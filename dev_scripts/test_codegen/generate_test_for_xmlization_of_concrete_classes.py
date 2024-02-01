@@ -16,15 +16,125 @@ import aas_core_codegen.parse
 import aas_core_codegen.run
 from aas_core_codegen import intermediate
 from aas_core_codegen.common import Stripped
-from aas_core_codegen.csharp import common as csharp_common
+from aas_core_codegen.java import common as java_common
 from icontract import require
+from aas_core_codegen.java.common import (
+    INDENT as I,
+    INDENT2 as II,
+    INDENT3 as III,
+    INDENT4 as IIII,
+    INDENT5 as IIIII,
+    INDENT6 as IIIIII,
+)
 
 import test_codegen.common
 from test_codegen import test_data_io
 
+def _generate_assert_serialize_deserialize_equals_original()-> Stripped:
+    """Generate the method to check serialize and deserialize matches original."""
+    return Stripped(
+            f"""\
+private static void assertSerializeDeserializeEqualsOriginal(IClass instance, String path) throws XMLStreamException, IOException {{
+
+{I}final StringWriter stringOut = new StringWriter();
+{I}final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+{I}final XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+{I}Xmlization.Serialize.to(instance, xmlStreamWriter);
+
+{I}final String outputText = stringOut.toString();
+
+{I}// Compare expected == output
+{I}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+{I}final XMLEventReader outputReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+{I}final List<XMLEvent> outputList = createElementsAndContentList(outputReader);
+{I}// check output for aas-name-space
+{I}for (XMLEvent event : outputList) {{
+{II}if (event.isStartElement()) {{
+{III}assertEquals(Xmlization.AAS_NAME_SPACE, event.asStartElement().getName().getNamespaceURI());
+{II}}}
+{I}}}
+        
+{I}final XMLEventReader expectedReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{I}final List<XMLEvent> expectedList = createElementsAndContentList(expectedReader);
+
+{I}if(expectedList.size() != outputList.size()){{
+{II}fail("Mismatch in element size expected " + expectedList.size() + " but got " + outputList.size());
+{I}}}
+
+{I}for(int i = 0; i < expectedList.size();i++){{
+{II}final Optional<Reporting.Error> inequalityError = checkElementsEqual(expectedList.get(i), outputList.get(i));
+{III}inequalityError.ifPresent(error -> fail(
+{IIII}"The original XML from " + path + " is unequal the serialized XML: " + error.getCause()
+{III}));
+{I}}}
+}}"""
+        )
+
+
+
+def _generate_create_elements_and_content_list() -> Stripped:
+    """Generate the method create list of xml elements and content."""
+    return Stripped(
+            f"""\
+private static List<XMLEvent> createElementsAndContentList(XMLEventReader expectedReader) throws XMLStreamException {{
+{I}final List<XMLEvent> result = new ArrayList<>();
+
+{I}while (expectedReader.hasNext()) {{
+{II}final XMLEvent event = expectedReader.nextEvent();
+{II}if (event.isStartElement() || event.isEndElement() || (event.isCharacters() && !event.asCharacters().isWhiteSpace())) {{
+{III}result.add(event);
+{II}}}
+{I}}}
+{I}return result;
+}}"""
+        )
+
+def _generate_check_elements_equal() -> Stripped:
+    """Generate the method for checking if elements are equal."""
+    return Stripped(
+            f"""\
+public static Optional<Reporting.Error> checkElementsEqual(XMLEvent expected, XMLEvent got) {{
+
+{I}switch (expected.getEventType()){{
+{II}case XMLStreamConstants.START_ELEMENT:{{
+{III}final String expectedName = expected.asStartElement().getName().getLocalPart();
+{III}final String gotName = got.asStartElement().getName().getLocalPart();
+{III}if(!expectedName.equals(gotName)){{
+{IIII}final Reporting.Error error = new Reporting.Error("Mismatch in element names: "
+{IIII}+ expectedName + " != " + gotName);
+{IIII}return Optional.of(error);
+{III}}}
+{III}return Optional.empty();
+{II}}}
+{II}case XMLStreamConstants.END_ELEMENT:{{
+{III}final String expectedName = expected.asEndElement().getName().getLocalPart();
+{III}final String gotName = got.asEndElement().getName().getLocalPart();
+{III}if(!expectedName.equals(gotName)){{
+{IIII}final Reporting.Error error = new Reporting.Error("Mismatch in element names: "
+{IIII}+ expectedName + " != " + gotName);
+{IIII}return Optional.of(error);
+{III}}}
+{III}return Optional.empty();
+{II}}}
+{II}case XMLStreamConstants.CHARACTERS:{{
+{III}final String expectedContent = expected.asCharacters().getData();
+{III}final String gotContent = got.asCharacters().getData();
+{III}if(!expectedContent.equals(gotContent)){{
+{IIII}final Reporting.Error error = new Reporting.Error("Mismatch in element contents: "
+{IIII}+ expectedContent + " != " + gotContent);
+{IIII}return Optional.of(error);
+{III}}}
+{III}return Optional.empty();
+{II}}}
+{II}default:
+{III}throw new IllegalStateException("Unexpected event type in check elements equal.");
+{I}}}
+}}"""
+        )
 
 def _generate_for_self_contained(
-    cls_name_csharp: str,
+    cls_name_java: str,
     cls_name_xml: str,
 ) -> List[Stripped]:
     """Generate the tests for a self-contained class."""
@@ -34,283 +144,29 @@ def _generate_for_self_contained(
     blocks.append(
         Stripped(
             f"""\
-[Test]
-public void Test_{cls_name_csharp}_ok()
-{{
-    var paths = Directory.GetFiles(
-        Path.Combine(
-            Aas.Tests.Common.TestDataDir,
-            "Xml", 
-            "SelfContained", 
-            "Expected",
-            {csharp_common.string_literal(cls_name_xml)}
-        ),
-        "*.xml",
-        System.IO.SearchOption.AllDirectories).ToList();
-    paths.Sort();
+@Test
+public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
 
-    foreach (var path in paths)
-    {{
-        using var xmlReader = System.Xml.XmlReader.Create(path);
-        
-        var instance = Aas.Xmlization.Deserialize.{cls_name_csharp}From(
-            xmlReader);
+{I}final Path searchPath = Paths.get(TestUtil.TEST_DATA_DIR,
+{II}"Xml",
+{II}"SelfContained",
+{II}"Expected",
+{II}{java_common.string_literal(cls_name_xml)});
+{II}final List<String> paths = TestUtil.findFiles(searchPath, ".xml");
+{II}for (String path : paths) {{
+{III}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+{III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{III}final {cls_name_java} instance = Xmlization.Deserialize.deserialize{cls_name_java}(xmlReader);
+{III}final Iterable<Reporting.Error> errors = Verification.verify(instance);
+{III}final List<Reporting.Error> errorList = TestUtil.asList(errors);
+{III}TestUtil.assertNoVerificationErrors(errorList, path);
+{III}assertSerializeDeserializeEqualsOriginal(instance, path);
+{II}}}
 
-        var errors = Aas.Verification.Verify(instance).ToList();
-        Aas.Tests.Common.AssertNoVerificationErrors(errors, path);
-
-        AssertSerializeDeserializeEqualsOriginal(
-            instance, path);
-    }}
-}}  // public void Test_{cls_name_csharp}_ok"""
+}}"""
         )
     )
-
-    blocks.append(
-        Stripped(
-            f"""\
-[Test]
-public void Test_{cls_name_csharp}_deserialization_fail()
-{{
-    foreach (string cause in CausesForDeserializationFailure)
-    {{
-        string baseDir = Path.Combine(
-            Aas.Tests.Common.TestDataDir,
-            "Xml", 
-            "SelfContained", 
-            "Unexpected", 
-            cause,
-            {csharp_common.string_literal(cls_name_xml)}
-        );
-         
-        if (!Directory.Exists(baseDir))
-        {{
-            // No examples of {cls_name_csharp} for the failure cause.
-            continue;
-        }} 
-        
-        var paths = Directory.GetFiles(
-            baseDir,
-            "*.xml",
-            System.IO.SearchOption.AllDirectories).ToList();
-        paths.Sort();
-
-        foreach (var path in paths)
-        {{
-            using var xmlReader = System.Xml.XmlReader.Create(path);
-            
-            Aas.Xmlization.Exception? exception = null;
-
-            try
-            {{
-                _ = Aas.Xmlization.Deserialize.{cls_name_csharp}From(
-                    xmlReader);
-            }}
-            catch (Aas.Xmlization.Exception observedException)
-            {{
-                exception = observedException;
-            }}
-
-            AssertEqualsExpectedOrRerecordDeserializationException(
-                exception, path);
-        }}
-    }}
-}}  // public void Test_{cls_name_csharp}_deserialization_fail"""
-        )
-    )
-
-    blocks.append(
-        Stripped(
-            f"""\
-[Test]
-public void Test_{cls_name_csharp}_verification_fail()
-{{
-    foreach (string cause in Aas.Tests.Common.CausesForVerificationFailure)
-    {{
-        string baseDir = Path.Combine(
-            Aas.Tests.Common.TestDataDir,
-            "Xml", 
-            "SelfContained", 
-            "Unexpected", 
-            cause,
-            {csharp_common.string_literal(cls_name_xml)}
-        );
-         
-        if (!Directory.Exists(baseDir))
-        {{
-            // No examples of {cls_name_csharp} for the failure cause.
-            continue;
-        }}
-        
-        var paths = Directory.GetFiles(
-            baseDir,
-            "*.xml",
-            System.IO.SearchOption.AllDirectories).ToList();
-        paths.Sort();
-
-        foreach (var path in paths)
-        {{
-            using var xmlReader = System.Xml.XmlReader.Create(path);
-        
-            var instance = Aas.Xmlization.Deserialize.{cls_name_csharp}From(
-                xmlReader);
-
-            var errors = Aas.Verification.Verify(instance).ToList();
-            Aas.Tests.Common.AssertEqualsExpectedOrRerecordVerificationErrors(
-                errors, path);
-        }}
-    }}
-}}  // public void Test_{cls_name_csharp}_verification_fail"""
-        )
-    )
-
     return blocks
-
-
-@require(lambda container_cls_csharp: container_cls_csharp == "Environment")
-def _generate_for_contained_in_environment(
-    cls_name_csharp: str,
-    cls_name_xml: str,
-    container_cls_csharp: str,
-) -> List[Stripped]:
-    """Generate the tests for a class contained in an ``Environment`` instance."""
-    # noinspection PyListCreation
-    blocks = []  # type: List[Stripped]
-
-    blocks.append(
-        Stripped(
-            f"""\
-[Test]
-public void Test_{cls_name_csharp}_ok()
-{{
-    var paths = Directory.GetFiles(
-        Path.Combine(
-            Aas.Tests.Common.TestDataDir,
-            "Xml", 
-            "ContainedInEnvironment", 
-            "Expected",
-            {csharp_common.string_literal(cls_name_xml)}
-        ),
-        "*.xml",
-        System.IO.SearchOption.AllDirectories).ToList();
-    paths.Sort();
-
-    foreach (var path in paths)
-    {{
-        using var xmlReader = System.Xml.XmlReader.Create(path);
-        
-        var container = Aas.Xmlization.Deserialize.{container_cls_csharp}From(
-            xmlReader);
-
-        var errors = Aas.Verification.Verify(container).ToList();
-        Aas.Tests.Common.AssertNoVerificationErrors(errors, path);
-
-        AssertSerializeDeserializeEqualsOriginal(
-            container, path);
-    }}
-}}  // public void Test_{cls_name_csharp}_ok"""
-        )
-    )
-
-    blocks.append(
-        Stripped(
-            f"""\
-[Test]
-public void Test_{cls_name_csharp}_deserialization_fail()
-{{
-    foreach (string cause in CausesForDeserializationFailure)
-    {{
-        string baseDir = Path.Combine(
-            Aas.Tests.Common.TestDataDir,
-            "Xml", 
-            "ContainedInEnvironment", 
-            "Unexpected", 
-            cause,
-            {csharp_common.string_literal(cls_name_xml)});
-            
-        if (!Directory.Exists(baseDir))
-        {{
-            // No examples of {cls_name_csharp} for the failure cause.
-            continue;
-        }}
-    
-        var paths = Directory.GetFiles(
-            baseDir,
-            "*.xml",
-            System.IO.SearchOption.AllDirectories).ToList();
-        paths.Sort();
-
-        foreach (var path in paths)
-        {{
-            using var xmlReader = System.Xml.XmlReader.Create(path);
-            
-            Aas.Xmlization.Exception? exception = null;
-
-            try
-            {{
-                _ = Aas.Xmlization.Deserialize.{container_cls_csharp}From(
-                    xmlReader);
-            }}
-            catch (Aas.Xmlization.Exception observedException)
-            {{
-                exception = observedException;
-            }}
-
-            AssertEqualsExpectedOrRerecordDeserializationException(
-                exception, path);
-        }}
-    }}
-}}  // public void Test_{cls_name_csharp}_deserialization_fail"""
-        )
-    )
-
-    blocks.append(
-        Stripped(
-            f"""\
-[Test]
-public void Test_{cls_name_csharp}_verification_fail()
-{{
-    foreach (string cause in Aas.Tests.Common.CausesForVerificationFailure)
-    {{
-        string baseDir = Path.Combine(
-            Aas.Tests.Common.TestDataDir,
-            "Xml", 
-            "ContainedInEnvironment", 
-            "Unexpected", 
-            cause,
-            {csharp_common.string_literal(cls_name_xml)}
-        );
-    
-        if (!Directory.Exists(baseDir))
-        {{
-            // No examples of {cls_name_csharp} for the failure cause.
-            continue;
-        }}
-    
-        var paths = Directory.GetFiles(
-            baseDir,
-            "*.xml",
-            System.IO.SearchOption.AllDirectories).ToList();
-        paths.Sort();
-
-        foreach (var path in paths)
-        {{
-            using var xmlReader = System.Xml.XmlReader.Create(path);
-        
-            var container = Aas.Xmlization.Deserialize.{container_cls_csharp}From(
-                xmlReader);
-
-            var errors = Aas.Verification.Verify(container).ToList();
-            Aas.Tests.Common.AssertEqualsExpectedOrRerecordVerificationErrors(
-                errors, path);
-        }}
-    }}
-}}  // public void Test_{cls_name_csharp}_verification_fail"""
-        )
-    )
-
-    return blocks
-
 
 def main() -> int:
     """Execute the main routine."""
@@ -322,172 +178,14 @@ def main() -> int:
     test_data_dir = repo_root / "test_data"
 
     # noinspection PyListCreation
-    blocks = []  # type: List[str]
+    blocks = [
+        _generate_assert_serialize_deserialize_equals_original(),
+        _generate_create_elements_and_content_list(),
+        _generate_check_elements_equal()
+    ]  # type: List[str]
 
-    xml_namespace_literal = csharp_common.string_literal(
+    xml_namespace_literal = java_common.string_literal(
         symbol_table.meta_model.xml_namespace
-    )
-
-    blocks.append(
-        Stripped(
-            f"""\
-private static void CheckElementsEqual(
-    XElement expected,
-    XElement got,
-    out Reporting.Error? error)
-{{
-    error = null;
-
-    if (expected.Name.LocalName != got.Name.LocalName)
-    {{
-        error = new Reporting.Error(
-            "Mismatch in element names: " +
-            $"{{expected}} != {{got}}"
-        );
-        return;
-    }}
-
-    string? expectedContent = (expected.FirstNode as XText)?.Value;
-    string? gotContent = (got.FirstNode as XText)?.Value;
-
-    if (expectedContent != gotContent)
-    {{
-        error = new Reporting.Error(
-            $"Mismatch in element contents: {{expected}} != {{got}}"
-        );
-        return;
-    }}
-
-    var expectedChildren = expected.Elements().ToList();
-    var gotChildren = got.Elements().ToList();
-
-    if (expectedChildren.Count != gotChildren.Count)
-    {{
-        error = new Reporting.Error(
-            $"Mismatch in child elements: {{expected}} != {{got}}"
-        );
-        return;
-    }}
-
-    for (int i = 0; i < expectedChildren.Count; i++)
-    {{
-        CheckElementsEqual(
-            expectedChildren[i],
-            gotChildren[i],
-            out error);
-
-        if (error != null)
-        {{
-            error.PrependSegment(
-                new Reporting.IndexSegment(i));
-
-            error.PrependSegment(
-                new Reporting.NameSegment(
-                    expected.Name.ToString()));
-        }}
-    }}
-}}
-
-private static void AssertSerializeDeserializeEqualsOriginal(
-    Aas.IClass instance, string path)
-{{
-    // Serialize
-    var outputBuilder = new System.Text.StringBuilder();
-
-    {{
-        using var writer = System.Xml.XmlWriter.Create(
-            outputBuilder,
-            new System.Xml.XmlWriterSettings()
-            {{
-                Encoding = System.Text.Encoding.UTF8,
-                OmitXmlDeclaration = true
-            }}
-        );
-        Aas.Xmlization.Serialize.To(
-            instance,
-            writer);
-    }}
-
-    string outputText = outputBuilder.ToString();
-
-    // Compare input == output
-    {{
-        using var outputReader = new System.IO.StringReader(outputText);
-        var gotDoc = XDocument.Load(outputReader);
-
-        Assert.AreEqual(
-            gotDoc.Root?.Name.Namespace.ToString(),
-            {xml_namespace_literal});
-
-        foreach (var child in gotDoc.Descendants())
-        {{
-            Assert.AreEqual(
-                child.GetDefaultNamespace().NamespaceName,
-                {xml_namespace_literal});
-        }}
-
-        var expectedDoc = XDocument.Load(path);
-
-        CheckElementsEqual(
-            expectedDoc.Root!,
-            gotDoc.Root!,
-            out Reporting.Error? inequalityError);
-
-        if (inequalityError != null)
-        {{
-            Assert.Fail(
-                $"The original XML from {{path}} is unequal the serialized XML: " +
-                $"#/{{Reporting.GenerateRelativeXPath(inequalityError.PathSegments)}}: " +
-                inequalityError.Cause
-            );
-        }}
-    }}
-}}
-
-private static readonly List<string> CausesForDeserializationFailure = (
-    new List<string>()
-    {{
-        "TypeViolation",
-        "RequiredViolation",
-        "EnumViolation",
-        "UnexpectedAdditionalProperty"
-    }});
-
-private static void AssertEqualsExpectedOrRerecordDeserializationException(
-    Aas.Xmlization.Exception? exception,
-    string path)
-{{
-    if (exception == null)
-    {{
-        Assert.Fail(
-            $"Expected a Xmlization exception when de-serializing {{path}}, but got none."
-        );
-    }}
-    else
-    {{
-        string exceptionPath = path + ".exception";
-        string got = exception.Message;
-        if (Aas.Tests.Common.RecordMode)
-        {{
-            System.IO.File.WriteAllText(exceptionPath, got);
-        }}
-        else
-        {{
-            if (!System.IO.File.Exists(exceptionPath))
-            {{
-                throw new System.IO.FileNotFoundException(
-                    $"The file with the recorded exception does not exist: {{exceptionPath}}");
-            }}
-
-            string expected = System.IO.File.ReadAllText(exceptionPath);
-            Assert.AreEqual(
-                expected.Replace("\\r\\n", "\\n"),
-                got.Replace("\\r\\n", "\\n"),
-                $"The expected exception does not match the actual one for the file {{path}}");
-        }}
-    }}
-}}"""
-        )
     )
 
     environment_cls = symbol_table.must_find_concrete_class(
@@ -501,27 +199,27 @@ private static void AssertEqualsExpectedOrRerecordDeserializationException(
         container_cls = test_data_io.determine_container_class(
             cls=our_type, test_data_dir=test_data_dir, environment_cls=environment_cls
         )
-        container_cls_csharp = aas_core_codegen.csharp.naming.class_name(
+        container_cls_java = aas_core_codegen.java.naming.class_name(
             container_cls.name
         )
 
-        cls_name_csharp = aas_core_codegen.csharp.naming.class_name(our_type.name)
+        cls_name_java = aas_core_codegen.java.naming.class_name(our_type.name)
         cls_name_xml = aas_core_codegen.naming.xml_class_name(our_type.name)
 
         if container_cls is our_type:
             blocks.extend(
                 _generate_for_self_contained(
-                    cls_name_csharp=cls_name_csharp, cls_name_xml=cls_name_xml
+                    cls_name_java=cls_name_java, cls_name_xml=cls_name_xml
                 )
             )
-        else:
-            blocks.extend(
-                _generate_for_contained_in_environment(
-                    cls_name_csharp=cls_name_csharp,
-                    cls_name_xml=cls_name_xml,
-                    container_cls_csharp=container_cls_csharp,
-                )
-            )
+        # else:
+            # blocks.extend(
+            #     _generate_for_contained_in_environment(
+            #         cls_name_csharp=cls_name_csharp,
+            #         cls_name_xml=cls_name_xml,
+            #         container_cls_csharp=container_cls_csharp,
+            #     )
+            # )
 
     writer = io.StringIO()
     writer.write(
@@ -531,19 +229,31 @@ private static void AssertEqualsExpectedOrRerecordDeserializationException(
  * Do NOT edit or append.
  */
 
-using Aas = AasCore.Aas3_0;  // renamed
-using Directory = System.IO.Directory;
-using Path = System.IO.Path;
+import aas_core.aas3_0.reporting.Reporting;
+import javax.annotation.Generated;
+import aas_core.aas3_0.types.impl.EventPayload;
+import aas_core.aas3_0.types.model.IClass;
+import aas_core.aas3_0.verification.Verification;
+import aas_core.aas3_0.xmlization.Xmlization;
+import org.junit.jupiter.api.Test;
 
-using NUnit.Framework; // can't alias
-using System.Collections.Generic;  // can't alias
-using System.Linq;  // can't alias
-using System.Xml.Linq; // can't alias
+import javax.xml.stream.*;
+import javax.xml.stream.events.XMLEvent;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-namespace AasCore.Aas3_0.Tests
-{
-    public class TestXmlizationOfConcreteClasses
-    {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
+@Generated("Generated by aas-test-gen")
+public class TestXmlizationOfConcreteClasses{
 """
     )
 
@@ -551,22 +261,22 @@ namespace AasCore.Aas3_0.Tests
         if i > 0:
             writer.write("\n\n")
 
-        writer.write(textwrap.indent(block, "        "))
+        writer.write(textwrap.indent(block, "    "))
 
     writer.write(
         """
-    }  // class TestXmlizationOfConcreteClasses
-}  // namespace AasCore.Aas3_0.Tests
+}     // class TestXmlizationOfConcreteClasses
+
 
 /*
- * This code has been automatically generated by testgen.
+ * This code has been automatically generated by test-gen.
  * Do NOT edit or append.
  */
 """
     )
 
     target_pth = (
-        repo_root / "src/test/java/TestXmlizationOfConcreteClasses.java"
+        repo_root / "/home/mboehm/IdeaProjects/TestGen/src/test/java/TestXmlizationOfConcreteClasses.java"
     )
     target_pth.write_text(writer.getvalue(), encoding="utf-8")
 
