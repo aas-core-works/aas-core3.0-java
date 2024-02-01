@@ -1,0 +1,1 @@
+Expected an XML start element representing a property of an instance of class Reference, but got the node of type Text with the value Unexpected string value at: submodels/*[0]/submodelElements/*[0]/first
