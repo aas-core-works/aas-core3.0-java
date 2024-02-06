@@ -50,45 +50,72 @@ private static void assertSerializeDeserializeEqualsOriginal(IClass instance, St
 {I}// Compare expected == output
 {I}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 {I}final XMLEventReader outputReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-{I}final List<XMLEvent> outputList = createElementsAndContentList(outputReader);
+{I}final Map<XMLEvent, String> outputMap = buildElementsMap(outputReader);
+
 {I}// check output for aas-name-space
-{I}for (XMLEvent event : outputList) {{
+{I}for (XMLEvent event : outputMap.keySet()) {{
 {II}if (event.isStartElement()) {{
 {III}assertEquals(Xmlization.AAS_NAME_SPACE, event.asStartElement().getName().getNamespaceURI());
 {II}}}
+{II}if (event.isEndElement()) {{
+{III}assertEquals(Xmlization.AAS_NAME_SPACE, event.asEndElement().getName().getNamespaceURI());
+{II}}}
 {I}}}
-        
+
 {I}final XMLEventReader expectedReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
-{I}final List<XMLEvent> expectedList = createElementsAndContentList(expectedReader);
+{I}final Map<XMLEvent, String> expectedMap = buildElementsMap(expectedReader);
 
-{I}if(expectedList.size() != outputList.size()){{
-{II}fail("Mismatch in element size expected " + expectedList.size() + " but got " + outputList.size());
+
+{I}if (expectedMap.size() != outputMap.size()) {{
+{II}fail("Mismatch in element size expected " + expectedMap.size() + " but got " + outputMap.size());
 {I}}}
 
-{I}for(int i = 0; i < expectedList.size();i++){{
-{II}final Optional<Reporting.Error> inequalityError = checkElementsEqual(expectedList.get(i), outputList.get(i));
+{I}expectedMap.forEach((xmlEvent, content) -> {{
+{II}final Optional<Reporting.Error> inequalityError = checkElementsEqual(xmlEvent, content, outputMap);
 {III}inequalityError.ifPresent(error -> fail(
 {IIII}"The original XML from " + path + " is unequal the serialized XML: " + error.getCause()
-{III}));
-{I}}}
+{II}));
+{I}}});
+
 }}"""
     )
 
 
-def _generate_create_elements_and_content_list() -> Stripped:
-    """Generate the method create list of xml elements and content."""
+def _generate_build_elements_map() -> Stripped:
+    """Generate the method create map of xml elements and its content."""
     return Stripped(
         f"""\
-private static List<XMLEvent> createElementsAndContentList(XMLEventReader expectedReader) throws XMLStreamException {{
-{I}final List<XMLEvent> result = new ArrayList<>();
-
-{I}while (expectedReader.hasNext()) {{
-{II}final XMLEvent event = expectedReader.nextEvent();
-{II}if (event.isStartElement() || event.isEndElement() || (event.isCharacters() && !event.asCharacters().isWhiteSpace())) {{
-{III}result.add(event);
+private static Map<XMLEvent, String> buildElementsMap(XMLEventReader reader) throws XMLStreamException {{
+{I}final Map<XMLEvent, String> result = new LinkedHashMap<>();
+{I}while (reader.hasNext()) {{
+{II}final XMLEvent current = reader.nextEvent();
+{II}if (current.isStartElement()) {{
+{III}result.put(current, readContent(reader));
+{II}}} else if (current.isEndElement()) {{
+{III}result.put(current, "");
 {II}}}
 {I}}}
 {I}return result;
+}}"""
+    )
+
+def _generate_read_content() -> Stripped:
+    """Generate the method for reading xml content."""
+    return Stripped(
+        f"""\
+private static String readContent(XMLEventReader reader) throws XMLStreamException {{
+{I}final StringBuilder content = new StringBuilder();
+{I}
+{I}while (reader.peek().isCharacters() 
+{III}&& !reader.peek().asCharacters().isWhiteSpace() 
+{III}|| reader.peek().getEventType() == XMLStreamConstants.COMMENT) {{
+
+{II}if (reader.peek().isCharacters()) {{
+{III}content.append(reader.peek().asCharacters().getData());
+{II}}}
+{II}reader.nextEvent();
+{I}}}
+{I}return content.toString();
 }}"""
     )
 
@@ -97,42 +124,45 @@ def _generate_check_elements_equal() -> Stripped:
     """Generate the method for checking if elements are equal."""
     return Stripped(
         f"""\
-public static Optional<Reporting.Error> checkElementsEqual(XMLEvent expected, XMLEvent got) {{
+public static Optional<Reporting.Error> checkElementsEqual(XMLEvent expected, String expectedContent, Map<XMLEvent, String> outputMap) {{
 
-{I}switch (expected.getEventType()){{
-{II}case XMLStreamConstants.START_ELEMENT:{{
-{III}final String expectedName = expected.asStartElement().getName().getLocalPart();
-{III}final String gotName = got.asStartElement().getName().getLocalPart();
-{III}if(!expectedName.equals(gotName)){{
-{IIII}final Reporting.Error error = new Reporting.Error("Mismatch in element names: "
-{IIII}+ expectedName + " != " + gotName);
+{I}switch (expected.getEventType()) {{
+{II}case XMLStreamConstants.START_ELEMENT: {{
+{III}final String expectedName = expected.asStartElement()
+{IIII}.getName()
+{IIII}.getLocalPart();
+{III}Optional<Map.Entry<XMLEvent, String>> got = outputMap
+{IIII}.entrySet()
+{IIII}.stream()
+{IIII}.filter(entry -> entry.getKey().isStartElement() && entry.getKey().asStartElement().getName().getLocalPart().equals(expectedName))
+{IIII}.filter(entry -> entry.getValue().equals(expectedContent))
+{IIII}.findAny();
+{III}if (!got.isPresent()) {{
+{IIII}final Reporting.Error error = new Reporting.Error("Missing start element " + expectedName + " in with content: " + expectedContent);
 {IIII}return Optional.of(error);
 {III}}}
+{III}outputMap.remove(got.get().getKey());
 {III}return Optional.empty();
 {II}}}
-{II}case XMLStreamConstants.END_ELEMENT:{{
-{III}final String expectedName = expected.asEndElement().getName().getLocalPart();
-{III}final String gotName = got.asEndElement().getName().getLocalPart();
-{III}if(!expectedName.equals(gotName)){{
-{IIII}final Reporting.Error error = new Reporting.Error("Mismatch in element names: "
-{IIII}+ expectedName + " != " + gotName);
+{II}case XMLStreamConstants.END_ELEMENT: {{
+{III}final String expectedName = expected.asEndElement()
+{IIII}.getName()
+{IIII}.getLocalPart();
+{II}Optional<Map.Entry<XMLEvent, String>> got = outputMap
+{IIII}.entrySet()
+{IIII}.stream()
+{IIII}.filter(entry -> entry.getKey().isEndElement() && entry.getKey().asEndElement().getName().getLocalPart().equals(expectedName))
+{IIII}.findAny();
+{III}if (!got.isPresent()){{
+{IIII}final Reporting.Error error = new Reporting.Error("Missing end element " + expectedName);
 {IIII}return Optional.of(error);
 {III}}}
-{III}return Optional.empty();
-{II}}}
-{II}case XMLStreamConstants.CHARACTERS:{{
-{III}final String expectedContent = expected.asCharacters().getData();
-{III}final String gotContent = got.asCharacters().getData();
-{III}if(!expectedContent.equals(gotContent)){{
-{IIII}final Reporting.Error error = new Reporting.Error("Mismatch in element contents: "
-{IIII}+ expectedContent + " != " + gotContent);
-{IIII}return Optional.of(error);
-{III}}}
+{III}outputMap.remove(got.get().getKey());
 {III}return Optional.empty();
 {II}}}
 {II}default:
 {III}throw new IllegalStateException("Unexpected event type in check elements equal.");
-{I}}}
+{II}}}
 }}"""
     )
 
@@ -223,7 +253,8 @@ def main() -> int:
     # noinspection PyListCreation
     blocks = [
         _generate_assert_serialize_deserialize_equals_original(),
-        _generate_create_elements_and_content_list(),
+        _generate_build_elements_map(),
+        _generate_read_content(),
         _generate_check_elements_equal()
     ]  # type: List[str]
 
@@ -274,6 +305,8 @@ def main() -> int:
 
 import aas_core.aas3_0.reporting.Reporting;
 import javax.annotation.Generated;
+
+import aas_core.aas3_0.types.impl.Environment;
 import aas_core.aas3_0.types.impl.EventPayload;
 import aas_core.aas3_0.types.model.IClass;
 import aas_core.aas3_0.verification.Verification;
@@ -288,8 +321,10 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
