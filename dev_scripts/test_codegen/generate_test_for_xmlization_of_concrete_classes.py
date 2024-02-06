@@ -8,16 +8,18 @@ import textwrap
 from typing import List
 
 import aas_core_codegen
-import aas_core_codegen.common
 import aas_core_codegen.csharp.naming
 import aas_core_codegen.java.naming
 import aas_core_codegen.naming
 import aas_core_codegen.parse
 import aas_core_codegen.run
 from aas_core_codegen import intermediate
-from aas_core_codegen.common import Stripped
 from aas_core_codegen.java import common as java_common
 from icontract import require
+from aas_core_codegen.common import (
+    Identifier,
+    Stripped,
+)
 from aas_core_codegen.java.common import (
     INDENT as I,
     INDENT2 as II,
@@ -30,10 +32,11 @@ from aas_core_codegen.java.common import (
 import test_codegen.common
 from test_codegen import test_data_io
 
-def _generate_assert_serialize_deserialize_equals_original()-> Stripped:
+
+def _generate_assert_serialize_deserialize_equals_original() -> Stripped:
     """Generate the method to check serialize and deserialize matches original."""
     return Stripped(
-            f"""\
+        f"""\
 private static void assertSerializeDeserializeEqualsOriginal(IClass instance, String path) throws XMLStreamException, IOException {{
 
 {I}final StringWriter stringOut = new StringWriter();
@@ -69,14 +72,13 @@ private static void assertSerializeDeserializeEqualsOriginal(IClass instance, St
 {III}));
 {I}}}
 }}"""
-        )
-
+    )
 
 
 def _generate_create_elements_and_content_list() -> Stripped:
     """Generate the method create list of xml elements and content."""
     return Stripped(
-            f"""\
+        f"""\
 private static List<XMLEvent> createElementsAndContentList(XMLEventReader expectedReader) throws XMLStreamException {{
 {I}final List<XMLEvent> result = new ArrayList<>();
 
@@ -88,12 +90,13 @@ private static List<XMLEvent> createElementsAndContentList(XMLEventReader expect
 {I}}}
 {I}return result;
 }}"""
-        )
+    )
+
 
 def _generate_check_elements_equal() -> Stripped:
     """Generate the method for checking if elements are equal."""
     return Stripped(
-            f"""\
+        f"""\
 public static Optional<Reporting.Error> checkElementsEqual(XMLEvent expected, XMLEvent got) {{
 
 {I}switch (expected.getEventType()){{
@@ -131,11 +134,12 @@ public static Optional<Reporting.Error> checkElementsEqual(XMLEvent expected, XM
 {III}throw new IllegalStateException("Unexpected event type in check elements equal.");
 {I}}}
 }}"""
-        )
+    )
+
 
 def _generate_for_self_contained(
-    cls_name_java: str,
-    cls_name_xml: str,
+        cls_name_java: str,
+        cls_name_xml: str,
 ) -> List[Stripped]:
     """Generate the tests for a self-contained class."""
     # noinspection PyListCreation
@@ -167,6 +171,45 @@ public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
         )
     )
     return blocks
+
+
+@require(lambda container_cls_java: container_cls_java == "Environment")
+def _generate_for_contained_in_environment(
+        cls_name_java: str,
+        cls_name_xml: str,
+        container_cls_java: str,
+) -> List[Stripped]:
+    """Generate the tests for a class contained in an ``Environment`` instance."""
+    # noinspection PyListCreation
+    blocks = []  # type: List[Stripped]
+
+    blocks.append(
+        Stripped(
+            f"""\
+@Test
+public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
+
+{I}final Path searchPath = Paths.get(TestUtil.TEST_DATA_DIR,
+{II}"Xml",
+{II}"ContainedInEnvironment",
+{II}"Expected",
+{II}{java_common.string_literal(cls_name_xml)});
+{II}final List<String> paths = TestUtil.findFiles(searchPath, ".xml");
+{II}for (String path : paths) {{
+{III}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+{III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{III}final {container_cls_java} instance = Xmlization.Deserialize.deserialize{container_cls_java}(xmlReader);
+{III}final Iterable<Reporting.Error> errors = Verification.verify(instance);
+{III}final List<Reporting.Error> errorList = TestUtil.asList(errors);
+{III}TestUtil.assertNoVerificationErrors(errorList, path);
+{III}assertSerializeDeserializeEqualsOriginal(instance, path);
+{II}}}
+
+}}"""
+        )
+    )
+    return blocks
+
 
 def main() -> int:
     """Execute the main routine."""
@@ -203,7 +246,7 @@ def main() -> int:
             container_cls.name
         )
 
-        cls_name_java = aas_core_codegen.java.naming.class_name(our_type.name)
+        cls_name_java = aas_core_codegen.java.naming.class_name(Identifier(f"{our_type.name}"))
         cls_name_xml = aas_core_codegen.naming.xml_class_name(our_type.name)
 
         if container_cls is our_type:
@@ -212,14 +255,14 @@ def main() -> int:
                     cls_name_java=cls_name_java, cls_name_xml=cls_name_xml
                 )
             )
-        # else:
-            # blocks.extend(
-            #     _generate_for_contained_in_environment(
-            #         cls_name_csharp=cls_name_csharp,
-            #         cls_name_xml=cls_name_xml,
-            #         container_cls_csharp=container_cls_csharp,
-            #     )
-            # )
+        else:
+            blocks.extend(
+                _generate_for_contained_in_environment(
+                    cls_name_java=cls_name_java,
+                    cls_name_xml=cls_name_xml,
+                    container_cls_java=container_cls_java,
+                )
+            )
 
     writer = io.StringIO()
     writer.write(
@@ -276,7 +319,7 @@ public class TestXmlizationOfConcreteClasses{
     )
 
     target_pth = (
-        repo_root / "/home/mboehm/IdeaProjects/TestGen/src/test/java/TestXmlizationOfConcreteClasses.java"
+            repo_root / "/home/mboehm/IdeaProjects/TestGen/src/test/java/TestXmlizationOfConcreteClasses.java"
     )
     target_pth.write_text(writer.getvalue(), encoding="utf-8")
 
