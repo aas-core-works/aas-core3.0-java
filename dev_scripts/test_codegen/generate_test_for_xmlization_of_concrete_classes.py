@@ -106,7 +106,7 @@ def _generate_read_content() -> Stripped:
 private static String readContent(XMLEventReader reader) throws XMLStreamException {{
 {I}final StringBuilder content = new StringBuilder();
 {I}
-{I}while (reader.peek().isCharacters() 
+{I}while (reader.hasNext() && reader.peek().isCharacters() 
 {III}&& !reader.peek().asCharacters().isWhiteSpace() 
 {III}|| reader.peek().getEventType() == XMLStreamConstants.COMMENT) {{
 
@@ -131,7 +131,7 @@ public static Optional<Reporting.Error> checkElementsEqual(XMLEvent expected, St
 {III}final String expectedName = expected.asStartElement()
 {IIII}.getName()
 {IIII}.getLocalPart();
-{III}Optional<Map.Entry<XMLEvent, String>> got = outputMap
+{III}final Optional<Map.Entry<XMLEvent, String>> got = outputMap
 {IIII}.entrySet()
 {IIII}.stream()
 {IIII}.filter(entry -> entry.getKey().isStartElement() && entry.getKey().asStartElement().getName().getLocalPart().equals(expectedName))
@@ -148,7 +148,7 @@ public static Optional<Reporting.Error> checkElementsEqual(XMLEvent expected, St
 {III}final String expectedName = expected.asEndElement()
 {IIII}.getName()
 {IIII}.getLocalPart();
-{II}Optional<Map.Entry<XMLEvent, String>> got = outputMap
+{III}final Optional<Map.Entry<XMLEvent, String>> got = outputMap
 {IIII}.entrySet()
 {IIII}.stream()
 {IIII}.filter(entry -> entry.getKey().isEndElement() && entry.getKey().asEndElement().getName().getLocalPart().equals(expectedName))
@@ -196,10 +196,30 @@ public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
 {III}TestUtil.assertNoVerificationErrors(errorList, path);
 {III}assertSerializeDeserializeEqualsOriginal(instance, path);
 {II}}}
-
-}}"""
+}}  // public void test{cls_name_java}Ok"""
         )
     )
+
+    blocks.append(
+        Stripped(
+            f"""\
+@Test
+public void test{cls_name_java}DeserializationFail(){{
+        //todo implement
+}}  // public void test{cls_name_java}DeserializationFail"""
+        )
+    )
+
+    blocks.append(
+        Stripped(
+            f"""\
+@Test
+public void test{cls_name_java}VerificationFail(){{
+        //todo implement
+}}  // public void test{cls_name_java}DeserializationFail"""
+        )
+    )
+
     return blocks
 
 
@@ -234,8 +254,7 @@ public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
 {III}TestUtil.assertNoVerificationErrors(errorList, path);
 {III}assertSerializeDeserializeEqualsOriginal(instance, path);
 {II}}}
-
-}}"""
+}}  // public void test{cls_name_java}DeserializationOk"""
         )
     )
     return blocks
