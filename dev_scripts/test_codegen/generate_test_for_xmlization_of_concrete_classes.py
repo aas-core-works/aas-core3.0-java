@@ -138,7 +138,8 @@ public static Optional<Reporting.Error> checkElementsEqual(XMLEvent expected, St
 {IIII}.filter(entry -> entry.getValue().equals(expectedContent))
 {IIII}.findAny();
 {III}if (!got.isPresent()) {{
-{IIII}final Reporting.Error error = new Reporting.Error("Missing start element " + expectedName + " in with content: " + expectedContent);
+{IIII}final Reporting.Error error = new Reporting.Error(
+{IIIII}"Missing start element " + expectedName + " in with content: " + expectedContent);
 {IIII}return Optional.of(error);
 {III}}}
 {III}outputMap.remove(got.get().getKey());
@@ -154,7 +155,8 @@ public static Optional<Reporting.Error> checkElementsEqual(XMLEvent expected, St
 {IIII}.filter(entry -> entry.getKey().isEndElement() && entry.getKey().asEndElement().getName().getLocalPart().equals(expectedName))
 {IIII}.findAny();
 {III}if (!got.isPresent()){{
-{IIII}final Reporting.Error error = new Reporting.Error("Missing end element " + expectedName);
+{IIII}final Reporting.Error error = new Reporting.Error(
+{IIIII}"Missing end element " + expectedName);
 {IIII}return Optional.of(error);
 {III}}}
 {III}outputMap.remove(got.get().getKey());
@@ -166,6 +168,20 @@ public static Optional<Reporting.Error> checkElementsEqual(XMLEvent expected, St
 }}"""
     )
 
+def _generate_test_round_trip() -> Stripped:
+    """Generate the method for testing the deserialize -> serialize round trip."""
+    return Stripped(
+        f"""\
+private static void testRoundTrip(String path) throws XMLStreamException, IOException {{
+{I}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+{I}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{I}final Environment instance = Xmlization.Deserialize.deserializeEnvironment(xmlReader);
+{I}final Iterable<Reporting.Error> errors = Verification.verify(instance);
+{I}final List<Reporting.Error> errorList = Common.asList(errors);
+{I}Common.assertNoVerificationErrors(errorList, path);
+{I}assertSerializeDeserializeEqualsOriginal(instance, path);
+}}"""
+    )
 
 def _generate_for_self_contained(
         cls_name_java: str,
@@ -181,19 +197,19 @@ def _generate_for_self_contained(
 @Test
 public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
 
-{I}final Path searchPath = Paths.get(TestUtil.TEST_DATA_DIR,
+{I}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
 {II}"Xml",
 {II}"SelfContained",
 {II}"Expected",
 {II}{java_common.string_literal(cls_name_xml)});
-{II}final List<String> paths = TestUtil.findFiles(searchPath, ".xml");
+{II}final List<String> paths = Common.findFiles(searchPath, ".xml");
 {II}for (String path : paths) {{
 {III}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 {III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
 {III}final {cls_name_java} instance = Xmlization.Deserialize.deserialize{cls_name_java}(xmlReader);
 {III}final Iterable<Reporting.Error> errors = Verification.verify(instance);
-{III}final List<Reporting.Error> errorList = TestUtil.asList(errors);
-{III}TestUtil.assertNoVerificationErrors(errorList, path);
+{III}final List<Reporting.Error> errorList = Common.asList(errors);
+{III}Common.assertNoVerificationErrors(errorList, path);
 {III}assertSerializeDeserializeEqualsOriginal(instance, path);
 {II}}}
 }}  // public void test{cls_name_java}Ok"""
@@ -214,9 +230,29 @@ public void test{cls_name_java}DeserializationFail(){{
         Stripped(
             f"""\
 @Test
-public void test{cls_name_java}VerificationFail(){{
-        //todo implement
-}}  // public void test{cls_name_java}DeserializationFail"""
+public void test{cls_name_java}VerificationFail() throws IOException, XMLStreamException {{
+{I}for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {{
+{II}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
+{III}"Xml",
+{III}"SelfContained",
+{III}"Unexpected",
+{III}cause,
+{III}{java_common.string_literal(cls_name_xml)});
+{II}if (!Files.exists(searchPath)) {{
+{II}// No examples of Environment for the failure cause.
+{III}continue;
+{II}}}
+{II}final List<String> paths = Common.findFiles(searchPath, ".xml");
+{II}for (String path : paths) {{
+{III}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+{III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{III}final {cls_name_java} instance = Xmlization.Deserialize.deserialize{cls_name_java}(xmlReader);
+{III}final Iterable<Reporting.Error> errors = Verification.verify(instance);
+{III}final List<Reporting.Error> errorList = Common.asList(errors);
+{III}Common.assertEqualsExpectedOrRerecordVerificationErrors(errorList,path);
+{II}}}
+{I}}}
+}}  // public void test{cls_name_java}VerificationFail"""
         )
     )
 
@@ -239,22 +275,56 @@ def _generate_for_contained_in_environment(
 @Test
 public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
 
-{I}final Path searchPath = Paths.get(TestUtil.TEST_DATA_DIR,
+{I}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
 {II}"Xml",
 {II}"ContainedInEnvironment",
 {II}"Expected",
 {II}{java_common.string_literal(cls_name_xml)});
-{II}final List<String> paths = TestUtil.findFiles(searchPath, ".xml");
+{II}final List<String> paths = Common.findFiles(searchPath, ".xml");
+{II}for (String path : paths) {{
+{III}testRoundTrip(path);
+{II}}}
+}}  // public void test{cls_name_java}DeserializationOk"""
+        )
+    )
+
+    blocks.append(
+        Stripped(
+            f"""\
+@Test
+public void test{cls_name_java}DeserializationFail(){{
+        //todo implement
+}}  // public void test{cls_name_java}DeserializationFail"""
+        )
+    )
+
+    blocks.append(
+        Stripped(
+            f"""\
+@Test
+public void test{cls_name_java}VerificationFail() throws IOException, XMLStreamException {{
+{I}for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {{
+{II}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
+{III}"Xml",
+{III}"ContainedInEnvironment",
+{III}"Unexpected",
+{III}cause,
+{III}{java_common.string_literal(cls_name_xml)});
+{II}if (!Files.exists(searchPath)) {{
+{II}// No examples of Environment for the failure cause.
+{III}continue;
+{II}}}
+{II}final List<String> paths = Common.findFiles(searchPath, ".xml");
 {II}for (String path : paths) {{
 {III}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 {III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
-{III}final {container_cls_java} instance = Xmlization.Deserialize.deserialize{container_cls_java}(xmlReader);
+{III}final Environment instance = Xmlization.Deserialize.deserializeEnvironment(xmlReader);
 {III}final Iterable<Reporting.Error> errors = Verification.verify(instance);
-{III}final List<Reporting.Error> errorList = TestUtil.asList(errors);
-{III}TestUtil.assertNoVerificationErrors(errorList, path);
-{III}assertSerializeDeserializeEqualsOriginal(instance, path);
+{III}final List<Reporting.Error> errorList = Common.asList(errors);
+{III}Common.assertEqualsExpectedOrRerecordVerificationErrors(errorList,path);
 {II}}}
-}}  // public void test{cls_name_java}DeserializationOk"""
+{I}}}
+}}  // public void test{cls_name_java}VerificationFail"""
         )
     )
     return blocks
@@ -274,7 +344,8 @@ def main() -> int:
         _generate_assert_serialize_deserialize_equals_original(),
         _generate_build_elements_map(),
         _generate_read_content(),
-        _generate_check_elements_equal()
+        _generate_check_elements_equal(),
+        _generate_test_round_trip()
     ]  # type: List[str]
 
     xml_namespace_literal = java_common.string_literal(
