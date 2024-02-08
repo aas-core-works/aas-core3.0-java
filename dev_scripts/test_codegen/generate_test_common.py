@@ -69,13 +69,13 @@ public static void assertEqualsExpectedOrRerecordVerificationErrors(List<Reporti
 {I}if (errors.isEmpty()) {{
 {II}fail("Expected at least one verification error when verifying " + path + ", but got none");
 {I}}}
-{I}final String got = String.join("\\n", errors.stream().map(error -> Reporting.generateRelativeXPath(error.getPathSegments()) + ": " + error.getCause()).collect(Collectors.toList()));
+{I}final String got = String.join("\\n", errors.stream().map(error -> Reporting.generateJsonPath(error.getPathSegments()) + ": " + error.getCause()).collect(Collectors.toList()));
 {I}final Path errorsPath = Paths.get(path + ".errors");
 {I}if (RECORD_MODE) {{
 {II}Files.write(errorsPath, got.getBytes(StandardCharsets.UTF_8));
 {I}}} else {{
 {I}if (!Files.exists(errorsPath)) {{
-{II}throw new FileNotFoundException("The file with the recorded errors does not exist: {{errorsPath}}");
+{II}throw new FileNotFoundException("The file with the recorded errors does not exist: " + errorsPath);
 {I}}}
 {I}final String expected = Files.readAllLines(errorsPath).stream().collect(Collectors.joining("\\n"));
 {I}assertEquals(expected,got,"The expected verification errors do not match the actual ones for the file " + path);
