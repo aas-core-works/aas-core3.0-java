@@ -83,6 +83,27 @@ public static void assertEqualsExpectedOrRerecordVerificationErrors(List<Reporti
 }}""")
 
 
+def _generate_assert_equals_expected_or_rerecord_deserialization_exception()-> Stripped:
+    return Stripped(f"""\
+public static void assertEqualsExpectedOrRerecordDeserializationException(Xmlization.DeserializeException exception, String path) throws IOException {{
+{I}if (exception == null) {{
+{II}fail("Expected a Xmlization exception when de-serializing " + path + ", but got none.");
+{I}}} else {{
+{I}final Path exceptionPath = Paths.get(path + ".exception");
+{I}final String got = exception.getMessage();
+{I}if (RECORD_MODE) {{
+{II}Files.write(exceptionPath, got.getBytes(StandardCharsets.UTF_8));
+{I}}} else{{
+{I}if (!Files.exists(exceptionPath)) {{
+{II}throw new FileNotFoundException("The file with the recorded errors does not exist: " + exceptionPath);
+{I}}}
+{I}final String expected = Files.readAllLines(exceptionPath).stream().collect(Collectors.joining("\\n"));
+{I}assertEquals(expected, got, "The expected exception does not match the actual one for the file " + path);
+{I}}}
+{I}}}
+}}""")
+
+
 def main() -> int:
     """Execute the main routine."""
     this_path = pathlib.Path(os.path.realpath(__file__))
@@ -91,7 +112,8 @@ def main() -> int:
         _generate_find_files(),
         _generate_assert_no_verification_errors(),
         _generate_as_list(),
-        _generate_assert_equals_expected_or_rerecord_verification_errors()
+        _generate_assert_equals_expected_or_rerecord_verification_errors(),
+        _generate_assert_equals_expected_or_rerecord_deserialization_exception()
     ]  # type: List[str]
 
     writer = io.StringIO()
@@ -103,6 +125,7 @@ def main() -> int:
  */
 
 import aas_core.aas3_0.reporting.Reporting;
+import aas_core.aas3_0.xmlization.Xmlization;
 import javax.annotation.Generated;
 import java.io.FileNotFoundException;
 import java.io.IOException;
