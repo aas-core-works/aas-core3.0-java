@@ -183,6 +183,20 @@ private static void testRoundTrip(String path) throws XMLStreamException, IOExce
 }}"""
     )
 
+def _generate_test_verification_fail() -> Stripped:
+    """Generate the method for testing the deserialize -> serialize round trip."""
+    return Stripped(
+        f"""\
+private static void testVerificationFail(String path) throws XMLStreamException, IOException {{
+{I}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+{I}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{I}final Environment instance = Xmlization.Deserialize.deserializeEnvironment(xmlReader);
+{I}final Iterable<Reporting.Error> errors = Verification.verify(instance);
+{I}final List<Reporting.Error> errorList = Common.asList(errors);
+{I}Common.assertEqualsExpectedOrRerecordVerificationErrors(errorList, path);
+}}"""
+    )
+
 def _generate_for_self_contained(
         cls_name_java: str,
         cls_name_xml: str,
@@ -316,12 +330,7 @@ public void test{cls_name_java}VerificationFail() throws IOException, XMLStreamE
 {II}}}
 {II}final List<String> paths = Common.findFiles(searchPath, ".xml");
 {II}for (String path : paths) {{
-{III}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-{III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
-{III}final Environment instance = Xmlization.Deserialize.deserializeEnvironment(xmlReader);
-{III}final Iterable<Reporting.Error> errors = Verification.verify(instance);
-{III}final List<Reporting.Error> errorList = Common.asList(errors);
-{III}Common.assertEqualsExpectedOrRerecordVerificationErrors(errorList,path);
+{III}testVerificationFail(path);
 {II}}}
 {I}}}
 }}  // public void test{cls_name_java}VerificationFail"""
@@ -345,7 +354,8 @@ def main() -> int:
         _generate_build_elements_map(),
         _generate_read_content(),
         _generate_check_elements_equal(),
-        _generate_test_round_trip()
+        _generate_test_round_trip(),
+        _generate_test_verification_fail()
     ]  # type: List[str]
 
     xml_namespace_literal = java_common.string_literal(
