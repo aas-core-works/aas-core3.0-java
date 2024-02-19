@@ -69,7 +69,7 @@ public static void assertEqualsExpectedOrRerecordVerificationErrors(List<Reporti
 {I}if (errors.isEmpty()) {{
 {II}fail("Expected at least one verification error when verifying " + path + ", but got none");
 {I}}}
-{I}final String got = String.join("\\n", errors.stream().map(error -> Reporting.generateJsonPath(error.getPathSegments()) + ": " + error.getCause()).collect(Collectors.toList()));
+{I}final String got = String.join(";\\n", errors.stream().map(error -> Reporting.generateJsonPath(error.getPathSegments()) + ": " + error.getCause()).collect(Collectors.toList()));
 {I}final Path errorsPath = Paths.get(path + ".errors");
 {I}if (RECORD_MODE) {{
 {II}Files.write(errorsPath, got.getBytes(StandardCharsets.UTF_8));
