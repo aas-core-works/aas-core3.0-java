@@ -119,7 +119,9 @@ public class SpecificAssetId implements ISpecificAssetId {
 
   @Override
   public void setName(String name) {
-    this.name = name;
+    this.name = Objects.requireNonNull(
+      name,
+      "Argument \"name\" must be non-null.");
   }
 
   @Override
@@ -129,7 +131,9 @@ public class SpecificAssetId implements ISpecificAssetId {
 
   @Override
   public void setValue(String value) {
-    this.value = value;
+    this.value = Objects.requireNonNull(
+      value,
+      "Argument \"value\" must be non-null.");
   }
 
   @Override

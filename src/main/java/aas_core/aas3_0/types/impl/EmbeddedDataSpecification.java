@@ -60,7 +60,9 @@ public class EmbeddedDataSpecification implements IEmbeddedDataSpecification {
 
   @Override
   public void setDataSpecification(IReference dataSpecification) {
-    this.dataSpecification = dataSpecification;
+    this.dataSpecification = Objects.requireNonNull(
+      dataSpecification,
+      "Argument \"dataSpecification\" must be non-null.");
   }
 
   @Override
@@ -70,7 +72,9 @@ public class EmbeddedDataSpecification implements IEmbeddedDataSpecification {
 
   @Override
   public void setDataSpecificationContent(IDataSpecificationContent dataSpecificationContent) {
-    this.dataSpecificationContent = dataSpecificationContent;
+    this.dataSpecificationContent = Objects.requireNonNull(
+      dataSpecificationContent,
+      "Argument \"dataSpecificationContent\" must be non-null.");
   }
 
   /**

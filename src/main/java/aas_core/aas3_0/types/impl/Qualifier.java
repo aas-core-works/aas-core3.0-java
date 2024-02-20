@@ -150,7 +150,9 @@ public class Qualifier implements IQualifier {
 
   @Override
   public void setType(String type) {
-    this.type = type;
+    this.type = Objects.requireNonNull(
+      type,
+      "Argument \"type\" must be non-null.");
   }
 
   @Override
@@ -160,7 +162,9 @@ public class Qualifier implements IQualifier {
 
   @Override
   public void setValueType(DataTypeDefXsd valueType) {
-    this.valueType = valueType;
+    this.valueType = Objects.requireNonNull(
+      valueType,
+      "Argument \"valueType\" must be non-null.");
   }
 
   @Override

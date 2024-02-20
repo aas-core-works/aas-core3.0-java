@@ -31,6 +31,9 @@ import java.util.Optional;
  *   If a first level child element in a {@link SubmodelElementList} does not
  *   specify a {@link IHasSemantics#getSemanticId semanticId} then the value is assumed to be
  *   identical to {@link SubmodelElementList#getSemanticIdListElement semanticIdListElement}.
+ *   <li> Constraint AASd-120:
+ *   The {@link SubmodelElementList#getIdShort idShort} of a {@link ISubmodelElement} being a direct child of a
+ *   {@link SubmodelElementList} shall not be specified.
  *   <li> Constraint AASd-108:
  *   All first level child elements in a {@link SubmodelElementList} shall have
  *   the same submodel element type as specified in {@link SubmodelElementList#getTypeValueListElement typeValueListElement}.

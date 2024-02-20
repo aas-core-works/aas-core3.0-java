@@ -216,7 +216,9 @@ public class AssetAdministrationShell implements IAssetAdministrationShell {
 
   @Override
   public void setId(String id) {
-    this.id = id;
+    this.id = Objects.requireNonNull(
+      id,
+      "Argument \"id\" must be non-null.");
   }
 
   @Override
@@ -246,7 +248,9 @@ public class AssetAdministrationShell implements IAssetAdministrationShell {
 
   @Override
   public void setAssetInformation(IAssetInformation assetInformation) {
-    this.assetInformation = assetInformation;
+    this.assetInformation = Objects.requireNonNull(
+      assetInformation,
+      "Argument \"assetInformation\" must be non-null.");
   }
 
   @Override

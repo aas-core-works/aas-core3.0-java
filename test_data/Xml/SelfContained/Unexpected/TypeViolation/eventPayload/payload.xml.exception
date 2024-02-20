@@ -1,1 +1,1 @@
-Expected an XML end element to conclude a property of class EventPayload with the element name payload, but got the node of type Element with the value  at: the beginning
+The property payload of an instance of class EventPayload  could not be de-serialized: Failed to read base64 encoded data: Illegal base64 character a at: payload

@@ -183,7 +183,9 @@ public class DataSpecificationIec61360 implements IDataSpecificationIec61360 {
 
   @Override
   public void setPreferredName(List<ILangStringPreferredNameTypeIec61360> preferredName) {
-    this.preferredName = preferredName;
+    this.preferredName = Objects.requireNonNull(
+      preferredName,
+      "Argument \"preferredName\" must be non-null.");
   }
 
   @Override

@@ -102,7 +102,9 @@ public class LevelType implements ILevelType {
 
   @Override
   public void setMin(Boolean min) {
-    this.min = min;
+    this.min = Objects.requireNonNull(
+      min,
+      "Argument \"min\" must be non-null.");
   }
 
   @Override
@@ -112,7 +114,9 @@ public class LevelType implements ILevelType {
 
   @Override
   public void setNom(Boolean nom) {
-    this.nom = nom;
+    this.nom = Objects.requireNonNull(
+      nom,
+      "Argument \"nom\" must be non-null.");
   }
 
   @Override
@@ -122,7 +126,9 @@ public class LevelType implements ILevelType {
 
   @Override
   public void setTyp(Boolean typ) {
-    this.typ = typ;
+    this.typ = Objects.requireNonNull(
+      typ,
+      "Argument \"typ\" must be non-null.");
   }
 
   @Override
@@ -132,7 +138,9 @@ public class LevelType implements ILevelType {
 
   @Override
   public void setMax(Boolean max) {
-    this.max = max;
+    this.max = Objects.requireNonNull(
+      max,
+      "Argument \"max\" must be non-null.");
   }
 
   /**

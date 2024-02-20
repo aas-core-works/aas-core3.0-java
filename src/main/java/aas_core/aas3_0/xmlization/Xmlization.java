@@ -31,6 +31,7 @@ public class Xmlization {
   /**
    * Represent a critical error during the deserialization.
    */
+  @SuppressWarnings("serial")
   public static class DeserializeException extends RuntimeException {
     private final String path;
     private final String reason;
@@ -53,6 +54,7 @@ public class Xmlization {
   /**
    * Represent a critical error during the serialization.
    */
+  @SuppressWarnings("serial")
   public static class SerializeException extends RuntimeException {
     private final String path;
     private final String reason;
@@ -99,6 +101,7 @@ public class Xmlization {
       return new Result<>(null, error, false);
     }
 
+    @SuppressWarnings("unchecked")
     public <I> Result<I> castTo(Class<I> type){
       if(isError() || type.isInstance(result)) return (Result<I>) this;
       throw new IllegalStateException("Result of type " + result.getClass().getName() + " is not an instance of " + type.getName());
@@ -259,6 +262,12 @@ public class Xmlization {
       return isComment || isWhiteSpace;
     }
 
+    private static void skipStartDocument(XMLEventReader reader){
+      if (currentEvent(reader).isStartDocument()){
+        reader.next();
+      }
+    }
+
     private static boolean invalidNameSpace(XMLEvent event) {
       if (event.isStartElement()) {
         return !AAS_NAME_SPACE.equals(event.asStartElement().getName().getNamespaceURI());
@@ -314,7 +323,9 @@ public class Xmlization {
         }
         reader.nextEvent();
       }
-
+      if(!("true".equals(content.toString()) || "false".equals(content.toString()))){
+        throw new IllegalStateException("Content cannot be converted to the type Boolean.");
+      }
       return Boolean.valueOf(content.toString());
     }
 
@@ -390,7 +401,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class IHasSemantics, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -483,7 +494,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class Extension, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -528,7 +539,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(Extension.class);
                   }
 
@@ -555,7 +566,7 @@ public class Xmlization {
 
                 try {
                   theName = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property name of an instance of class Extension "
                       + " could not be de-serialized: " + e.getMessage());
@@ -571,7 +582,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property valueType of an instance of class DataTypeDefXsd " +
+                  "The property valueType of an instance of class Extension " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -583,7 +594,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property valueType of an instance of class DataTypeDefXsd, "
+                        + "the property valueType of an instance of class Extension, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -591,9 +602,9 @@ public class Xmlization {
               String textValueType;
               try {
                 textValueType = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property valueType of an instance of class DataTypeDefXsd "
+                    "The property valueType of an instance of class Extension"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -609,9 +620,9 @@ public class Xmlization {
                 theValueType = optionalValueType.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property valueType of an instance of class DataTypeDefXsd " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theValueType);
+                    "The property valueType of an instance of class Extension" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textValueType);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "valueType"));
@@ -635,7 +646,7 @@ public class Xmlization {
 
                 try {
                   theValue = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property value of an instance of class Extension "
                       + " could not be de-serialized: " + e.getMessage());
@@ -663,7 +674,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theRefersTo"));
+                        new Reporting.NameSegment("refersTo"));
                     return itemResult.castTo(Extension.class);
                   }
 
@@ -729,7 +740,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class Extension, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -751,6 +762,7 @@ public class Xmlization {
       Result<Extension> result = tryExtensionFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(Extension.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -781,7 +793,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class IHasExtensions, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -852,7 +864,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class IReferable, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -923,7 +935,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class IIdentifiable, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -966,7 +978,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class IHasKind, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -1005,7 +1017,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class IHasDataSpecification, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -1097,7 +1109,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class AdministrativeInformation, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -1126,7 +1138,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(AdministrativeInformation.class);
                   }
 
@@ -1153,7 +1165,7 @@ public class Xmlization {
 
                 try {
                   theVersion = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property version of an instance of class AdministrativeInformation "
                       + " could not be de-serialized: " + e.getMessage());
@@ -1181,7 +1193,7 @@ public class Xmlization {
 
                 try {
                   theRevision = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property revision of an instance of class AdministrativeInformation "
                       + " could not be de-serialized: " + e.getMessage());
@@ -1225,7 +1237,7 @@ public class Xmlization {
 
                 try {
                   theTemplateId = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property templateId of an instance of class AdministrativeInformation "
                       + " could not be de-serialized: " + e.getMessage());
@@ -1284,7 +1296,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class AdministrativeInformation, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -1306,6 +1318,7 @@ public class Xmlization {
       Result<AdministrativeInformation> result = tryAdministrativeInformationFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(AdministrativeInformation.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -1336,7 +1349,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class IQualifiable, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -1424,7 +1437,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class Qualifier, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -1469,7 +1482,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(Qualifier.class);
                   }
 
@@ -1484,7 +1497,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property kind of an instance of class QualifierKind " +
+                  "The property kind of an instance of class Qualifier " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -1496,7 +1509,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property kind of an instance of class QualifierKind, "
+                        + "the property kind of an instance of class Qualifier, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -1504,9 +1517,9 @@ public class Xmlization {
               String textKind;
               try {
                 textKind = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property kind of an instance of class QualifierKind "
+                    "The property kind of an instance of class Qualifier"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -1522,9 +1535,9 @@ public class Xmlization {
                 theKind = optionalKind.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property kind of an instance of class QualifierKind " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theKind);
+                    "The property kind of an instance of class Qualifier" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textKind);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "kind"));
@@ -1548,7 +1561,7 @@ public class Xmlization {
 
                 try {
                   theType = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property type of an instance of class Qualifier "
                       + " could not be de-serialized: " + e.getMessage());
@@ -1564,7 +1577,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property valueType of an instance of class DataTypeDefXsd " +
+                  "The property valueType of an instance of class Qualifier " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -1576,7 +1589,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property valueType of an instance of class DataTypeDefXsd, "
+                        + "the property valueType of an instance of class Qualifier, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -1584,9 +1597,9 @@ public class Xmlization {
               String textValueType;
               try {
                 textValueType = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property valueType of an instance of class DataTypeDefXsd "
+                    "The property valueType of an instance of class Qualifier"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -1602,9 +1615,9 @@ public class Xmlization {
                 theValueType = optionalValueType.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property valueType of an instance of class DataTypeDefXsd " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theValueType);
+                    "The property valueType of an instance of class Qualifier" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textValueType);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "valueType"));
@@ -1628,7 +1641,7 @@ public class Xmlization {
 
                 try {
                   theValue = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property value of an instance of class Qualifier "
                       + " could not be de-serialized: " + e.getMessage());
@@ -1719,7 +1732,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class Qualifier, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -1741,6 +1754,7 @@ public class Xmlization {
       Result<Qualifier> result = tryQualifierFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(Qualifier.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -1796,7 +1810,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class AssetAdministrationShell, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -1825,7 +1839,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(AssetAdministrationShell.class);
                   }
 
@@ -1852,7 +1866,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class AssetAdministrationShell "
                       + " could not be de-serialized: " + e.getMessage());
@@ -1880,7 +1894,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class AssetAdministrationShell "
                       + " could not be de-serialized: " + e.getMessage());
@@ -1908,7 +1922,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(AssetAdministrationShell.class);
                   }
 
@@ -1935,7 +1949,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(AssetAdministrationShell.class);
                   }
 
@@ -1978,7 +1992,7 @@ public class Xmlization {
 
                 try {
                   theId = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property id of an instance of class AssetAdministrationShell "
                       + " could not be de-serialized: " + e.getMessage());
@@ -2006,7 +2020,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(AssetAdministrationShell.class);
                   }
 
@@ -2065,7 +2079,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSubmodels"));
+                        new Reporting.NameSegment("submodels"));
                     return itemResult.castTo(AssetAdministrationShell.class);
                   }
 
@@ -2143,7 +2157,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class AssetAdministrationShell, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -2165,6 +2179,7 @@ public class Xmlization {
       Result<AssetAdministrationShell> result = tryAssetAdministrationShellFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(AssetAdministrationShell.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -2214,7 +2229,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class AssetInformation, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -2231,7 +2246,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property assetKind of an instance of class AssetKind " +
+                  "The property assetKind of an instance of class AssetInformation " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -2243,7 +2258,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property assetKind of an instance of class AssetKind, "
+                        + "the property assetKind of an instance of class AssetInformation, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -2251,9 +2266,9 @@ public class Xmlization {
               String textAssetKind;
               try {
                 textAssetKind = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property assetKind of an instance of class AssetKind "
+                    "The property assetKind of an instance of class AssetInformation"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -2269,9 +2284,9 @@ public class Xmlization {
                 theAssetKind = optionalAssetKind.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property assetKind of an instance of class AssetKind " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theAssetKind);
+                    "The property assetKind of an instance of class AssetInformation" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textAssetKind);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "assetKind"));
@@ -2295,7 +2310,7 @@ public class Xmlization {
 
                 try {
                   theGlobalAssetId = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property globalAssetId of an instance of class AssetInformation "
                       + " could not be de-serialized: " + e.getMessage());
@@ -2323,7 +2338,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSpecificAssetIds"));
+                        new Reporting.NameSegment("specificAssetIds"));
                     return itemResult.castTo(AssetInformation.class);
                   }
 
@@ -2350,7 +2365,7 @@ public class Xmlization {
 
                 try {
                   theAssetType = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property assetType of an instance of class AssetInformation "
                       + " could not be de-serialized: " + e.getMessage());
@@ -2432,7 +2447,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class AssetInformation, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -2454,6 +2469,7 @@ public class Xmlization {
       Result<AssetInformation> result = tryAssetInformationFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(AssetInformation.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -2500,7 +2516,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class Resource, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -2529,7 +2545,7 @@ public class Xmlization {
 
                 try {
                   thePath = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property path of an instance of class Resource "
                       + " could not be de-serialized: " + e.getMessage());
@@ -2557,7 +2573,7 @@ public class Xmlization {
 
                 try {
                   theContentType = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property contentType of an instance of class Resource "
                       + " could not be de-serialized: " + e.getMessage());
@@ -2620,7 +2636,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class Resource, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -2642,6 +2658,7 @@ public class Xmlization {
       Result<Resource> result = tryResourceFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(Resource.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -2691,7 +2708,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class SpecificAssetId, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -2736,7 +2753,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(SpecificAssetId.class);
                   }
 
@@ -2763,7 +2780,7 @@ public class Xmlization {
 
                 try {
                   theName = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property name of an instance of class SpecificAssetId "
                       + " could not be de-serialized: " + e.getMessage());
@@ -2791,7 +2808,7 @@ public class Xmlization {
 
                 try {
                   theValue = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property value of an instance of class SpecificAssetId "
                       + " could not be de-serialized: " + e.getMessage());
@@ -2880,7 +2897,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class SpecificAssetId, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -2902,6 +2919,7 @@ public class Xmlization {
       Result<SpecificAssetId> result = trySpecificAssetIdFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(SpecificAssetId.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -2959,7 +2977,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class Submodel, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -2988,7 +3006,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(Submodel.class);
                   }
 
@@ -3015,7 +3033,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class Submodel "
                       + " could not be de-serialized: " + e.getMessage());
@@ -3043,7 +3061,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class Submodel "
                       + " could not be de-serialized: " + e.getMessage());
@@ -3071,7 +3089,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(Submodel.class);
                   }
 
@@ -3098,7 +3116,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(Submodel.class);
                   }
 
@@ -3141,7 +3159,7 @@ public class Xmlization {
 
                 try {
                   theId = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property id of an instance of class Submodel "
                       + " could not be de-serialized: " + e.getMessage());
@@ -3157,7 +3175,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property kind of an instance of class ModellingKind " +
+                  "The property kind of an instance of class Submodel " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -3169,7 +3187,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property kind of an instance of class ModellingKind, "
+                        + "the property kind of an instance of class Submodel, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -3177,9 +3195,9 @@ public class Xmlization {
               String textKind;
               try {
                 textKind = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property kind of an instance of class ModellingKind "
+                    "The property kind of an instance of class Submodel"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -3195,9 +3213,9 @@ public class Xmlization {
                 theKind = optionalKind.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property kind of an instance of class ModellingKind " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theKind);
+                    "The property kind of an instance of class Submodel" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textKind);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "kind"));
@@ -3237,7 +3255,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(Submodel.class);
                   }
 
@@ -3264,7 +3282,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(Submodel.class);
                   }
 
@@ -3291,7 +3309,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(Submodel.class);
                   }
 
@@ -3318,7 +3336,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSubmodelElements"));
+                        new Reporting.NameSegment("submodelElements"));
                     return itemResult.castTo(Submodel.class);
                   }
 
@@ -3391,7 +3409,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class Submodel, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -3413,6 +3431,7 @@ public class Xmlization {
       Result<Submodel> result = trySubmodelFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(Submodel.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -3443,7 +3462,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class ISubmodelElement, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -3533,7 +3552,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class RelationshipElement, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -3562,7 +3581,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(RelationshipElement.class);
                   }
 
@@ -3589,7 +3608,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class RelationshipElement "
                       + " could not be de-serialized: " + e.getMessage());
@@ -3617,7 +3636,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class RelationshipElement "
                       + " could not be de-serialized: " + e.getMessage());
@@ -3645,7 +3664,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(RelationshipElement.class);
                   }
 
@@ -3672,7 +3691,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(RelationshipElement.class);
                   }
 
@@ -3715,7 +3734,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(RelationshipElement.class);
                   }
 
@@ -3742,7 +3761,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(RelationshipElement.class);
                   }
 
@@ -3769,7 +3788,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(RelationshipElement.class);
                   }
 
@@ -3878,7 +3897,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class IRelationshipElement, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -3920,7 +3939,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class RelationshipElement, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -3942,6 +3961,7 @@ public class Xmlization {
       Result<RelationshipElement> result = tryRelationshipElementFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(RelationshipElement.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -4000,7 +4020,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class SubmodelElementList, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -4029,7 +4049,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(SubmodelElementList.class);
                   }
 
@@ -4056,7 +4076,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class SubmodelElementList "
                       + " could not be de-serialized: " + e.getMessage());
@@ -4084,7 +4104,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class SubmodelElementList "
                       + " could not be de-serialized: " + e.getMessage());
@@ -4112,7 +4132,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(SubmodelElementList.class);
                   }
 
@@ -4139,7 +4159,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(SubmodelElementList.class);
                   }
 
@@ -4182,7 +4202,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(SubmodelElementList.class);
                   }
 
@@ -4209,7 +4229,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(SubmodelElementList.class);
                   }
 
@@ -4236,7 +4256,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(SubmodelElementList.class);
                   }
 
@@ -4270,7 +4290,7 @@ public class Xmlization {
 
                 try {
                   theOrderRelevant = readContentAsBool(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property orderRelevant of an instance of class SubmodelElementList "
                       + " could not be de-serialized: " + e.getMessage());
@@ -4302,7 +4322,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property typeValueListElement of an instance of class AasSubmodelElements " +
+                  "The property typeValueListElement of an instance of class SubmodelElementList " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -4314,7 +4334,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property typeValueListElement of an instance of class AasSubmodelElements, "
+                        + "the property typeValueListElement of an instance of class SubmodelElementList, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -4322,9 +4342,9 @@ public class Xmlization {
               String textTypeValueListElement;
               try {
                 textTypeValueListElement = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property typeValueListElement of an instance of class AasSubmodelElements "
+                    "The property typeValueListElement of an instance of class SubmodelElementList"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -4340,9 +4360,9 @@ public class Xmlization {
                 theTypeValueListElement = optionalTypeValueListElement.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property typeValueListElement of an instance of class AasSubmodelElements " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theTypeValueListElement);
+                    "The property typeValueListElement of an instance of class SubmodelElementList" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textTypeValueListElement);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "typeValueListElement"));
@@ -4354,7 +4374,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property valueTypeListElement of an instance of class DataTypeDefXsd " +
+                  "The property valueTypeListElement of an instance of class SubmodelElementList " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -4366,7 +4386,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property valueTypeListElement of an instance of class DataTypeDefXsd, "
+                        + "the property valueTypeListElement of an instance of class SubmodelElementList, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -4374,9 +4394,9 @@ public class Xmlization {
               String textValueTypeListElement;
               try {
                 textValueTypeListElement = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property valueTypeListElement of an instance of class DataTypeDefXsd "
+                    "The property valueTypeListElement of an instance of class SubmodelElementList"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -4392,9 +4412,9 @@ public class Xmlization {
                 theValueTypeListElement = optionalValueTypeListElement.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property valueTypeListElement of an instance of class DataTypeDefXsd " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theValueTypeListElement);
+                    "The property valueTypeListElement of an instance of class SubmodelElementList" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textValueTypeListElement);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "valueTypeListElement"));
@@ -4418,7 +4438,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theValue"));
+                        new Reporting.NameSegment("value"));
                     return itemResult.castTo(SubmodelElementList.class);
                   }
 
@@ -4492,7 +4512,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class SubmodelElementList, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -4514,6 +4534,7 @@ public class Xmlization {
       Result<SubmodelElementList> result = trySubmodelElementListFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(SubmodelElementList.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -4568,7 +4589,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class SubmodelElementCollection, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -4597,7 +4618,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(SubmodelElementCollection.class);
                   }
 
@@ -4624,7 +4645,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class SubmodelElementCollection "
                       + " could not be de-serialized: " + e.getMessage());
@@ -4652,7 +4673,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class SubmodelElementCollection "
                       + " could not be de-serialized: " + e.getMessage());
@@ -4680,7 +4701,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(SubmodelElementCollection.class);
                   }
 
@@ -4707,7 +4728,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(SubmodelElementCollection.class);
                   }
 
@@ -4750,7 +4771,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(SubmodelElementCollection.class);
                   }
 
@@ -4777,7 +4798,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(SubmodelElementCollection.class);
                   }
 
@@ -4804,7 +4825,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(SubmodelElementCollection.class);
                   }
 
@@ -4831,7 +4852,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theValue"));
+                        new Reporting.NameSegment("value"));
                     return itemResult.castTo(SubmodelElementCollection.class);
                   }
 
@@ -4894,7 +4915,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class SubmodelElementCollection, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -4916,6 +4937,7 @@ public class Xmlization {
       Result<SubmodelElementCollection> result = trySubmodelElementCollectionFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(SubmodelElementCollection.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -4946,7 +4968,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class IDataElement, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -5021,7 +5043,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class Property, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -5050,7 +5072,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(Property.class);
                   }
 
@@ -5077,7 +5099,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class Property "
                       + " could not be de-serialized: " + e.getMessage());
@@ -5105,7 +5127,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class Property "
                       + " could not be de-serialized: " + e.getMessage());
@@ -5133,7 +5155,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(Property.class);
                   }
 
@@ -5160,7 +5182,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(Property.class);
                   }
 
@@ -5203,7 +5225,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(Property.class);
                   }
 
@@ -5230,7 +5252,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(Property.class);
                   }
 
@@ -5257,7 +5279,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(Property.class);
                   }
 
@@ -5272,7 +5294,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property valueType of an instance of class DataTypeDefXsd " +
+                  "The property valueType of an instance of class Property " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -5284,7 +5306,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property valueType of an instance of class DataTypeDefXsd, "
+                        + "the property valueType of an instance of class Property, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -5292,9 +5314,9 @@ public class Xmlization {
               String textValueType;
               try {
                 textValueType = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property valueType of an instance of class DataTypeDefXsd "
+                    "The property valueType of an instance of class Property"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -5310,9 +5332,9 @@ public class Xmlization {
                 theValueType = optionalValueType.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property valueType of an instance of class DataTypeDefXsd " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theValueType);
+                    "The property valueType of an instance of class Property" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textValueType);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "valueType"));
@@ -5336,7 +5358,7 @@ public class Xmlization {
 
                 try {
                   theValue = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property value of an instance of class Property "
                       + " could not be de-serialized: " + e.getMessage());
@@ -5425,7 +5447,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class Property, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -5447,6 +5469,7 @@ public class Xmlization {
       Result<Property> result = tryPropertyFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(Property.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -5502,7 +5525,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class MultiLanguageProperty, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -5531,7 +5554,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(MultiLanguageProperty.class);
                   }
 
@@ -5558,7 +5581,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class MultiLanguageProperty "
                       + " could not be de-serialized: " + e.getMessage());
@@ -5586,7 +5609,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class MultiLanguageProperty "
                       + " could not be de-serialized: " + e.getMessage());
@@ -5614,7 +5637,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(MultiLanguageProperty.class);
                   }
 
@@ -5641,7 +5664,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(MultiLanguageProperty.class);
                   }
 
@@ -5684,7 +5707,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(MultiLanguageProperty.class);
                   }
 
@@ -5711,7 +5734,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(MultiLanguageProperty.class);
                   }
 
@@ -5738,7 +5761,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(MultiLanguageProperty.class);
                   }
 
@@ -5765,7 +5788,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theValue"));
+                        new Reporting.NameSegment("value"));
                     return itemResult.castTo(MultiLanguageProperty.class);
                   }
 
@@ -5845,7 +5868,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class MultiLanguageProperty, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -5867,6 +5890,7 @@ public class Xmlization {
       Result<MultiLanguageProperty> result = tryMultiLanguagePropertyFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(MultiLanguageProperty.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -5923,7 +5947,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class Range, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -5952,7 +5976,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(Range.class);
                   }
 
@@ -5979,7 +6003,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class Range "
                       + " could not be de-serialized: " + e.getMessage());
@@ -6007,7 +6031,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class Range "
                       + " could not be de-serialized: " + e.getMessage());
@@ -6035,7 +6059,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(Range.class);
                   }
 
@@ -6062,7 +6086,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(Range.class);
                   }
 
@@ -6105,7 +6129,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(Range.class);
                   }
 
@@ -6132,7 +6156,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(Range.class);
                   }
 
@@ -6159,7 +6183,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(Range.class);
                   }
 
@@ -6174,7 +6198,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property valueType of an instance of class DataTypeDefXsd " +
+                  "The property valueType of an instance of class Range " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -6186,7 +6210,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property valueType of an instance of class DataTypeDefXsd, "
+                        + "the property valueType of an instance of class Range, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -6194,9 +6218,9 @@ public class Xmlization {
               String textValueType;
               try {
                 textValueType = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property valueType of an instance of class DataTypeDefXsd "
+                    "The property valueType of an instance of class Range"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -6212,9 +6236,9 @@ public class Xmlization {
                 theValueType = optionalValueType.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property valueType of an instance of class DataTypeDefXsd " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theValueType);
+                    "The property valueType of an instance of class Range" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textValueType);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "valueType"));
@@ -6238,7 +6262,7 @@ public class Xmlization {
 
                 try {
                   theMin = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property min of an instance of class Range "
                       + " could not be de-serialized: " + e.getMessage());
@@ -6266,7 +6290,7 @@ public class Xmlization {
 
                 try {
                   theMax = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property max of an instance of class Range "
                       + " could not be de-serialized: " + e.getMessage());
@@ -6339,7 +6363,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class Range, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -6361,6 +6385,7 @@ public class Xmlization {
       Result<Range> result = tryRangeFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(Range.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -6415,7 +6440,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class ReferenceElement, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -6444,7 +6469,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(ReferenceElement.class);
                   }
 
@@ -6471,7 +6496,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class ReferenceElement "
                       + " could not be de-serialized: " + e.getMessage());
@@ -6499,7 +6524,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class ReferenceElement "
                       + " could not be de-serialized: " + e.getMessage());
@@ -6527,7 +6552,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(ReferenceElement.class);
                   }
 
@@ -6554,7 +6579,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(ReferenceElement.class);
                   }
 
@@ -6597,7 +6622,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(ReferenceElement.class);
                   }
 
@@ -6624,7 +6649,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(ReferenceElement.class);
                   }
 
@@ -6651,7 +6676,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(ReferenceElement.class);
                   }
 
@@ -6730,7 +6755,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class ReferenceElement, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -6752,6 +6777,7 @@ public class Xmlization {
       Result<ReferenceElement> result = tryReferenceElementFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(ReferenceElement.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -6807,7 +6833,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class Blob, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -6836,7 +6862,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(Blob.class);
                   }
 
@@ -6863,7 +6889,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class Blob "
                       + " could not be de-serialized: " + e.getMessage());
@@ -6891,7 +6917,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class Blob "
                       + " could not be de-serialized: " + e.getMessage());
@@ -6919,7 +6945,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(Blob.class);
                   }
 
@@ -6946,7 +6972,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(Blob.class);
                   }
 
@@ -6989,7 +7015,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(Blob.class);
                   }
 
@@ -7016,7 +7042,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(Blob.class);
                   }
 
@@ -7043,7 +7069,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(Blob.class);
                   }
 
@@ -7077,7 +7103,7 @@ public class Xmlization {
 
                 try {
                   theValue = readContentAsBase64(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property value of an instance of class Blob "
                       + " could not be de-serialized: " + e.getMessage());
@@ -7105,7 +7131,7 @@ public class Xmlization {
 
                 try {
                   theContentType = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property contentType of an instance of class Blob "
                       + " could not be de-serialized: " + e.getMessage());
@@ -7177,7 +7203,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class Blob, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -7199,6 +7225,7 @@ public class Xmlization {
       Result<Blob> result = tryBlobFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(Blob.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -7254,7 +7281,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class File, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -7283,7 +7310,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(File.class);
                   }
 
@@ -7310,7 +7337,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class File "
                       + " could not be de-serialized: " + e.getMessage());
@@ -7338,7 +7365,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class File "
                       + " could not be de-serialized: " + e.getMessage());
@@ -7366,7 +7393,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(File.class);
                   }
 
@@ -7393,7 +7420,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(File.class);
                   }
 
@@ -7436,7 +7463,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(File.class);
                   }
 
@@ -7463,7 +7490,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(File.class);
                   }
 
@@ -7490,7 +7517,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(File.class);
                   }
 
@@ -7517,7 +7544,7 @@ public class Xmlization {
 
                 try {
                   theValue = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property value of an instance of class File "
                       + " could not be de-serialized: " + e.getMessage());
@@ -7545,7 +7572,7 @@ public class Xmlization {
 
                 try {
                   theContentType = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property contentType of an instance of class File "
                       + " could not be de-serialized: " + e.getMessage());
@@ -7617,7 +7644,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class File, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -7639,6 +7666,7 @@ public class Xmlization {
       Result<File> result = tryFileFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(File.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -7695,7 +7723,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class AnnotatedRelationshipElement, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -7724,7 +7752,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(AnnotatedRelationshipElement.class);
                   }
 
@@ -7751,7 +7779,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class AnnotatedRelationshipElement "
                       + " could not be de-serialized: " + e.getMessage());
@@ -7779,7 +7807,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class AnnotatedRelationshipElement "
                       + " could not be de-serialized: " + e.getMessage());
@@ -7807,7 +7835,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(AnnotatedRelationshipElement.class);
                   }
 
@@ -7834,7 +7862,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(AnnotatedRelationshipElement.class);
                   }
 
@@ -7877,7 +7905,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(AnnotatedRelationshipElement.class);
                   }
 
@@ -7904,7 +7932,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(AnnotatedRelationshipElement.class);
                   }
 
@@ -7931,7 +7959,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(AnnotatedRelationshipElement.class);
                   }
 
@@ -7990,7 +8018,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theAnnotations"));
+                        new Reporting.NameSegment("annotations"));
                     return itemResult.castTo(AnnotatedRelationshipElement.class);
                   }
 
@@ -8069,7 +8097,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class AnnotatedRelationshipElement, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -8091,6 +8119,7 @@ public class Xmlization {
       Result<AnnotatedRelationshipElement> result = tryAnnotatedRelationshipElementFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(AnnotatedRelationshipElement.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -8148,7 +8177,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class Entity, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -8177,7 +8206,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(Entity.class);
                   }
 
@@ -8204,7 +8233,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class Entity "
                       + " could not be de-serialized: " + e.getMessage());
@@ -8232,7 +8261,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class Entity "
                       + " could not be de-serialized: " + e.getMessage());
@@ -8260,7 +8289,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(Entity.class);
                   }
 
@@ -8287,7 +8316,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(Entity.class);
                   }
 
@@ -8330,7 +8359,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(Entity.class);
                   }
 
@@ -8357,7 +8386,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(Entity.class);
                   }
 
@@ -8384,7 +8413,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(Entity.class);
                   }
 
@@ -8411,7 +8440,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theStatements"));
+                        new Reporting.NameSegment("statements"));
                     return itemResult.castTo(Entity.class);
                   }
 
@@ -8426,7 +8455,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property entityType of an instance of class EntityType " +
+                  "The property entityType of an instance of class Entity " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -8438,7 +8467,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property entityType of an instance of class EntityType, "
+                        + "the property entityType of an instance of class Entity, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -8446,9 +8475,9 @@ public class Xmlization {
               String textEntityType;
               try {
                 textEntityType = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property entityType of an instance of class EntityType "
+                    "The property entityType of an instance of class Entity"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -8464,9 +8493,9 @@ public class Xmlization {
                 theEntityType = optionalEntityType.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property entityType of an instance of class EntityType " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theEntityType);
+                    "The property entityType of an instance of class Entity" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textEntityType);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "entityType"));
@@ -8490,7 +8519,7 @@ public class Xmlization {
 
                 try {
                   theGlobalAssetId = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property globalAssetId of an instance of class Entity "
                       + " could not be de-serialized: " + e.getMessage());
@@ -8518,7 +8547,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSpecificAssetIds"));
+                        new Reporting.NameSegment("specificAssetIds"));
                     return itemResult.castTo(Entity.class);
                   }
 
@@ -8591,7 +8620,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class Entity, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -8613,6 +8642,7 @@ public class Xmlization {
       Result<Entity> result = tryEntityFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(Entity.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -8665,7 +8695,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class EventPayload, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -8758,7 +8788,7 @@ public class Xmlization {
 
                 try {
                   theTopic = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property topic of an instance of class EventPayload "
                       + " could not be de-serialized: " + e.getMessage());
@@ -8802,7 +8832,7 @@ public class Xmlization {
 
                 try {
                   theTimeStamp = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property timeStamp of an instance of class EventPayload "
                       + " could not be de-serialized: " + e.getMessage());
@@ -8837,7 +8867,7 @@ public class Xmlization {
 
                 try {
                   thePayload = readContentAsBase64(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property payload of an instance of class EventPayload "
                       + " could not be de-serialized: " + e.getMessage());
@@ -8920,7 +8950,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class EventPayload, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -8942,6 +8972,7 @@ public class Xmlization {
       Result<EventPayload> result = tryEventPayloadFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(EventPayload.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -8972,7 +9003,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class IEventElement, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -9042,7 +9073,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class BasicEventElement, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -9071,7 +9102,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(BasicEventElement.class);
                   }
 
@@ -9098,7 +9129,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class BasicEventElement "
                       + " could not be de-serialized: " + e.getMessage());
@@ -9126,7 +9157,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class BasicEventElement "
                       + " could not be de-serialized: " + e.getMessage());
@@ -9154,7 +9185,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(BasicEventElement.class);
                   }
 
@@ -9181,7 +9212,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(BasicEventElement.class);
                   }
 
@@ -9224,7 +9255,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(BasicEventElement.class);
                   }
 
@@ -9251,7 +9282,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(BasicEventElement.class);
                   }
 
@@ -9278,7 +9309,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(BasicEventElement.class);
                   }
 
@@ -9309,7 +9340,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property direction of an instance of class Direction " +
+                  "The property direction of an instance of class BasicEventElement " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -9321,7 +9352,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property direction of an instance of class Direction, "
+                        + "the property direction of an instance of class BasicEventElement, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -9329,9 +9360,9 @@ public class Xmlization {
               String textDirection;
               try {
                 textDirection = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property direction of an instance of class Direction "
+                    "The property direction of an instance of class BasicEventElement"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -9347,9 +9378,9 @@ public class Xmlization {
                 theDirection = optionalDirection.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property direction of an instance of class Direction " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theDirection);
+                    "The property direction of an instance of class BasicEventElement" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textDirection);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "direction"));
@@ -9361,7 +9392,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property state of an instance of class StateOfEvent " +
+                  "The property state of an instance of class BasicEventElement " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -9373,7 +9404,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property state of an instance of class StateOfEvent, "
+                        + "the property state of an instance of class BasicEventElement, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -9381,9 +9412,9 @@ public class Xmlization {
               String textState;
               try {
                 textState = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property state of an instance of class StateOfEvent "
+                    "The property state of an instance of class BasicEventElement"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -9399,9 +9430,9 @@ public class Xmlization {
                 theState = optionalState.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property state of an instance of class StateOfEvent " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theState);
+                    "The property state of an instance of class BasicEventElement" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textState);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "state"));
@@ -9425,7 +9456,7 @@ public class Xmlization {
 
                 try {
                   theMessageTopic = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property messageTopic of an instance of class BasicEventElement "
                       + " could not be de-serialized: " + e.getMessage());
@@ -9469,7 +9500,7 @@ public class Xmlization {
 
                 try {
                   theLastUpdate = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property lastUpdate of an instance of class BasicEventElement "
                       + " could not be de-serialized: " + e.getMessage());
@@ -9497,7 +9528,7 @@ public class Xmlization {
 
                 try {
                   theMinInterval = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property minInterval of an instance of class BasicEventElement "
                       + " could not be de-serialized: " + e.getMessage());
@@ -9525,7 +9556,7 @@ public class Xmlization {
 
                 try {
                   theMaxInterval = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property maxInterval of an instance of class BasicEventElement "
                       + " could not be de-serialized: " + e.getMessage());
@@ -9617,7 +9648,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class BasicEventElement, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -9639,6 +9670,7 @@ public class Xmlization {
       Result<BasicEventElement> result = tryBasicEventElementFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(BasicEventElement.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -9695,7 +9727,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class Operation, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -9724,7 +9756,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(Operation.class);
                   }
 
@@ -9751,7 +9783,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class Operation "
                       + " could not be de-serialized: " + e.getMessage());
@@ -9779,7 +9811,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class Operation "
                       + " could not be de-serialized: " + e.getMessage());
@@ -9807,7 +9839,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(Operation.class);
                   }
 
@@ -9834,7 +9866,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(Operation.class);
                   }
 
@@ -9877,7 +9909,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(Operation.class);
                   }
 
@@ -9904,7 +9936,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(Operation.class);
                   }
 
@@ -9931,7 +9963,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(Operation.class);
                   }
 
@@ -9958,7 +9990,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theInputVariables"));
+                        new Reporting.NameSegment("inputVariables"));
                     return itemResult.castTo(Operation.class);
                   }
 
@@ -9985,7 +10017,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theOutputVariables"));
+                        new Reporting.NameSegment("outputVariables"));
                     return itemResult.castTo(Operation.class);
                   }
 
@@ -10012,7 +10044,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theInoutputVariables"));
+                        new Reporting.NameSegment("inoutputVariables"));
                     return itemResult.castTo(Operation.class);
                   }
 
@@ -10077,7 +10109,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class Operation, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -10099,6 +10131,7 @@ public class Xmlization {
       Result<Operation> result = tryOperationFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(Operation.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -10144,7 +10177,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class OperationVariable, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -10260,7 +10293,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class OperationVariable, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -10282,6 +10315,7 @@ public class Xmlization {
       Result<OperationVariable> result = tryOperationVariableFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(OperationVariable.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -10335,7 +10369,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class Capability, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -10364,7 +10398,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(Capability.class);
                   }
 
@@ -10391,7 +10425,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class Capability "
                       + " could not be de-serialized: " + e.getMessage());
@@ -10419,7 +10453,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class Capability "
                       + " could not be de-serialized: " + e.getMessage());
@@ -10447,7 +10481,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(Capability.class);
                   }
 
@@ -10474,7 +10508,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(Capability.class);
                   }
 
@@ -10517,7 +10551,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSupplementalSemanticIds"));
+                        new Reporting.NameSegment("supplementalSemanticIds"));
                     return itemResult.castTo(Capability.class);
                   }
 
@@ -10544,7 +10578,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theQualifiers"));
+                        new Reporting.NameSegment("qualifiers"));
                     return itemResult.castTo(Capability.class);
                   }
 
@@ -10571,7 +10605,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(Capability.class);
                   }
 
@@ -10633,7 +10667,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class Capability, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -10655,6 +10689,7 @@ public class Xmlization {
       Result<Capability> result = tryCapabilityFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(Capability.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -10708,7 +10743,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class ConceptDescription, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -10737,7 +10772,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theExtensions"));
+                        new Reporting.NameSegment("extensions"));
                     return itemResult.castTo(ConceptDescription.class);
                   }
 
@@ -10764,7 +10799,7 @@ public class Xmlization {
 
                 try {
                   theCategory = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property category of an instance of class ConceptDescription "
                       + " could not be de-serialized: " + e.getMessage());
@@ -10792,7 +10827,7 @@ public class Xmlization {
 
                 try {
                   theIdShort = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property idShort of an instance of class ConceptDescription "
                       + " could not be de-serialized: " + e.getMessage());
@@ -10820,7 +10855,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDisplayName"));
+                        new Reporting.NameSegment("displayName"));
                     return itemResult.castTo(ConceptDescription.class);
                   }
 
@@ -10847,7 +10882,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDescription"));
+                        new Reporting.NameSegment("description"));
                     return itemResult.castTo(ConceptDescription.class);
                   }
 
@@ -10890,7 +10925,7 @@ public class Xmlization {
 
                 try {
                   theId = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property id of an instance of class ConceptDescription "
                       + " could not be de-serialized: " + e.getMessage());
@@ -10918,7 +10953,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theEmbeddedDataSpecifications"));
+                        new Reporting.NameSegment("embeddedDataSpecifications"));
                     return itemResult.castTo(ConceptDescription.class);
                   }
 
@@ -10945,7 +10980,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theIsCaseOf"));
+                        new Reporting.NameSegment("isCaseOf"));
                     return itemResult.castTo(ConceptDescription.class);
                   }
 
@@ -11014,7 +11049,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class ConceptDescription, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -11036,6 +11071,7 @@ public class Xmlization {
       Result<ConceptDescription> result = tryConceptDescriptionFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(ConceptDescription.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -11083,7 +11119,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class Reference, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -11100,7 +11136,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property type of an instance of class ReferenceTypes " +
+                  "The property type of an instance of class Reference " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -11112,7 +11148,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property type of an instance of class ReferenceTypes, "
+                        + "the property type of an instance of class Reference, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -11120,9 +11156,9 @@ public class Xmlization {
               String textType;
               try {
                 textType = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property type of an instance of class ReferenceTypes "
+                    "The property type of an instance of class Reference"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -11138,9 +11174,9 @@ public class Xmlization {
                 theType = optionalType.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property type of an instance of class ReferenceTypes " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theType);
+                    "The property type of an instance of class Reference" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textType);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "type"));
@@ -11180,7 +11216,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theKeys"));
+                        new Reporting.NameSegment("keys"));
                     return itemResult.castTo(Reference.class);
                   }
 
@@ -11250,7 +11286,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class Reference, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -11272,6 +11308,7 @@ public class Xmlization {
       Result<Reference> result = tryReferenceFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(Reference.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -11318,7 +11355,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class Key, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -11335,7 +11372,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property type of an instance of class KeyTypes " +
+                  "The property type of an instance of class Key " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -11347,7 +11384,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property type of an instance of class KeyTypes, "
+                        + "the property type of an instance of class Key, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -11355,9 +11392,9 @@ public class Xmlization {
               String textType;
               try {
                 textType = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property type of an instance of class KeyTypes "
+                    "The property type of an instance of class Key"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -11373,9 +11410,9 @@ public class Xmlization {
                 theType = optionalType.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property type of an instance of class KeyTypes " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theType);
+                    "The property type of an instance of class Key" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textType);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "type"));
@@ -11399,7 +11436,7 @@ public class Xmlization {
 
                 try {
                   theValue = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property value of an instance of class Key "
                       + " could not be de-serialized: " + e.getMessage());
@@ -11469,7 +11506,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class Key, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -11491,6 +11528,7 @@ public class Xmlization {
       Result<Key> result = tryKeyFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(Key.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -11521,7 +11559,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class IAbstractLangString, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -11584,7 +11622,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class LangStringNameType, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -11613,7 +11651,7 @@ public class Xmlization {
 
                 try {
                   theLanguage = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property language of an instance of class LangStringNameType "
                       + " could not be de-serialized: " + e.getMessage());
@@ -11641,7 +11679,7 @@ public class Xmlization {
 
                 try {
                   theText = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property text of an instance of class LangStringNameType "
                       + " could not be de-serialized: " + e.getMessage());
@@ -11711,7 +11749,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class LangStringNameType, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -11733,6 +11771,7 @@ public class Xmlization {
       Result<LangStringNameType> result = tryLangStringNameTypeFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(LangStringNameType.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -11779,7 +11818,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class LangStringTextType, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -11808,7 +11847,7 @@ public class Xmlization {
 
                 try {
                   theLanguage = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property language of an instance of class LangStringTextType "
                       + " could not be de-serialized: " + e.getMessage());
@@ -11836,7 +11875,7 @@ public class Xmlization {
 
                 try {
                   theText = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property text of an instance of class LangStringTextType "
                       + " could not be de-serialized: " + e.getMessage());
@@ -11906,7 +11945,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class LangStringTextType, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -11928,6 +11967,7 @@ public class Xmlization {
       Result<LangStringTextType> result = tryLangStringTextTypeFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(LangStringTextType.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -11975,7 +12015,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class Environment, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -12004,7 +12044,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theAssetAdministrationShells"));
+                        new Reporting.NameSegment("assetAdministrationShells"));
                     return itemResult.castTo(Environment.class);
                   }
 
@@ -12031,7 +12071,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theSubmodels"));
+                        new Reporting.NameSegment("submodels"));
                     return itemResult.castTo(Environment.class);
                   }
 
@@ -12058,7 +12098,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theConceptDescriptions"));
+                        new Reporting.NameSegment("conceptDescriptions"));
                     return itemResult.castTo(Environment.class);
                   }
 
@@ -12114,7 +12154,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class Environment, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -12136,6 +12176,7 @@ public class Xmlization {
       Result<Environment> result = tryEnvironmentFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(Environment.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -12166,7 +12207,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class IDataSpecificationContent, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -12221,7 +12262,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class EmbeddedDataSpecification, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -12361,7 +12402,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class EmbeddedDataSpecification, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -12383,6 +12424,7 @@ public class Xmlization {
       Result<EmbeddedDataSpecification> result = tryEmbeddedDataSpecificationFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(EmbeddedDataSpecification.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -12431,7 +12473,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class LevelType, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -12467,7 +12509,7 @@ public class Xmlization {
 
                 try {
                   theMin = readContentAsBool(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property min of an instance of class LevelType "
                       + " could not be de-serialized: " + e.getMessage());
@@ -12502,7 +12544,7 @@ public class Xmlization {
 
                 try {
                   theNom = readContentAsBool(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property nom of an instance of class LevelType "
                       + " could not be de-serialized: " + e.getMessage());
@@ -12537,7 +12579,7 @@ public class Xmlization {
 
                 try {
                   theTyp = readContentAsBool(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property typ of an instance of class LevelType "
                       + " could not be de-serialized: " + e.getMessage());
@@ -12572,7 +12614,7 @@ public class Xmlization {
 
                 try {
                   theMax = readContentAsBool(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property max of an instance of class LevelType "
                       + " could not be de-serialized: " + e.getMessage());
@@ -12658,7 +12700,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class LevelType, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -12680,6 +12722,7 @@ public class Xmlization {
       Result<LevelType> result = tryLevelTypeFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(LevelType.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -12726,7 +12769,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class ValueReferencePair, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -12755,7 +12798,7 @@ public class Xmlization {
 
                 try {
                   theValue = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property value of an instance of class ValueReferencePair "
                       + " could not be de-serialized: " + e.getMessage());
@@ -12841,7 +12884,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class ValueReferencePair, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -12863,6 +12906,7 @@ public class Xmlization {
       Result<ValueReferencePair> result = tryValueReferencePairFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(ValueReferencePair.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -12908,7 +12952,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class ValueList, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -12937,7 +12981,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theValueReferencePairs"));
+                        new Reporting.NameSegment("valueReferencePairs"));
                     return itemResult.castTo(ValueList.class);
                   }
 
@@ -12998,7 +13042,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class ValueList, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -13020,6 +13064,7 @@ public class Xmlization {
       Result<ValueList> result = tryValueListFromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(ValueList.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -13066,7 +13111,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class LangStringPreferredNameTypeIec61360, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -13095,7 +13140,7 @@ public class Xmlization {
 
                 try {
                   theLanguage = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property language of an instance of class LangStringPreferredNameTypeIec61360 "
                       + " could not be de-serialized: " + e.getMessage());
@@ -13123,7 +13168,7 @@ public class Xmlization {
 
                 try {
                   theText = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property text of an instance of class LangStringPreferredNameTypeIec61360 "
                       + " could not be de-serialized: " + e.getMessage());
@@ -13193,7 +13238,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class LangStringPreferredNameTypeIec61360, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -13215,6 +13260,7 @@ public class Xmlization {
       Result<LangStringPreferredNameTypeIec61360> result = tryLangStringPreferredNameTypeIec61360FromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(LangStringPreferredNameTypeIec61360.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -13261,7 +13307,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class LangStringShortNameTypeIec61360, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -13290,7 +13336,7 @@ public class Xmlization {
 
                 try {
                   theLanguage = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property language of an instance of class LangStringShortNameTypeIec61360 "
                       + " could not be de-serialized: " + e.getMessage());
@@ -13318,7 +13364,7 @@ public class Xmlization {
 
                 try {
                   theText = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property text of an instance of class LangStringShortNameTypeIec61360 "
                       + " could not be de-serialized: " + e.getMessage());
@@ -13388,7 +13434,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class LangStringShortNameTypeIec61360, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -13410,6 +13456,7 @@ public class Xmlization {
       Result<LangStringShortNameTypeIec61360> result = tryLangStringShortNameTypeIec61360FromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(LangStringShortNameTypeIec61360.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -13456,7 +13503,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class LangStringDefinitionTypeIec61360, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -13485,7 +13532,7 @@ public class Xmlization {
 
                 try {
                   theLanguage = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property language of an instance of class LangStringDefinitionTypeIec61360 "
                       + " could not be de-serialized: " + e.getMessage());
@@ -13513,7 +13560,7 @@ public class Xmlization {
 
                 try {
                   theText = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property text of an instance of class LangStringDefinitionTypeIec61360 "
                       + " could not be de-serialized: " + e.getMessage());
@@ -13583,7 +13630,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class LangStringDefinitionTypeIec61360, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -13605,6 +13652,7 @@ public class Xmlization {
       Result<LangStringDefinitionTypeIec61360> result = tryLangStringDefinitionTypeIec61360FromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(LangStringDefinitionTypeIec61360.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -13661,7 +13709,7 @@ public class Xmlization {
               "Expected an XML start element representing " +
               "a property of an instance of class DataSpecificationIec61360, " +
               "but got the node of type " + getEventTypeAsString(currentEvent(reader)) +
-              "with the value " + currentEvent(reader));
+              " with the value " + currentEvent(reader));
             return Result.failure(error);
           }
 
@@ -13690,7 +13738,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("thePreferredName"));
+                        new Reporting.NameSegment("preferredName"));
                     return itemResult.castTo(DataSpecificationIec61360.class);
                   }
 
@@ -13717,7 +13765,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theShortName"));
+                        new Reporting.NameSegment("shortName"));
                     return itemResult.castTo(DataSpecificationIec61360.class);
                   }
 
@@ -13744,7 +13792,7 @@ public class Xmlization {
 
                 try {
                   theUnit = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property unit of an instance of class DataSpecificationIec61360 "
                       + " could not be de-serialized: " + e.getMessage());
@@ -13788,7 +13836,7 @@ public class Xmlization {
 
                 try {
                   theSourceOfDefinition = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property sourceOfDefinition of an instance of class DataSpecificationIec61360 "
                       + " could not be de-serialized: " + e.getMessage());
@@ -13816,7 +13864,7 @@ public class Xmlization {
 
                 try {
                   theSymbol = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property symbol of an instance of class DataSpecificationIec61360 "
                       + " could not be de-serialized: " + e.getMessage());
@@ -13832,7 +13880,7 @@ public class Xmlization {
             {
               if (isEmptyProperty) {
                 final Reporting.Error error = new Reporting.Error(
-                  "The property dataType of an instance of class DataTypeIec61360 " +
+                  "The property dataType of an instance of class DataSpecificationIec61360 " +
                   "can not be de-serialized from a self-closing element " +
                   "since it needs content");
                 error.prependSegment(
@@ -13844,7 +13892,7 @@ public class Xmlization {
               if (currentEvent(reader).isEndDocument()) {
                 final Reporting.Error error = new Reporting.Error(
                     "Expected an XML content representing "
-                        + "the property dataType of an instance of class DataTypeIec61360, "
+                        + "the property dataType of an instance of class DataSpecificationIec61360, "
                         + "but reached the end-of-file");
                 return Result.failure(error);
               }
@@ -13852,9 +13900,9 @@ public class Xmlization {
               String textDataType;
               try {
                 textDataType = readContentAsString(reader);
-              } catch (XMLStreamException e) {
+              } catch (Exception e) {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property dataType of an instance of class DataTypeIec61360 "
+                    "The property dataType of an instance of class DataSpecificationIec61360"
                         + " could not be de-serialized: " + e.getMessage());
                 error.prependSegment(
                     new Reporting.NameSegment(
@@ -13870,9 +13918,9 @@ public class Xmlization {
                 theDataType = optionalDataType.get();
               } else {
                 final Reporting.Error error = new Reporting.Error(
-                    "The property dataType of an instance of class DataTypeIec61360 " +
-                        "could not be de-serialized from an unexpected enumeration literal: " +
-                        theDataType);
+                    "The property dataType of an instance of class DataSpecificationIec61360" +
+                        " could not be de-serialized from an unexpected enumeration literal: " +
+                        textDataType);
                 error.prependSegment(
                     new Reporting.NameSegment(
                         "dataType"));
@@ -13896,7 +13944,7 @@ public class Xmlization {
                         new Reporting.IndexSegment(index));
                     itemResult.getError()
                       .prependSegment(
-                        new Reporting.NameSegment("theDefinition"));
+                        new Reporting.NameSegment("definition"));
                     return itemResult.castTo(DataSpecificationIec61360.class);
                   }
 
@@ -13923,7 +13971,7 @@ public class Xmlization {
 
                 try {
                   theValueFormat = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property valueFormat of an instance of class DataSpecificationIec61360 "
                       + " could not be de-serialized: " + e.getMessage());
@@ -13967,7 +14015,7 @@ public class Xmlization {
 
                 try {
                   theValue = readContentAsString(reader);
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                   final Reporting.Error error = new Reporting.Error(
                     "The property value of an instance of class DataSpecificationIec61360 "
                       + " could not be de-serialized: " + e.getMessage());
@@ -14056,7 +14104,7 @@ public class Xmlization {
         final Reporting.Error error = new Reporting.Error(
           "Expected an XML element representing an instance of class DataSpecificationIec61360, " +
           "but got a node of type " + getEventTypeAsString(currentEvent) +
-          "with value " + currentEvent);
+          " with value " + currentEvent);
         return Result.failure(error);
       }
 
@@ -14078,6 +14126,7 @@ public class Xmlization {
       Result<DataSpecificationIec61360> result = tryDataSpecificationIec61360FromSequence(
         reader,
         isEmptyElement);
+      if (result.isError()) return result.castTo(DataSpecificationIec61360.class);
 
 
       final Result<XMLEvent> checkEndElement = verifyClosingTagForClass(
@@ -14098,7 +14147,7 @@ public class Xmlization {
    * Here is an example how to parse an instance of class IHasSemantics:
    * {@code
    * XMLEventReader reader = xmlFactory.createXMLEventReader(...some arguments...);
-   * IHasSemantics anInstance = Deserialize.IHasSemanticsFrom(
+   * IHasSemantics anInstance = Deserialize.deserializeIHasSemantics(
    *   reader);
    * }
    * </pre>
@@ -14107,7 +14156,7 @@ public class Xmlization {
    * If the elements live in a namespace, you have to supply it. For example:
    * {@code
    * XMLEventReader reader = xmlFactory.createXMLEventReader(...some arguments...);
-   * IHasSemantics anInstance = Deserialize.IHasSemanticsFrom(
+   * IHasSemantics anInstance = Deserialize.deserializeIHasSemantics(
    *   reader,
    *   "http://www.example.com/5/12");
    * }
@@ -14118,19 +14167,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of IHasSemantics from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static IHasSemantics deserializeIhassemantics(
+    public static IHasSemantics deserializeIHasSemantics(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class IHasSemantics, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends IHasSemantics> result =
         DeserializeImplementation.tryIHasSemanticsFromElement(
@@ -14146,19 +14189,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of Extension from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static Extension deserializeExtension(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class Extension, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends Extension> result =
         DeserializeImplementation.tryExtensionFromElement(
@@ -14174,19 +14211,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of IHasExtensions from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static IHasExtensions deserializeIhasextensions(
+    public static IHasExtensions deserializeIHasExtensions(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class IHasExtensions, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends IHasExtensions> result =
         DeserializeImplementation.tryIHasExtensionsFromElement(
@@ -14202,19 +14233,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of IReferable from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static IReferable deserializeIreferable(
+    public static IReferable deserializeIReferable(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class IReferable, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends IReferable> result =
         DeserializeImplementation.tryIReferableFromElement(
@@ -14230,19 +14255,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of IIdentifiable from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static IIdentifiable deserializeIidentifiable(
+    public static IIdentifiable deserializeIIdentifiable(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class IIdentifiable, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends IIdentifiable> result =
         DeserializeImplementation.tryIIdentifiableFromElement(
@@ -14258,19 +14277,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of IHasKind from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static IHasKind deserializeIhaskind(
+    public static IHasKind deserializeIHasKind(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class IHasKind, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends IHasKind> result =
         DeserializeImplementation.tryIHasKindFromElement(
@@ -14286,19 +14299,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of IHasDataSpecification from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static IHasDataSpecification deserializeIhasdataspecification(
+    public static IHasDataSpecification deserializeIHasDataSpecification(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class IHasDataSpecification, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends IHasDataSpecification> result =
         DeserializeImplementation.tryIHasDataSpecificationFromElement(
@@ -14314,19 +14321,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of AdministrativeInformation from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static AdministrativeInformation deserializeAdministrativeinformation(
+    public static AdministrativeInformation deserializeAdministrativeInformation(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class AdministrativeInformation, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends AdministrativeInformation> result =
         DeserializeImplementation.tryAdministrativeInformationFromElement(
@@ -14342,19 +14343,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of IQualifiable from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static IQualifiable deserializeIqualifiable(
+    public static IQualifiable deserializeIQualifiable(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class IQualifiable, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends IQualifiable> result =
         DeserializeImplementation.tryIQualifiableFromElement(
@@ -14370,19 +14365,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of Qualifier from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static Qualifier deserializeQualifier(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class Qualifier, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends Qualifier> result =
         DeserializeImplementation.tryQualifierFromElement(
@@ -14398,19 +14387,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of AssetAdministrationShell from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static AssetAdministrationShell deserializeAssetadministrationshell(
+    public static AssetAdministrationShell deserializeAssetAdministrationShell(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class AssetAdministrationShell, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends AssetAdministrationShell> result =
         DeserializeImplementation.tryAssetAdministrationShellFromElement(
@@ -14426,19 +14409,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of AssetInformation from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static AssetInformation deserializeAssetinformation(
+    public static AssetInformation deserializeAssetInformation(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class AssetInformation, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends AssetInformation> result =
         DeserializeImplementation.tryAssetInformationFromElement(
@@ -14454,19 +14431,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of Resource from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static Resource deserializeResource(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class Resource, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends Resource> result =
         DeserializeImplementation.tryResourceFromElement(
@@ -14482,19 +14453,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of SpecificAssetId from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static SpecificAssetId deserializeSpecificassetid(
+    public static SpecificAssetId deserializeSpecificAssetId(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class SpecificAssetId, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends SpecificAssetId> result =
         DeserializeImplementation.trySpecificAssetIdFromElement(
@@ -14510,19 +14475,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of Submodel from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static Submodel deserializeSubmodel(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class Submodel, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends Submodel> result =
         DeserializeImplementation.trySubmodelFromElement(
@@ -14538,19 +14497,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of ISubmodelElement from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static ISubmodelElement deserializeIsubmodelelement(
+    public static ISubmodelElement deserializeISubmodelElement(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class ISubmodelElement, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends ISubmodelElement> result =
         DeserializeImplementation.tryISubmodelElementFromElement(
@@ -14566,19 +14519,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of IRelationshipElement from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static IRelationshipElement deserializeIrelationshipelement(
+    public static IRelationshipElement deserializeIRelationshipElement(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class IRelationshipElement, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends IRelationshipElement> result =
         DeserializeImplementation.tryIRelationshipElementFromElement(
@@ -14594,19 +14541,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of RelationshipElement from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static RelationshipElement deserializeRelationshipelement(
+    public static RelationshipElement deserializeRelationshipElement(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class RelationshipElement, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends RelationshipElement> result =
         DeserializeImplementation.tryRelationshipElementFromElement(
@@ -14622,19 +14563,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of SubmodelElementList from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static SubmodelElementList deserializeSubmodelelementlist(
+    public static SubmodelElementList deserializeSubmodelElementList(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class SubmodelElementList, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends SubmodelElementList> result =
         DeserializeImplementation.trySubmodelElementListFromElement(
@@ -14650,19 +14585,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of SubmodelElementCollection from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static SubmodelElementCollection deserializeSubmodelelementcollection(
+    public static SubmodelElementCollection deserializeSubmodelElementCollection(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class SubmodelElementCollection, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends SubmodelElementCollection> result =
         DeserializeImplementation.trySubmodelElementCollectionFromElement(
@@ -14678,19 +14607,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of IDataElement from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static IDataElement deserializeIdataelement(
+    public static IDataElement deserializeIDataElement(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class IDataElement, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends IDataElement> result =
         DeserializeImplementation.tryIDataElementFromElement(
@@ -14706,19 +14629,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of Property from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static Property deserializeProperty(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class Property, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends Property> result =
         DeserializeImplementation.tryPropertyFromElement(
@@ -14734,19 +14651,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of MultiLanguageProperty from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static MultiLanguageProperty deserializeMultilanguageproperty(
+    public static MultiLanguageProperty deserializeMultiLanguageProperty(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class MultiLanguageProperty, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends MultiLanguageProperty> result =
         DeserializeImplementation.tryMultiLanguagePropertyFromElement(
@@ -14762,19 +14673,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of Range from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static Range deserializeRange(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class Range, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends Range> result =
         DeserializeImplementation.tryRangeFromElement(
@@ -14790,19 +14695,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of ReferenceElement from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static ReferenceElement deserializeReferenceelement(
+    public static ReferenceElement deserializeReferenceElement(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class ReferenceElement, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends ReferenceElement> result =
         DeserializeImplementation.tryReferenceElementFromElement(
@@ -14818,19 +14717,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of Blob from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static Blob deserializeBlob(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class Blob, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends Blob> result =
         DeserializeImplementation.tryBlobFromElement(
@@ -14846,19 +14739,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of File from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static File deserializeFile(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class File, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends File> result =
         DeserializeImplementation.tryFileFromElement(
@@ -14874,19 +14761,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of AnnotatedRelationshipElement from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static AnnotatedRelationshipElement deserializeAnnotatedrelationshipelement(
+    public static AnnotatedRelationshipElement deserializeAnnotatedRelationshipElement(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class AnnotatedRelationshipElement, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends AnnotatedRelationshipElement> result =
         DeserializeImplementation.tryAnnotatedRelationshipElementFromElement(
@@ -14902,19 +14783,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of Entity from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static Entity deserializeEntity(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class Entity, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends Entity> result =
         DeserializeImplementation.tryEntityFromElement(
@@ -14930,19 +14805,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of EventPayload from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static EventPayload deserializeEventpayload(
+    public static EventPayload deserializeEventPayload(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class EventPayload, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends EventPayload> result =
         DeserializeImplementation.tryEventPayloadFromElement(
@@ -14958,19 +14827,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of IEventElement from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static IEventElement deserializeIeventelement(
+    public static IEventElement deserializeIEventElement(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class IEventElement, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends IEventElement> result =
         DeserializeImplementation.tryIEventElementFromElement(
@@ -14986,19 +14849,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of BasicEventElement from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static BasicEventElement deserializeBasiceventelement(
+    public static BasicEventElement deserializeBasicEventElement(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class BasicEventElement, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends BasicEventElement> result =
         DeserializeImplementation.tryBasicEventElementFromElement(
@@ -15014,19 +14871,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of Operation from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static Operation deserializeOperation(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class Operation, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends Operation> result =
         DeserializeImplementation.tryOperationFromElement(
@@ -15042,19 +14893,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of OperationVariable from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static OperationVariable deserializeOperationvariable(
+    public static OperationVariable deserializeOperationVariable(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class OperationVariable, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends OperationVariable> result =
         DeserializeImplementation.tryOperationVariableFromElement(
@@ -15070,19 +14915,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of Capability from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static Capability deserializeCapability(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class Capability, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends Capability> result =
         DeserializeImplementation.tryCapabilityFromElement(
@@ -15098,19 +14937,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of ConceptDescription from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static ConceptDescription deserializeConceptdescription(
+    public static ConceptDescription deserializeConceptDescription(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class ConceptDescription, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends ConceptDescription> result =
         DeserializeImplementation.tryConceptDescriptionFromElement(
@@ -15126,19 +14959,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of Reference from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static Reference deserializeReference(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class Reference, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends Reference> result =
         DeserializeImplementation.tryReferenceFromElement(
@@ -15154,19 +14981,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of Key from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static Key deserializeKey(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class Key, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends Key> result =
         DeserializeImplementation.tryKeyFromElement(
@@ -15182,19 +15003,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of IAbstractLangString from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static IAbstractLangString deserializeIabstractlangstring(
+    public static IAbstractLangString deserializeIAbstractLangString(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class IAbstractLangString, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends IAbstractLangString> result =
         DeserializeImplementation.tryIAbstractLangStringFromElement(
@@ -15210,19 +15025,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of LangStringNameType from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static LangStringNameType deserializeLangstringnametype(
+    public static LangStringNameType deserializeLangStringNameType(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class LangStringNameType, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends LangStringNameType> result =
         DeserializeImplementation.tryLangStringNameTypeFromElement(
@@ -15238,19 +15047,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of LangStringTextType from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static LangStringTextType deserializeLangstringtexttype(
+    public static LangStringTextType deserializeLangStringTextType(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class LangStringTextType, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends LangStringTextType> result =
         DeserializeImplementation.tryLangStringTextTypeFromElement(
@@ -15266,19 +15069,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of Environment from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
     public static Environment deserializeEnvironment(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class Environment, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends Environment> result =
         DeserializeImplementation.tryEnvironmentFromElement(
@@ -15294,19 +15091,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of IDataSpecificationContent from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static IDataSpecificationContent deserializeIdataspecificationcontent(
+    public static IDataSpecificationContent deserializeIDataSpecificationContent(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class IDataSpecificationContent, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends IDataSpecificationContent> result =
         DeserializeImplementation.tryIDataSpecificationContentFromElement(
@@ -15322,19 +15113,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of EmbeddedDataSpecification from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static EmbeddedDataSpecification deserializeEmbeddeddataspecification(
+    public static EmbeddedDataSpecification deserializeEmbeddedDataSpecification(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class EmbeddedDataSpecification, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends EmbeddedDataSpecification> result =
         DeserializeImplementation.tryEmbeddedDataSpecificationFromElement(
@@ -15350,19 +15135,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of LevelType from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static LevelType deserializeLeveltype(
+    public static LevelType deserializeLevelType(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class LevelType, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends LevelType> result =
         DeserializeImplementation.tryLevelTypeFromElement(
@@ -15378,19 +15157,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of ValueReferencePair from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static ValueReferencePair deserializeValuereferencepair(
+    public static ValueReferencePair deserializeValueReferencePair(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class ValueReferencePair, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends ValueReferencePair> result =
         DeserializeImplementation.tryValueReferencePairFromElement(
@@ -15406,19 +15179,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of ValueList from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static ValueList deserializeValuelist(
+    public static ValueList deserializeValueList(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class ValueList, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends ValueList> result =
         DeserializeImplementation.tryValueListFromElement(
@@ -15434,19 +15201,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of LangStringPreferredNameTypeIec61360 from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static LangStringPreferredNameTypeIec61360 deserializeLangstringpreferrednametypeiec61360(
+    public static LangStringPreferredNameTypeIec61360 deserializeLangStringPreferredNameTypeIec61360(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class LangStringPreferredNameTypeIec61360, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends LangStringPreferredNameTypeIec61360> result =
         DeserializeImplementation.tryLangStringPreferredNameTypeIec61360FromElement(
@@ -15462,19 +15223,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of LangStringShortNameTypeIec61360 from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static LangStringShortNameTypeIec61360 deserializeLangstringshortnametypeiec61360(
+    public static LangStringShortNameTypeIec61360 deserializeLangStringShortNameTypeIec61360(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class LangStringShortNameTypeIec61360, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends LangStringShortNameTypeIec61360> result =
         DeserializeImplementation.tryLangStringShortNameTypeIec61360FromElement(
@@ -15490,19 +15245,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of LangStringDefinitionTypeIec61360 from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static LangStringDefinitionTypeIec61360 deserializeLangstringdefinitiontypeiec61360(
+    public static LangStringDefinitionTypeIec61360 deserializeLangStringDefinitionTypeIec61360(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class LangStringDefinitionTypeIec61360, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends LangStringDefinitionTypeIec61360> result =
         DeserializeImplementation.tryLangStringDefinitionTypeIec61360FromElement(
@@ -15518,19 +15267,13 @@ public class Xmlization {
     /**
      * Deserialize an instance of DataSpecificationIec61360 from {@code reader}.
      *
-     * @param reader Initialized XML reader with cursor set to the element
+     * @param reader Initialized XML reader with reader.peek() set to the element
      */
-    public static DataSpecificationIec61360 deserializeDataspecificationiec61360(
+    public static DataSpecificationIec61360 deserializeDataSpecificationIec61360(
       XMLEventReader reader) {
 
+      DeserializeImplementation.skipStartDocument(reader);
       DeserializeImplementation.skipWhitespaceAndComments(reader);
-
-      if (DeserializeImplementation.currentEvent(reader).getEventType() == XMLStreamConstants.START_DOCUMENT) {
-        String reason = "Unexpected XML declaration when reading an instance "
-          + "of class DataSpecificationIec61360, as we expect the reader "
-          + "to be set at content.";
-        throw new DeserializeException("", reason);
-      }
 
       Result<? extends DataSpecificationIec61360> result =
         DeserializeImplementation.tryDataSpecificationIec61360FromElement(
@@ -15550,15 +15293,6 @@ public class Xmlization {
   static class VisitorWithWriter
     extends AbstractVisitorWithContext<XMLStreamWriter> {
 
-  Reporting.Error error = null;
-
-  public boolean isError() {
-    return error != null;
-  }
-
-  public Reporting.Error getError() {
-    return error;
-  }
     private void extensionToSequence(
       IExtension that,
       XMLStreamWriter writer) {
@@ -15574,31 +15308,32 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "name");
         writer.writeCharacters(
           that.getName().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -15619,8 +15354,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -15633,25 +15368,23 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "refersTo");
-
         if (that.getRefersTo().isPresent()) {
+          writer.writeStartElement(
+          "refersTo");
           for (IClass item : that.getRefersTo().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -15668,7 +15401,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -15676,20 +15409,18 @@ public class Xmlization {
       IAdministrativeInformation that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -15702,8 +15433,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -15716,8 +15447,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -15732,7 +15463,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -15745,8 +15476,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -15763,7 +15494,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -15782,24 +15513,22 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -15820,15 +15549,18 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "type");
         writer.writeCharacters(
           that.getType().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -15847,8 +15579,8 @@ public class Xmlization {
         writer.writeCharacters(textValueType.get());
 
         writer.writeEndElement();
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -15861,8 +15593,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -15877,7 +15609,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -15894,7 +15626,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -15902,20 +15634,18 @@ public class Xmlization {
       IAssetAdministrationShell that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -15928,8 +15658,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -15942,42 +15672,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -15992,31 +15718,32 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
-      }
-
-      try {
-        writer.writeCharacters(
-          that.getId().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
         writer.writeStartElement(
-          "embeddedDataSpecifications");
+                    "id");
+        writer.writeCharacters(
+          that.getId().toString());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
+      }
 
+      try {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16031,7 +15758,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16044,24 +15771,22 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "submodels");
-
         if (that.getSubmodels().isPresent()) {
+          writer.writeStartElement(
+          "submodels");
           for (IClass item : that.getSubmodels().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -16078,7 +15803,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -16101,8 +15826,8 @@ public class Xmlization {
         writer.writeCharacters(textAssetKind.get());
 
         writer.writeEndElement();
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16115,25 +15840,23 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "specificAssetIds");
-
         if (that.getSpecificAssetIds().isPresent()) {
+          writer.writeStartElement(
+          "specificAssetIds");
           for (IClass item : that.getSpecificAssetIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16146,8 +15869,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16162,7 +15885,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -16179,7 +15902,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -16187,10 +15910,13 @@ public class Xmlization {
       IResource that,
       XMLStreamWriter writer) {
       try {
+        writer.writeStartElement(
+                    "path");
         writer.writeCharacters(
           that.getPath().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16203,8 +15929,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -16221,7 +15947,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -16240,38 +15966,42 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "name");
         writer.writeCharacters(
           that.getName().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "value");
         writer.writeCharacters(
           that.getValue().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16286,7 +16016,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -16303,7 +16033,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -16311,20 +16041,18 @@ public class Xmlization {
       ISubmodel that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16337,8 +16065,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16351,42 +16079,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16401,14 +16125,17 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "id");
         writer.writeCharacters(
           that.getId().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16429,8 +16156,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16445,75 +16172,67 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "submodelElements");
-
         if (that.getSubmodelElements().isPresent()) {
+          writer.writeStartElement(
+          "submodelElements");
           for (IClass item : that.getSubmodelElements().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -16530,7 +16249,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -16538,20 +16257,18 @@ public class Xmlization {
       IRelationshipElement that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16564,8 +16281,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16578,42 +16295,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16628,58 +16341,52 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16692,7 +16399,7 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16705,7 +16412,7 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -16722,7 +16429,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -16730,20 +16437,18 @@ public class Xmlization {
       ISubmodelElementList that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16756,8 +16461,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16770,42 +16475,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16820,58 +16521,52 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16884,8 +16579,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16900,7 +16595,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16919,8 +16614,8 @@ public class Xmlization {
         writer.writeCharacters(textTypeValueListElement.get());
 
         writer.writeEndElement();
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -16941,25 +16636,23 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "value");
-
         if (that.getValue().isPresent()) {
+          writer.writeStartElement(
+          "value");
           for (IClass item : that.getValue().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -16976,7 +16669,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -16984,20 +16677,18 @@ public class Xmlization {
       ISubmodelElementCollection that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17010,8 +16701,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17024,42 +16715,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17074,75 +16761,67 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "value");
-
         if (that.getValue().isPresent()) {
+          writer.writeStartElement(
+          "value");
           for (IClass item : that.getValue().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -17159,7 +16838,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -17167,20 +16846,18 @@ public class Xmlization {
       IProperty that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17193,8 +16870,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17207,42 +16884,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17257,58 +16930,52 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17327,8 +16994,8 @@ public class Xmlization {
         writer.writeCharacters(textValueType.get());
 
         writer.writeEndElement();
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17341,8 +17008,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17357,7 +17024,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -17374,7 +17041,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -17382,20 +17049,18 @@ public class Xmlization {
       IMultiLanguageProperty that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17408,8 +17073,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17422,42 +17087,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17472,75 +17133,67 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "value");
-
         if (that.getValue().isPresent()) {
+          writer.writeStartElement(
+          "value");
           for (IClass item : that.getValue().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17555,7 +17208,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -17572,7 +17225,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -17580,20 +17233,18 @@ public class Xmlization {
       IRange that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17606,8 +17257,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17620,42 +17271,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17670,58 +17317,52 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17740,8 +17381,8 @@ public class Xmlization {
         writer.writeCharacters(textValueType.get());
 
         writer.writeEndElement();
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17754,8 +17395,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17768,8 +17409,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -17786,7 +17427,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -17794,20 +17435,18 @@ public class Xmlization {
       IReferenceElement that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17820,8 +17459,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17834,42 +17473,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17884,58 +17519,52 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -17950,7 +17579,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -17967,7 +17596,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -17975,20 +17604,18 @@ public class Xmlization {
       IBlob that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18001,8 +17628,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18015,42 +17642,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18065,75 +17688,74 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
         if (that.getValue().isPresent()) {
+          writer.writeStartElement("value");
           String theB64Value = Base64.getEncoder().encodeToString(
             that.getValue().get());
           writer.writeCharacters(theB64Value);
+          writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "contentType");
         writer.writeCharacters(
           that.getContentType().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -18150,7 +17772,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -18158,20 +17780,18 @@ public class Xmlization {
       IFile that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18184,8 +17804,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18198,42 +17818,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18248,58 +17864,52 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18312,15 +17922,18 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "contentType");
         writer.writeCharacters(
           that.getContentType().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -18337,7 +17950,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -18345,20 +17958,18 @@ public class Xmlization {
       IAnnotatedRelationshipElement that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18371,8 +17982,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18385,42 +17996,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18435,58 +18042,52 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18499,7 +18100,7 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18512,24 +18113,22 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "annotations");
-
         if (that.getAnnotations().isPresent()) {
+          writer.writeStartElement(
+          "annotations");
           for (IClass item : that.getAnnotations().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -18546,7 +18145,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -18554,20 +18153,18 @@ public class Xmlization {
       IEntity that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18580,8 +18177,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18594,42 +18191,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18644,75 +18237,67 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "statements");
-
         if (that.getStatements().isPresent()) {
+          writer.writeStartElement(
+          "statements");
           for (IClass item : that.getStatements().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18731,8 +18316,8 @@ public class Xmlization {
         writer.writeCharacters(textEntityType.get());
 
         writer.writeEndElement();
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18745,25 +18330,23 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "specificAssetIds");
-
         if (that.getSpecificAssetIds().isPresent()) {
+          writer.writeStartElement(
+          "specificAssetIds");
           for (IClass item : that.getSpecificAssetIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -18780,7 +18363,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -18797,7 +18380,7 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18812,7 +18395,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18825,7 +18408,7 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18840,7 +18423,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18853,8 +18436,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18869,24 +18452,29 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "timeStamp");
         writer.writeCharacters(
           that.getTimeStamp().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
         if (that.getPayload().isPresent()) {
+          writer.writeStartElement("payload");
           String theB64Payload = Base64.getEncoder().encodeToString(
             that.getPayload().get());
           writer.writeCharacters(theB64Payload);
+          writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -18898,12 +18486,14 @@ public class Xmlization {
         writer.writeStartElement(
           "eventPayload");
 
+        writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+
         this.eventPayloadToSequence(
           that,
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -18911,20 +18501,18 @@ public class Xmlization {
       IBasicEventElement that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18937,8 +18525,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -18951,42 +18539,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19001,58 +18585,52 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19065,7 +18643,7 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19084,8 +18662,8 @@ public class Xmlization {
         writer.writeCharacters(textDirection.get());
 
         writer.writeEndElement();
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19104,8 +18682,8 @@ public class Xmlization {
         writer.writeCharacters(textState.get());
 
         writer.writeEndElement();
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19118,8 +18696,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19134,7 +18712,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19147,8 +18725,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19161,8 +18739,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19175,8 +18753,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -19193,7 +18771,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -19201,20 +18779,18 @@ public class Xmlization {
       IOperation that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19227,8 +18803,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19241,42 +18817,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19291,109 +18863,97 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "inputVariables");
-
         if (that.getInputVariables().isPresent()) {
+          writer.writeStartElement(
+          "inputVariables");
           for (IClass item : that.getInputVariables().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "outputVariables");
-
         if (that.getOutputVariables().isPresent()) {
+          writer.writeStartElement(
+          "outputVariables");
           for (IClass item : that.getOutputVariables().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "inoutputVariables");
-
         if (that.getInoutputVariables().isPresent()) {
+          writer.writeStartElement(
+          "inoutputVariables");
           for (IClass item : that.getInoutputVariables().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -19410,7 +18970,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -19427,7 +18987,7 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -19444,7 +19004,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -19452,20 +19012,18 @@ public class Xmlization {
       ICapability that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19478,8 +19036,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19492,42 +19050,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19542,58 +19096,52 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "supplementalSemanticIds");
-
         if (that.getSupplementalSemanticIds().isPresent()) {
+          writer.writeStartElement(
+          "supplementalSemanticIds");
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "qualifiers");
-
         if (that.getQualifiers().isPresent()) {
+          writer.writeStartElement(
+          "qualifiers");
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "embeddedDataSpecifications");
-
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -19610,7 +19158,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -19618,20 +19166,18 @@ public class Xmlization {
       IConceptDescription that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "extensions");
-
         if (that.getExtensions().isPresent()) {
+          writer.writeStartElement(
+          "extensions");
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19644,8 +19190,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19658,42 +19204,38 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "displayName");
-
         if (that.getDisplayName().isPresent()) {
+          writer.writeStartElement(
+          "displayName");
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "description");
-
         if (that.getDescription().isPresent()) {
+          writer.writeStartElement(
+          "description");
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19708,48 +19250,47 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
-      }
-
-      try {
-        writer.writeCharacters(
-          that.getId().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
         writer.writeStartElement(
-          "embeddedDataSpecifications");
+                    "id");
+        writer.writeCharacters(
+          that.getId().toString());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
+      }
 
+      try {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
+          writer.writeStartElement(
+          "embeddedDataSpecifications");
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "isCaseOf");
-
         if (that.getIsCaseOf().isPresent()) {
+          writer.writeStartElement(
+          "isCaseOf");
           for (IClass item : that.getIsCaseOf().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -19766,7 +19307,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -19789,8 +19330,8 @@ public class Xmlization {
         writer.writeCharacters(textType.get());
 
         writer.writeEndElement();
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19805,7 +19346,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -19820,7 +19361,7 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -19837,7 +19378,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -19860,15 +19401,18 @@ public class Xmlization {
         writer.writeCharacters(textType.get());
 
         writer.writeEndElement();
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "value");
         writer.writeCharacters(
           that.getValue().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -19885,7 +19429,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -19893,17 +19437,23 @@ public class Xmlization {
       ILangStringNameType that,
       XMLStreamWriter writer) {
       try {
+        writer.writeStartElement(
+                    "language");
         writer.writeCharacters(
           that.getLanguage().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "text");
         writer.writeCharacters(
           that.getText().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -19920,7 +19470,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -19928,17 +19478,23 @@ public class Xmlization {
       ILangStringTextType that,
       XMLStreamWriter writer) {
       try {
+        writer.writeStartElement(
+                    "language");
         writer.writeCharacters(
           that.getLanguage().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "text");
         writer.writeCharacters(
           that.getText().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -19955,7 +19511,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -19963,54 +19519,48 @@ public class Xmlization {
       IEnvironment that,
       XMLStreamWriter writer) {
       try {
-        writer.writeStartElement(
-          "assetAdministrationShells");
-
         if (that.getAssetAdministrationShells().isPresent()) {
+          writer.writeStartElement(
+          "assetAdministrationShells");
           for (IClass item : that.getAssetAdministrationShells().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "submodels");
-
         if (that.getSubmodels().isPresent()) {
+          writer.writeStartElement(
+          "submodels");
           for (IClass item : that.getSubmodels().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "conceptDescriptions");
-
         if (that.getConceptDescriptions().isPresent()) {
+          writer.writeStartElement(
+          "conceptDescriptions");
           for (IClass item : that.getConceptDescriptions().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -20029,7 +19579,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -20046,7 +19596,7 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -20059,7 +19609,7 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -20076,7 +19626,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -20084,31 +19634,43 @@ public class Xmlization {
       ILevelType that,
       XMLStreamWriter writer) {
       try {
+        writer.writeStartElement(
+                    "min");
         writer.writeCharacters(
           that.getMin().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "nom");
         writer.writeCharacters(
           that.getNom().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "typ");
         writer.writeCharacters(
           that.getTyp().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "max");
         writer.writeCharacters(
           that.getMax().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -20125,7 +19687,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -20133,10 +19695,13 @@ public class Xmlization {
       IValueReferencePair that,
       XMLStreamWriter writer) {
       try {
+        writer.writeStartElement(
+                    "value");
         writer.writeCharacters(
           that.getValue().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -20149,7 +19714,7 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -20166,7 +19731,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -20185,7 +19750,7 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -20202,7 +19767,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -20210,17 +19775,23 @@ public class Xmlization {
       ILangStringPreferredNameTypeIec61360 that,
       XMLStreamWriter writer) {
       try {
+        writer.writeStartElement(
+                    "language");
         writer.writeCharacters(
           that.getLanguage().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "text");
         writer.writeCharacters(
           that.getText().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -20237,7 +19808,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -20245,17 +19816,23 @@ public class Xmlization {
       ILangStringShortNameTypeIec61360 that,
       XMLStreamWriter writer) {
       try {
+        writer.writeStartElement(
+                    "language");
         writer.writeCharacters(
           that.getLanguage().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "text");
         writer.writeCharacters(
           that.getText().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -20272,7 +19849,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -20280,17 +19857,23 @@ public class Xmlization {
       ILangStringDefinitionTypeIec61360 that,
       XMLStreamWriter writer) {
       try {
+        writer.writeStartElement(
+                    "language");
         writer.writeCharacters(
           that.getLanguage().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
+        writer.writeStartElement(
+                    "text");
         writer.writeCharacters(
           that.getText().toString());
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        writer.writeEndElement();
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -20307,7 +19890,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
 
@@ -20326,24 +19909,22 @@ public class Xmlization {
 
         writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "shortName");
-
         if (that.getShortName().isPresent()) {
+          writer.writeStartElement(
+          "shortName");
           for (IClass item : that.getShortName().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -20356,8 +19937,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -20372,7 +19953,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -20385,8 +19966,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -20399,8 +19980,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -20421,25 +20002,23 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
-        writer.writeStartElement(
-          "definition");
-
         if (that.getDefinition().isPresent()) {
+          writer.writeStartElement(
+          "definition");
           for (IClass item : that.getDefinition().get()) {
             this.visit(
               item,
               writer);
-          }
+            }
+          writer.writeEndElement();
         }
-
-        writer.writeEndElement();
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -20452,8 +20031,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -20468,7 +20047,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -20481,8 +20060,8 @@ public class Xmlization {
 
           writer.writeEndElement();
         }
-      } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+      } catch (Exception exception) {
+        throw new SerializeException("",exception.getMessage());
       }
 
       try {
@@ -20497,7 +20076,7 @@ public class Xmlization {
           writer.writeEndElement();
         }
       } catch (XMLStreamException exception) {
-        error = new Reporting.Error(exception.getMessage());
+        throw new SerializeException("",exception.getMessage());
       }
     }
 
@@ -20514,7 +20093,7 @@ public class Xmlization {
           writer);
         writer.writeEndElement();
     } catch (XMLStreamException exception) {
-      error = new Reporting.Error(exception.getMessage());
+      throw new SerializeException("",exception.getMessage());
     }
     }
   }
@@ -20549,12 +20128,6 @@ public class Xmlization {
       XMLStreamWriter writer) throws SerializeException {
       Serialize._visitorWithWriter.visit(
         that, writer);
-      if (Serialize._visitorWithWriter.isError()) {
-        Reporting.Error error = Serialize._visitorWithWriter.getError();
-        throw new SerializeException("",
-        "Failed to serialize object graph: " +
-        error.getCause());
-      }
     }
   }
 }

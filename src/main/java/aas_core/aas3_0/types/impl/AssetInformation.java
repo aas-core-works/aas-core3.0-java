@@ -128,7 +128,9 @@ public class AssetInformation implements IAssetInformation {
 
   @Override
   public void setAssetKind(AssetKind assetKind) {
-    this.assetKind = assetKind;
+    this.assetKind = Objects.requireNonNull(
+      assetKind,
+      "Argument \"assetKind\" must be non-null.");
   }
 
   @Override

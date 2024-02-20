@@ -141,26 +141,26 @@ public class Reporting
     /**
      * Represent an error during the deserialization or the verification.
      */
-        public static class Error {
-            private final Deque<Segment> pathSegments = new LinkedList<>();
-            private final String cause;
+    public static class Error {
+        private final Deque<Segment> pathSegments = new LinkedList<>();
+        private final String cause;
 
-            public Error(String cause) {
-                this.cause = cause;
-            }
-
-            public void prependSegment(Segment segment) {
-                pathSegments.addFirst(segment);
-            }
-
-            public String getCause() {
-                return cause;
-            }
-
-            public Collection<Segment> getPathSegments() {
-                return pathSegments;
-            }
+        public Error(String cause) {
+            this.cause = cause;
         }
+
+        public void prependSegment(Segment segment) {
+            pathSegments.addFirst(segment);
+        }
+
+        public String getCause() {
+            return cause;
+        }
+
+        public Collection<Segment> getPathSegments() {
+            return pathSegments;
+        }
+    }
 }
 
 /*

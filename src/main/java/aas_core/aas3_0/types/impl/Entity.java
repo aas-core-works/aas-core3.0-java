@@ -284,7 +284,9 @@ public class Entity implements IEntity {
 
   @Override
   public void setEntityType(EntityType entityType) {
-    this.entityType = entityType;
+    this.entityType = Objects.requireNonNull(
+      entityType,
+      "Argument \"entityType\" must be non-null.");
   }
 
   @Override

@@ -58,7 +58,9 @@ public class Resource implements IResource {
 
   @Override
   public void setPath(String path) {
-    this.path = path;
+    this.path = Objects.requireNonNull(
+      path,
+      "Argument \"path\" must be non-null.");
   }
 
   @Override

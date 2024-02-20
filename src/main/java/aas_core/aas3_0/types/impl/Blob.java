@@ -269,7 +269,9 @@ public class Blob implements IBlob {
 
   @Override
   public void setContentType(String contentType) {
-    this.contentType = contentType;
+    this.contentType = Objects.requireNonNull(
+      contentType,
+      "Argument \"contentType\" must be non-null.");
   }
 
   /**

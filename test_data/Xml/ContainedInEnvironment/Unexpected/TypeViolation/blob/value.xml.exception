@@ -1,1 +1,1 @@
-Expected an XML end element to conclude a property of class Blob with the element name value, but got the node of type Element with the value  at: submodels/*[0]/submodelElements/*[0]
+The property value of an instance of class Blob  could not be de-serialized: Failed to read base64 encoded data: Illegal base64 character a at: submodels/*[0]/submodelElements/*[0]/value

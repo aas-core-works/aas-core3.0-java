@@ -265,7 +265,9 @@ public class Property implements IProperty {
 
   @Override
   public void setValueType(DataTypeDefXsd valueType) {
-    this.valueType = valueType;
+    this.valueType = Objects.requireNonNull(
+      valueType,
+      "Argument \"valueType\" must be non-null.");
   }
 
   @Override

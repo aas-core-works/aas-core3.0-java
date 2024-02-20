@@ -120,7 +120,9 @@ public class EventPayload implements IEventPayload {
 
   @Override
   public void setSource(IReference source) {
-    this.source = source;
+    this.source = Objects.requireNonNull(
+      source,
+      "Argument \"source\" must be non-null.");
   }
 
   @Override
@@ -140,7 +142,9 @@ public class EventPayload implements IEventPayload {
 
   @Override
   public void setObservableReference(IReference observableReference) {
-    this.observableReference = observableReference;
+    this.observableReference = Objects.requireNonNull(
+      observableReference,
+      "Argument \"observableReference\" must be non-null.");
   }
 
   @Override
@@ -180,7 +184,9 @@ public class EventPayload implements IEventPayload {
 
   @Override
   public void setTimeStamp(String timeStamp) {
-    this.timeStamp = timeStamp;
+    this.timeStamp = Objects.requireNonNull(
+      timeStamp,
+      "Argument \"timeStamp\" must be non-null.");
   }
 
   @Override

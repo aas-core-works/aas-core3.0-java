@@ -11354,6 +11354,7 @@ public class Jsonization {
     /**
     * Represent a critical error during the deserialization.
     */
+    @SuppressWarnings("serial")
       public static class DeserializeException extends RuntimeException {
         private final String path;
         private final String reason;
@@ -13103,7 +13104,7 @@ public class Jsonization {
         }
 
         if (that.getOrderRelevant().isPresent()) {
-          result.put("orderRelevant", JsonNodeFactory.instance.booleanNode(
+          result.set("orderRelevant", JsonNodeFactory.instance.booleanNode(
             that.getOrderRelevant().get()));
         }
 
@@ -14611,16 +14612,16 @@ public class Jsonization {
       ) {
         final ObjectNode result = JsonNodeFactory.instance.objectNode();
 
-        result.put("min", JsonNodeFactory.instance.booleanNode(
+        result.set("min", JsonNodeFactory.instance.booleanNode(
           that.getMin()));
 
-        result.put("nom", JsonNodeFactory.instance.booleanNode(
+        result.set("nom", JsonNodeFactory.instance.booleanNode(
           that.getNom()));
 
-        result.put("typ", JsonNodeFactory.instance.booleanNode(
+        result.set("typ", JsonNodeFactory.instance.booleanNode(
           that.getTyp()));
 
-        result.put("max", JsonNodeFactory.instance.booleanNode(
+        result.set("max", JsonNodeFactory.instance.booleanNode(
           that.getMax()));
 
         return result;

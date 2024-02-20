@@ -17,6 +17,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Objects;
 import javax.annotation.Generated;
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import aas_core.aas3_0.types.model.IEnvironment;
 import java.util.Collections;
 import java.util.List;
@@ -119,14 +124,14 @@ public class Environment implements IEnvironment {
    * Iterate recursively over all the class instances referenced from this instance.
    */
   public Iterable<IClass> descend() {
-    return Collections.emptyList();
+    return new EnvironmentRecursiveIterable();
   }
 
   /**
    * Iterate over all the class instances referenced from this instance.
    */
   public Iterable<IClass> descendOnce() {
-    return Collections.emptyList();
+    return new EnvironmentIterable();
   }
 
   /**
@@ -165,6 +170,100 @@ public class Environment implements IEnvironment {
       ITransformerWithContext<ContextT, T> transformer,
       ContextT context) {
     return transformer.transformEnvironment(this, context);
+  }
+
+  private class EnvironmentIterable implements Iterable<IClass> {
+    @Override
+    public Iterator<IClass> iterator() {
+      Stream<IClass> stream = stream();
+
+      return stream.iterator();
+    }
+
+    @Override
+    public void forEach(Consumer<? super IClass> action) {
+      Stream<IClass> stream = stream();
+
+      stream.forEach(action);
+    }
+
+    @Override
+    public Spliterator<IClass> spliterator() {
+      Stream<IClass> stream = stream();
+
+      return stream.spliterator();
+    }
+
+    private Stream<IClass> stream() {
+      Stream<IClass> memberStream = Stream.empty();
+
+      if (assetAdministrationShells != null) {
+        memberStream = Stream.concat(memberStream,
+          Environment.this.assetAdministrationShells.stream());
+      }
+
+      if (submodels != null) {
+        memberStream = Stream.concat(memberStream,
+          Environment.this.submodels.stream());
+      }
+
+      if (conceptDescriptions != null) {
+        memberStream = Stream.concat(memberStream,
+          Environment.this.conceptDescriptions.stream());
+      }
+
+      return memberStream;
+    }
+  }
+
+  private class EnvironmentRecursiveIterable implements Iterable<IClass> {
+    @Override
+    public Iterator<IClass> iterator() {
+      Stream<IClass> stream = stream();
+
+      return stream.iterator();
+    }
+
+    @Override
+    public void forEach(Consumer<? super IClass> action) {
+      Stream<IClass> stream = stream();
+
+      stream.forEach(action);
+    }
+
+    @Override
+    public Spliterator<IClass> spliterator() {
+      Stream<IClass> stream = stream();
+
+      return stream.spliterator();
+    }
+
+    private Stream<IClass> stream() {
+      Stream<IClass> memberStream = Stream.empty();
+
+      if (assetAdministrationShells != null) {
+        memberStream = Stream.concat(memberStream,
+          Environment.this.assetAdministrationShells.stream()
+            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
+              StreamSupport.stream(item.descend().spliterator(), false))));
+      }
+
+      if (submodels != null) {
+        memberStream = Stream.concat(memberStream,
+          Environment.this.submodels.stream()
+            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
+              StreamSupport.stream(item.descend().spliterator(), false))));
+      }
+
+      if (conceptDescriptions != null) {
+        memberStream = Stream.concat(memberStream,
+          Environment.this.conceptDescriptions.stream()
+            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
+              StreamSupport.stream(item.descend().spliterator(), false))));
+      }
+
+      return memberStream;
+    }
   }
 }
 

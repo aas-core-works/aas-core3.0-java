@@ -327,7 +327,9 @@ public class BasicEventElement implements IBasicEventElement {
 
   @Override
   public void setObserved(IReference observed) {
-    this.observed = observed;
+    this.observed = Objects.requireNonNull(
+      observed,
+      "Argument \"observed\" must be non-null.");
   }
 
   @Override
@@ -337,7 +339,9 @@ public class BasicEventElement implements IBasicEventElement {
 
   @Override
   public void setDirection(Direction direction) {
-    this.direction = direction;
+    this.direction = Objects.requireNonNull(
+      direction,
+      "Argument \"direction\" must be non-null.");
   }
 
   @Override
@@ -347,7 +351,9 @@ public class BasicEventElement implements IBasicEventElement {
 
   @Override
   public void setState(StateOfEvent state) {
-    this.state = state;
+    this.state = Objects.requireNonNull(
+      state,
+      "Argument \"state\" must be non-null.");
   }
 
   @Override

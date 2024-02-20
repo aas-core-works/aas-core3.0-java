@@ -139,7 +139,9 @@ public class Reference implements IReference {
 
   @Override
   public void setType(ReferenceTypes type) {
-    this.type = type;
+    this.type = Objects.requireNonNull(
+      type,
+      "Argument \"type\" must be non-null.");
   }
 
   @Override
@@ -159,7 +161,9 @@ public class Reference implements IReference {
 
   @Override
   public void setKeys(List<IKey> keys) {
-    this.keys = keys;
+    this.keys = Objects.requireNonNull(
+      keys,
+      "Argument \"keys\" must be non-null.");
   }
 
   /**

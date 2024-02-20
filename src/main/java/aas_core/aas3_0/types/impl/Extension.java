@@ -121,7 +121,9 @@ public class Extension implements IExtension {
 
   @Override
   public void setName(String name) {
-    this.name = name;
+    this.name = Objects.requireNonNull(
+      name,
+      "Argument \"name\" must be non-null.");
   }
 
   @Override

@@ -259,7 +259,9 @@ public class AnnotatedRelationshipElement implements IAnnotatedRelationshipEleme
 
   @Override
   public void setFirst(IReference first) {
-    this.first = first;
+    this.first = Objects.requireNonNull(
+      first,
+      "Argument \"first\" must be non-null.");
   }
 
   @Override
@@ -269,7 +271,9 @@ public class AnnotatedRelationshipElement implements IAnnotatedRelationshipEleme
 
   @Override
   public void setSecond(IReference second) {
-    this.second = second;
+    this.second = Objects.requireNonNull(
+      second,
+      "Argument \"second\" must be non-null.");
   }
 
   @Override

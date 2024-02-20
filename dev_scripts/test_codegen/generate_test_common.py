@@ -153,7 +153,7 @@ public class Common{
             System.getenv("AAS_CORE_AAS3_0_TESTS_RECORD_MODE")
                     .toLowerCase()
                     .equals("true") ? true : false;
-    public static String TEST_DATA_DIR = Paths.get("src", "test", "test_data").toAbsolutePath().toString();
+    public static String TEST_DATA_DIR = Paths.get("test_data").toAbsolutePath().toString();
     public static final List<String> CAUSES_DESERIALIZATION_FAILURE =
             Collections.unmodifiableList(Arrays.asList(
                     "TypeViolation",
@@ -192,7 +192,7 @@ public class Common{
 """
     )
 
-    target_pth = repo_root / "/home/mboehm/IdeaProjects/TestGen/src/test/java/Common.java"
+    target_pth = repo_root / "src/test/java/Common.java"
     target_pth.write_text(writer.getvalue(), encoding="utf-8")
 
     return 0

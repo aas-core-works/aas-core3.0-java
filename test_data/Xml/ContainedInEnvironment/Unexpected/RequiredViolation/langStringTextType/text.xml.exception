@@ -1,1 +1,1 @@
-The required property Text has not been given in the XML representation of an instance of class LangStringTextType at: assetAdministrationShells/*[0]/description/*[0]
+The required property text has not been given in the XML representation of an instance of class LangStringTextType at: assetAdministrationShells/*[0]/description/*[0]

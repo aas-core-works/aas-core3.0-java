@@ -65,7 +65,9 @@ public class Key implements IKey {
 
   @Override
   public void setType(KeyTypes type) {
-    this.type = type;
+    this.type = Objects.requireNonNull(
+      type,
+      "Argument \"type\" must be non-null.");
   }
 
   @Override
@@ -75,7 +77,9 @@ public class Key implements IKey {
 
   @Override
   public void setValue(String value) {
-    this.value = value;
+    this.value = Objects.requireNonNull(
+      value,
+      "Argument \"value\" must be non-null.");
   }
 
   /**

@@ -52,7 +52,9 @@ public class LangStringNameType implements ILangStringNameType {
 
   @Override
   public void setLanguage(String language) {
-    this.language = language;
+    this.language = Objects.requireNonNull(
+      language,
+      "Argument \"language\" must be non-null.");
   }
 
   @Override
@@ -62,7 +64,9 @@ public class LangStringNameType implements ILangStringNameType {
 
   @Override
   public void setText(String text) {
-    this.text = text;
+    this.text = Objects.requireNonNull(
+      text,
+      "Argument \"text\" must be non-null.");
   }
 
   /**

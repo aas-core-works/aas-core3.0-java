@@ -51,7 +51,9 @@ public class OperationVariable implements IOperationVariable {
 
   @Override
   public void setValue(ISubmodelElement value) {
-    this.value = value;
+    this.value = Objects.requireNonNull(
+      value,
+      "Argument \"value\" must be non-null.");
   }
 
   /**

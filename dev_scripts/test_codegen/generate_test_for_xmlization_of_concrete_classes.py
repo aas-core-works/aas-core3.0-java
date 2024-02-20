@@ -512,7 +512,7 @@ public class TestXmlizationOfConcreteClasses{
     )
 
     target_pth = (
-            repo_root / "/home/mboehm/IdeaProjects/TestGen/src/test/java/TestXmlizationOfConcreteClasses.java"
+            repo_root / "src/test/java/TestXmlizationOfConcreteClasses.java"
     )
     target_pth.write_text(writer.getvalue(), encoding="utf-8")
 

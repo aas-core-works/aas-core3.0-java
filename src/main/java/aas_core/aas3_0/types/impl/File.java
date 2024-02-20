@@ -264,7 +264,9 @@ public class File implements IFile {
 
   @Override
   public void setContentType(String contentType) {
-    this.contentType = contentType;
+    this.contentType = Objects.requireNonNull(
+      contentType,
+      "Argument \"contentType\" must be non-null.");
   }
 
   /**

@@ -242,7 +242,9 @@ public class Submodel implements ISubmodel {
 
   @Override
   public void setId(String id) {
-    this.id = id;
+    this.id = Objects.requireNonNull(
+      id,
+      "Argument \"id\" must be non-null.");
   }
 
   @Override

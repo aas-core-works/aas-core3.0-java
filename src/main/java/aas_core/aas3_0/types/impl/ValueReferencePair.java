@@ -63,7 +63,9 @@ public class ValueReferencePair implements IValueReferencePair {
 
   @Override
   public void setValue(String value) {
-    this.value = value;
+    this.value = Objects.requireNonNull(
+      value,
+      "Argument \"value\" must be non-null.");
   }
 
   @Override
@@ -73,7 +75,9 @@ public class ValueReferencePair implements IValueReferencePair {
 
   @Override
   public void setValueId(IReference valueId) {
-    this.valueId = valueId;
+    this.valueId = Objects.requireNonNull(
+      valueId,
+      "Argument \"valueId\" must be non-null.");
   }
 
   /**
