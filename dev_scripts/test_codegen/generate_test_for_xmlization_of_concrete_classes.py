@@ -234,8 +234,32 @@ public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
         Stripped(
             f"""\
 @Test
-public void test{cls_name_java}DeserializationFail(){{
-        //todo implement
+public void test{cls_name_java}DeserializationFail() throws IOException, XMLStreamException {{
+
+{I}for (String cause : Common.CAUSES_DESERIALIZATION_FAILURE) {{
+{II}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
+{III}"Xml",
+{III}"SelfContained",
+{III}"Unexpected",
+{III}cause,
+{III}{java_common.string_literal(cls_name_xml)});
+{II}if (!Files.exists(searchPath)) {{
+{III}// No examples of Environment for the failure cause.
+{III}continue;
+{I}}}
+{II}final List<String> paths = Common.findFiles(searchPath, ".xml");
+{II}for (String path : paths) {{
+{III}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+{III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{III}Xmlization.DeserializeException exception = null;
+{III}try{{
+{IIII}Xmlization.Deserialize.deserialize{cls_name_java}(xmlReader);
+{III}}}catch (Xmlization.DeserializeException observedException){{
+{IIII}exception = observedException;
+{III}}}
+{III}Common.assertEqualsExpectedOrRerecordDeserializationException(exception,path);
+{II}}}
+{I}}}
 }}  // public void test{cls_name_java}DeserializationFail"""
         )
     )
@@ -253,7 +277,7 @@ public void test{cls_name_java}VerificationFail() throws IOException, XMLStreamE
 {III}cause,
 {III}{java_common.string_literal(cls_name_xml)});
 {II}if (!Files.exists(searchPath)) {{
-{II}// No examples of Environment for the failure cause.
+{III}// No examples of Environment for the failure cause.
 {III}continue;
 {II}}}
 {II}final List<String> paths = Common.findFiles(searchPath, ".xml");
