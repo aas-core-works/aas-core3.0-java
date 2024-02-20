@@ -184,7 +184,7 @@ private static void testRoundTrip(String path) throws XMLStreamException, IOExce
     )
 
 def _generate_test_verification_fail() -> Stripped:
-    """Generate the method for testing the deserialize -> serialize round trip."""
+    """Generate the method for testing verification fails."""
     return Stripped(
         f"""\
 private static void testVerificationFail(String path) throws XMLStreamException, IOException {{
@@ -194,6 +194,23 @@ private static void testVerificationFail(String path) throws XMLStreamException,
 {I}final Iterable<Reporting.Error> errors = Verification.verify(instance);
 {I}final List<Reporting.Error> errorList = Common.asList(errors);
 {I}Common.assertEqualsExpectedOrRerecordVerificationErrors(errorList, path);
+}}"""
+    )
+
+def _generate_test_deserialization_fail() -> Stripped:
+    """enerate the method for testing deserialization fails."""
+    return Stripped(
+        f"""\
+private static void testDeserializationFail(String path) throws XMLStreamException, IOException {{
+{I}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+{I}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{I}Xmlization.DeserializeException exception = null;
+{I}try{{
+{II}Xmlization.Deserialize.deserializeEnvironment(xmlReader);
+{I}}}catch (Xmlization.DeserializeException observedException){{
+{II}exception = observedException;
+{I}}}
+{I}Common.assertEqualsExpectedOrRerecordDeserializationException(exception, path);
 }}"""
     )
 
@@ -345,15 +362,7 @@ public void test{cls_name_java}DeserializationFail() throws IOException, XMLStre
 {I}}}
 {II}final List<String> paths = Common.findFiles(searchPath, ".xml");
 {II}for (String path : paths) {{
-{III}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-{III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
-{III}Xmlization.DeserializeException exception = null;
-{III}try{{
-{IIII}Xmlization.Deserialize.deserializeEnvironment(xmlReader);
-{III}}}catch (Xmlization.DeserializeException observedException){{
-{IIII}exception = observedException;
-{III}}}
-{III}Common.assertEqualsExpectedOrRerecordDeserializationException(exception,path);
+{III}testDeserializationFail(path);
 {II}}}
 {I}}}
 }}  // public void test{cls_name_java}DeserializationFail"""
@@ -403,7 +412,8 @@ def main() -> int:
         _generate_read_content(),
         _generate_check_elements_equal(),
         _generate_test_round_trip(),
-        _generate_test_verification_fail()
+        _generate_test_verification_fail(),
+        _generate_test_deserialization_fail()
     ]  # type: List[str]
 
     xml_namespace_literal = java_common.string_literal(
