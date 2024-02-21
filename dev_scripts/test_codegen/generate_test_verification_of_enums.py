@@ -53,7 +53,7 @@ public void test{enum_name}Valid() {{
 
 @Test
 public void test{enum_name}Invalid() {{
-final {enum_name} value = null;
+{I}final {enum_name} value = null;
 {I}final List<Reporting.Error> errors = Verification.verify{enum_name}(value).collect(Collectors.toList());
 {I}assertEquals(1,errors.size());
 {I}assertEquals("Invalid {enum_name}: null", errors.get(0).getCause());
