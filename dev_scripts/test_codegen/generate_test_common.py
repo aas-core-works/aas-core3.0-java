@@ -35,6 +35,25 @@ public static List<String> findFiles(Path path, String fileExtension) throws IOE
 {I}return result;
 }}""")
 
+def _generate_must_find()-> Stripped:
+    return Stripped(f"""\
+public static <T extends IClass> T mustFind(String type, IClass container) {{
+{I}if (type.equals(container.getClass().getSimpleName())) {{
+{II}return (T)container;
+{I}}}
+{I}IClass instance = null;
+{I}for (IClass current : container.descend()) {{
+{II}if (type.equals(current.getClass().getSimpleName())) {{
+{III}instance = current;
+{III}break;
+{I}}}
+{I}}}
+{I}if(instance == null){{
+{II}throw new IllegalStateException("No instance of " + type + " could be found");
+{I}}}
+{I}return (T)instance;
+}}""")
+
 def _generate_assert_no_verification_errors()-> Stripped:
     return Stripped(f"""\
 public static void assertNoVerificationErrors(List<Reporting.Error> errors, String path){{
@@ -110,6 +129,7 @@ def main() -> int:
     repo_root = this_path.parent.parent.parent
     blocks = [
         _generate_find_files(),
+        _generate_must_find(),
         _generate_assert_no_verification_errors(),
         _generate_as_list(),
         _generate_assert_equals_expected_or_rerecord_verification_errors(),
@@ -126,6 +146,7 @@ def main() -> int:
 
 import aas_core.aas3_0.reporting.Reporting;
 import aas_core.aas3_0.xmlization.Xmlization;
+import aas_core.aas3_0.types.model.IClass;
 import javax.annotation.Generated;
 import java.io.FileNotFoundException;
 import java.io.IOException;
