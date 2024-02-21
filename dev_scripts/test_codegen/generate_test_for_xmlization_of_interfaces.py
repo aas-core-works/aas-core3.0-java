@@ -1,4 +1,4 @@
-"""Generate the test code for the xmlization of classes outside a container."""
+"""Generate the test code for the XML de/serialization of interfaces."""
 
 import io
 import os
@@ -16,8 +16,7 @@ import aas_core_codegen.run
 from aas_core_codegen import intermediate
 from aas_core_codegen.common import Stripped
 
-import test_codegen.common
-from test_codegen import test_data_io
+from test_codegen.common import load_symbol_table
 from aas_core_codegen.java.common import (
     INDENT as I
 )
@@ -25,45 +24,42 @@ from aas_core_codegen.java.common import (
 
 def main() -> int:
     """Execute the main routine."""
-    symbol_table = test_codegen.common.load_symbol_table()
-
-    this_path = pathlib.Path(os.path.realpath(__file__))
-    repo_root = this_path.parent.parent.parent
-
-    test_data_dir = repo_root / "test_data"
-
-    environment_cls = symbol_table.must_find_concrete_class(
-        aas_core_codegen.common.Identifier("Environment")
-    )
+    symbol_table = load_symbol_table()
 
     # noinspection PyListCreation
     blocks = []  # type: List[str]
 
     for our_type in symbol_table.our_types:
-        if not isinstance(our_type, intermediate.ConcreteClass):
+        if not isinstance(our_type, intermediate.Class):
             continue
 
-        container_cls = test_data_io.determine_container_class(
-            cls=our_type, test_data_dir=test_data_dir, environment_cls=environment_cls
-        )
-
-        if container_cls is our_type:
-            # NOTE (mristin, 2022-06-27):
-            # These classes are tested already in TestXmlizationOfConcreteClasses.
-            # We only need to test for class instances contained in a container.
+        if our_type.interface is None or len(our_type.interface.implementers) == 0:
             continue
 
-        cls_name_java = aas_core_codegen.java.naming.class_name(our_type.name)
+        if our_type.name == aas_core_codegen.common.Identifier("Event_payload"):
+            # NOTE (mristin, 2022-06-21):
+            # Event payload is a dangling class and can not be reached from
+            # the environment. Hence, we skip it.
+            continue
 
-        blocks.append(
-            Stripped(
-                f"""\
+        for cls in our_type.interface.implementers:
+            if cls.serialization is None or not cls.serialization.with_model_type:
+                continue
+
+            interface_name_java = aas_core_codegen.java.naming.interface_name(
+                our_type.interface.name
+            )
+
+            cls_name_java = aas_core_codegen.java.naming.class_name(cls.name)
+
+            blocks.append(
+                Stripped(
+                    f"""\
 @Test
-public void testRoundTrip{cls_name_java}() throws IOException, XMLStreamException {{
+public void testRoundTrip{interface_name_java}From{cls_name_java}() throws IOException, XMLStreamException {{
 {I}// We load from JSON here just to jump-start the round trip.
 {I}// The round-trip goes then over XML.
 {I}final {cls_name_java} instance = CommonJsonization.loadMaximal{cls_name_java}();
-{I}
 {I}final StringWriter stringOut = new StringWriter();
 {I}final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
 {I}final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
@@ -73,15 +69,16 @@ public void testRoundTrip{cls_name_java}() throws IOException, XMLStreamExceptio
 {I}final String outputText = stringOut.toString();
 {I}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 {I}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-{I}final {cls_name_java}  anotherInstance = Xmlization.Deserialize.deserialize{cls_name_java} (xmlReader);
+{I}final {interface_name_java} anotherInstance = Xmlization.Deserialize.deserialize{interface_name_java}(xmlReader);
 {I}// Serialize back to XML
 {I}final StringWriter anotherStringOut = new StringWriter();
 {I}final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+{I}
 {I}Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
 {I}assertEquals(outputText, anotherStringOut.toString());
-}}  // public void testRoundTrip{cls_name_java}"""
+}}  // void testRoundTrip{interface_name_java}From{cls_name_java}"""
+                )
             )
-        )
 
     writer = io.StringIO()
     writer.write(
@@ -91,29 +88,19 @@ public void testRoundTrip{cls_name_java}() throws IOException, XMLStreamExceptio
  * Do NOT edit or append.
  */
 
-import javax.annotation.Generated;
-import javax.xml.stream.*;
-
 import aas_core.aas3_0.types.impl.*;
+import aas_core.aas3_0.types.model.*;
 import aas_core.aas3_0.xmlization.Xmlization;
 import org.junit.jupiter.api.Test;
-
+import javax.annotation.Generated;
+import javax.xml.stream.*;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
-/** 
-* Test de/serialization of classes contained in a container <i>outside</i>
-* of that container.
-* This is necessary so that we also test the methods that directly de/serialize
-* an instance in rare use cases where it does not reside within a container such
-* as {@link Environment}.
-*/
 @Generated("Generated by aas-test-gen")
-public class TestXmlizationOfConcreteClassesOutsideContainer {
+public class TestXmlizationOfInterfaces {
 """
     )
 
@@ -125,7 +112,7 @@ public class TestXmlizationOfConcreteClassesOutsideContainer {
 
     writer.write(
         """
-}  // class TestXmlizationOfConcreteClassesOutsideContainer
+}  // class TestXmlizationOfInterfaces
 
 /*
  * This code has been automatically generated by testgen.
@@ -134,9 +121,10 @@ public class TestXmlizationOfConcreteClassesOutsideContainer {
 """
     )
 
-    target_pth = (
-        repo_root / "/home/mboehm/IdeaProjects/TestGen/src/test/java/TestXmlizationOfConcreteClassesOutsideContainer.java"
-    )
+    this_path = pathlib.Path(os.path.realpath(__file__))
+    repo_root = this_path.parent.parent.parent
+
+    target_pth = repo_root / "/home/mboehm/IdeaProjects/TestGen/src/test/java/TestXmlizationOfInterfaces.java"
     target_pth.write_text(writer.getvalue(), encoding="utf-8")
 
     return 0
