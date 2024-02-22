@@ -16,22 +16,21 @@ from aas_core_codegen.java.common import (
     INDENT6 as IIIIII,
 )
 
-def _generate_find_files()-> Stripped:
+def _generate_find_paths()-> Stripped:
     return Stripped(f"""\
-public static List<String> findFiles(Path path, String fileExtension) throws IOException {{
+public static List<Path> findPaths(Path path, String fileExtension) throws IOException {{
 
 {I}if (!Files.isDirectory(path)) {{
 {II}throw new IllegalArgumentException("Path must be a directory!");
 {I}}}
 
-{I}List<String> result;
+{I}List<Path> result;
 {I}try (Stream<Path> walk = Files.walk(path)) {{
 {II}result = walk
 {III}.filter(p -> !Files.isDirectory(p))
-{III}.map(Path::toString)
-{III}.filter(f -> f.endsWith(fileExtension))
+{III}.filter(f -> f.toString().endsWith(fileExtension))
 {III}.collect(Collectors.toList());
-{II}}}
+{I}}}
 {I}return result;
 }}""")
 
@@ -56,12 +55,12 @@ public static <T extends IClass> T mustFind(String type, IClass container) {{
 
 def _generate_assert_no_verification_errors()-> Stripped:
     return Stripped(f"""\
-public static void assertNoVerificationErrors(List<Reporting.Error> errors, String path){{
+public static void assertNoVerificationErrors(List<Reporting.Error> errors, Path path){{
 
 {I}if(!errors.isEmpty()){{
 {II}StringBuilder stringBuilder = new StringBuilder();
 {III}stringBuilder.append("Expected no errors when verifying the instance de-serialized from ")
-{III}.append(path).append(", ")
+{III}.append(path.toString()).append(", ")
 {III}.append("but got ")
 {III}.append(errors.size())
 {III}.append(" error(s):")
@@ -84,7 +83,7 @@ public static <T> List<T> asList(Iterable<T> iterable) {{
 
 def _generate_assert_equals_expected_or_rerecord_verification_errors()-> Stripped:
     return Stripped(f"""\
-public static void assertEqualsExpectedOrRerecordVerificationErrors(List<Reporting.Error> errors, String path) throws IOException {{
+public static void assertEqualsExpectedOrRerecordVerificationErrors(List<Reporting.Error> errors, Path path) throws IOException {{
 {I}if (errors.isEmpty()) {{
 {II}fail("Expected at least one verification error when verifying " + path + ", but got none");
 {I}}}
@@ -104,7 +103,7 @@ public static void assertEqualsExpectedOrRerecordVerificationErrors(List<Reporti
 
 def _generate_assert_equals_expected_or_rerecord_deserialization_exception()-> Stripped:
     return Stripped(f"""\
-public static void assertEqualsExpectedOrRerecordDeserializationException(Xmlization.DeserializeException exception, String path) throws IOException {{
+public static void assertEqualsExpectedOrRerecordDeserializationException(Xmlization.DeserializeException exception, Path path) throws IOException {{
 {I}if (exception == null) {{
 {II}fail("Expected a Xmlization exception when de-serializing " + path + ", but got none.");
 {I}}} else {{
@@ -128,7 +127,7 @@ def main() -> int:
     this_path = pathlib.Path(os.path.realpath(__file__))
     repo_root = this_path.parent.parent.parent
     blocks = [
-        _generate_find_files(),
+        _generate_find_paths(),
         _generate_must_find(),
         _generate_assert_no_verification_errors(),
         _generate_as_list(),

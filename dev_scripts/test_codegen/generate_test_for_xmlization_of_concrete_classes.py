@@ -36,7 +36,7 @@ def _generate_assert_serialize_deserialize_equals_original() -> Stripped:
     """Generate the method to check serialize and deserialize matches original."""
     return Stripped(
         f"""\
-private static void assertSerializeDeserializeEqualsOriginal(IClass instance, String path) throws XMLStreamException, IOException {{
+private static void assertSerializeDeserializeEqualsOriginal(IClass instance, Path path) throws XMLStreamException, IOException {{
 
 {I}final StringWriter stringOut = new StringWriter();
 {I}final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
@@ -61,7 +61,7 @@ private static void assertSerializeDeserializeEqualsOriginal(IClass instance, St
 {II}}}
 {I}}}
 
-{I}final XMLEventReader expectedReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{I}final XMLEventReader expectedReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(path));
 {I}final Map<XMLEvent, String> expectedMap = buildElementsMap(expectedReader);
 
 
@@ -171,9 +171,9 @@ def _generate_test_round_trip() -> Stripped:
     """Generate the method for testing the deserialize -> serialize round trip."""
     return Stripped(
         f"""\
-private static void testRoundTrip(String path) throws XMLStreamException, IOException {{
+private static void testRoundTrip(Path path) throws XMLStreamException, IOException {{
 {I}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-{I}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{I}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(path));
 {I}final Environment instance = Xmlization.Deserialize.deserializeEnvironment(xmlReader);
 {I}final Iterable<Reporting.Error> errors = Verification.verify(instance);
 {I}final List<Reporting.Error> errorList = Common.asList(errors);
@@ -186,9 +186,9 @@ def _generate_test_verification_fail() -> Stripped:
     """Generate the method for testing verification fails."""
     return Stripped(
         f"""\
-private static void testVerificationFail(String path) throws XMLStreamException, IOException {{
+private static void testVerificationFail(Path path) throws XMLStreamException, IOException {{
 {I}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-{I}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{I}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(path));
 {I}final Environment instance = Xmlization.Deserialize.deserializeEnvironment(xmlReader);
 {I}final Iterable<Reporting.Error> errors = Verification.verify(instance);
 {I}final List<Reporting.Error> errorList = Common.asList(errors);
@@ -200,9 +200,9 @@ def _generate_test_deserialization_fail() -> Stripped:
     """enerate the method for testing deserialization fails."""
     return Stripped(
         f"""\
-private static void testDeserializationFail(String path) throws XMLStreamException, IOException {{
+private static void testDeserializationFail(Path path) throws XMLStreamException, IOException {{
 {I}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-{I}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{I}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(path));
 {I}Xmlization.DeserializeException exception = null;
 {I}try{{
 {II}Xmlization.Deserialize.deserializeEnvironment(xmlReader);
@@ -232,10 +232,10 @@ public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
 {II}"SelfContained",
 {II}"Expected",
 {II}{java_common.string_literal(cls_name_xml)});
-{II}final List<String> paths = Common.findFiles(searchPath, ".xml");
-{II}for (String path : paths) {{
+{II}final List<Path> paths = Common.findPaths(searchPath, ".xml");
+{II}for (Path path : paths) {{
 {III}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-{III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(path));
 {III}final {cls_name_java} instance = Xmlization.Deserialize.deserialize{cls_name_java}(xmlReader);
 {III}final Iterable<Reporting.Error> errors = Verification.verify(instance);
 {III}final List<Reporting.Error> errorList = Common.asList(errors);
@@ -263,10 +263,10 @@ public void test{cls_name_java}DeserializationFail() throws IOException, XMLStre
 {III}// No examples of Environment for the failure cause.
 {III}continue;
 {I}}}
-{II}final List<String> paths = Common.findFiles(searchPath, ".xml");
-{II}for (String path : paths) {{
+{II}final List<Path> paths = Common.findPaths(searchPath, ".xml");
+{II}for (Path path : paths) {{
 {III}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-{III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(path));
 {III}Xmlization.DeserializeException exception = null;
 {III}try{{
 {IIII}Xmlization.Deserialize.deserialize{cls_name_java}(xmlReader);
@@ -296,10 +296,10 @@ public void test{cls_name_java}VerificationFail() throws IOException, XMLStreamE
 {III}// No examples of Environment for the failure cause.
 {III}continue;
 {II}}}
-{II}final List<String> paths = Common.findFiles(searchPath, ".xml");
-{II}for (String path : paths) {{
+{II}final List<Path> paths = Common.findPaths(searchPath, ".xml");
+{II}for (Path path : paths) {{
 {III}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-{III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(Paths.get(path)));
+{III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(path));
 {III}final {cls_name_java} instance = Xmlization.Deserialize.deserialize{cls_name_java}(xmlReader);
 {III}final Iterable<Reporting.Error> errors = Verification.verify(instance);
 {III}final List<Reporting.Error> errorList = Common.asList(errors);
@@ -334,8 +334,8 @@ public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
 {II}"ContainedInEnvironment",
 {II}"Expected",
 {II}{java_common.string_literal(cls_name_xml)});
-{II}final List<String> paths = Common.findFiles(searchPath, ".xml");
-{II}for (String path : paths) {{
+{II}final List<Path> paths = Common.findPaths(searchPath, ".xml");
+{II}for (Path path : paths) {{
 {III}testRoundTrip(path);
 {II}}}
 }}  // public void test{cls_name_java}DeserializationOk"""
@@ -359,8 +359,8 @@ public void test{cls_name_java}DeserializationFail() throws IOException, XMLStre
 {III}// No examples of Environment for the failure cause.
 {III}continue;
 {I}}}
-{II}final List<String> paths = Common.findFiles(searchPath, ".xml");
-{II}for (String path : paths) {{
+{II}final List<Path> paths = Common.findPaths(searchPath, ".xml");
+{II}for (Path path : paths) {{
 {III}testDeserializationFail(path);
 {II}}}
 {I}}}
@@ -384,8 +384,8 @@ public void test{cls_name_java}VerificationFail() throws IOException, XMLStreamE
 {II}// No examples of Environment for the failure cause.
 {III}continue;
 {II}}}
-{II}final List<String> paths = Common.findFiles(searchPath, ".xml");
-{II}for (String path : paths) {{
+{II}final List<Path> paths = Common.findPaths(searchPath, ".xml");
+{II}for (Path path : paths) {{
 {III}testVerificationFail(path);
 {II}}}
 {I}}}
