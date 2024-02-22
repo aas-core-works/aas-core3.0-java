@@ -92,11 +92,11 @@ public static void assertEqualsExpectedOrRerecordVerificationErrors(List<Reporti
 {I}if (RECORD_MODE) {{
 {II}Files.write(errorsPath, got.getBytes(StandardCharsets.UTF_8));
 {I}}} else {{
-{I}if (!Files.exists(errorsPath)) {{
-{II}throw new FileNotFoundException("The file with the recorded errors does not exist: " + errorsPath);
-{I}}}
-{I}final String expected = Files.readAllLines(errorsPath).stream().collect(Collectors.joining("\\n"));
-{I}assertEquals(expected,got,"The expected verification errors do not match the actual ones for the file " + path);
+{II}if (!Files.exists(errorsPath)) {{
+{III}throw new FileNotFoundException("The file with the recorded errors does not exist: " + errorsPath);
+{II}}}
+{II}final String expected = Files.readAllLines(errorsPath).stream().collect(Collectors.joining("\\n"));
+{II}assertEquals(expected,got,"The expected verification errors do not match the actual ones for the file " + path);
 {I}}}
 }}""")
 
@@ -107,17 +107,17 @@ public static void assertEqualsExpectedOrRerecordDeserializationException(Xmliza
 {I}if (exception == null) {{
 {II}fail("Expected a Xmlization exception when de-serializing " + path + ", but got none.");
 {I}}} else {{
-{I}final Path exceptionPath = Paths.get(path + ".exception");
-{I}final String got = exception.getMessage();
-{I}if (RECORD_MODE) {{
-{II}Files.write(exceptionPath, got.getBytes(StandardCharsets.UTF_8));
-{I}}} else{{
-{I}if (!Files.exists(exceptionPath)) {{
-{II}throw new FileNotFoundException("The file with the recorded errors does not exist: " + exceptionPath);
-{I}}}
-{I}final String expected = Files.readAllLines(exceptionPath).stream().collect(Collectors.joining("\\n"));
-{I}assertEquals(expected, got, "The expected exception does not match the actual one for the file " + path);
-{I}}}
+{II}final Path exceptionPath = Paths.get(path + ".exception");
+{II}final String got = exception.getMessage();
+{II}if (RECORD_MODE) {{
+{III}Files.write(exceptionPath, got.getBytes(StandardCharsets.UTF_8));
+{II}}} else{{
+{III}if (!Files.exists(exceptionPath)) {{
+{IIII}throw new FileNotFoundException("The file with the recorded errors does not exist: " + exceptionPath);
+{III}}}
+{III}final String expected = Files.readAllLines(exceptionPath).stream().collect(Collectors.joining("\\n"));
+{III}assertEquals(expected, got, "The expected exception does not match the actual one for the file " + path);
+{II}}}
 {I}}}
 }}""")
 
@@ -174,11 +174,20 @@ public class Common{
                     .toLowerCase()
                     .equals("true");
     public static String TEST_DATA_DIR = Paths.get("test_data").toAbsolutePath().toString();
-    public static final List<String> CAUSES_DESERIALIZATION_FAILURE =
+    
+    public static final List<String> CAUSES_XML_DESERIALIZATION_FAILURE =
             Collections.unmodifiableList(Arrays.asList(
                     "TypeViolation",
                     "RequiredViolation",
                     "EnumViolation",
+                    "UnexpectedAdditionalProperty"));
+                    
+    public static final List<String> CAUSES_JSON_DESERIALIZATION_FAILURE =
+            Collections.unmodifiableList(Arrays.asList(
+                    "TypeViolation",
+                    "RequiredViolation",
+                    "EnumViolation",
+                    "NullViolation",
                     "UnexpectedAdditionalProperty"));
 
     public static final List<String> CAUSES_FOR_VERIFICATION_FAILURE =

@@ -252,7 +252,7 @@ public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
 @Test
 public void test{cls_name_java}DeserializationFail() throws IOException, XMLStreamException {{
 
-{I}for (String cause : Common.CAUSES_DESERIALIZATION_FAILURE) {{
+{I}for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {{
 {II}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
 {III}"Xml",
 {III}"SelfContained",
@@ -348,7 +348,7 @@ public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
 @Test
 public void test{cls_name_java}DeserializationFail() throws IOException, XMLStreamException {{
 
-{I}for (String cause : Common.CAUSES_DESERIALIZATION_FAILURE) {{
+{I}for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {{
 {II}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
 {III}"Xml",
 {III}"ContainedInEnvironment",
