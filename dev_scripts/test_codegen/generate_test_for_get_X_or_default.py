@@ -40,6 +40,7 @@ def main() -> int:
 public static void compareOrRerecordValue(Object value, Path expectedPath) throws IOException {{
 {I}final JsonNode got = mapper.readTree( "\\"" + value + "\\"" );
 {I}if (Common.RECORD_MODE) {{
+{II}Files.createDirectories(expectedPath.getParent());
 {II}Files.write(expectedPath, got.toString().getBytes());
 {I}}} else {{
 {II}if (!Files.exists(expectedPath)) {{
