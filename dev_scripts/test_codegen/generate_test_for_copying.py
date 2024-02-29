@@ -27,6 +27,66 @@ from aas_core_codegen.java.common import (
 
 from test_codegen.common import load_symbol_table
 
+def _generate_pair() -> Stripped:
+    """Generate zip  method."""
+    return Stripped(
+        f"""\
+private static class Pair<A, B> {{
+{I}private final A first;
+{I}private final B second;
+{I}
+{I}public Pair(A first, B second) {{
+{II}this.first = first;
+{II}this.second = second;
+{I}}}
+{I}
+{I}public A getFirst() {{
+{II}return first;
+{I}}}
+{I}
+{I}public B getSecond() {{
+{II}return second;
+{I}}}
+}}"""
+    )
+
+def _generate_zip() -> Stripped:
+    """Generate zip  method."""
+    return Stripped(
+        f"""\
+// Java 8 doesn't provide a split operation out of the box, so we have to ship our own.
+// Adapted from: https://stackoverflow.com/a/23529010
+private static <A, B> Stream<Pair<A, B>> zip(
+{I}Stream<? extends A> a,
+{I}Stream<? extends B> b) {{
+{I}Spliterator<? extends A> aSplit = Objects.requireNonNull(a).spliterator();
+{I}Spliterator<? extends B> bSplit = Objects.requireNonNull(b).spliterator();
+{I}
+{I}int characteristics = aSplit.characteristics() & bSplit.characteristics() &
+{II}~(Spliterator.DISTINCT | Spliterator.SORTED);
+{I}
+{I}long zipSize = ((characteristics & Spliterator.SIZED) != 0)
+{II}? Math.min(aSplit.getExactSizeIfKnown(), bSplit.getExactSizeIfKnown())
+{II}: -1;
+{I}
+{I}Iterator<A> aIter = Spliterators.iterator(aSplit);
+{I}Iterator<B> bIter = Spliterators.iterator(bSplit);
+{I}Iterator<Pair<A, B>> cIter = new Iterator<Pair<A, B>>() {{
+{II}@Override
+{II}public boolean hasNext() {{
+{III}return aIter.hasNext() && bIter.hasNext();
+{II}}}
+{II}
+{II}@Override
+{II}public Pair<A, B> next() {{
+{III}return new Pair<>(aIter.next(), bIter.next());
+{II}}}
+{I}}};
+{I}
+{I}Spliterator<Pair<A, B>> split = Spliterators.spliterator(cIter, zipSize, characteristics);
+{I}return StreamSupport.stream(split, false);
+}}"""
+    )
 
 def _generate_shallow_equals(cls: intermediate.ConcreteClass) -> Stripped:
     """Generate the code for a static shallow ``Equals`` method."""
@@ -78,236 +138,242 @@ private static boolean check{cls_name_java}ShallowEquals(
     )
 
 
-# def _generate_transform_as_deep_equals(cls: intermediate.ConcreteClass) -> Stripped:
-#     """Generate the transform method that checks for deep equality."""
-#     if cls.is_implementation_specific:
-#         raise AssertionError(
-#             f"(mristin, 2022-11-04): "
-#             f"The class {cls.name!r} is implementation specific. "
-#             f"At the moment, we assume that all classes are not "
-#             f"implementation-specific, so that we can automatically generate the "
-#             f"shallow-equals methods. This way we can dispense of the whole "
-#             f"snippet/specific-implementation loading logic in "
-#             f"the unit test generation. Please notify the developers if you see this, "
-#             f"so that we can add the logic for implementation-specific classes "
-#             f"to this generation script."
-#         )
-#
-#     cls_name = java_naming.class_name(cls.name)
-#
-#     exprs = []  # type: List[Stripped]
-#
-#     for prop in cls.properties:
-#         optional = isinstance(prop.type_annotation, intermediate.OptionalTypeAnnotation)
-#         type_anno = intermediate.beneath_optional(prop.type_annotation)
-#
-#         prop_name = java_naming.property_name(prop.name)
-#
-#         expr = None  # type: Optional[Stripped]
-#
-#         primitive_type = intermediate.try_primitive_type(type_anno)
-#
-#         # fmt: off
-#         if (
-#                 isinstance(type_anno, intermediate.PrimitiveTypeAnnotation)
-#                 or (
-#                     isinstance(type_anno, intermediate.OurTypeAnnotation)
-#                     and isinstance(
-#                         type_anno.our_type, intermediate.ConstrainedPrimitive
-#                     )
-#                 )
-#         ):
-#             # fmt: on
-#             assert primitive_type is not None
-#             if (
-#                     primitive_type is intermediate.PrimitiveType.BOOL
-#                 or primitive_type is intermediate.PrimitiveType.INT
-#                 or primitive_type is intermediate.PrimitiveType.FLOAT
-#                 or primitive_type is intermediate.PrimitiveType.STR
-#             ):
-#                 expr = Stripped(f"that.{prop_name} == casted.{prop_name}")
-#             elif primitive_type is intermediate.PrimitiveType.BYTEARRAY:
-#                 expr = Stripped(
-#                         f"""\
-# ByteSpansEqual(
-# {I}that.{prop_name},
-# {I}casted.{prop_name})"""
-#                 )
-#             else:
-#                 aas_core_codegen.common.assert_never(primitive_type)
-#         elif isinstance(type_anno, intermediate.OurTypeAnnotation):
-#             if isinstance(type_anno.our_type, intermediate.Enumeration):
-#                 expr = Stripped(f"that.{prop_name} == casted.{prop_name}")
-#             elif isinstance(type_anno.our_type, intermediate.ConstrainedPrimitive):
-#                 raise AssertionError("Expected to handle this case above")
-#             elif isinstance(
-#                     type_anno.our_type,
-#                     (intermediate.AbstractClass, intermediate.ConcreteClass)
-#             ):
-#                 expr = Stripped(
-#                     f"""\
-# Transform(
-# {I}that.{prop_name},
-# {I}casted.{prop_name})"""
-#                 )
-#             else:
-#                 aas_core_codegen.common.assert_never(type_anno.our_type)
-#         elif isinstance(type_anno, intermediate.ListTypeAnnotation):
-#             assert (
-#                     isinstance(type_anno.items, intermediate.OurTypeAnnotation)
-#                     and isinstance(type_anno.items.our_type, intermediate.Class)
-#             ), (
-#                 f"(mristin, 2022-11-03): We handle only lists of classes in the deep "
-#                 f"equality checks at the moment. The meta-model does not contain "
-#                 f"any other lists, so we wanted to keep the code as simple as "
-#                 f"possible, and avoid unrolling. Please contact the developers "
-#                 f"if you need this feature. The class in question was {cls.name!r} and "
-#                 f"the property {prop.name!r}."
-#             )
-#
-#             expr = Stripped(
-#                 f"""\
-# that.{prop_name}.Count == casted.{prop_name}.Count
-# && (
-# {I}that.{prop_name}
-# {II}.Zip(
-# {III}casted.{prop_name},
-# {III}Transform)
-# {II}.All(item => item))"""
-#             )
-#         else:
-#             aas_core_codegen.common.assert_never(type_anno)
-#
-#         if optional and primitive_type is None:
-#             expr = Stripped(
-#                 f"""\
-# (that.{prop_name} != null && casted.{prop_name} != null)
-# {I}? {aas_core_codegen.common.indent_but_first_line(expr, II)}
-# {I}: that.{prop_name} == null && casted.{prop_name} == null"""
-#             )
-#
-#         exprs.append(expr)
-#
-#     body_writer = io.StringIO()
-#     body_writer.write("return (")
-#     for i, expr in enumerate(exprs):
-#         body_writer.write("\n")
-#         if i > 0:
-#             body_writer.write(
-#                 f"{I}&& {aas_core_codegen.common.indent_but_first_line(expr, I)}"
-#             )
-#         else:
-#             body_writer.write(
-#                 f"{I}{aas_core_codegen.common.indent_but_first_line(expr, I)}"
-#             )
-#
-#     body_writer.write(");")
-#
-#     interface_name = java_naming.interface_name(cls.name)
-#     transform_name = java_naming.method_name(Identifier(f"transform_{cls.name}"))
-#
-#     return Stripped(
-#         f"""\
-# public override bool {transform_name}(
-# {I}Aas.{interface_name} that,
-# {I}Aas.IClass other)
-# {{
-# {I}if (!(other is Aas.{cls_name} casted))
-# {I}{{
-# {II}return false;
-# {I}}}
-#
-# {I}{aas_core_codegen.common.indent_but_first_line(body_writer.getvalue(), I)}
-# }}"""
-#     )
+def _generate_transform_as_deep_equals(cls: intermediate.ConcreteClass) -> Stripped:
+    """Generate the transform method that checks for deep equality."""
+    if cls.is_implementation_specific:
+        raise AssertionError(
+            f"(mristin, 2022-11-04): "
+            f"The class {cls.name!r} is implementation specific. "
+            f"At the moment, we assume that all classes are not "
+            f"implementation-specific, so that we can automatically generate the "
+            f"shallow-equals methods. This way we can dispense of the whole "
+            f"snippet/specific-implementation loading logic in "
+            f"the unit test generation. Please notify the developers if you see this, "
+            f"so that we can add the logic for implementation-specific classes "
+            f"to this generation script."
+        )
+
+    cls_name = java_naming.class_name(cls.name)
+
+    exprs = []  # type: List[Stripped]
+
+    for prop in cls.properties:
+        optional = isinstance(prop.type_annotation, intermediate.OptionalTypeAnnotation)
+        type_anno = intermediate.beneath_optional(prop.type_annotation)
+        getter_name = java_naming.getter_name(prop.name)
+        prop_name = java_naming.property_name(prop.name)
+
+        expr = None  # type: Optional[Stripped]
+
+        primitive_type = intermediate.try_primitive_type(type_anno)
+
+        # fmt: off
+        if (
+                isinstance(type_anno, intermediate.PrimitiveTypeAnnotation)
+                or (
+                    isinstance(type_anno, intermediate.OurTypeAnnotation)
+                    and isinstance(
+                        type_anno.our_type, intermediate.ConstrainedPrimitive
+                    )
+                )
+        ):
+            # fmt: on
+            assert primitive_type is not None
+            if (
+                    primitive_type is intermediate.PrimitiveType.BOOL
+                or primitive_type is intermediate.PrimitiveType.INT
+                or primitive_type is intermediate.PrimitiveType.FLOAT
+                or primitive_type is intermediate.PrimitiveType.STR
+            ):
+                if optional: expr = Stripped(f"that.{getter_name}().isPresent() ? casted.{getter_name}().isPresent() && that.{getter_name}().get() == casted.{getter_name}().get() : ! casted.{getter_name}().isPresent()")
+                else: expr = Stripped(f"that.{getter_name}() == casted.{getter_name}()")
+            elif primitive_type is intermediate.PrimitiveType.BYTEARRAY:
+                expr = Stripped(
+                        f"""\
+Arrays.equals(that.{getter_name}().get(),casted.{getter_name}().get())"""
+                )
+            else:
+                aas_core_codegen.common.assert_never(primitive_type)
+        elif isinstance(type_anno, intermediate.OurTypeAnnotation):
+            if isinstance(type_anno.our_type, intermediate.Enumeration):
+                if optional:
+                    expr = Stripped(f"that.{getter_name}().isPresent() ? "
+                                    f"( casted.{getter_name}().isPresent() && that.{getter_name}().get() == casted.{getter_name}().get() )"
+                                    f": ! casted.{getter_name}().isPresent()")
+                else:
+                    expr = Stripped(f"that.{getter_name}() == casted.{getter_name}()")
+            elif isinstance(type_anno.our_type, intermediate.ConstrainedPrimitive):
+                raise AssertionError("Expected to handle this case above")
+            elif isinstance(
+                    type_anno.our_type,
+                    (intermediate.AbstractClass, intermediate.ConcreteClass)
+            ):
+                if optional: expr = Stripped(
+                    f"""\
+( that.{getter_name}().isPresent() ? casted.{getter_name}().isPresent() && transform( that.{getter_name}().get(), casted.{getter_name}().get()) : ! casted.{getter_name}().isPresent())"""
+                )
+                else: expr = Stripped(
+                    f"""\
+transform(
+{I}that.{getter_name}(),
+{I}casted.{getter_name}())"""
+                )
+            else:
+                aas_core_codegen.common.assert_never(type_anno.our_type)
+        elif isinstance(type_anno, intermediate.ListTypeAnnotation):
+            assert (
+                    isinstance(type_anno.items, intermediate.OurTypeAnnotation)
+                    and isinstance(type_anno.items.our_type, intermediate.Class)
+            ), (
+                f"(mristin, 2022-11-03): We handle only lists of classes in the deep "
+                f"equality checks at the moment. The meta-model does not contain "
+                f"any other lists, so we wanted to keep the code as simple as "
+                f"possible, and avoid unrolling. Please contact the developers "
+                f"if you need this feature. The class in question was {cls.name!r} and "
+                f"the property {prop.name!r}."
+            )
+            if optional: expr = Stripped(
+                f"""\
+that.{getter_name}().isPresent()
+                    ? ( casted.{getter_name}().isPresent()
+                    && that.{getter_name}().get().size() == casted.{getter_name}().get().size()
+                    && zip(that.{getter_name}().get().stream(), casted.{getter_name}().get().stream())
+                    .map(pair -> transform(pair.getFirst(),pair.getSecond())).collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
+                    : ! casted.{getter_name}().isPresent()"""
+            )
+            else: expr = Stripped(
+                f"""\
+that.{getter_name}().size() == casted.{getter_name}().size()
+&& (
+{I}zip(that.{getter_name}().stream(), casted.{getter_name}().stream())
+{I}.map(pair -> transform(pair.getFirst(), pair.getSecond())).collect(Collectors.toList()).stream().allMatch(
+{I}Boolean.TRUE::equals))"""
+            )
+        else:
+            aas_core_codegen.common.assert_never(type_anno)
+
+        exprs.append(expr)
+
+    body_writer = io.StringIO()
+    body_writer.write("return (")
+    for i, expr in enumerate(exprs):
+        body_writer.write("\n")
+        if i > 0:
+            body_writer.write(
+                f"{I}&& {aas_core_codegen.common.indent_but_first_line(expr, I)}"
+            )
+        else:
+            body_writer.write(
+                f"{I}{aas_core_codegen.common.indent_but_first_line(expr, I)}"
+            )
+
+    body_writer.write(");")
+
+    interface_name = java_naming.interface_name(cls.name)
+    transform_name = java_naming.method_name(Identifier(f"transform_{cls.name}"))
+
+    return Stripped(
+        f"""\
+@Override
+public Boolean {transform_name}(
+{I}{interface_name} that,
+{I}IClass other)
+{{
+{I}final {cls_name} casted;
+{I}try {{
+{II}casted = ({cls_name}) other;
+{I}}} catch (ClassCastException exception) {{
+{I}return false;
+{I}}}
+
+{I}{aas_core_codegen.common.indent_but_first_line(body_writer.getvalue(), I)}
+}}"""
+    )
 
 
-# def _generate_deep_equals_transformer(
-#     symbol_table: intermediate.SymbolTable,
-# ) -> Stripped:
-#     """Generate the transformer that checks for deep equality."""
-#     blocks = [
+def _generate_deep_equals_transformer(
+    symbol_table: intermediate.SymbolTable,
+) -> Stripped:
+    """Generate the transformer that checks for deep equality."""
+    blocks = [
 #         Stripped(
 #             f"""\
-# /// <summary>Compare two byte spans for equal content.</summary>
-# /// <remarks>
-# /// <c>byte[]</c> implicitly converts to <c>ReadOnlySpan</c>.
-# /// See: https://stackoverflow.com/a/48599119/1600678
-# /// </remarks>
-# private static bool ByteSpansEqual(
-# {I}System.ReadOnlySpan<byte> that,
-# {I}System.ReadOnlySpan<byte> other)
-# {{
-# {I}return that.SequenceEqual(other);
+# /**
+# * Compare two byte spans for equal content.
+# */
+# private static Boolean byteSpansEqual(
+# {I}byte[] that,
+# {I}byte[] other)
+# {I}{{
+# {II}return Arrays.equals(that,other);
+# {I}}}
 # }}"""
 #         )
-#     ]  # type: List[Stripped]
-#
-#     for our_type in symbol_table.our_types:
-#         if not isinstance(our_type, intermediate.ConcreteClass):
-#             continue
-#
-#         if our_type.is_implementation_specific:
-#             raise AssertionError(
-#                 f"(mristin, 2022-11-04): "
-#                 f"The class {our_type.name!r} is implementation specific. "
-#                 f"At the moment, we assume that all classes are not "
-#                 f"implementation-specific, so that we can automatically generate the "
-#                 f"deep-equals methods. This way we can dispense of the whole "
-#                 f"snippet/specific-implementation loading logic in "
-#                 f"the unit test generation. Please notify the developers if you see "
-#                 f"this, so that we can add the logic for implementation-specific "
-#                 f"classes to this generation script."
-#             )
-#
-#         blocks.append(_generate_transform_as_deep_equals(cls=our_type))
-#
-#     writer = io.StringIO()
-#     writer.write(
-#         f"""\
-# internal class DeepEqualsier
-# {I}: Aas.Visitation.AbstractTransformerWithContext<Aas.IClass, bool>
-# {{
-# """
-#     )
-#
-#     for i, block in enumerate(blocks):
-#         if i > 0:
-#             writer.write("\n\n")
-#
-#         writer.write(textwrap.indent(block, I))
-#
-#     writer.write("\n}  // internal class DeepEqualsier")
-#
-#     return Stripped(writer.getvalue())
+    ]  # type: List[Stripped]
+
+    for our_type in symbol_table.our_types:
+        if not isinstance(our_type, intermediate.ConcreteClass):
+            continue
+
+        if our_type.is_implementation_specific:
+            raise AssertionError(
+                f"(mristin, 2022-11-04): "
+                f"The class {our_type.name!r} is implementation specific. "
+                f"At the moment, we assume that all classes are not "
+                f"implementation-specific, so that we can automatically generate the "
+                f"deep-equals methods. This way we can dispense of the whole "
+                f"snippet/specific-implementation loading logic in "
+                f"the unit test generation. Please notify the developers if you see "
+                f"this, so that we can add the logic for implementation-specific "
+                f"classes to this generation script."
+            )
+
+        blocks.append(_generate_transform_as_deep_equals(cls=our_type))
+
+    writer = io.StringIO()
+    writer.write(
+        f"""\
+private static class DeepEqualTransformer extends AbstractTransformerWithContext<IClass, Boolean> {{
+"""
+    )
+
+    for i, block in enumerate(blocks):
+        if i > 0:
+            writer.write("\n\n")
+
+        writer.write(textwrap.indent(block, I))
+
+    writer.write("\n}  // inner class DeepEqualTransformer")
+
+    return Stripped(writer.getvalue())
 
 
-# def _generate_deep_equals(cls: intermediate.ConcreteClass) -> Stripped:
-#     """Generate the code for a static deep ``Equals`` method."""
-#     if cls.is_implementation_specific:
-#         raise AssertionError(
-#             f"(mristin, 2022-11-04): "
-#             f"The class {cls.name!r} is implementation specific. "
-#             f"At the moment, we assume that all classes are not "
-#             f"implementation-specific, so that we can automatically generate the "
-#             f"shallow-equals methods. This way we can dispense of the whole "
-#             f"snippet/specific-implementation loading logic in "
-#             f"the unit test generation. Please notify the developers if you see this, "
-#             f"so that we can add the logic for implementation-specific classes "
-#             f"to this generation script."
-#         )
-#
-#     cls_name = java_naming.class_name(cls.name)
-#
-#     return Stripped(
-#         f"""\
-# private static bool {cls_name}DeepEquals(
-# {I}Aas.{cls_name} that,
-# {I}Aas.{cls_name} other)
-# {{
-# {I}return DeepEqualsierInstance.Transform(that, other);
-# }}"""
-#     )
+def _generate_deep_equals(cls: intermediate.ConcreteClass) -> Stripped:
+    """Generate the code for a static deep ``Equals`` method."""
+    if cls.is_implementation_specific:
+        raise AssertionError(
+            f"(mristin, 2022-11-04): "
+            f"The class {cls.name!r} is implementation specific. "
+            f"At the moment, we assume that all classes are not "
+            f"implementation-specific, so that we can automatically generate the "
+            f"shallow-equals methods. This way we can dispense of the whole "
+            f"snippet/specific-implementation loading logic in "
+            f"the unit test generation. Please notify the developers if you see this, "
+            f"so that we can add the logic for implementation-specific classes "
+            f"to this generation script."
+        )
+
+    cls_name = java_naming.class_name(cls.name)
+
+    return Stripped(
+        f"""\
+private static boolean check{cls_name}DeepEquals(
+{I}{cls_name} that,
+{I}{cls_name} other)
+{{
+{I}return deepEqualTransformerInstance.transform(that, other);
+}} // public void test{cls_name}DeepCopy"""
+    )
 
 
 def main() -> int:
@@ -315,26 +381,28 @@ def main() -> int:
     symbol_table = load_symbol_table()
     blocks = []  # type: List[Stripped]
 
-#     # noinspection PyListCreation
-#     blocks = [
-#         _generate_deep_equals_transformer(symbol_table=symbol_table),
-#         Stripped(
-#             f"""\
-# private static readonly DeepEqualsier DeepEqualsierInstance = new DeepEqualsier();"""
-#         ),
-#     ]  # type: List[Stripped]
-#
+    # noinspection PyListCreation
+    blocks = [
+        _generate_pair(),
+        _generate_zip(),
+        _generate_deep_equals_transformer(symbol_table=symbol_table),
+        Stripped(
+            f"""\
+private static final DeepEqualTransformer deepEqualTransformerInstance = new DeepEqualTransformer();"""
+        ),
+    ]  # type: List[Stripped]
+
     for our_type in symbol_table.our_types:
         if not isinstance(our_type, intermediate.ConcreteClass):
             continue
 
         blocks.append(_generate_shallow_equals(cls=our_type))
-#
-#     for our_type in symbol_table.our_types:
-#         if not isinstance(our_type, intermediate.ConcreteClass):
-#             continue
-#
-#         blocks.append(_generate_deep_equals(cls=our_type))
+
+    for our_type in symbol_table.our_types:
+        if not isinstance(our_type, intermediate.ConcreteClass):
+            continue
+
+        blocks.append(_generate_deep_equals(cls=our_type))
 
     for our_type in symbol_table.our_types:
         if not isinstance(our_type, intermediate.ConcreteClass):
@@ -354,24 +422,17 @@ public void test{cls_name}ShallowCopy() throws IOException {{
             )
         )
 
-#         blocks.append(
-#             Stripped(
-#                 f"""\
-# [Test]
-# public void Test_{cls_name}_deep_copy()
-# {{
-#     Aas.{cls_name} instance = (
-#         Aas.Tests.CommonJsonization.LoadMaximal{cls_name}());
-#
-#     var instanceCopy = Aas.Copying.Deep(instance);
-#
-#     Assert.IsTrue(
-#         {cls_name}DeepEquals(
-#             instance, instanceCopy),
-#         {java_common.string_literal(cls_name)});
-# }}  // public void Test_{cls_name}_deep_copy"""
-#             )
-#         )
+        blocks.append(
+            Stripped(
+                f"""\
+@Test
+public void test{cls_name}DeepCopy() throws IOException {{
+{I}final {cls_name} instance = CommonJsonization.loadMaximal{cls_name}();
+{I}final {cls_name} instanceCopy = Copying.deep(instance);
+{I}assertTrue(check{cls_name}DeepEquals(instance,instanceCopy),"{cls_name}");
+}}  // public void test{cls_name}DeepCopy"""
+            )
+        )
 
 #     blocks.append(
 #         Stripped(
@@ -434,11 +495,16 @@ public void test{cls_name}ShallowCopy() throws IOException {{
 
 import aas_core.aas3_0.copying.Copying;
 import aas_core.aas3_0.types.impl.*;
+import aas_core.aas3_0.types.model.*;
 import org.junit.jupiter.api.Test;
-
+import aas_core.aas3_0.types.model.IClass;
+import aas_core.aas3_0.visitation.AbstractTransformerWithContext;
 import javax.annotation.Generated;
 import java.io.IOException;
-
+import java.util.*;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Generated("Generated by aas-test-gen")
