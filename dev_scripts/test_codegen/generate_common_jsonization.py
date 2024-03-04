@@ -142,7 +142,7 @@ public class CommonJsonization{
 """
     )
 
-    target_pth = repo_root / "/home/mboehm/IdeaProjects/TestGen/src/test/java/CommonJsonization.java"
+    target_pth = repo_root / "src/test/java/CommonJsonization.java"
     target_pth.write_text(writer.getvalue(), encoding="utf-8")
 
     return 0

@@ -135,7 +135,7 @@ public class TestXmlizationOfConcreteClassesOutsideContainer {
     )
 
     target_pth = (
-        repo_root / "/home/mboehm/IdeaProjects/TestGen/src/test/java/TestXmlizationOfConcreteClassesOutsideContainer.java"
+        repo_root / "src/test/java/TestXmlizationOfConcreteClassesOutsideContainer.java"
     )
     target_pth.write_text(writer.getvalue(), encoding="utf-8")
 

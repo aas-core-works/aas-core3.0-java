@@ -5,6 +5,7 @@
 
 import aas_core.aas3_0.reporting.Reporting;
 import aas_core.aas3_0.xmlization.Xmlization;
+import aas_core.aas3_0.types.model.IClass;
 import javax.annotation.Generated;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,13 +32,22 @@ public class Common{
             ? false :
             System.getenv("AAS_CORE_AAS3_0_TESTS_RECORD_MODE")
                     .toLowerCase()
-                    .equals("true") ? true : false;
+                    .equals("true");
     public static String TEST_DATA_DIR = Paths.get("test_data").toAbsolutePath().toString();
-    public static final List<String> CAUSES_DESERIALIZATION_FAILURE =
+    
+    public static final List<String> CAUSES_XML_DESERIALIZATION_FAILURE =
             Collections.unmodifiableList(Arrays.asList(
                     "TypeViolation",
                     "RequiredViolation",
                     "EnumViolation",
+                    "UnexpectedAdditionalProperty"));
+                    
+    public static final List<String> CAUSES_JSON_DESERIALIZATION_FAILURE =
+            Collections.unmodifiableList(Arrays.asList(
+                    "TypeViolation",
+                    "RequiredViolation",
+                    "EnumViolation",
+                    "NullViolation",
                     "UnexpectedAdditionalProperty"));
 
     public static final List<String> CAUSES_FOR_VERIFICATION_FAILURE =
@@ -50,29 +60,45 @@ public class Common{
                     "InvalidMinMaxExample",
                     "SetViolation",
                     "ConstraintViolation"));
-    public static List<String> findFiles(Path path, String fileExtension) throws IOException {
+    public static List<Path> findPaths(Path path, String fileExtension) throws IOException {
 
       if (!Files.isDirectory(path)) {
         throw new IllegalArgumentException("Path must be a directory!");
       }
 
-      List<String> result;
+      List<Path> result;
       try (Stream<Path> walk = Files.walk(path)) {
         result = walk
           .filter(p -> !Files.isDirectory(p))
-          .map(Path::toString)
-          .filter(f -> f.endsWith(fileExtension))
+          .filter(f -> f.toString().endsWith(fileExtension))
           .collect(Collectors.toList());
-        }
+      }
       return result;
     }
 
-    public static void assertNoVerificationErrors(List<Reporting.Error> errors, String path){
+    public static <T extends IClass> T mustFind(String type, IClass container) {
+      if (type.equals(container.getClass().getSimpleName())) {
+        return (T)container;
+      }
+      IClass instance = null;
+      for (IClass current : container.descend()) {
+        if (type.equals(current.getClass().getSimpleName())) {
+          instance = current;
+          break;
+      }
+      }
+      if(instance == null){
+        throw new IllegalStateException("No instance of " + type + " could be found");
+      }
+      return (T)instance;
+    }
+
+    public static void assertNoVerificationErrors(List<Reporting.Error> errors, Path path){
 
       if(!errors.isEmpty()){
         StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append("Expected no errors when verifying the instance de-serialized from ")
-          .append(path).append(", ")
+          .append(path.toString()).append(", ")
           .append("but got ")
           .append(errors.size())
           .append(" error(s):")
@@ -91,7 +117,7 @@ public class Common{
         .collect(Collectors.toList());
     }
 
-    public static void assertEqualsExpectedOrRerecordVerificationErrors(List<Reporting.Error> errors, String path) throws IOException {
+    public static void assertEqualsExpectedOrRerecordVerificationErrors(List<Reporting.Error> errors, Path path) throws IOException {
       if (errors.isEmpty()) {
         fail("Expected at least one verification error when verifying " + path + ", but got none");
       }
@@ -100,29 +126,29 @@ public class Common{
       if (RECORD_MODE) {
         Files.write(errorsPath, got.getBytes(StandardCharsets.UTF_8));
       } else {
-      if (!Files.exists(errorsPath)) {
-        throw new FileNotFoundException("The file with the recorded errors does not exist: " + errorsPath);
-      }
-      final String expected = Files.readAllLines(errorsPath).stream().collect(Collectors.joining("\n"));
-      assertEquals(expected,got,"The expected verification errors do not match the actual ones for the file " + path);
+        if (!Files.exists(errorsPath)) {
+          throw new FileNotFoundException("The file with the recorded errors does not exist: " + errorsPath);
+        }
+        final String expected = Files.readAllLines(errorsPath).stream().collect(Collectors.joining("\n"));
+        assertEquals(expected,got,"The expected verification errors do not match the actual ones for the file " + path);
       }
     }
 
-    public static void assertEqualsExpectedOrRerecordDeserializationException(Xmlization.DeserializeException exception, String path) throws IOException {
+    public static void assertEqualsExpectedOrRerecordDeserializationException(Xmlization.DeserializeException exception, Path path) throws IOException {
       if (exception == null) {
         fail("Expected a Xmlization exception when de-serializing " + path + ", but got none.");
       } else {
-      final Path exceptionPath = Paths.get(path + ".exception");
-      final String got = exception.getMessage();
-      if (RECORD_MODE) {
-        Files.write(exceptionPath, got.getBytes(StandardCharsets.UTF_8));
-      } else{
-      if (!Files.exists(exceptionPath)) {
-        throw new FileNotFoundException("The file with the recorded errors does not exist: " + exceptionPath);
-      }
-      final String expected = Files.readAllLines(exceptionPath).stream().collect(Collectors.joining("\n"));
-      assertEquals(expected, got, "The expected exception does not match the actual one for the file " + path);
-      }
+        final Path exceptionPath = Paths.get(path + ".exception");
+        final String got = exception.getMessage();
+        if (RECORD_MODE) {
+          Files.write(exceptionPath, got.getBytes(StandardCharsets.UTF_8));
+        } else{
+          if (!Files.exists(exceptionPath)) {
+            throw new FileNotFoundException("The file with the recorded errors does not exist: " + exceptionPath);
+          }
+          final String expected = Files.readAllLines(exceptionPath).stream().collect(Collectors.joining("\n"));
+          assertEquals(expected, got, "The expected exception does not match the actual one for the file " + path);
+        }
       }
     }
 }  // class Common

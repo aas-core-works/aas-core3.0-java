@@ -404,7 +404,7 @@ public class TestJsonizationOfConcreteClasses {
     )
 
     target_pth = (
-        repo_root / "/home/mboehm/IdeaProjects/TestGen/src/test/java/TestJsonizationOfConcreteClasses.java"
+        repo_root / "src/test/java/TestJsonizationOfConcreteClasses.java"
     )
     target_pth.write_text(writer.getvalue(), encoding="utf-8")
 

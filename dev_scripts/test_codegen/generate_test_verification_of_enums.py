@@ -105,7 +105,7 @@ public class TestVerificationOfEnums {
     this_path = pathlib.Path(os.path.realpath(__file__))
     repo_root = this_path.parent.parent.parent
 
-    target_pth = repo_root / "/home/mboehm/IdeaProjects/TestGen/src/test/java/TestVerificationOfEnums.java"
+    target_pth = repo_root / "src/test/java/TestVerificationOfEnums.java"
     target_pth.write_text(writer.getvalue(), encoding="utf-8")
 
     return 0

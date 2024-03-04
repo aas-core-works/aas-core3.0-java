@@ -139,7 +139,7 @@ public class TestDescendOnce {
 """
     )
 
-    target_pth = repo_root / "/home/mboehm/IdeaProjects/TestGen/src/test/java/TestDescendOnce.java"
+    target_pth = repo_root / "src/test/java/TestDescendOnce.java"
     target_pth.write_text(writer.getvalue(), encoding="utf-8")
 
     return 0
