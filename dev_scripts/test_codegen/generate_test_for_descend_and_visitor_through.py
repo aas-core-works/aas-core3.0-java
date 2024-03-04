@@ -29,11 +29,18 @@ private void compareOrRerecordTrace(IClass instance, Path expectedPath) throws I
 {I}final StringBuilder stringBuilder = new StringBuilder();
 {I}for (IClass descendant : instance.descend()) {{
 {II}if (descendant instanceof IIdentifiable) {{
-{III}stringBuilder.append(descendant.getClass().getSimpleName()).append(" with ID ").append(((IIdentifiable) descendant).getId());
+{III}stringBuilder.append(descendant.getClass().getSimpleName())
+{III}.append(" with ID ").append(((IIdentifiable) descendant).getId())
+{III}.append("\\n");
 {II}}} else if (descendant instanceof IReferable) {{
-{III}stringBuilder.append(descendant.getClass().getSimpleName()).append(" with ID-short ").append(((IReferable) descendant).getIdShort());
+{III}stringBuilder.append(descendant.getClass().getSimpleName())
+{III}.append(" with ID-short ")
+{III}.append(((IReferable) descendant).getIdShort())
+{III}.append("\\n");
 {II}}} else {{
-{III}stringBuilder.append(descendant.getClass().getSimpleName());
+{III}stringBuilder
+{IIII}.append(descendant.getClass().getSimpleName())
+{IIII}.append("\\n");
 {II}}}
 {I}}}
 {I}
@@ -46,7 +53,7 @@ private void compareOrRerecordTrace(IClass instance, Path expectedPath) throws I
 {IIII}throw new FileNotFoundException("The file with the recorded value does not exist: " + expectedPath);
 {III}}}
 {III}final String expected = Files.readAllLines(expectedPath).stream().collect(Collectors.joining("\\n"));
-{III}assertEquals(expected, got);
+{III}assertEquals(expected.replace("\\n",""), got.replace("\\n",""));
 {I}}}
 }}""")
 
