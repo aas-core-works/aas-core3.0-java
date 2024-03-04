@@ -1,1 +1,1 @@
-Required property "valueType" is missing at: submodels[0].qualifiers[0]
+Expected a JsonValue of String, but got NULL at: submodels[0].qualifiers[0].valueType

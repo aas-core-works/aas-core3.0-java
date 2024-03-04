@@ -1,1 +1,1 @@
-Required property "observableReference" is missing at: 
+Expected a JsonObject, but got NULL at: observableReference

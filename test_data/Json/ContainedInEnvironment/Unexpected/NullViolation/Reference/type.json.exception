@@ -1,1 +1,1 @@
-Required property "type" is missing at: assetAdministrationShells[0].derivedFrom
+Expected a JsonValue of String, but got NULL at: assetAdministrationShells[0].derivedFrom.type

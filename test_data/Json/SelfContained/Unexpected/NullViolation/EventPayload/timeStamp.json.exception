@@ -1,1 +1,1 @@
-Required property "timeStamp" is missing at: 
+Expected a JsonValue of String, but got NULL at: timeStamp

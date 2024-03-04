@@ -1,1 +1,1 @@
-Required property "path" is missing at: assetAdministrationShells[0].assetInformation.defaultThumbnail
+Expected a JsonValue of String, but got NULL at: assetAdministrationShells[0].assetInformation.defaultThumbnail.path

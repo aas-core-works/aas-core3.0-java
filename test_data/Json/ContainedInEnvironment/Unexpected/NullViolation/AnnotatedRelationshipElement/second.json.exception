@@ -1,1 +1,1 @@
-Required property "second" is missing at: submodels[0].submodelElements[0]
+Expected a JsonObject, but got NULL at: submodels[0].submodelElements[0].second

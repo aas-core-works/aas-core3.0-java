@@ -1,1 +1,1 @@
-Expected a JsonValue, but got System.Text.Json.Nodes.JsonArray at: submodels[0].qualifiers[0].kind
+Expected a JsonValue of String, but got ARRAY at: submodels[0].qualifiers[0].kind

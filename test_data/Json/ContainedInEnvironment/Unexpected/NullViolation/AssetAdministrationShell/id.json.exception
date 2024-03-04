@@ -1,1 +1,1 @@
-Required property "id" is missing at: assetAdministrationShells[0]
+Expected a JsonValue of String, but got NULL at: assetAdministrationShells[0].id
