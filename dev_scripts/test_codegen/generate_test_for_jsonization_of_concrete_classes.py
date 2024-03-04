@@ -125,11 +125,10 @@ public void test{cls_name_java}VerificationFail() throws IOException {{
     return blocks
 
 
-@require(lambda container_cls_java: container_cls_java == "Environment")
+
 def _generate_for_contained_in_environment(
     cls_name_java: str,
     cls_name_json: str,
-    container_cls_java: str,
 ) -> List[Stripped]:
     """Generate the tests for a class contained in an ``Environment`` instance."""
     # noinspection PyListCreation
@@ -244,11 +243,12 @@ private static void assertSerializeDeserializeEqualsOriginal(JsonNode originalNo
 {I}assertEquals(mapper.readTree(originalNode.toString()), mapper.readTree(serialized.toString()));
 }}""")
 
-def _generate_test_round_trip()-> Stripped:
+@require(lambda container_cls_java: container_cls_java == "Environment")
+def _generate_test_round_trip( container_cls_java: str)-> Stripped:
     return Stripped(f"""\
 private static void testRoundTrip(Path path) throws IOException {{
 {I}final JsonNode node = mapper.readTree(path.toFile());
-{I}final Environment instance = Jsonization.Deserialize.deserializeEnvironment(node);
+{I}final {container_cls_java} instance = Jsonization.Deserialize.deserializeEnvironment(node);
 {I}final Iterable<Reporting.Error> errors = Verification.verify(instance);
 {I}final List<Reporting.Error> errorList = Common.asList(errors);
 {I}Common.assertNoVerificationErrors(errorList, path);
@@ -308,19 +308,17 @@ def main() -> int:
     repo_root = this_path.parent.parent.parent
 
     test_data_dir = repo_root / "test_data"
-
+    environment_cls = symbol_table.must_find_concrete_class(
+        aas_core_codegen.common.Identifier("Environment")
+    )
     # noinspection PyListCreation
     blocks = [
         _generate_assert_serialize_deserialize_equals_original(),
-        _generate_test_round_trip(),
+        _generate_test_round_trip(environment_cls.name),
         _generate_test_verification_fail(),
         _generate_test_deserialization_fail(),
         _generate_assert_equals_expected_or_rerecord_deserialization_exception()
     ]  # type: List[str]
-
-    environment_cls = symbol_table.must_find_concrete_class(
-        aas_core_codegen.common.Identifier("Environment")
-    )
 
     for our_type in symbol_table.our_types:
         if not isinstance(our_type, intermediate.ConcreteClass):
@@ -347,7 +345,6 @@ def main() -> int:
                 _generate_for_contained_in_environment(
                     cls_name_java=cls_name_java,
                     cls_name_json=cls_name_json,
-                    container_cls_java=container_cls_java,
                 )
             )
 

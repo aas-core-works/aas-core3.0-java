@@ -166,15 +166,15 @@ public static Optional<Reporting.Error> checkElementsEqual(XMLEvent expected, St
 {II}}}
 }}"""
     )
-
-def _generate_test_round_trip() -> Stripped:
+@require(lambda container_cls_java: container_cls_java == "Environment")
+def _generate_test_round_trip(container_cls_java: str) -> Stripped:
     """Generate the method for testing the deserialize -> serialize round trip."""
     return Stripped(
         f"""\
 private static void testRoundTrip(Path path) throws XMLStreamException, IOException {{
 {I}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 {I}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(path));
-{I}final Environment instance = Xmlization.Deserialize.deserializeEnvironment(xmlReader);
+{I}final {container_cls_java} instance = Xmlization.Deserialize.deserializeEnvironment(xmlReader);
 {I}final Iterable<Reporting.Error> errors = Verification.verify(instance);
 {I}final List<Reporting.Error> errorList = Common.asList(errors);
 {I}Common.assertNoVerificationErrors(errorList, path);
@@ -313,11 +313,9 @@ public void test{cls_name_java}VerificationFail() throws IOException, XMLStreamE
     return blocks
 
 
-@require(lambda container_cls_java: container_cls_java == "Environment")
 def _generate_for_contained_in_environment(
         cls_name_java: str,
-        cls_name_xml: str,
-        container_cls_java: str,
+        cls_name_xml: str
 ) -> List[Stripped]:
     """Generate the tests for a class contained in an ``Environment`` instance."""
     # noinspection PyListCreation
@@ -403,25 +401,21 @@ def main() -> int:
     repo_root = this_path.parent.parent.parent
 
     test_data_dir = repo_root / "test_data"
-
+    environment_cls = symbol_table.must_find_concrete_class(
+        aas_core_codegen.common.Identifier("Environment")
+    )
     # noinspection PyListCreation
     blocks = [
         _generate_assert_serialize_deserialize_equals_original(),
         _generate_build_elements_map(),
         _generate_read_content(),
         _generate_check_elements_equal(),
-        _generate_test_round_trip(),
+        _generate_test_round_trip(environment_cls.name),
         _generate_test_verification_fail(),
         _generate_test_deserialization_fail()
     ]  # type: List[str]
 
-    xml_namespace_literal = java_common.string_literal(
-        symbol_table.meta_model.xml_namespace
-    )
 
-    environment_cls = symbol_table.must_find_concrete_class(
-        aas_core_codegen.common.Identifier("Environment")
-    )
 
     for our_type in symbol_table.our_types:
         if not isinstance(our_type, intermediate.ConcreteClass):
@@ -429,9 +423,6 @@ def main() -> int:
 
         container_cls = test_data_io.determine_container_class(
             cls=our_type, test_data_dir=test_data_dir, environment_cls=environment_cls
-        )
-        container_cls_java = aas_core_codegen.java.naming.class_name(
-            container_cls.name
         )
 
         cls_name_java = aas_core_codegen.java.naming.class_name(Identifier(f"{our_type.name}"))
@@ -447,8 +438,7 @@ def main() -> int:
             blocks.extend(
                 _generate_for_contained_in_environment(
                     cls_name_java=cls_name_java,
-                    cls_name_xml=cls_name_xml,
-                    container_cls_java=container_cls_java,
+                    cls_name_xml=cls_name_xml
                 )
             )
 

@@ -15,14 +15,11 @@ import aas_core_codegen.parse
 import aas_core_codegen.run
 from aas_core_codegen import intermediate
 from aas_core_codegen.common import Stripped
-from aas_core_codegen.java import common as java_common
 from aas_core_codegen.java.common import (
     INDENT as I,
     INDENT2 as II,
     INDENT3 as III,
     INDENT4 as IIII,
-    INDENT5 as IIIII,
-    INDENT6 as IIIIII,
 )
 
 import test_codegen.common
@@ -69,7 +66,6 @@ def main() -> int:
             continue
 
         cls_name_java = aas_core_codegen.java.naming.class_name(our_type.name)
-        cls_name_json = aas_core_codegen.naming.json_model_type(our_type.name)
 
         blocks.append(
             Stripped(

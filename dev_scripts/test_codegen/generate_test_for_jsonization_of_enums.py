@@ -20,12 +20,7 @@ from aas_core_codegen.java import common as java_common
 import aas_core_codegen.java.naming
 from test_codegen.common import load_symbol_table
 from aas_core_codegen.java.common import (
-    INDENT as I,
-    INDENT2 as II,
-    INDENT3 as III,
-    INDENT4 as IIII,
-    INDENT5 as IIIII,
-    INDENT6 as IIIIII,
+    INDENT as I
 )
 
 

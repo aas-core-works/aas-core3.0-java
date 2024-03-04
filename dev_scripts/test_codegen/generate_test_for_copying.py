@@ -161,10 +161,6 @@ def _generate_transform_as_deep_equals(cls: intermediate.ConcreteClass) -> Strip
         optional = isinstance(prop.type_annotation, intermediate.OptionalTypeAnnotation)
         type_anno = intermediate.beneath_optional(prop.type_annotation)
         getter_name = java_naming.getter_name(prop.name)
-        prop_name = java_naming.property_name(prop.name)
-
-        expr = None  # type: Optional[Stripped]
-
         primitive_type = intermediate.try_primitive_type(type_anno)
 
         # fmt: off
@@ -185,7 +181,11 @@ def _generate_transform_as_deep_equals(cls: intermediate.ConcreteClass) -> Strip
                 or primitive_type is intermediate.PrimitiveType.FLOAT
                 or primitive_type is intermediate.PrimitiveType.STR
             ):
-                if optional: expr = Stripped(f"that.{getter_name}().isPresent() ? casted.{getter_name}().isPresent() && that.{getter_name}().get() == casted.{getter_name}().get() : ! casted.{getter_name}().isPresent()")
+                if optional: expr = Stripped(f"""\
+that.{getter_name}().isPresent() 
+{I}? casted.{getter_name}().isPresent() 
+{I}&& that.{getter_name}().get() == casted.{getter_name}().get() 
+{I}: ! casted.{getter_name}().isPresent()""")
                 else: expr = Stripped(f"that.{getter_name}() == casted.{getter_name}()")
             elif primitive_type is intermediate.PrimitiveType.BYTEARRAY:
                 expr = Stripped(
@@ -197,9 +197,11 @@ Arrays.equals(that.{getter_name}().get(),casted.{getter_name}().get())"""
         elif isinstance(type_anno, intermediate.OurTypeAnnotation):
             if isinstance(type_anno.our_type, intermediate.Enumeration):
                 if optional:
-                    expr = Stripped(f"that.{getter_name}().isPresent() ? "
-                                    f"( casted.{getter_name}().isPresent() && that.{getter_name}().get() == casted.{getter_name}().get() )"
-                                    f": ! casted.{getter_name}().isPresent()")
+                    expr = Stripped(f"""\
+that.{getter_name}().isPresent() ?
+{I}( casted.{getter_name}().isPresent()
+{I}&& that.{getter_name}().get() == casted.{getter_name}().get() )
+{I}: ! casted.{getter_name}().isPresent()""")
                 else:
                     expr = Stripped(f"that.{getter_name}() == casted.{getter_name}()")
             elif isinstance(type_anno.our_type, intermediate.ConstrainedPrimitive):
@@ -210,7 +212,10 @@ Arrays.equals(that.{getter_name}().get(),casted.{getter_name}().get())"""
             ):
                 if optional: expr = Stripped(
                     f"""\
-( that.{getter_name}().isPresent() ? casted.{getter_name}().isPresent() && transform( that.{getter_name}().get(), casted.{getter_name}().get()) : ! casted.{getter_name}().isPresent())"""
+( that.{getter_name}().isPresent() 
+{I}? casted.{getter_name}().isPresent() 
+{I}&& transform( that.{getter_name}().get(), casted.{getter_name}().get()) 
+{I}: ! casted.{getter_name}().isPresent())"""
                 )
                 else: expr = Stripped(
                     f"""\
@@ -235,19 +240,23 @@ transform(
             if optional: expr = Stripped(
                 f"""\
 that.{getter_name}().isPresent()
-                    ? ( casted.{getter_name}().isPresent()
-                    && that.{getter_name}().get().size() == casted.{getter_name}().get().size()
-                    && zip(that.{getter_name}().get().stream(), casted.{getter_name}().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond())).collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                    : ! casted.{getter_name}().isPresent()"""
+{I}? ( casted.{getter_name}().isPresent()
+{I}&& that.{getter_name}().get().size() == casted.{getter_name}().get().size()
+{I}&& zip(
+{II}that.{getter_name}().get().stream(),
+{II}casted.{getter_name}().get().stream())
+{III}.map(pair -> transform(pair.getFirst(),pair.getSecond()))
+{III}.collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
+{I}: ! casted.{getter_name}().isPresent()"""
             )
             else: expr = Stripped(
                 f"""\
 that.{getter_name}().size() == casted.{getter_name}().size()
-&& (
-{I}zip(that.{getter_name}().stream(), casted.{getter_name}().stream())
-{I}.map(pair -> transform(pair.getFirst(), pair.getSecond())).collect(Collectors.toList()).stream().allMatch(
-{I}Boolean.TRUE::equals))"""
+{I}&& ( zip(
+{II}that.{getter_name}().stream(),
+{II}casted.{getter_name}().stream())
+{III}.map(pair -> transform(pair.getFirst(), pair.getSecond()))
+{III}.collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))"""
             )
         else:
             aas_core_codegen.common.assert_never(type_anno)

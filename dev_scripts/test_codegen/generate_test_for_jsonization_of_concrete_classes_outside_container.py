@@ -19,12 +19,7 @@ from aas_core_codegen.common import Stripped
 import test_codegen.common
 from test_codegen import test_data_io
 from aas_core_codegen.java.common import (
-    INDENT as I,
-    INDENT2 as II,
-    INDENT3 as III,
-    INDENT4 as IIII,
-    INDENT5 as IIIII,
-    INDENT6 as IIIIII,
+    INDENT as I
 )
 
 
