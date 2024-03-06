@@ -13704,8 +13704,9 @@ public class Jsonization {
         }
 
         if (that.getValue().isPresent()) {
-          result.set("value", JsonNodeFactory.instance.binaryNode(
-              that.getValue().get()));
+          result.set("value", JsonNodeFactory.instance.textNode(
+              Base64.getEncoder()
+                .encodeToString(that.getValue().get())));
         }
 
         result.set("contentType", JsonNodeFactory.instance.textNode(
@@ -14062,8 +14063,9 @@ public class Jsonization {
           that.getTimeStamp()));
 
         if (that.getPayload().isPresent()) {
-          result.set("payload", JsonNodeFactory.instance.binaryNode(
-              that.getPayload().get()));
+          result.set("payload", JsonNodeFactory.instance.textNode(
+              Base64.getEncoder()
+                .encodeToString(that.getPayload().get())));
         }
 
         return result;

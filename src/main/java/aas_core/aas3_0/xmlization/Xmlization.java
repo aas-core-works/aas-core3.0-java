@@ -15293,6 +15293,8 @@ public class Xmlization {
   static class VisitorWithWriter
     extends AbstractVisitorWithContext<XMLStreamWriter> {
 
+    private boolean topLevel = true;
+
     private void extensionToSequence(
       IExtension that,
       XMLStreamWriter writer) {
@@ -15300,6 +15302,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -15315,6 +15321,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -15328,7 +15338,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "name");
+          "name");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getName().toString());
         writer.writeEndElement();
@@ -15340,6 +15354,10 @@ public class Xmlization {
         if (that.getValueType().isPresent()) {
           writer.writeStartElement(
             "valueType");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           Optional<String> textValueType = Stringification.toString(
             that.getValueType().get());
@@ -15362,6 +15380,10 @@ public class Xmlization {
         if (that.getValue().isPresent()) {
           writer.writeStartElement(
             "value");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getValue().get().toString());
@@ -15376,6 +15398,10 @@ public class Xmlization {
         if (that.getRefersTo().isPresent()) {
           writer.writeStartElement(
           "refersTo");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getRefersTo().get()) {
             this.visit(
               item,
@@ -15395,7 +15421,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "extension");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.extensionToSequence(
           that,
           writer);
@@ -15412,6 +15441,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -15427,6 +15460,10 @@ public class Xmlization {
         if (that.getVersion().isPresent()) {
           writer.writeStartElement(
             "version");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getVersion().get().toString());
@@ -15441,6 +15478,10 @@ public class Xmlization {
         if (that.getRevision().isPresent()) {
           writer.writeStartElement(
             "revision");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getRevision().get().toString());
@@ -15455,6 +15496,10 @@ public class Xmlization {
         if (that.getCreator().isPresent()) {
           writer.writeStartElement(
             "creator");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getCreator().get(),
@@ -15470,6 +15515,10 @@ public class Xmlization {
         if (that.getTemplateId().isPresent()) {
           writer.writeStartElement(
             "templateId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getTemplateId().get().toString());
@@ -15488,7 +15537,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "administrativeInformation");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.administrativeInformationToSequence(
           that,
           writer);
@@ -15505,6 +15557,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -15520,6 +15576,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -15535,6 +15595,10 @@ public class Xmlization {
         if (that.getKind().isPresent()) {
           writer.writeStartElement(
             "kind");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           Optional<String> textKind = Stringification.toString(
             that.getKind().get());
@@ -15555,7 +15619,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "type");
+          "type");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getType().toString());
         writer.writeEndElement();
@@ -15566,6 +15634,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "valueType");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         Optional<String> textValueType = Stringification.toString(
           that.getValueType());
@@ -15587,6 +15659,10 @@ public class Xmlization {
         if (that.getValue().isPresent()) {
           writer.writeStartElement(
             "value");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getValue().get().toString());
@@ -15601,6 +15677,10 @@ public class Xmlization {
         if (that.getValueId().isPresent()) {
           writer.writeStartElement(
             "valueId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getValueId().get(),
@@ -15620,7 +15700,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "qualifier");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.qualifierToSequence(
           that,
           writer);
@@ -15637,6 +15720,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -15652,6 +15739,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -15666,6 +15757,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -15680,6 +15775,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -15695,6 +15794,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -15710,6 +15813,10 @@ public class Xmlization {
         if (that.getAdministration().isPresent()) {
           writer.writeStartElement(
             "administration");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.administrativeInformationToSequence(
             that.getAdministration().get(),
@@ -15723,7 +15830,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "id");
+          "id");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getId().toString());
         writer.writeEndElement();
@@ -15735,6 +15846,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -15750,6 +15865,10 @@ public class Xmlization {
         if (that.getDerivedFrom().isPresent()) {
           writer.writeStartElement(
             "derivedFrom");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getDerivedFrom().get(),
@@ -15764,6 +15883,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "assetInformation");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         this.assetInformationToSequence(
           that.getAssetInformation(),
@@ -15778,6 +15901,10 @@ public class Xmlization {
         if (that.getSubmodels().isPresent()) {
           writer.writeStartElement(
           "submodels");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSubmodels().get()) {
             this.visit(
               item,
@@ -15797,7 +15924,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "assetAdministrationShell");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.assetAdministrationShellToSequence(
           that,
           writer);
@@ -15813,6 +15943,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "assetKind");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         Optional<String> textAssetKind = Stringification.toString(
           that.getAssetKind());
@@ -15834,6 +15968,10 @@ public class Xmlization {
         if (that.getGlobalAssetId().isPresent()) {
           writer.writeStartElement(
             "globalAssetId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getGlobalAssetId().get().toString());
@@ -15848,6 +15986,10 @@ public class Xmlization {
         if (that.getSpecificAssetIds().isPresent()) {
           writer.writeStartElement(
           "specificAssetIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSpecificAssetIds().get()) {
             this.visit(
               item,
@@ -15863,6 +16005,10 @@ public class Xmlization {
         if (that.getAssetType().isPresent()) {
           writer.writeStartElement(
             "assetType");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getAssetType().get().toString());
@@ -15877,6 +16023,10 @@ public class Xmlization {
         if (that.getDefaultThumbnail().isPresent()) {
           writer.writeStartElement(
             "defaultThumbnail");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.resourceToSequence(
             that.getDefaultThumbnail().get(),
@@ -15896,7 +16046,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "assetInformation");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.assetInformationToSequence(
           that,
           writer);
@@ -15911,7 +16064,11 @@ public class Xmlization {
       XMLStreamWriter writer) {
       try {
         writer.writeStartElement(
-                    "path");
+          "path");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getPath().toString());
         writer.writeEndElement();
@@ -15923,6 +16080,10 @@ public class Xmlization {
         if (that.getContentType().isPresent()) {
           writer.writeStartElement(
             "contentType");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getContentType().get().toString());
@@ -15941,7 +16102,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "resource");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.resourceToSequence(
           that,
           writer);
@@ -15958,6 +16122,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -15973,6 +16141,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -15986,7 +16158,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "name");
+          "name");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getName().toString());
         writer.writeEndElement();
@@ -15996,7 +16172,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "value");
+          "value");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getValue().toString());
         writer.writeEndElement();
@@ -16008,6 +16188,10 @@ public class Xmlization {
         if (that.getExternalSubjectId().isPresent()) {
           writer.writeStartElement(
             "externalSubjectId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getExternalSubjectId().get(),
@@ -16027,7 +16211,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "specificAssetId");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.specificAssetIdToSequence(
           that,
           writer);
@@ -16044,6 +16231,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -16059,6 +16250,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -16073,6 +16268,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -16087,6 +16286,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -16102,6 +16305,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -16117,6 +16324,10 @@ public class Xmlization {
         if (that.getAdministration().isPresent()) {
           writer.writeStartElement(
             "administration");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.administrativeInformationToSequence(
             that.getAdministration().get(),
@@ -16130,7 +16341,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "id");
+          "id");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getId().toString());
         writer.writeEndElement();
@@ -16142,6 +16357,10 @@ public class Xmlization {
         if (that.getKind().isPresent()) {
           writer.writeStartElement(
             "kind");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           Optional<String> textKind = Stringification.toString(
             that.getKind().get());
@@ -16164,6 +16383,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -16179,6 +16402,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -16194,6 +16421,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -16209,6 +16440,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -16224,6 +16459,10 @@ public class Xmlization {
         if (that.getSubmodelElements().isPresent()) {
           writer.writeStartElement(
           "submodelElements");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSubmodelElements().get()) {
             this.visit(
               item,
@@ -16243,7 +16482,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "submodel");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.submodelToSequence(
           that,
           writer);
@@ -16260,6 +16502,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -16275,6 +16521,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -16289,6 +16539,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -16303,6 +16557,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -16318,6 +16576,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -16333,6 +16595,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -16348,6 +16614,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -16363,6 +16633,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -16378,6 +16652,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -16392,6 +16670,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "first");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         this.referenceToSequence(
           that.getFirst(),
@@ -16405,6 +16687,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "second");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         this.referenceToSequence(
           that.getSecond(),
@@ -16423,7 +16709,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "relationshipElement");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.relationshipElementToSequence(
           that,
           writer);
@@ -16440,6 +16729,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -16455,6 +16748,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -16469,6 +16766,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -16483,6 +16784,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -16498,6 +16803,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -16513,6 +16822,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -16528,6 +16841,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -16543,6 +16860,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -16558,6 +16879,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -16573,6 +16898,10 @@ public class Xmlization {
         if (that.getOrderRelevant().isPresent()) {
           writer.writeStartElement(
             "orderRelevant");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getOrderRelevant().get().toString());
@@ -16587,6 +16916,10 @@ public class Xmlization {
         if (that.getSemanticIdListElement().isPresent()) {
           writer.writeStartElement(
             "semanticIdListElement");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticIdListElement().get(),
@@ -16601,6 +16934,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "typeValueListElement");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         Optional<String> textTypeValueListElement = Stringification.toString(
           that.getTypeValueListElement());
@@ -16622,6 +16959,10 @@ public class Xmlization {
         if (that.getValueTypeListElement().isPresent()) {
           writer.writeStartElement(
             "valueTypeListElement");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           Optional<String> textValueTypeListElement = Stringification.toString(
             that.getValueTypeListElement().get());
@@ -16644,6 +16985,10 @@ public class Xmlization {
         if (that.getValue().isPresent()) {
           writer.writeStartElement(
           "value");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getValue().get()) {
             this.visit(
               item,
@@ -16663,7 +17008,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "submodelElementList");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.submodelElementListToSequence(
           that,
           writer);
@@ -16680,6 +17028,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -16695,6 +17047,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -16709,6 +17065,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -16723,6 +17083,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -16738,6 +17102,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -16753,6 +17121,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -16768,6 +17140,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -16783,6 +17159,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -16798,6 +17178,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -16813,6 +17197,10 @@ public class Xmlization {
         if (that.getValue().isPresent()) {
           writer.writeStartElement(
           "value");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getValue().get()) {
             this.visit(
               item,
@@ -16832,7 +17220,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "submodelElementCollection");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.submodelElementCollectionToSequence(
           that,
           writer);
@@ -16849,6 +17240,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -16864,6 +17259,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -16878,6 +17277,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -16892,6 +17295,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -16907,6 +17314,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -16922,6 +17333,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -16937,6 +17352,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -16952,6 +17371,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -16967,6 +17390,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -16981,6 +17408,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "valueType");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         Optional<String> textValueType = Stringification.toString(
           that.getValueType());
@@ -17002,6 +17433,10 @@ public class Xmlization {
         if (that.getValue().isPresent()) {
           writer.writeStartElement(
             "value");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getValue().get().toString());
@@ -17016,6 +17451,10 @@ public class Xmlization {
         if (that.getValueId().isPresent()) {
           writer.writeStartElement(
             "valueId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getValueId().get(),
@@ -17035,7 +17474,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "property");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.propertyToSequence(
           that,
           writer);
@@ -17052,6 +17494,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -17067,6 +17513,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -17081,6 +17531,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -17095,6 +17549,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -17110,6 +17568,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -17125,6 +17587,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -17140,6 +17606,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -17155,6 +17625,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -17170,6 +17644,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -17185,6 +17663,10 @@ public class Xmlization {
         if (that.getValue().isPresent()) {
           writer.writeStartElement(
           "value");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getValue().get()) {
             this.visit(
               item,
@@ -17200,6 +17682,10 @@ public class Xmlization {
         if (that.getValueId().isPresent()) {
           writer.writeStartElement(
             "valueId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getValueId().get(),
@@ -17219,7 +17705,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "multiLanguageProperty");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.multiLanguagePropertyToSequence(
           that,
           writer);
@@ -17236,6 +17725,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -17251,6 +17744,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -17265,6 +17762,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -17279,6 +17780,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -17294,6 +17799,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -17309,6 +17818,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -17324,6 +17837,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -17339,6 +17856,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -17354,6 +17875,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -17368,6 +17893,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "valueType");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         Optional<String> textValueType = Stringification.toString(
           that.getValueType());
@@ -17389,6 +17918,10 @@ public class Xmlization {
         if (that.getMin().isPresent()) {
           writer.writeStartElement(
             "min");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getMin().get().toString());
@@ -17403,6 +17936,10 @@ public class Xmlization {
         if (that.getMax().isPresent()) {
           writer.writeStartElement(
             "max");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getMax().get().toString());
@@ -17421,7 +17958,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "range");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.rangeToSequence(
           that,
           writer);
@@ -17438,6 +17978,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -17453,6 +17997,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -17467,6 +18015,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -17481,6 +18033,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -17496,6 +18052,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -17511,6 +18071,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -17526,6 +18090,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -17541,6 +18109,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -17556,6 +18128,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -17571,6 +18147,10 @@ public class Xmlization {
         if (that.getValue().isPresent()) {
           writer.writeStartElement(
             "value");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getValue().get(),
@@ -17590,7 +18170,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "referenceElement");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.referenceElementToSequence(
           that,
           writer);
@@ -17607,6 +18190,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -17622,6 +18209,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -17636,6 +18227,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -17650,6 +18245,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -17665,6 +18264,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -17680,6 +18283,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -17695,6 +18302,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -17710,6 +18321,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -17725,6 +18340,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -17739,6 +18358,10 @@ public class Xmlization {
       try {
         if (that.getValue().isPresent()) {
           writer.writeStartElement("value");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           String theB64Value = Base64.getEncoder().encodeToString(
             that.getValue().get());
           writer.writeCharacters(theB64Value);
@@ -17750,7 +18373,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "contentType");
+          "contentType");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getContentType().toString());
         writer.writeEndElement();
@@ -17766,7 +18393,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "blob");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.blobToSequence(
           that,
           writer);
@@ -17783,6 +18413,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -17798,6 +18432,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -17812,6 +18450,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -17826,6 +18468,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -17841,6 +18487,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -17856,6 +18506,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -17871,6 +18525,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -17886,6 +18544,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -17901,6 +18563,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -17916,6 +18582,10 @@ public class Xmlization {
         if (that.getValue().isPresent()) {
           writer.writeStartElement(
             "value");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getValue().get().toString());
@@ -17928,7 +18598,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "contentType");
+          "contentType");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getContentType().toString());
         writer.writeEndElement();
@@ -17944,7 +18618,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "file");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.fileToSequence(
           that,
           writer);
@@ -17961,6 +18638,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -17976,6 +18657,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -17990,6 +18675,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -18004,6 +18693,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -18019,6 +18712,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -18034,6 +18731,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -18049,6 +18750,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -18064,6 +18769,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -18079,6 +18788,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -18093,6 +18806,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "first");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         this.referenceToSequence(
           that.getFirst(),
@@ -18106,6 +18823,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "second");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         this.referenceToSequence(
           that.getSecond(),
@@ -18120,6 +18841,10 @@ public class Xmlization {
         if (that.getAnnotations().isPresent()) {
           writer.writeStartElement(
           "annotations");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getAnnotations().get()) {
             this.visit(
               item,
@@ -18139,7 +18864,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "annotatedRelationshipElement");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.annotatedRelationshipElementToSequence(
           that,
           writer);
@@ -18156,6 +18884,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -18171,6 +18903,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -18185,6 +18921,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -18199,6 +18939,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -18214,6 +18958,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -18229,6 +18977,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -18244,6 +18996,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -18259,6 +19015,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -18274,6 +19034,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -18289,6 +19053,10 @@ public class Xmlization {
         if (that.getStatements().isPresent()) {
           writer.writeStartElement(
           "statements");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getStatements().get()) {
             this.visit(
               item,
@@ -18303,6 +19071,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "entityType");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         Optional<String> textEntityType = Stringification.toString(
           that.getEntityType());
@@ -18324,6 +19096,10 @@ public class Xmlization {
         if (that.getGlobalAssetId().isPresent()) {
           writer.writeStartElement(
             "globalAssetId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getGlobalAssetId().get().toString());
@@ -18338,6 +19114,10 @@ public class Xmlization {
         if (that.getSpecificAssetIds().isPresent()) {
           writer.writeStartElement(
           "specificAssetIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSpecificAssetIds().get()) {
             this.visit(
               item,
@@ -18357,7 +19137,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "entity");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.entityToSequence(
           that,
           writer);
@@ -18373,6 +19156,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "source");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         this.referenceToSequence(
           that.getSource(),
@@ -18387,6 +19174,10 @@ public class Xmlization {
         if (that.getSourceSemanticId().isPresent()) {
           writer.writeStartElement(
             "sourceSemanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSourceSemanticId().get(),
@@ -18401,6 +19192,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "observableReference");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         this.referenceToSequence(
           that.getObservableReference(),
@@ -18415,6 +19210,10 @@ public class Xmlization {
         if (that.getObservableSemanticId().isPresent()) {
           writer.writeStartElement(
             "observableSemanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getObservableSemanticId().get(),
@@ -18430,6 +19229,10 @@ public class Xmlization {
         if (that.getTopic().isPresent()) {
           writer.writeStartElement(
             "topic");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getTopic().get().toString());
@@ -18444,6 +19247,10 @@ public class Xmlization {
         if (that.getSubjectId().isPresent()) {
           writer.writeStartElement(
             "subjectId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSubjectId().get(),
@@ -18457,7 +19264,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "timeStamp");
+          "timeStamp");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getTimeStamp().toString());
         writer.writeEndElement();
@@ -18468,6 +19279,10 @@ public class Xmlization {
       try {
         if (that.getPayload().isPresent()) {
           writer.writeStartElement("payload");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           String theB64Payload = Base64.getEncoder().encodeToString(
             that.getPayload().get());
           writer.writeCharacters(theB64Payload);
@@ -18485,9 +19300,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "eventPayload");
-
-        writer.writeNamespace("xmlns", AAS_NAME_SPACE);
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.eventPayloadToSequence(
           that,
           writer);
@@ -18504,6 +19320,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -18519,6 +19339,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -18533,6 +19357,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -18547,6 +19375,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -18562,6 +19394,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -18577,6 +19413,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -18592,6 +19432,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -18607,6 +19451,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -18622,6 +19470,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -18636,6 +19488,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "observed");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         this.referenceToSequence(
           that.getObserved(),
@@ -18649,6 +19505,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "direction");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         Optional<String> textDirection = Stringification.toString(
           that.getDirection());
@@ -18669,6 +19529,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "state");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         Optional<String> textState = Stringification.toString(
           that.getState());
@@ -18690,6 +19554,10 @@ public class Xmlization {
         if (that.getMessageTopic().isPresent()) {
           writer.writeStartElement(
             "messageTopic");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getMessageTopic().get().toString());
@@ -18704,6 +19572,10 @@ public class Xmlization {
         if (that.getMessageBroker().isPresent()) {
           writer.writeStartElement(
             "messageBroker");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getMessageBroker().get(),
@@ -18719,6 +19591,10 @@ public class Xmlization {
         if (that.getLastUpdate().isPresent()) {
           writer.writeStartElement(
             "lastUpdate");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getLastUpdate().get().toString());
@@ -18733,6 +19609,10 @@ public class Xmlization {
         if (that.getMinInterval().isPresent()) {
           writer.writeStartElement(
             "minInterval");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getMinInterval().get().toString());
@@ -18747,6 +19627,10 @@ public class Xmlization {
         if (that.getMaxInterval().isPresent()) {
           writer.writeStartElement(
             "maxInterval");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getMaxInterval().get().toString());
@@ -18765,7 +19649,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "basicEventElement");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.basicEventElementToSequence(
           that,
           writer);
@@ -18782,6 +19669,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -18797,6 +19688,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -18811,6 +19706,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -18825,6 +19724,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -18840,6 +19743,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -18855,6 +19762,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -18870,6 +19781,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -18885,6 +19800,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -18900,6 +19819,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -18915,6 +19838,10 @@ public class Xmlization {
         if (that.getInputVariables().isPresent()) {
           writer.writeStartElement(
           "inputVariables");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getInputVariables().get()) {
             this.visit(
               item,
@@ -18930,6 +19857,10 @@ public class Xmlization {
         if (that.getOutputVariables().isPresent()) {
           writer.writeStartElement(
           "outputVariables");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getOutputVariables().get()) {
             this.visit(
               item,
@@ -18945,6 +19876,10 @@ public class Xmlization {
         if (that.getInoutputVariables().isPresent()) {
           writer.writeStartElement(
           "inoutputVariables");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getInoutputVariables().get()) {
             this.visit(
               item,
@@ -18964,7 +19899,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "operation");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.operationToSequence(
           that,
           writer);
@@ -18980,6 +19918,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "value");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         this.visit(
           that.getValue(),
@@ -18998,7 +19940,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "operationVariable");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.operationVariableToSequence(
           that,
           writer);
@@ -19015,6 +19960,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -19030,6 +19979,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -19044,6 +19997,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -19058,6 +20015,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -19073,6 +20034,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -19088,6 +20053,10 @@ public class Xmlization {
         if (that.getSemanticId().isPresent()) {
           writer.writeStartElement(
             "semanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getSemanticId().get(),
@@ -19103,6 +20072,10 @@ public class Xmlization {
         if (that.getSupplementalSemanticIds().isPresent()) {
           writer.writeStartElement(
           "supplementalSemanticIds");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSupplementalSemanticIds().get()) {
             this.visit(
               item,
@@ -19118,6 +20091,10 @@ public class Xmlization {
         if (that.getQualifiers().isPresent()) {
           writer.writeStartElement(
           "qualifiers");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getQualifiers().get()) {
             this.visit(
               item,
@@ -19133,6 +20110,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -19152,7 +20133,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "capability");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.capabilityToSequence(
           that,
           writer);
@@ -19169,6 +20153,10 @@ public class Xmlization {
         if (that.getExtensions().isPresent()) {
           writer.writeStartElement(
           "extensions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getExtensions().get()) {
             this.visit(
               item,
@@ -19184,6 +20172,10 @@ public class Xmlization {
         if (that.getCategory().isPresent()) {
           writer.writeStartElement(
             "category");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getCategory().get().toString());
@@ -19198,6 +20190,10 @@ public class Xmlization {
         if (that.getIdShort().isPresent()) {
           writer.writeStartElement(
             "idShort");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getIdShort().get().toString());
@@ -19212,6 +20208,10 @@ public class Xmlization {
         if (that.getDisplayName().isPresent()) {
           writer.writeStartElement(
           "displayName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDisplayName().get()) {
             this.visit(
               item,
@@ -19227,6 +20227,10 @@ public class Xmlization {
         if (that.getDescription().isPresent()) {
           writer.writeStartElement(
           "description");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDescription().get()) {
             this.visit(
               item,
@@ -19242,6 +20246,10 @@ public class Xmlization {
         if (that.getAdministration().isPresent()) {
           writer.writeStartElement(
             "administration");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.administrativeInformationToSequence(
             that.getAdministration().get(),
@@ -19255,7 +20263,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "id");
+          "id");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getId().toString());
         writer.writeEndElement();
@@ -19267,6 +20279,10 @@ public class Xmlization {
         if (that.getEmbeddedDataSpecifications().isPresent()) {
           writer.writeStartElement(
           "embeddedDataSpecifications");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getEmbeddedDataSpecifications().get()) {
             this.visit(
               item,
@@ -19282,6 +20298,10 @@ public class Xmlization {
         if (that.getIsCaseOf().isPresent()) {
           writer.writeStartElement(
           "isCaseOf");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getIsCaseOf().get()) {
             this.visit(
               item,
@@ -19301,7 +20321,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "conceptDescription");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.conceptDescriptionToSequence(
           that,
           writer);
@@ -19317,6 +20340,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "type");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         Optional<String> textType = Stringification.toString(
           that.getType());
@@ -19338,6 +20365,10 @@ public class Xmlization {
         if (that.getReferredSemanticId().isPresent()) {
           writer.writeStartElement(
             "referredSemanticId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getReferredSemanticId().get(),
@@ -19352,6 +20383,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "keys");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         for (IClass item : that.getKeys()) {
           this.visit(
@@ -19372,7 +20407,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "reference");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.referenceToSequence(
           that,
           writer);
@@ -19388,6 +20426,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "type");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         Optional<String> textType = Stringification.toString(
           that.getType());
@@ -19407,7 +20449,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "value");
+          "value");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getValue().toString());
         writer.writeEndElement();
@@ -19423,7 +20469,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "key");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.keyToSequence(
           that,
           writer);
@@ -19438,7 +20487,11 @@ public class Xmlization {
       XMLStreamWriter writer) {
       try {
         writer.writeStartElement(
-                    "language");
+          "language");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getLanguage().toString());
         writer.writeEndElement();
@@ -19448,7 +20501,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "text");
+          "text");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getText().toString());
         writer.writeEndElement();
@@ -19464,7 +20521,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "langStringNameType");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.langStringNameTypeToSequence(
           that,
           writer);
@@ -19479,7 +20539,11 @@ public class Xmlization {
       XMLStreamWriter writer) {
       try {
         writer.writeStartElement(
-                    "language");
+          "language");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getLanguage().toString());
         writer.writeEndElement();
@@ -19489,7 +20553,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "text");
+          "text");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getText().toString());
         writer.writeEndElement();
@@ -19505,7 +20573,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "langStringTextType");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.langStringTextTypeToSequence(
           that,
           writer);
@@ -19522,6 +20593,10 @@ public class Xmlization {
         if (that.getAssetAdministrationShells().isPresent()) {
           writer.writeStartElement(
           "assetAdministrationShells");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getAssetAdministrationShells().get()) {
             this.visit(
               item,
@@ -19537,6 +20612,10 @@ public class Xmlization {
         if (that.getSubmodels().isPresent()) {
           writer.writeStartElement(
           "submodels");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getSubmodels().get()) {
             this.visit(
               item,
@@ -19552,6 +20631,10 @@ public class Xmlization {
         if (that.getConceptDescriptions().isPresent()) {
           writer.writeStartElement(
           "conceptDescriptions");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getConceptDescriptions().get()) {
             this.visit(
               item,
@@ -19571,9 +20654,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "environment");
-
-        writer.writeNamespace("xmlns", AAS_NAME_SPACE);
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.environmentToSequence(
           that,
           writer);
@@ -19589,6 +20673,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "dataSpecification");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         this.referenceToSequence(
           that.getDataSpecification(),
@@ -19602,6 +20690,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "dataSpecificationContent");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         this.visit(
           that.getDataSpecificationContent(),
@@ -19620,7 +20712,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "embeddedDataSpecification");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.embeddedDataSpecificationToSequence(
           that,
           writer);
@@ -19635,7 +20730,11 @@ public class Xmlization {
       XMLStreamWriter writer) {
       try {
         writer.writeStartElement(
-                    "min");
+          "min");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getMin().toString());
         writer.writeEndElement();
@@ -19645,7 +20744,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "nom");
+          "nom");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getNom().toString());
         writer.writeEndElement();
@@ -19655,7 +20758,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "typ");
+          "typ");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getTyp().toString());
         writer.writeEndElement();
@@ -19665,7 +20772,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "max");
+          "max");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getMax().toString());
         writer.writeEndElement();
@@ -19681,7 +20792,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "levelType");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.levelTypeToSequence(
           that,
           writer);
@@ -19696,7 +20810,11 @@ public class Xmlization {
       XMLStreamWriter writer) {
       try {
         writer.writeStartElement(
-                    "value");
+          "value");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getValue().toString());
         writer.writeEndElement();
@@ -19707,6 +20825,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "valueId");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         this.referenceToSequence(
           that.getValueId(),
@@ -19725,7 +20847,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "valueReferencePair");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.valueReferencePairToSequence(
           that,
           writer);
@@ -19741,6 +20866,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "valueReferencePairs");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         for (IClass item : that.getValueReferencePairs()) {
           this.visit(
@@ -19761,7 +20890,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "valueList");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.valueListToSequence(
           that,
           writer);
@@ -19776,7 +20908,11 @@ public class Xmlization {
       XMLStreamWriter writer) {
       try {
         writer.writeStartElement(
-                    "language");
+          "language");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getLanguage().toString());
         writer.writeEndElement();
@@ -19786,7 +20922,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "text");
+          "text");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getText().toString());
         writer.writeEndElement();
@@ -19802,7 +20942,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "langStringPreferredNameTypeIec61360");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.langStringPreferredNameTypeIec61360ToSequence(
           that,
           writer);
@@ -19817,7 +20960,11 @@ public class Xmlization {
       XMLStreamWriter writer) {
       try {
         writer.writeStartElement(
-                    "language");
+          "language");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getLanguage().toString());
         writer.writeEndElement();
@@ -19827,7 +20974,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "text");
+          "text");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getText().toString());
         writer.writeEndElement();
@@ -19843,7 +20994,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "langStringShortNameTypeIec61360");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.langStringShortNameTypeIec61360ToSequence(
           that,
           writer);
@@ -19858,7 +21012,11 @@ public class Xmlization {
       XMLStreamWriter writer) {
       try {
         writer.writeStartElement(
-                    "language");
+          "language");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getLanguage().toString());
         writer.writeEndElement();
@@ -19868,7 +21026,11 @@ public class Xmlization {
 
       try {
         writer.writeStartElement(
-                    "text");
+          "text");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         writer.writeCharacters(
           that.getText().toString());
         writer.writeEndElement();
@@ -19884,7 +21046,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "langStringDefinitionTypeIec61360");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.langStringDefinitionTypeIec61360ToSequence(
           that,
           writer);
@@ -19900,6 +21065,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "preferredName");
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
 
         for (IClass item : that.getPreferredName()) {
           this.visit(
@@ -19916,6 +21085,10 @@ public class Xmlization {
         if (that.getShortName().isPresent()) {
           writer.writeStartElement(
           "shortName");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getShortName().get()) {
             this.visit(
               item,
@@ -19931,6 +21104,10 @@ public class Xmlization {
         if (that.getUnit().isPresent()) {
           writer.writeStartElement(
             "unit");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getUnit().get().toString());
@@ -19945,6 +21122,10 @@ public class Xmlization {
         if (that.getUnitId().isPresent()) {
           writer.writeStartElement(
             "unitId");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.referenceToSequence(
             that.getUnitId().get(),
@@ -19960,6 +21141,10 @@ public class Xmlization {
         if (that.getSourceOfDefinition().isPresent()) {
           writer.writeStartElement(
             "sourceOfDefinition");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getSourceOfDefinition().get().toString());
@@ -19974,6 +21159,10 @@ public class Xmlization {
         if (that.getSymbol().isPresent()) {
           writer.writeStartElement(
             "symbol");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getSymbol().get().toString());
@@ -19988,6 +21177,10 @@ public class Xmlization {
         if (that.getDataType().isPresent()) {
           writer.writeStartElement(
             "dataType");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           Optional<String> textDataType = Stringification.toString(
             that.getDataType().get());
@@ -20010,6 +21203,10 @@ public class Xmlization {
         if (that.getDefinition().isPresent()) {
           writer.writeStartElement(
           "definition");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
           for (IClass item : that.getDefinition().get()) {
             this.visit(
               item,
@@ -20025,6 +21222,10 @@ public class Xmlization {
         if (that.getValueFormat().isPresent()) {
           writer.writeStartElement(
             "valueFormat");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getValueFormat().get().toString());
@@ -20039,6 +21240,10 @@ public class Xmlization {
         if (that.getValueList().isPresent()) {
           writer.writeStartElement(
             "valueList");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.valueListToSequence(
             that.getValueList().get(),
@@ -20054,6 +21259,10 @@ public class Xmlization {
         if (that.getValue().isPresent()) {
           writer.writeStartElement(
             "value");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           writer.writeCharacters(
             that.getValue().get().toString());
@@ -20068,6 +21277,10 @@ public class Xmlization {
         if (that.getLevelType().isPresent()) {
           writer.writeStartElement(
             "levelType");
+          if (topLevel) {
+            writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+            topLevel = false;
+          }
 
           this.levelTypeToSequence(
             that.getLevelType().get(),
@@ -20087,7 +21300,10 @@ public class Xmlization {
       try {
         writer.writeStartElement(
           "dataSpecificationIec61360");
-
+        if (topLevel) {
+          writer.writeNamespace("xmlns", AAS_NAME_SPACE);
+          topLevel = false;
+        }
         this.dataSpecificationIec61360ToSequence(
           that,
           writer);
@@ -20117,16 +21333,14 @@ public class Xmlization {
    */
   public static class Serialize
   {
-    private static final VisitorWithWriter _visitorWithWriter =
-      new VisitorWithWriter();
-
     /**
      * Serialize an instance of the meta-model to XML.
      */
     public static void to(
       IClass that,
       XMLStreamWriter writer) throws SerializeException {
-      Serialize._visitorWithWriter.visit(
+      VisitorWithWriter visitor = new VisitorWithWriter(); 
+      visitor.visit(
         that, writer);
     }
   }
