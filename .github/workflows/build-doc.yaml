@@ -2,7 +2,7 @@ name: Build Documentation
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "ci-and-doc-build" ]
   pull_request:
     branches: [ "main" ]
 
@@ -28,8 +28,8 @@ jobs:
           cd doc
           ls
 
-      - name: Deploy to gh-pages 🚀
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: doc
+#      - name: Deploy to gh-pages 🚀
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          publish_dir: doc

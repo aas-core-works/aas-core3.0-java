@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "ci-and-doc-build" ]
   pull_request:
     branches: [ "main" ]
 
