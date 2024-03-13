@@ -7,6 +7,12 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.AssignExpr;
+import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.expr.VariableDeclarationExpr;
+import com.github.javaparser.ast.stmt.ExpressionStmt;
+import com.github.javaparser.ast.stmt.ReturnStmt;
+import com.github.javaparser.ast.stmt.Statement;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -47,26 +53,6 @@ public class PatchVerification {
 
     ClassOrInterfaceDeclaration verificationCls = maybeVerificationCls.get();
 
-    MethodDeclaration stripMethod = new MethodDeclaration();
-    stripMethod.addModifier(Modifier.Keyword.PRIVATE);
-    stripMethod.addModifier(Modifier.Keyword.STATIC);
-    stripMethod.setType("String");
-    stripMethod.setName("stripCaretPrefixAndDollarSuffixForDkBricsAutomaton");
-    stripMethod.setBody(
-        StaticJavaParser.parseBlock("""
-            {
-              if (pattern.startsWith("^")) {
-                pattern = pattern.replaceFirst("\\\\^", "");
-              }
-              if (pattern.endsWith("$")) {
-                pattern = pattern.substring(0, pattern.length() - 1);
-              }
-              return pattern;
-            }""")
-    );
-
-    verificationCls.addMember(stripMethod);
-
     MethodDeclaration constructMethod = null;
     for (MethodDeclaration method : verificationCls.getMethods()) {
       if (method.getName().toString().equals("constructMatchesRfc8089Path")) {
@@ -85,35 +71,64 @@ public class PatchVerification {
 
     constructMethod.setType("Automaton");
 
-    stripMethod.setBody(
-        StaticJavaParser.parseBlock("""
-            {
-            String h16 = "[0-9A-Fa-f]{1,4}";
-            String decOctet = "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])";
-            String ipv4address = decOctet + "\\\\." + decOctet + "\\\\." + decOctet + "\\\\." + decOctet;
-            String ls32 = "(" + h16 + ":" + h16 + "|" + ipv4address + ")";
-            String ipv6address = "((" + h16 + ":){6}" + ls32 + "|::(" + h16 + ":){5}" + ls32 + "|(" + h16 + ")?::(" + h16 + ":){4}" + ls32 + "|((" + h16 + ":)?" + h16 + ")?::(" + h16 + ":){3}" + ls32 + "|((" + h16 + ":){2}" + h16 + ")?::(" + h16 + ":){2}" + ls32 + "|((" + h16 + ":){3}" + h16 + ")?::" + h16 + ":" + ls32 + "|((" + h16 + ":){4}" + h16 + ")?::" + ls32 + "|((" + h16 + ":){5}" + h16 + ")?::" + h16 + "|((" + h16 + ":){6}" + h16 + ")?::)";
-            String unreserved = "[a-zA-Z0-9\\\\-._~]";
-            String subDelims = "[!$&\\'()*+,;=]";
-            String ipvfuture = "[vV][0-9A-Fa-f]+\\\\.(" + unreserved + "|" + subDelims + "|:)+";
-            String ipLiteral = "\\\\[(" + ipv6address + "|" + ipvfuture + ")\\\\]";
-            String pctEncoded = "%[0-9A-Fa-f][0-9A-Fa-f]";
-            String regName = "(" + unreserved + "|" + pctEncoded + "|" + subDelims + ")*";
-            String host = "(" + ipLiteral + "|" + ipv4address + "|" + regName + ")";
-            String fileAuth = "(localhost|" + host + ")";
-            String pchar = "(" + unreserved + "|" + pctEncoded + "|" + subDelims + "|[:@])";
-            String segmentNz = "(" + pchar + ")+";
-            String segment = "(" + pchar + ")*";
-            String pathAbsolute = "/(" + segmentNz + "(/" + segment + ")*)?";
-            String authPath = "(" + fileAuth + ")?" + pathAbsolute;
-            String localPath = pathAbsolute;
-            String fileHierPart = "(//" + authPath + "|" + localPath + ")";
-            String fileScheme = "file";
-            String fileUri = fileScheme + ":" + fileHierPart;
-            String pattern = "^" + fileUri + "$";
+    if (!constructMethod.getBody().isPresent()) {
+      System.err.println(
+          "The constructMatchesRfc8089Path lacks the body in " + sourcePath
+      );
+      System.exit(1);
+      return;
+    }
 
-            return new RegExp(stripCaretPrefixAndDollarSuffixForDkBricsAutomaton(pattern)).toAutomaton();
-            }""")
+    VariableDeclarator expectedPatternDecl = null;
+    ReturnStmt expectedReturnStmt = null;
+
+    for (Statement statement : constructMethod.getBody().get().getStatements()) {
+      if (
+          statement.isExpressionStmt()
+              && statement instanceof ExpressionStmt
+      ) {
+        ExpressionStmt expressionStmt = (ExpressionStmt) statement;
+
+        Expression expression = expressionStmt.getExpression();
+
+        if (expression instanceof VariableDeclarationExpr) {
+          VariableDeclarationExpr varDeclExpr = (VariableDeclarationExpr) expression;
+
+          if (expression.toString().equals("String pattern = \"^\" + fileUri + \"$\"")) {
+            expectedPatternDecl = varDeclExpr.getVariable(0);
+          }
+        }
+      } else if (statement.isReturnStmt()) {
+        ReturnStmt returnStmt = (ReturnStmt) statement;
+
+        if (returnStmt.toString().equals("return Pattern.compile(pattern);")) {
+          expectedReturnStmt = returnStmt;
+        }
+      }
+    }
+
+    if (expectedPatternDecl == null) {
+      System.err.println(
+          "The constructMatchesRfc8089Path lacks the 'String pattern = \"^\" + fileUri + \"$\"' statement in "
+              + sourcePath
+      );
+      System.exit(1);
+      return;
+    }
+
+    if (expectedReturnStmt == null) {
+      System.err.println(
+          "The constructMatchesRfc8089Path lacks the expected return statement " +
+              "'return Pattern.compile(pattern);' in " + sourcePath
+      );
+      System.exit(1);
+      return;
+    }
+
+    expectedPatternDecl.setInitializer("fileUri");
+
+    expectedReturnStmt.setExpression(
+        StaticJavaParser.parseExpression("new RegExp(pattern).toAutomaton()")
     );
 
     VariableDeclarator regexVariable = null;
