@@ -1,4 +1,4 @@
-package aas_core_works;
+
 
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
@@ -52,27 +52,6 @@ public class PatchVerification {
     }
 
     ClassOrInterfaceDeclaration verificationCls = maybeVerificationCls.get();
-
-    // TODO: remove
-//    MethodDeclaration stripMethod = new MethodDeclaration();
-//    stripMethod.addModifier(Modifier.Keyword.PRIVATE);
-//    stripMethod.addModifier(Modifier.Keyword.STATIC);
-//    stripMethod.setType("String");
-//    stripMethod.setName("stripCaretPrefixAndDollarSuffixForDkBricsAutomaton");
-//    stripMethod.setBody(
-//        StaticJavaParser.parseBlock("""
-//            {
-//              if (pattern.startsWith("^")) {
-//                pattern = pattern.replaceFirst("\\\\^", "");
-//              }
-//              if (pattern.endsWith("$")) {
-//                pattern = pattern.substring(0, pattern.length() - 1);
-//              }
-//              return pattern;
-//            }""")
-//    );
-//
-//    verificationCls.addMember(stripMethod);
 
     MethodDeclaration constructMethod = null;
     for (MethodDeclaration method : verificationCls.getMethods()) {
