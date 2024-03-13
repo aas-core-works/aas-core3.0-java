@@ -1,4 +1,4 @@
-
+package aas_core_works;
 
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
@@ -78,8 +78,6 @@ public class PatchVerification {
       System.exit(1);
       return;
     }
-
-
 
     VariableDeclarator expectedPatternDecl = null;
     ReturnStmt expectedReturnStmt = null;
