@@ -19,7 +19,7 @@ jobs:
           java-version: '8'
           distribution: 'corretto'
 
-      - name: Creat javadoc
+      - name: Create javadoc
         run: javadoc -d doc -sourcepath ./src/main/java -subpackages aas_core.aas3_0
 
       #TODO remove after testing
