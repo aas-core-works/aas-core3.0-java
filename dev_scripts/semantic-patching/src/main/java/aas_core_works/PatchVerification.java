@@ -3,16 +3,15 @@ package aas_core_works;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.FieldDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 public class PatchVerification {
@@ -51,6 +50,10 @@ public class PatchVerification {
     stripMethod.addModifier(Modifier.Keyword.PRIVATE);
     stripMethod.addModifier(Modifier.Keyword.STATIC);
     stripMethod.setType("String");
+    Parameter parameter = new Parameter()
+            .setType("String")
+            .setName("pattern");
+    stripMethod.setParameters(new NodeList<>(parameter));
     stripMethod.setName("stripCaretPrefixAndDollarSuffixForDkBricsAutomaton");
     stripMethod.setBody(
         StaticJavaParser.parseBlock("""
@@ -85,7 +88,7 @@ public class PatchVerification {
 
     constructMethod.setType("Automaton");
 
-    stripMethod.setBody(
+    constructMethod.setBody(
         StaticJavaParser.parseBlock("""
             {
             String h16 = "[0-9A-Fa-f]{1,4}";
