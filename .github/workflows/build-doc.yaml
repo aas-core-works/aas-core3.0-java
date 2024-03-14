@@ -18,12 +18,9 @@ jobs:
         with:
           java-version: '8'
           distribution: 'corretto'
-          cache: maven
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
 
       - name: Create javadoc
-        run: javadoc -d doc -sourcepath ./src/main/java -subpackages aas_core.aas3_0 -exclude dk.brics.automaton
+        run: javadoc -Xdoclint:none -d doc -sourcepath ./src/main/java -subpackages aas_core.aas3_0
 
       #TODO remove after testing
       - name: List doc directory for debugging
