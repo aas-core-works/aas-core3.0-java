@@ -2,7 +2,7 @@ name: Build Documentation
 
 on:
   push:
-    branches: [ "ci-and-doc-build" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -22,14 +22,8 @@ jobs:
       - name: Create javadoc
         run: javadoc -Xdoclint:none -d doc/javadoc -sourcepath ./src/main/java -subpackages aas_core.aas3_0
 
-      #TODO remove after testing
-      - name: List doc directory for debugging
-        run: |
-          cd doc/javadoc
-          ls -R
-
-#      - name: Deploy to gh-pages 🚀
-#        uses: peaceiris/actions-gh-pages@v3
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          publish_dir: doc
+      - name: Deploy to gh-pages 🚀
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: doc
