@@ -23,7 +23,7 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Create javadoc
-        run: javadoc -d doc -sourcepath ./src/main/java -subpackages aas_core.aas3_0 -exclude dk.brics
+        run: javadoc -d doc -sourcepath ./src/main/java -subpackages aas_core.aas3_0 -exclude dk.brics.automaton
 
       #TODO remove after testing
       - name: List doc directory for debugging
