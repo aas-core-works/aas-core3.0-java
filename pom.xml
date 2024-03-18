@@ -14,6 +14,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jackson.version>2.16.1</jackson.version>
         <dk.brics.version>1.12-4</dk.brics.version>
+        <!--Note: For Java 8 we need the spotless plugin in version <= 2.30.0 -->
+        <spotless.maven.plugin.version>2.30.0</spotless.maven.plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -38,4 +40,40 @@
             <version>${dk.brics.version}</version>
         </dependency>
     </dependencies>
+
+     <build>
+        <plugins>
+            <plugin>
+                <!-- https://github.com/diffplug/spotless/tree/main/plugin-maven -->
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless.maven.plugin.version}</version>
+                <inherited>true</inherited>
+                <configuration>
+                    <java>
+                        <includes>
+                            <include>src/main/java/**/*.java</include>
+                            <include>src/test/java/**/*.java</include>
+                        </includes>
+                        <googleJavaFormat>
+                            <!--Note: JVM 8, is limited to google-java-format 1.7.-->
+                            <version>1.7</version>
+                            <style>GOOGLE</style>
+                        </googleJavaFormat>
+                        <importOrder/>
+                        <removeUnusedImports/>
+                    </java>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>auto-style</id>
+                        <goals>
+                            <goal>apply</goal>
+                        </goals>
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
