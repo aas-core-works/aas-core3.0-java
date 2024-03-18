@@ -126,17 +126,28 @@ public class RelationshipElement implements IRelationshipElement {
   private IReference second;
 
   public RelationshipElement(
-      IReference first,
-      IReference second,
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+    IReference first,
+    IReference second) {
+    this.first = Objects.requireNonNull(
+      first,
+      "Argument \"first\" must be non-null.");
+    this.second = Objects.requireNonNull(
+      second,
+      "Argument \"second\" must be non-null.");
+  }
+
+  public RelationshipElement(
+    IReference first,
+    IReference second,
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;

@@ -130,18 +130,24 @@ public class File implements IFile {
    */
   private String contentType;
 
+  public File(String contentType) {
+    this.contentType = Objects.requireNonNull(
+      contentType,
+      "Argument \"contentType\" must be non-null.");
+  }
+
   public File(
-      String contentType,
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      String value) {
+    String contentType,
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    String value) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;

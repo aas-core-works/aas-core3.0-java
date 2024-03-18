@@ -77,13 +77,19 @@ public class Extension implements IExtension {
    */
   private List<IReference> refersTo;
 
+  public Extension(String name) {
+    this.name = Objects.requireNonNull(
+      name,
+      "Argument \"name\" must be non-null.");
+  }
+
   public Extension(
-      String name,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      DataTypeDefXsd valueType,
-      String value,
-      List<IReference> refersTo) {
+    String name,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    DataTypeDefXsd valueType,
+    String value,
+    List<IReference> refersTo) {
     this.semanticId = semanticId;
     this.supplementalSemanticIds = supplementalSemanticIds;
     this.name = Objects.requireNonNull(

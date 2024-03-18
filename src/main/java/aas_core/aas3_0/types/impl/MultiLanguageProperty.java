@@ -135,17 +135,17 @@ public class MultiLanguageProperty implements IMultiLanguageProperty {
   private IReference valueId;
 
   public MultiLanguageProperty(
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      List<ILangStringTextType> value,
-      IReference valueId) {
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    List<ILangStringTextType> value,
+    IReference valueId) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;
@@ -157,20 +157,6 @@ public class MultiLanguageProperty implements IMultiLanguageProperty {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     this.value = value;
     this.valueId = valueId;
-  }
-
-  public MultiLanguageProperty() {
-    this.extensions = null;
-    this.idShort = null;
-    this.displayName = null;
-    this.category = null;
-    this.description = null;
-    this.semanticId = null;
-    this.supplementalSemanticIds = null;
-    this.qualifiers = null;
-    this.embeddedDataSpecifications = null;
-    this.value = null;
-    this.valueId = null;
   }
 
   @Override

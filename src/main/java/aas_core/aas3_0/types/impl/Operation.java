@@ -139,18 +139,18 @@ public class Operation implements IOperation {
   private List<IOperationVariable> inoutputVariables;
 
   public Operation(
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      List<IOperationVariable> inputVariables,
-      List<IOperationVariable> outputVariables,
-      List<IOperationVariable> inoutputVariables) {
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    List<IOperationVariable> inputVariables,
+    List<IOperationVariable> outputVariables,
+    List<IOperationVariable> inoutputVariables) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;
@@ -163,21 +163,6 @@ public class Operation implements IOperation {
     this.inputVariables = inputVariables;
     this.outputVariables = outputVariables;
     this.inoutputVariables = inoutputVariables;
-  }
-
-  public Operation() {
-    this.extensions = null;
-    this.idShort = null;
-    this.displayName = null;
-    this.category = null;
-    this.description = null;
-    this.semanticId = null;
-    this.supplementalSemanticIds = null;
-    this.qualifiers = null;
-    this.embeddedDataSpecifications = null;
-    this.inputVariables = null;
-    this.outputVariables = null;
-    this.inoutputVariables = null;
   }
 
   @Override

@@ -48,8 +48,8 @@ public class Key implements IKey {
   private String value;
 
   public Key(
-      KeyTypes type,
-      String value) {
+    KeyTypes type,
+    String value) {
     this.type = Objects.requireNonNull(
       type,
       "Argument \"type\" must be non-null.");

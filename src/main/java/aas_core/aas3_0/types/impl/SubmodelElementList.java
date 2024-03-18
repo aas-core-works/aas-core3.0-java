@@ -176,21 +176,27 @@ public class SubmodelElementList implements ISubmodelElementList {
    */
   private List<ISubmodelElement> value;
 
+  public SubmodelElementList(AasSubmodelElements typeValueListElement) {
+    this.typeValueListElement = Objects.requireNonNull(
+      typeValueListElement,
+      "Argument \"typeValueListElement\" must be non-null.");
+  }
+
   public SubmodelElementList(
-      AasSubmodelElements typeValueListElement,
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      Boolean orderRelevant,
-      IReference semanticIdListElement,
-      DataTypeDefXsd valueTypeListElement,
-      List<ISubmodelElement> value) {
+    AasSubmodelElements typeValueListElement,
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    Boolean orderRelevant,
+    IReference semanticIdListElement,
+    DataTypeDefXsd valueTypeListElement,
+    List<ISubmodelElement> value) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;

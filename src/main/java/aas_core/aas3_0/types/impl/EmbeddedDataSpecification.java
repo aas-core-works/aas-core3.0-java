@@ -43,8 +43,8 @@ public class EmbeddedDataSpecification implements IEmbeddedDataSpecification {
   private IDataSpecificationContent dataSpecificationContent;
 
   public EmbeddedDataSpecification(
-      IReference dataSpecification,
-      IDataSpecificationContent dataSpecificationContent) {
+    IReference dataSpecification,
+    IDataSpecificationContent dataSpecificationContent) {
     this.dataSpecification = Objects.requireNonNull(
       dataSpecification,
       "Argument \"dataSpecification\" must be non-null.");

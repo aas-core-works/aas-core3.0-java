@@ -132,18 +132,29 @@ public class AnnotatedRelationshipElement implements IAnnotatedRelationshipEleme
   private List<IDataElement> annotations;
 
   public AnnotatedRelationshipElement(
-      IReference first,
-      IReference second,
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      List<IDataElement> annotations) {
+    IReference first,
+    IReference second) {
+    this.first = Objects.requireNonNull(
+      first,
+      "Argument \"first\" must be non-null.");
+    this.second = Objects.requireNonNull(
+      second,
+      "Argument \"second\" must be non-null.");
+  }
+
+  public AnnotatedRelationshipElement(
+    IReference first,
+    IReference second,
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    List<IDataElement> annotations) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;

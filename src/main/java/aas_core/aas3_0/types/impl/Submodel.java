@@ -144,20 +144,26 @@ public class Submodel implements ISubmodel {
    */
   private List<ISubmodelElement> submodelElements;
 
+  public Submodel(String id) {
+    this.id = Objects.requireNonNull(
+      id,
+      "Argument \"id\" must be non-null.");
+  }
+
   public Submodel(
-      String id,
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IAdministrativeInformation administration,
-      ModellingKind kind,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      List<ISubmodelElement> submodelElements) {
+    String id,
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IAdministrativeInformation administration,
+    ModellingKind kind,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    List<ISubmodelElement> submodelElements) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;

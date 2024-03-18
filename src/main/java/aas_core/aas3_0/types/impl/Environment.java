@@ -52,18 +52,12 @@ public class Environment implements IEnvironment {
   private List<IConceptDescription> conceptDescriptions;
 
   public Environment(
-      List<IAssetAdministrationShell> assetAdministrationShells,
-      List<ISubmodel> submodels,
-      List<IConceptDescription> conceptDescriptions) {
+    List<IAssetAdministrationShell> assetAdministrationShells,
+    List<ISubmodel> submodels,
+    List<IConceptDescription> conceptDescriptions) {
     this.assetAdministrationShells = assetAdministrationShells;
     this.submodels = submodels;
     this.conceptDescriptions = conceptDescriptions;
-  }
-
-  public Environment() {
-    this.assetAdministrationShells = null;
-    this.submodels = null;
-    this.conceptDescriptions = null;
   }
 
   @Override

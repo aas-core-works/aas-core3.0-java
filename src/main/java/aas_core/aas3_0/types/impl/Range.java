@@ -133,19 +133,25 @@ public class Range implements IRange {
    */
   private String max;
 
+  public Range(DataTypeDefXsd valueType) {
+    this.valueType = Objects.requireNonNull(
+      valueType,
+      "Argument \"valueType\" must be non-null.");
+  }
+
   public Range(
-      DataTypeDefXsd valueType,
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      String min,
-      String max) {
+    DataTypeDefXsd valueType,
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    String min,
+    String max) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;

@@ -35,8 +35,8 @@ public class LangStringNameType implements ILangStringNameType {
   private String text;
 
   public LangStringNameType(
-      String language,
-      String text) {
+    String language,
+    String text) {
     this.language = Objects.requireNonNull(
       language,
       "Argument \"language\" must be non-null.");

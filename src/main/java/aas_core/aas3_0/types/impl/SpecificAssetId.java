@@ -76,11 +76,22 @@ public class SpecificAssetId implements ISpecificAssetId {
   private IReference externalSubjectId;
 
   public SpecificAssetId(
-      String name,
-      String value,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      IReference externalSubjectId) {
+    String name,
+    String value) {
+    this.name = Objects.requireNonNull(
+      name,
+      "Argument \"name\" must be non-null.");
+    this.value = Objects.requireNonNull(
+      value,
+      "Argument \"value\" must be non-null.");
+  }
+
+  public SpecificAssetId(
+    String name,
+    String value,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    IReference externalSubjectId) {
     this.semanticId = semanticId;
     this.supplementalSemanticIds = supplementalSemanticIds;
     this.name = Objects.requireNonNull(

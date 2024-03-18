@@ -135,18 +135,24 @@ public class Blob implements IBlob {
    */
   private String contentType;
 
+  public Blob(String contentType) {
+    this.contentType = Objects.requireNonNull(
+      contentType,
+      "Argument \"contentType\" must be non-null.");
+  }
+
   public Blob(
-      String contentType,
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      byte[] value) {
+    String contentType,
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    byte[] value) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;

@@ -76,24 +76,16 @@ public class AdministrativeInformation implements IAdministrativeInformation {
   private String templateId;
 
   public AdministrativeInformation(
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      String version,
-      String revision,
-      IReference creator,
-      String templateId) {
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    String version,
+    String revision,
+    IReference creator,
+    String templateId) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     this.version = version;
     this.revision = revision;
     this.creator = creator;
     this.templateId = templateId;
-  }
-
-  public AdministrativeInformation() {
-    this.embeddedDataSpecifications = null;
-    this.version = null;
-    this.revision = null;
-    this.creator = null;
-    this.templateId = null;
   }
 
   @Override

@@ -121,17 +121,28 @@ public class AssetAdministrationShell implements IAssetAdministrationShell {
   private List<IReference> submodels;
 
   public AssetAdministrationShell(
-      String id,
-      IAssetInformation assetInformation,
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IAdministrativeInformation administration,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      IReference derivedFrom,
-      List<IReference> submodels) {
+    String id,
+    IAssetInformation assetInformation) {
+    this.id = Objects.requireNonNull(
+      id,
+      "Argument \"id\" must be non-null.");
+    this.assetInformation = Objects.requireNonNull(
+      assetInformation,
+      "Argument \"assetInformation\" must be non-null.");
+  }
+
+  public AssetAdministrationShell(
+    String id,
+    IAssetInformation assetInformation,
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IAdministrativeInformation administration,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    IReference derivedFrom,
+    List<IReference> submodels) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;

@@ -121,16 +121,16 @@ public class SubmodelElementCollection implements ISubmodelElementCollection {
   private List<ISubmodelElement> value;
 
   public SubmodelElementCollection(
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      List<ISubmodelElement> value) {
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    List<ISubmodelElement> value) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;
@@ -141,19 +141,6 @@ public class SubmodelElementCollection implements ISubmodelElementCollection {
     this.qualifiers = qualifiers;
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     this.value = value;
-  }
-
-  public SubmodelElementCollection() {
-    this.extensions = null;
-    this.idShort = null;
-    this.displayName = null;
-    this.category = null;
-    this.description = null;
-    this.semanticId = null;
-    this.supplementalSemanticIds = null;
-    this.qualifiers = null;
-    this.embeddedDataSpecifications = null;
-    this.value = null;
   }
 
   @Override

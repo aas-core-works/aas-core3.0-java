@@ -139,19 +139,25 @@ public class Property implements IProperty {
    */
   private IReference valueId;
 
+  public Property(DataTypeDefXsd valueType) {
+    this.valueType = Objects.requireNonNull(
+      valueType,
+      "Argument \"valueType\" must be non-null.");
+  }
+
   public Property(
-      DataTypeDefXsd valueType,
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      String value,
-      IReference valueId) {
+    DataTypeDefXsd valueType,
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    String value,
+    IReference valueId) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;

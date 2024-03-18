@@ -42,9 +42,15 @@ public class Resource implements IResource {
    */
   private String contentType;
 
+  public Resource(String path) {
+    this.path = Objects.requireNonNull(
+      path,
+      "Argument \"path\" must be non-null.");
+  }
+
   public Resource(
-      String path,
-      String contentType) {
+    String path,
+    String contentType) {
     this.path = Objects.requireNonNull(
       path,
       "Argument \"path\" must be non-null.");
