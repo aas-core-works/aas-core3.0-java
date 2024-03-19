@@ -37,8 +37,8 @@ public class LangStringPreferredNameTypeIec61360 implements ILangStringPreferred
   private String text;
 
   public LangStringPreferredNameTypeIec61360(
-      String language,
-      String text) {
+    String language,
+    String text) {
     this.language = Objects.requireNonNull(
       language,
       "Argument \"language\" must be non-null.");

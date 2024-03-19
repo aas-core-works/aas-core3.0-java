@@ -106,12 +106,18 @@ public class AssetInformation implements IAssetInformation {
    */
   private IResource defaultThumbnail;
 
+  public AssetInformation(AssetKind assetKind) {
+    this.assetKind = Objects.requireNonNull(
+      assetKind,
+      "Argument \"assetKind\" must be non-null.");
+  }
+
   public AssetInformation(
-      AssetKind assetKind,
-      String globalAssetId,
-      List<ISpecificAssetId> specificAssetIds,
-      String assetType,
-      IResource defaultThumbnail) {
+    AssetKind assetKind,
+    String globalAssetId,
+    List<ISpecificAssetId> specificAssetIds,
+    String assetType,
+    IResource defaultThumbnail) {
     this.assetKind = Objects.requireNonNull(
       assetKind,
       "Argument \"assetKind\" must be non-null.");

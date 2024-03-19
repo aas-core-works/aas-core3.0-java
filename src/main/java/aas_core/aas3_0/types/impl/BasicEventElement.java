@@ -188,23 +188,38 @@ public class BasicEventElement implements IBasicEventElement {
   private String maxInterval;
 
   public BasicEventElement(
-      IReference observed,
-      Direction direction,
-      StateOfEvent state,
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      String messageTopic,
-      IReference messageBroker,
-      String lastUpdate,
-      String minInterval,
-      String maxInterval) {
+    IReference observed,
+    Direction direction,
+    StateOfEvent state) {
+    this.observed = Objects.requireNonNull(
+      observed,
+      "Argument \"observed\" must be non-null.");
+    this.direction = Objects.requireNonNull(
+      direction,
+      "Argument \"direction\" must be non-null.");
+    this.state = Objects.requireNonNull(
+      state,
+      "Argument \"state\" must be non-null.");
+  }
+
+  public BasicEventElement(
+    IReference observed,
+    Direction direction,
+    StateOfEvent state,
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    String messageTopic,
+    IReference messageBroker,
+    String lastUpdate,
+    String minInterval,
+    String maxInterval) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;

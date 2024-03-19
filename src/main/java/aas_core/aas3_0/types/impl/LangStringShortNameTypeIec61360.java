@@ -35,8 +35,8 @@ public class LangStringShortNameTypeIec61360 implements ILangStringShortNameType
   private String text;
 
   public LangStringShortNameTypeIec61360(
-      String language,
-      String text) {
+    String language,
+    String text) {
     this.language = Objects.requireNonNull(
       language,
       "Argument \"language\" must be non-null.");

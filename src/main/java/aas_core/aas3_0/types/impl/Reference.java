@@ -120,9 +120,20 @@ public class Reference implements IReference {
   private List<IKey> keys;
 
   public Reference(
-      ReferenceTypes type,
-      List<IKey> keys,
-      IReference referredSemanticId) {
+    ReferenceTypes type,
+    List<IKey> keys) {
+    this.type = Objects.requireNonNull(
+      type,
+      "Argument \"type\" must be non-null.");
+    this.keys = Objects.requireNonNull(
+      keys,
+      "Argument \"keys\" must be non-null.");
+  }
+
+  public Reference(
+    ReferenceTypes type,
+    List<IKey> keys,
+    IReference referredSemanticId) {
     this.type = Objects.requireNonNull(
       type,
       "Argument \"type\" must be non-null.");

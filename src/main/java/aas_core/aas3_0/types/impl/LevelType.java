@@ -77,10 +77,10 @@ public class LevelType implements ILevelType {
   private Boolean max;
 
   public LevelType(
-      Boolean min,
-      Boolean nom,
-      Boolean typ,
-      Boolean max) {
+    Boolean min,
+    Boolean nom,
+    Boolean typ,
+    Boolean max) {
     this.min = Objects.requireNonNull(
       min,
       "Argument \"min\" must be non-null.");

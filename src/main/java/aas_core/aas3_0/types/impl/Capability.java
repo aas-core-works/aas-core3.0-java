@@ -116,15 +116,15 @@ public class Capability implements ICapability {
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
   public Capability(
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;
@@ -134,18 +134,6 @@ public class Capability implements ICapability {
     this.supplementalSemanticIds = supplementalSemanticIds;
     this.qualifiers = qualifiers;
     this.embeddedDataSpecifications = embeddedDataSpecifications;
-  }
-
-  public Capability() {
-    this.extensions = null;
-    this.idShort = null;
-    this.displayName = null;
-    this.category = null;
-    this.description = null;
-    this.semanticId = null;
-    this.supplementalSemanticIds = null;
-    this.qualifiers = null;
-    this.embeddedDataSpecifications = null;
   }
 
   @Override

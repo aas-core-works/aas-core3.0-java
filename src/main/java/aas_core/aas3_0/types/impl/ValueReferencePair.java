@@ -46,8 +46,8 @@ public class ValueReferencePair implements IValueReferencePair {
   private IReference valueId;
 
   public ValueReferencePair(
-      String value,
-      IReference valueId) {
+    String value,
+    IReference valueId) {
     this.value = Objects.requireNonNull(
       value,
       "Argument \"value\" must be non-null.");

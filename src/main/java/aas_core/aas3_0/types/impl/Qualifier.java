@@ -93,13 +93,24 @@ public class Qualifier implements IQualifier {
   private IReference valueId;
 
   public Qualifier(
-      String type,
-      DataTypeDefXsd valueType,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      QualifierKind kind,
-      String value,
-      IReference valueId) {
+    String type,
+    DataTypeDefXsd valueType) {
+    this.type = Objects.requireNonNull(
+      type,
+      "Argument \"type\" must be non-null.");
+    this.valueType = Objects.requireNonNull(
+      valueType,
+      "Argument \"valueType\" must be non-null.");
+  }
+
+  public Qualifier(
+    String type,
+    DataTypeDefXsd valueType,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    QualifierKind kind,
+    String value,
+    IReference valueId) {
     this.semanticId = semanticId;
     this.supplementalSemanticIds = supplementalSemanticIds;
     this.type = Objects.requireNonNull(

@@ -35,8 +35,8 @@ public class LangStringDefinitionTypeIec61360 implements ILangStringDefinitionTy
   private String text;
 
   public LangStringDefinitionTypeIec61360(
-      String language,
-      String text) {
+    String language,
+    String text) {
     this.language = Objects.requireNonNull(
       language,
       "Argument \"language\" must be non-null.");

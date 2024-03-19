@@ -15429,9 +15429,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void administrativeInformationToSequence(
@@ -15545,9 +15545,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void qualifierToSequence(
@@ -15708,9 +15708,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void assetAdministrationShellToSequence(
@@ -15932,9 +15932,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void assetInformationToSequence(
@@ -16054,9 +16054,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void resourceToSequence(
@@ -16110,9 +16110,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void specificAssetIdToSequence(
@@ -16219,9 +16219,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void submodelToSequence(
@@ -16490,9 +16490,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void relationshipElementToSequence(
@@ -16717,9 +16717,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void submodelElementListToSequence(
@@ -17016,9 +17016,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void submodelElementCollectionToSequence(
@@ -17228,9 +17228,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void propertyToSequence(
@@ -17482,9 +17482,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void multiLanguagePropertyToSequence(
@@ -17713,9 +17713,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void rangeToSequence(
@@ -17966,9 +17966,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void referenceElementToSequence(
@@ -18178,9 +18178,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void blobToSequence(
@@ -18401,9 +18401,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void fileToSequence(
@@ -18626,9 +18626,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void annotatedRelationshipElementToSequence(
@@ -18872,9 +18872,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void entityToSequence(
@@ -19145,9 +19145,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void eventPayloadToSequence(
@@ -19308,9 +19308,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void basicEventElementToSequence(
@@ -19657,9 +19657,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void operationToSequence(
@@ -19907,9 +19907,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void operationVariableToSequence(
@@ -19948,9 +19948,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void capabilityToSequence(
@@ -20141,9 +20141,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void conceptDescriptionToSequence(
@@ -20329,9 +20329,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void referenceToSequence(
@@ -20415,9 +20415,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void keyToSequence(
@@ -20477,9 +20477,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void langStringNameTypeToSequence(
@@ -20529,9 +20529,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void langStringTextTypeToSequence(
@@ -20581,9 +20581,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void environmentToSequence(
@@ -20662,9 +20662,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void embeddedDataSpecificationToSequence(
@@ -20720,9 +20720,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void levelTypeToSequence(
@@ -20800,9 +20800,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void valueReferencePairToSequence(
@@ -20855,9 +20855,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void valueListToSequence(
@@ -20898,9 +20898,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void langStringPreferredNameTypeIec61360ToSequence(
@@ -20950,9 +20950,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void langStringShortNameTypeIec61360ToSequence(
@@ -21002,9 +21002,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void langStringDefinitionTypeIec61360ToSequence(
@@ -21054,9 +21054,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void dataSpecificationIec61360ToSequence(
@@ -21308,9 +21308,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
   }
 

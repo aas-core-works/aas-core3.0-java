@@ -164,16 +164,22 @@ public class ConceptDescription implements IConceptDescription {
    */
   private List<IReference> isCaseOf;
 
+  public ConceptDescription(String id) {
+    this.id = Objects.requireNonNull(
+      id,
+      "Argument \"id\" must be non-null.");
+  }
+
   public ConceptDescription(
-      String id,
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IAdministrativeInformation administration,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      List<IReference> isCaseOf) {
+    String id,
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IAdministrativeInformation administration,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    List<IReference> isCaseOf) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;

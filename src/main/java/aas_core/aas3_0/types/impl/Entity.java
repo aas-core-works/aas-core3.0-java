@@ -146,20 +146,26 @@ public class Entity implements IEntity {
    */
   private List<ISpecificAssetId> specificAssetIds;
 
+  public Entity(EntityType entityType) {
+    this.entityType = Objects.requireNonNull(
+      entityType,
+      "Argument \"entityType\" must be non-null.");
+  }
+
   public Entity(
-      EntityType entityType,
-      List<IExtension> extensions,
-      String category,
-      String idShort,
-      List<ILangStringNameType> displayName,
-      List<ILangStringTextType> description,
-      IReference semanticId,
-      List<IReference> supplementalSemanticIds,
-      List<IQualifier> qualifiers,
-      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-      List<ISubmodelElement> statements,
-      String globalAssetId,
-      List<ISpecificAssetId> specificAssetIds) {
+    EntityType entityType,
+    List<IExtension> extensions,
+    String category,
+    String idShort,
+    List<ILangStringNameType> displayName,
+    List<ILangStringTextType> description,
+    IReference semanticId,
+    List<IReference> supplementalSemanticIds,
+    List<IQualifier> qualifiers,
+    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+    List<ISubmodelElement> statements,
+    String globalAssetId,
+    List<ISpecificAssetId> specificAssetIds) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;

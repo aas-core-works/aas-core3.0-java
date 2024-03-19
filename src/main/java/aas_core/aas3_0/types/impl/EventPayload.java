@@ -89,14 +89,29 @@ public class EventPayload implements IEventPayload {
   private byte[] payload;
 
   public EventPayload(
-      IReference source,
-      IReference observableReference,
-      String timeStamp,
-      IReference sourceSemanticId,
-      IReference observableSemanticId,
-      String topic,
-      IReference subjectId,
-      byte[] payload) {
+    IReference source,
+    IReference observableReference,
+    String timeStamp) {
+    this.source = Objects.requireNonNull(
+      source,
+      "Argument \"source\" must be non-null.");
+    this.observableReference = Objects.requireNonNull(
+      observableReference,
+      "Argument \"observableReference\" must be non-null.");
+    this.timeStamp = Objects.requireNonNull(
+      timeStamp,
+      "Argument \"timeStamp\" must be non-null.");
+  }
+
+  public EventPayload(
+    IReference source,
+    IReference observableReference,
+    String timeStamp,
+    IReference sourceSemanticId,
+    IReference observableSemanticId,
+    String topic,
+    IReference subjectId,
+    byte[] payload) {
     this.source = Objects.requireNonNull(
       source,
       "Argument \"source\" must be non-null.");

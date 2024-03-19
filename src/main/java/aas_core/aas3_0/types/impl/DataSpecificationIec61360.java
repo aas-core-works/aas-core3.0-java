@@ -147,19 +147,25 @@ public class DataSpecificationIec61360 implements IDataSpecificationIec61360 {
    */
   private ILevelType levelType;
 
+  public DataSpecificationIec61360(List<ILangStringPreferredNameTypeIec61360> preferredName) {
+    this.preferredName = Objects.requireNonNull(
+      preferredName,
+      "Argument \"preferredName\" must be non-null.");
+  }
+
   public DataSpecificationIec61360(
-      List<ILangStringPreferredNameTypeIec61360> preferredName,
-      List<ILangStringShortNameTypeIec61360> shortName,
-      String unit,
-      IReference unitId,
-      String sourceOfDefinition,
-      String symbol,
-      DataTypeIec61360 dataType,
-      List<ILangStringDefinitionTypeIec61360> definition,
-      String valueFormat,
-      IValueList valueList,
-      String value,
-      ILevelType levelType) {
+    List<ILangStringPreferredNameTypeIec61360> preferredName,
+    List<ILangStringShortNameTypeIec61360> shortName,
+    String unit,
+    IReference unitId,
+    String sourceOfDefinition,
+    String symbol,
+    DataTypeIec61360 dataType,
+    List<ILangStringDefinitionTypeIec61360> definition,
+    String valueFormat,
+    IValueList valueList,
+    String value,
+    ILevelType levelType) {
     this.preferredName = Objects.requireNonNull(
       preferredName,
       "Argument \"preferredName\" must be non-null.");
