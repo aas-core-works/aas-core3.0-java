@@ -1,0 +1,12 @@
+aas_core.aas3_0.constants
+aas_core.aas3_0.copying
+aas_core.aas3_0.enhancing
+aas_core.aas3_0.jsonization
+aas_core.aas3_0.reporting
+aas_core.aas3_0.stringification
+aas_core.aas3_0.types.enums
+aas_core.aas3_0.types.impl
+aas_core.aas3_0.types.model
+aas_core.aas3_0.verification
+aas_core.aas3_0.visitation
+aas_core.aas3_0.xmlization
