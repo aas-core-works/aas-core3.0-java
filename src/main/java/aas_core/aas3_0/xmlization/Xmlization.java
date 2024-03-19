@@ -529,6 +529,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -664,6 +671,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("refersTo"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -1128,6 +1142,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -1472,6 +1493,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -1829,6 +1857,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -1912,6 +1947,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -1939,6 +1981,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -2010,6 +2059,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -2069,6 +2125,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("submodels"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -2328,6 +2391,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ISpecificAssetId, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("specificAssetIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ISpecificAssetId> itemResult = trySpecificAssetIdFromElement(reader);
@@ -2743,6 +2813,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -2996,6 +3073,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -3079,6 +3163,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -3106,6 +3197,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -3245,6 +3343,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -3272,6 +3377,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -3299,6 +3411,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -3326,6 +3445,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ISubmodelElement, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("submodelElements"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ISubmodelElement> itemResult = tryISubmodelElementFromElement(reader);
@@ -3571,6 +3697,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -3654,6 +3787,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -3681,6 +3821,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -3724,6 +3871,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -3751,6 +3905,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -3778,6 +3939,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -4039,6 +4207,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -4122,6 +4297,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -4149,6 +4331,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -4192,6 +4381,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -4219,6 +4415,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -4246,6 +4449,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -4428,6 +4638,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ISubmodelElement, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("value"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ISubmodelElement> itemResult = tryISubmodelElementFromElement(reader);
@@ -4608,6 +4825,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -4691,6 +4915,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -4718,6 +4949,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -4761,6 +4999,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -4788,6 +5033,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -4815,6 +5067,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -4842,6 +5101,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ISubmodelElement, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("value"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ISubmodelElement> itemResult = tryISubmodelElementFromElement(reader);
@@ -5062,6 +5328,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -5145,6 +5418,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -5172,6 +5452,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -5215,6 +5502,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -5242,6 +5536,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -5269,6 +5570,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -5544,6 +5852,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -5627,6 +5942,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -5654,6 +5976,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -5697,6 +6026,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -5724,6 +6060,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -5751,6 +6094,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -5778,6 +6128,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("value"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -5966,6 +6323,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -6049,6 +6413,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -6076,6 +6447,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -6119,6 +6497,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -6146,6 +6531,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -6173,6 +6565,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -6459,6 +6858,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -6542,6 +6948,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -6569,6 +6982,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -6612,6 +7032,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -6639,6 +7066,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -6666,6 +7100,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -6852,6 +7293,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -6935,6 +7383,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -6962,6 +7417,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -7005,6 +7467,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -7032,6 +7501,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -7059,6 +7535,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -7300,6 +7783,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -7383,6 +7873,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -7410,6 +7907,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -7453,6 +7957,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -7480,6 +7991,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -7507,6 +8025,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -7742,6 +8267,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -7825,6 +8357,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -7852,6 +8391,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -7895,6 +8441,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -7922,6 +8475,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -7949,6 +8509,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -8008,6 +8575,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IDataElement, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("annotations"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IDataElement> itemResult = tryIDataElementFromElement(reader);
@@ -8196,6 +8770,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -8279,6 +8860,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -8306,6 +8894,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -8349,6 +8944,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -8376,6 +8978,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -8403,6 +9012,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -8430,6 +9046,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ISubmodelElement, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("statements"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ISubmodelElement> itemResult = tryISubmodelElementFromElement(reader);
@@ -8537,6 +9160,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ISpecificAssetId, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("specificAssetIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ISpecificAssetId> itemResult = trySpecificAssetIdFromElement(reader);
@@ -9092,6 +9722,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -9175,6 +9812,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -9202,6 +9846,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -9245,6 +9896,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -9272,6 +9930,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -9299,6 +9964,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -9746,6 +10418,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -9829,6 +10508,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -9856,6 +10542,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -9899,6 +10592,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -9926,6 +10626,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -9953,6 +10660,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -9980,6 +10694,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IOperationVariable, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("inputVariables"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IOperationVariable> itemResult = tryOperationVariableFromElement(reader);
@@ -10007,6 +10728,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IOperationVariable, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("outputVariables"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IOperationVariable> itemResult = tryOperationVariableFromElement(reader);
@@ -10034,6 +10762,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IOperationVariable, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("inoutputVariables"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IOperationVariable> itemResult = tryOperationVariableFromElement(reader);
@@ -10388,6 +11123,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -10471,6 +11213,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -10498,6 +11247,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -10541,6 +11297,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -10568,6 +11331,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("qualifiers"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IQualifier> itemResult = tryQualifierFromElement(reader);
@@ -10595,6 +11365,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -10762,6 +11539,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("extensions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IExtension> itemResult = tryExtensionFromElement(reader);
@@ -10845,6 +11629,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("displayName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringNameType> itemResult = tryLangStringNameTypeFromElement(reader);
@@ -10872,6 +11663,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("description"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringTextType> itemResult = tryLangStringTextTypeFromElement(reader);
@@ -10943,6 +11741,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IEmbeddedDataSpecification> itemResult = tryEmbeddedDataSpecificationFromElement(reader);
@@ -10970,6 +11775,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("isCaseOf"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IReference> itemResult = tryReferenceFromElement(reader);
@@ -11206,6 +12018,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IKey, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("keys"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IKey> itemResult = tryKeyFromElement(reader);
@@ -12034,6 +12853,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IAssetAdministrationShell, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("assetAdministrationShells"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IAssetAdministrationShell> itemResult = tryAssetAdministrationShellFromElement(reader);
@@ -12061,6 +12887,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ISubmodel, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("submodels"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ISubmodel> itemResult = trySubmodelFromElement(reader);
@@ -12088,6 +12921,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IConceptDescription, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("conceptDescriptions"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IConceptDescription> itemResult = tryConceptDescriptionFromElement(reader);
@@ -12971,6 +13811,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of IValueReferencePair, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("valueReferencePairs"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends IValueReferencePair> itemResult = tryValueReferencePairFromElement(reader);
@@ -13728,6 +14575,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringPreferredNameTypeIec61360, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("preferredName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringPreferredNameTypeIec61360> itemResult = tryLangStringPreferredNameTypeIec61360FromElement(reader);
@@ -13755,6 +14609,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringShortNameTypeIec61360, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("shortName"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringShortNameTypeIec61360> itemResult = tryLangStringShortNameTypeIec61360FromElement(reader);
@@ -13934,6 +14795,13 @@ public class Xmlization {
               if (!isEmptyProperty) {
                 skipWhitespaceAndComments(reader);
                 int index = 0;
+                if(!currentEvent(reader).isStartElement()){
+                  final Reporting.Error error = new Reporting.Error(
+                  "Expected a start element opening an instance of ILangStringDefinitionTypeIec61360, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  error.prependSegment(new Reporting.IndexSegment(index));
+                  error.prependSegment(new Reporting.NameSegment("definition"));
+                  return Result.failure(error);
+                }
                 while (currentEvent(reader).isStartElement()) {
 
                   Result<? extends ILangStringDefinitionTypeIec61360> itemResult = tryLangStringDefinitionTypeIec61360FromElement(reader);
@@ -14180,6 +15048,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("ihassemantics"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14202,6 +15071,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("extension"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14224,6 +15094,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("ihasextensions"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14246,6 +15117,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("ireferable"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14268,6 +15140,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("iidentifiable"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14290,6 +15163,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("ihaskind"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14312,6 +15186,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("ihasdataspecification"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14334,6 +15209,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("administrativeinformation"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14356,6 +15232,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("iqualifiable"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14378,6 +15255,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("qualifier"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14400,6 +15278,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("assetadministrationshell"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14422,6 +15301,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("assetinformation"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14444,6 +15324,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("resource"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14466,6 +15347,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("specificassetid"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14488,6 +15370,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("submodel"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14510,6 +15393,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("isubmodelelement"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14532,6 +15416,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("irelationshipelement"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14554,6 +15439,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("relationshipelement"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14576,6 +15462,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("submodelelementlist"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14598,6 +15485,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("submodelelementcollection"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14620,6 +15508,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("idataelement"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14642,6 +15531,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("property"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14664,6 +15554,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("multilanguageproperty"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14686,6 +15577,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("range"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14708,6 +15600,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("referenceelement"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14730,6 +15623,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("blob"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14752,6 +15646,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("file"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14774,6 +15669,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("annotatedrelationshipelement"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14796,6 +15692,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("entity"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14818,6 +15715,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("eventpayload"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14840,6 +15738,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("ieventelement"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14862,6 +15761,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("basiceventelement"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14884,6 +15784,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("operation"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14906,6 +15807,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("operationvariable"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14928,6 +15830,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("capability"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14950,6 +15853,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("conceptdescription"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14972,6 +15876,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("reference"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -14994,6 +15899,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("key"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15016,6 +15922,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("iabstractlangstring"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15038,6 +15945,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("langstringnametype"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15060,6 +15968,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("langstringtexttype"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15082,6 +15991,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("environment"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15104,6 +16014,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("idataspecificationcontent"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15126,6 +16037,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("embeddeddataspecification"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15148,6 +16060,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("leveltype"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15170,6 +16083,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("valuereferencepair"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15192,6 +16106,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("valuelist"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15214,6 +16129,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("langstringpreferrednametypeiec61360"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15236,6 +16152,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("langstringshortnametypeiec61360"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15258,6 +16175,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("langstringdefinitiontypeiec61360"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15280,6 +16198,7 @@ public class Xmlization {
           reader);
 
       return result.onError(error -> {
+        error.prependSegment(new Reporting.NameSegment("dataspecificationiec61360"));
         throw new DeserializeException(
           Reporting.generateRelativeXPath(error.getPathSegments()),
           error.getCause());
@@ -15429,9 +16348,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void administrativeInformationToSequence(
@@ -15545,9 +16464,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void qualifierToSequence(
@@ -15708,9 +16627,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void assetAdministrationShellToSequence(
@@ -15932,9 +16851,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void assetInformationToSequence(
@@ -16054,9 +16973,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void resourceToSequence(
@@ -16110,9 +17029,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void specificAssetIdToSequence(
@@ -16219,9 +17138,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void submodelToSequence(
@@ -16490,9 +17409,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void relationshipElementToSequence(
@@ -16717,9 +17636,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void submodelElementListToSequence(
@@ -17016,9 +17935,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void submodelElementCollectionToSequence(
@@ -17228,9 +18147,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void propertyToSequence(
@@ -17482,9 +18401,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void multiLanguagePropertyToSequence(
@@ -17713,9 +18632,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void rangeToSequence(
@@ -17966,9 +18885,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void referenceElementToSequence(
@@ -18178,9 +19097,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void blobToSequence(
@@ -18401,9 +19320,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void fileToSequence(
@@ -18626,9 +19545,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void annotatedRelationshipElementToSequence(
@@ -18872,9 +19791,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void entityToSequence(
@@ -19145,9 +20064,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void eventPayloadToSequence(
@@ -19308,9 +20227,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void basicEventElementToSequence(
@@ -19657,9 +20576,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void operationToSequence(
@@ -19907,9 +20826,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void operationVariableToSequence(
@@ -19948,9 +20867,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void capabilityToSequence(
@@ -20141,9 +21060,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void conceptDescriptionToSequence(
@@ -20329,9 +21248,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void referenceToSequence(
@@ -20415,9 +21334,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void keyToSequence(
@@ -20477,9 +21396,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void langStringNameTypeToSequence(
@@ -20529,9 +21448,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void langStringTextTypeToSequence(
@@ -20581,9 +21500,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void environmentToSequence(
@@ -20662,9 +21581,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void embeddedDataSpecificationToSequence(
@@ -20720,9 +21639,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void levelTypeToSequence(
@@ -20800,9 +21719,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void valueReferencePairToSequence(
@@ -20855,9 +21774,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void valueListToSequence(
@@ -20898,9 +21817,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void langStringPreferredNameTypeIec61360ToSequence(
@@ -20950,9 +21869,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void langStringShortNameTypeIec61360ToSequence(
@@ -21002,9 +21921,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void langStringDefinitionTypeIec61360ToSequence(
@@ -21054,9 +21973,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
 
     private void dataSpecificationIec61360ToSequence(
@@ -21308,9 +22227,9 @@ public class Xmlization {
           that,
           writer);
         writer.writeEndElement();
-    } catch (XMLStreamException exception) {
-      throw new SerializeException("",exception.getMessage());
-    }
+      } catch (XMLStreamException exception) {
+        throw new SerializeException("", exception.getMessage());
+      }
     }
   }
 
