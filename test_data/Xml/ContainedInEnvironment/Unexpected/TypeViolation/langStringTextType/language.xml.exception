@@ -1,1 +1,1 @@
-Expected an XML end element to conclude a property of class LangStringTextType with the element name language, but got the node of type Start-Element with the value <['https://admin-shell.io/aas/3/0']::reference> at: assetAdministrationShells/*[0]/description/*[0]
+Expected an XML end element to conclude a property of class LangStringTextType with the element name language, but got the node of type Start-Element with the value <['https://admin-shell.io/aas/3/0']::reference> at: environment/assetAdministrationShells/*[0]/description/*[0]

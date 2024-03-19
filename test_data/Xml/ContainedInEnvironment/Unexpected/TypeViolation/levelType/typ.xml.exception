@@ -1,1 +1,1 @@
-The property typ of an instance of class LevelType  could not be de-serialized: Content cannot be converted to the type Boolean. at: assetAdministrationShells/*[0]/embeddedDataSpecifications/*[0]/dataSpecificationContent/dataSpecificationIec61360/levelType/typ
+The property typ of an instance of class LevelType  could not be de-serialized: Content cannot be converted to the type Boolean. at: environment/assetAdministrationShells/*[0]/embeddedDataSpecifications/*[0]/dataSpecificationContent/dataSpecificationIec61360/levelType/typ
