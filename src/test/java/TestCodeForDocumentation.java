@@ -1,11 +1,8 @@
+import aas_core.aas3_0.enhancing.Enhancer;
 import aas_core.aas3_0.jsonization.Jsonization;
 import aas_core.aas3_0.reporting.Reporting;
-import aas_core.aas3_0.stringification.Stringification;
 import aas_core.aas3_0.types.enums.DataTypeDefXsd;
-import aas_core.aas3_0.types.impl.Blob;
-import aas_core.aas3_0.types.impl.Environment;
-import aas_core.aas3_0.types.impl.Property;
-import aas_core.aas3_0.types.impl.Submodel;
+import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.types.model.*;
 import aas_core.aas3_0.verification.Verification;
 import aas_core.aas3_0.visitation.VisitorThrough;
@@ -18,10 +15,11 @@ import org.junit.jupiter.api.Test;
 import javax.xml.stream.*;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class TestCodeForDocumentation {
 
     @Test
@@ -184,7 +182,8 @@ public class TestCodeForDocumentation {
 
 
     @Test
-    public void testVerify(){
+    public void testVerify() {
+
         // We prepare the environment.
         ISubmodelElement someProperty = new Property(DataTypeDefXsd.BOOLEAN);
 
@@ -219,7 +218,7 @@ public class TestCodeForDocumentation {
 
 
     @Test
-    public void testJsonSerialize(){
+    public void testJsonSerialize() {
         // We prepare the environment.
         ISubmodelElement someProperty = new Property(DataTypeDefXsd.INT);
         someProperty.setIdShort("someProperty");
@@ -283,7 +282,7 @@ public class TestCodeForDocumentation {
         // We parse the JSON as environment.
         try {
             IEnvironment environment = Jsonization.Deserialize.deserializeEnvironment(json);
-        } catch (Jsonization.DeserializeException exception){
+        } catch (Jsonization.DeserializeException exception) {
             System.out.println(exception.getPath().get() + ": " + exception.getReason().get());
         }
 
@@ -291,7 +290,6 @@ public class TestCodeForDocumentation {
         // submodels: Expected a JsonArray, but got NUMBER
 
     }
-
 
 
     @Test
@@ -339,7 +337,6 @@ public class TestCodeForDocumentation {
     }
 
 
-
     @Test
     public void testXmlDeserialization() throws XMLStreamException {
         String text = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
@@ -376,11 +373,11 @@ public class TestCodeForDocumentation {
         // of an AAS instance. Submodels should be a list,
         // not a number.
         String text = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-        "<environment xmlns=\"https://admin-shell.io/aas/3/0\">" +
-        "<submodels>" +
-        "42" +
-        "</submodels>" +
-        "</environment>";
+                "<environment xmlns=\"https://admin-shell.io/aas/3/0\">" +
+                "<submodels>" +
+                "42" +
+                "</submodels>" +
+                "</environment>";
 
         // We create the reader
         final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
@@ -390,7 +387,7 @@ public class TestCodeForDocumentation {
         // an XML text.
         try {
             IEnvironment environment = Xmlization.Deserialize.deserializeEnvironment(outputReader);
-        }catch (Xmlization.DeserializeException exception){
+        } catch (Xmlization.DeserializeException exception) {
             System.out.println(exception.getPath().get() + ": " + exception.getReason().get());
         }
 
@@ -400,32 +397,121 @@ public class TestCodeForDocumentation {
     }
 
 
+    @Test
+    public void testEnhancing() {
+        // We prepare the environment.
+        ISubmodelElement someProperty = new Property(DataTypeDefXsd.INT);
+        someProperty.setIdShort("someProperty");
+
+        List<ISubmodelElement> submodelElements = new ArrayList<>();
+        submodelElements.add(someProperty);
+
+        ISubmodel submodel = new Submodel("some-unique-global-identifier");
+        submodel.setSubmodelElements(submodelElements);
+
+        List<ISubmodel> submodels = new ArrayList<>();
+        submodels.add(submodel);
+
+        IEnvironment environment = new Environment(null, submodels, null);
+
+        // We enhance the environment recursively.
+        Enhancer<ParentEnhancement> enhancer = produceParentEnhancement();
+        environment = (IEnvironment) enhancer.wrap(environment);
+
+        Queue<IClass> queue = new ArrayDeque<>();
+        queue.add(environment);
+
+        while (!queue.isEmpty()) {
+            IClass instance = queue.remove();
+            for (IClass child : instance.descendOnce()) {
+                enhancer.mustUnwrap(child).parent = instance;
+                queue.add(child);
+            }
+        }
+        // Retrieve the parent of the first submodel
+        boolean environmentIsParent = enhancer.mustUnwrap(environment.getSubmodels().get().get(0)).parent == environment;
+        System.out.println(environmentIsParent);
+    }
+
+    // We define the enhancement, a parent-child relationship.
+    private class ParentEnhancement {
+        public IClass parent = null;
+    }
+
+    // We define the enhancement factory.
+    private Enhancer<ParentEnhancement> produceParentEnhancement() {
+        Function<IClass, Optional<ParentEnhancement>> enhancementFactory = iClass -> Optional.of(new ParentEnhancement());
+        return new Enhancer<>(enhancementFactory);
+    }
 
 
+    @Test
+    public void testSelectiveEnhancing() {
+
+        // We prepare the environment.
+        ISubmodelElement someProperty = new Property(DataTypeDefXsd.INT);
+        someProperty.setIdShort("someProperty");
+
+        AdministrativeInformation administration = new AdministrativeInformation(null, "1.0", null, null, null);
+
+        List<ISubmodelElement> submodelElements = new ArrayList<>();
+        submodelElements.add(someProperty);
 
 
+        ISubmodel submodel = new Submodel("some-unique-global-identifier");
+        submodel.setSubmodelElements(submodelElements);
+        submodel.setAdministration(administration);
 
+        List<ISubmodel> submodels = new ArrayList<>();
+        submodels.add(submodel);
 
+        IEnvironment environment = new Environment(null, submodels, null);
 
+        // Prepare the enhancer
+        AtomicLong lastId = new AtomicLong();
+        Function<IClass, Optional<IdEnhancement>> enhancementFactory = iClass -> {
+            if (iClass instanceof IReferable) {
+                lastId.getAndIncrement();
+                return Optional.of(new IdEnhancement(lastId.get()));
+            }
+            return Optional.empty();
+        };
 
+        Enhancer<IdEnhancement> enhancer = new Enhancer<>(enhancementFactory);
+        // Enhance
+        environment = (IEnvironment) enhancer.wrap(environment);
 
+        // The submodel and property are enhanced.
+        IdEnhancement enhancement = enhancer.mustUnwrap(environment.getSubmodels().get().get(0));
+        System.out.println(enhancement.Id);
 
+        // Prints:
+        // 2
 
+        enhancement = enhancer.mustUnwrap(environment.getSubmodels().get().get(0).getSubmodelElements().get().get(0));
+        System.out.println(enhancement.Id);
 
+        // Prints:
+        // 1
 
+        // The administrative information is not referable, and thus not enhanced.
+        Optional<IdEnhancement> maybeEnhancement = enhancer.unwrap(
+                environment.getSubmodels().get().get(0).getAdministration().get()
+        );
 
+        System.out.println(maybeEnhancement.isPresent());
 
+        // Prints:
+        // false
+    }
 
+    private class IdEnhancement {
+        public long Id;
 
-
-
-
-
-
-
-
-
-
+        public IdEnhancement(long id) {
+            Id = id;
+        }
+    }
 
 
 }
