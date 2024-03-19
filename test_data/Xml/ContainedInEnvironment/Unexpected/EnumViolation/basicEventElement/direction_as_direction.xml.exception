@@ -1,1 +1,1 @@
-The property direction of an instance of class BasicEventElement could not be de-serialized from an unexpected enumeration literal: totally utterly invalid at: submodels/*[0]/submodelElements/*[0]/direction
+The property direction of an instance of class BasicEventElement could not be de-serialized from an unexpected enumeration literal: totally utterly invalid at: environment/submodels/*[0]/submodelElements/*[0]/direction

@@ -1,1 +1,1 @@
-The property orderRelevant of an instance of class SubmodelElementList  could not be de-serialized: Content cannot be converted to the type Boolean. at: submodels/*[0]/submodelElements/*[0]/orderRelevant
+The property orderRelevant of an instance of class SubmodelElementList  could not be de-serialized: Content cannot be converted to the type Boolean. at: environment/submodels/*[0]/submodelElements/*[0]/orderRelevant

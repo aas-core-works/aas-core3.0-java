@@ -1,2 +1,2 @@
 The property kind of an instance of class Submodel could not be de-serialized from an unexpected enumeration literal: 
-				 at: submodels/*[0]/kind
+				 at: environment/submodels/*[0]/kind
