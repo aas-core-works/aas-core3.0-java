@@ -1464,9 +1464,9 @@ public class Jsonization {
               }
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -2359,9 +2359,9 @@ public class Jsonization {
               }
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -2891,9 +2891,9 @@ public class Jsonization {
               }
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -3426,9 +3426,9 @@ public class Jsonization {
               }
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -3880,9 +3880,9 @@ public class Jsonization {
               }
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -4366,9 +4366,9 @@ public class Jsonization {
               theValueId = theValueIdResult.getResult();
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -4833,9 +4833,9 @@ public class Jsonization {
               theValueId = theValueIdResult.getResult();
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -5274,9 +5274,9 @@ public class Jsonization {
               theMax = theMaxResult.getResult();
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -5690,9 +5690,9 @@ public class Jsonization {
               theValue = theValueResult.getResult();
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -6115,9 +6115,9 @@ public class Jsonization {
               theValue = theValueResult.getResult();
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -6545,9 +6545,9 @@ public class Jsonization {
               theValue = theValueResult.getResult();
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -7026,9 +7026,9 @@ public class Jsonization {
               }
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -7565,9 +7565,9 @@ public class Jsonization {
               }
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -8352,9 +8352,9 @@ public class Jsonization {
               theMaxInterval = theMaxIntervalResult.getResult();
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -8923,9 +8923,9 @@ public class Jsonization {
               }
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -9371,9 +9371,9 @@ public class Jsonization {
               }
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -9729,9 +9729,9 @@ public class Jsonization {
               }
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
@@ -11316,9 +11316,9 @@ public class Jsonization {
               theLevelType = theLevelTypeResult.getResult();
               break;
             }
-            case "modelType": {{
+            case "modelType": {
                 continue;
-            }}
+            }
             default: {
               final Reporting.Error error = new Reporting.Error(
                 "Unexpected property: " + currentNode.getKey());
