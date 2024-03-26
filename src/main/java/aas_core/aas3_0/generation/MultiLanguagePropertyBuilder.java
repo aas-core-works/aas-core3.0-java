@@ -8,9 +8,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Builder for the ReferenceElement type.
+ * Builder for the MultiLanguageProperty type.
  */
-public class ReferenceelementBuilder {
+public class MultiLanguagePropertyBuilder {
   /**
    * An extension of the element.
    */
@@ -94,64 +94,74 @@ public class ReferenceelementBuilder {
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
   /**
-   * Global reference to an external object or entity or a logical reference to
-   * another element within the same or another AAS (i.e. a model reference to
-   * a Referable).
+   * The value of the property instance.
    */
-  private IReference value;
+  private List<ILangStringTextType> value;
 
-  public ReferenceelementBuilder setExtensions(List<IExtension> extensions) {
+  /**
+   * Reference to the global unique ID of a coded value.
+   *
+   * <p>It is recommended to use a global reference.
+   */
+  private IReference valueId;
+
+  public MultiLanguagePropertyBuilder setExtensions(List<IExtension> extensions) {
     this.extensions = extensions;
     return this;
   }
 
-  public ReferenceelementBuilder setCategory(String category) {
+  public MultiLanguagePropertyBuilder setCategory(String category) {
     this.category = category;
     return this;
   }
 
-  public ReferenceelementBuilder setIdshort(String idShort) {
+  public MultiLanguagePropertyBuilder setIdshort(String idShort) {
     this.idShort = idShort;
     return this;
   }
 
-  public ReferenceelementBuilder setDisplayname(List<ILangStringNameType> displayName) {
+  public MultiLanguagePropertyBuilder setDisplayname(List<ILangStringNameType> displayName) {
     this.displayName = displayName;
     return this;
   }
 
-  public ReferenceelementBuilder setDescription(List<ILangStringTextType> description) {
+  public MultiLanguagePropertyBuilder setDescription(List<ILangStringTextType> description) {
     this.description = description;
     return this;
   }
 
-  public ReferenceelementBuilder setSemanticid(IReference semanticId) {
+  public MultiLanguagePropertyBuilder setSemanticid(IReference semanticId) {
     this.semanticId = semanticId;
     return this;
   }
 
-  public ReferenceelementBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
+  public MultiLanguagePropertyBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
     this.supplementalSemanticIds = supplementalSemanticIds;
     return this;
   }
 
-  public ReferenceelementBuilder setQualifiers(List<IQualifier> qualifiers) {
+  public MultiLanguagePropertyBuilder setQualifiers(List<IQualifier> qualifiers) {
     this.qualifiers = qualifiers;
     return this;
   }
 
-  public ReferenceelementBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public MultiLanguagePropertyBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;
   }
 
-  public ReferenceelementBuilder setValue(IReference value) {
+  public MultiLanguagePropertyBuilder setValue(List<ILangStringTextType> value) {
     this.value = value;
     return this;
   }
 
-  public ReferenceElement build() {
-    return new ReferenceElement(
+  public MultiLanguagePropertyBuilder setValueid(IReference valueId) {
+    this.valueId = valueId;
+    return this;
+  }
+
+  public MultiLanguageProperty build() {
+    return new MultiLanguageProperty(
       this.extensions,
       this.category,
       this.idShort,
@@ -161,6 +171,7 @@ public class ReferenceelementBuilder {
       this.supplementalSemanticIds,
       this.qualifiers,
       this.embeddedDataSpecifications,
-      this.value);
+      this.value,
+      this.valueId);
   }
 }

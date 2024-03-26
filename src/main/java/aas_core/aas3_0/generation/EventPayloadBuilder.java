@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * Builder for the EventPayload type.
  */
-public class EventpayloadBuilder {
+public class EventPayloadBuilder {
   /**
    * Reference to the source event element, including identification of
    * {@link AssetAdministrationShell}, {@link Submodel},
@@ -64,7 +64,7 @@ public class EventpayloadBuilder {
    */
   private byte[] payload;
 
-  public EventpayloadBuilder(
+  public EventPayloadBuilder(
     IReference source,
     IReference observableReference,
     String timeStamp) {
@@ -79,27 +79,27 @@ public class EventpayloadBuilder {
       "Argument \"timeStamp\" must be non-null.");
   }
 
-  public EventpayloadBuilder setSourcesemanticid(IReference sourceSemanticId) {
+  public EventPayloadBuilder setSourcesemanticid(IReference sourceSemanticId) {
     this.sourceSemanticId = sourceSemanticId;
     return this;
   }
 
-  public EventpayloadBuilder setObservablesemanticid(IReference observableSemanticId) {
+  public EventPayloadBuilder setObservablesemanticid(IReference observableSemanticId) {
     this.observableSemanticId = observableSemanticId;
     return this;
   }
 
-  public EventpayloadBuilder setTopic(String topic) {
+  public EventPayloadBuilder setTopic(String topic) {
     this.topic = topic;
     return this;
   }
 
-  public EventpayloadBuilder setSubjectid(IReference subjectId) {
+  public EventPayloadBuilder setSubjectid(IReference subjectId) {
     this.subjectId = subjectId;
     return this;
   }
 
-  public EventpayloadBuilder setPayload(byte[] payload) {
+  public EventPayloadBuilder setPayload(byte[] payload) {
     this.payload = payload;
     return this;
   }

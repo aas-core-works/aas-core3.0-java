@@ -8,9 +8,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Builder for the MultiLanguageProperty type.
+ * Builder for the RelationshipElement type.
  */
-public class MultilanguagepropertyBuilder {
+public class RelationshipElementBuilder {
   /**
    * An extension of the element.
    */
@@ -94,74 +94,75 @@ public class MultilanguagepropertyBuilder {
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
   /**
-   * The value of the property instance.
+   * Reference to the first element in the relationship taking the role of the subject.
    */
-  private List<ILangStringTextType> value;
+  private IReference first;
 
   /**
-   * Reference to the global unique ID of a coded value.
-   *
-   * <p>It is recommended to use a global reference.
+   * Reference to the second element in the relationship taking the role of the object.
    */
-  private IReference valueId;
+  private IReference second;
 
-  public MultilanguagepropertyBuilder setExtensions(List<IExtension> extensions) {
+  public RelationshipElementBuilder(
+    IReference first,
+    IReference second) {
+    this.first = Objects.requireNonNull(
+      first,
+      "Argument \"first\" must be non-null.");
+    this.second = Objects.requireNonNull(
+      second,
+      "Argument \"second\" must be non-null.");
+  }
+
+  public RelationshipElementBuilder setExtensions(List<IExtension> extensions) {
     this.extensions = extensions;
     return this;
   }
 
-  public MultilanguagepropertyBuilder setCategory(String category) {
+  public RelationshipElementBuilder setCategory(String category) {
     this.category = category;
     return this;
   }
 
-  public MultilanguagepropertyBuilder setIdshort(String idShort) {
+  public RelationshipElementBuilder setIdshort(String idShort) {
     this.idShort = idShort;
     return this;
   }
 
-  public MultilanguagepropertyBuilder setDisplayname(List<ILangStringNameType> displayName) {
+  public RelationshipElementBuilder setDisplayname(List<ILangStringNameType> displayName) {
     this.displayName = displayName;
     return this;
   }
 
-  public MultilanguagepropertyBuilder setDescription(List<ILangStringTextType> description) {
+  public RelationshipElementBuilder setDescription(List<ILangStringTextType> description) {
     this.description = description;
     return this;
   }
 
-  public MultilanguagepropertyBuilder setSemanticid(IReference semanticId) {
+  public RelationshipElementBuilder setSemanticid(IReference semanticId) {
     this.semanticId = semanticId;
     return this;
   }
 
-  public MultilanguagepropertyBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
+  public RelationshipElementBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
     this.supplementalSemanticIds = supplementalSemanticIds;
     return this;
   }
 
-  public MultilanguagepropertyBuilder setQualifiers(List<IQualifier> qualifiers) {
+  public RelationshipElementBuilder setQualifiers(List<IQualifier> qualifiers) {
     this.qualifiers = qualifiers;
     return this;
   }
 
-  public MultilanguagepropertyBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public RelationshipElementBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;
   }
 
-  public MultilanguagepropertyBuilder setValue(List<ILangStringTextType> value) {
-    this.value = value;
-    return this;
-  }
-
-  public MultilanguagepropertyBuilder setValueid(IReference valueId) {
-    this.valueId = valueId;
-    return this;
-  }
-
-  public MultiLanguageProperty build() {
-    return new MultiLanguageProperty(
+  public RelationshipElement build() {
+    return new RelationshipElement(
+      this.first,
+      this.second,
       this.extensions,
       this.category,
       this.idShort,
@@ -170,8 +171,6 @@ public class MultilanguagepropertyBuilder {
       this.semanticId,
       this.supplementalSemanticIds,
       this.qualifiers,
-      this.embeddedDataSpecifications,
-      this.value,
-      this.valueId);
+      this.embeddedDataSpecifications);
   }
 }

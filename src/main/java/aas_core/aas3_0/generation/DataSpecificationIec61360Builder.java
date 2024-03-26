@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * Builder for the DataSpecificationIec61360 type.
  */
-public class Dataspecificationiec61360Builder {
+public class DataSpecificationIec61360Builder {
   /**
    * Preferred name
    *
@@ -86,63 +86,63 @@ public class Dataspecificationiec61360Builder {
    */
   private ILevelType levelType;
 
-  public Dataspecificationiec61360Builder(List<ILangStringPreferredNameTypeIec61360> preferredName) {
+  public DataSpecificationIec61360Builder(List<ILangStringPreferredNameTypeIec61360> preferredName) {
     this.preferredName = Objects.requireNonNull(
       preferredName,
       "Argument \"preferredName\" must be non-null.");
   }
 
-  public Dataspecificationiec61360Builder setShortname(List<ILangStringShortNameTypeIec61360> shortName) {
+  public DataSpecificationIec61360Builder setShortname(List<ILangStringShortNameTypeIec61360> shortName) {
     this.shortName = shortName;
     return this;
   }
 
-  public Dataspecificationiec61360Builder setUnit(String unit) {
+  public DataSpecificationIec61360Builder setUnit(String unit) {
     this.unit = unit;
     return this;
   }
 
-  public Dataspecificationiec61360Builder setUnitid(IReference unitId) {
+  public DataSpecificationIec61360Builder setUnitid(IReference unitId) {
     this.unitId = unitId;
     return this;
   }
 
-  public Dataspecificationiec61360Builder setSourceofdefinition(String sourceOfDefinition) {
+  public DataSpecificationIec61360Builder setSourceofdefinition(String sourceOfDefinition) {
     this.sourceOfDefinition = sourceOfDefinition;
     return this;
   }
 
-  public Dataspecificationiec61360Builder setSymbol(String symbol) {
+  public DataSpecificationIec61360Builder setSymbol(String symbol) {
     this.symbol = symbol;
     return this;
   }
 
-  public Dataspecificationiec61360Builder setDatatype(DataTypeIec61360 dataType) {
+  public DataSpecificationIec61360Builder setDatatype(DataTypeIec61360 dataType) {
     this.dataType = dataType;
     return this;
   }
 
-  public Dataspecificationiec61360Builder setDefinition(List<ILangStringDefinitionTypeIec61360> definition) {
+  public DataSpecificationIec61360Builder setDefinition(List<ILangStringDefinitionTypeIec61360> definition) {
     this.definition = definition;
     return this;
   }
 
-  public Dataspecificationiec61360Builder setValueformat(String valueFormat) {
+  public DataSpecificationIec61360Builder setValueformat(String valueFormat) {
     this.valueFormat = valueFormat;
     return this;
   }
 
-  public Dataspecificationiec61360Builder setValuelist(IValueList valueList) {
+  public DataSpecificationIec61360Builder setValuelist(IValueList valueList) {
     this.valueList = valueList;
     return this;
   }
 
-  public Dataspecificationiec61360Builder setValue(String value) {
+  public DataSpecificationIec61360Builder setValue(String value) {
     this.value = value;
     return this;
   }
 
-  public Dataspecificationiec61360Builder setLeveltype(ILevelType levelType) {
+  public DataSpecificationIec61360Builder setLeveltype(ILevelType levelType) {
     this.levelType = levelType;
     return this;
   }

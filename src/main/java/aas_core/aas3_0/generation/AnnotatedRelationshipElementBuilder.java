@@ -8,9 +8,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Builder for the SubmodelElementCollection type.
+ * Builder for the AnnotatedRelationshipElement type.
  */
-public class SubmodelelementcollectionBuilder {
+public class AnnotatedRelationshipElementBuilder {
   /**
    * An extension of the element.
    */
@@ -94,62 +94,86 @@ public class SubmodelelementcollectionBuilder {
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
   /**
-   * Submodel element contained in the collection.
+   * Reference to the first element in the relationship taking the role of the subject.
    */
-  private List<ISubmodelElement> value;
+  private IReference first;
 
-  public SubmodelelementcollectionBuilder setExtensions(List<IExtension> extensions) {
+  /**
+   * Reference to the second element in the relationship taking the role of the object.
+   */
+  private IReference second;
+
+  /**
+   * A data element that represents an annotation that holds for the relationship
+   * between the two elements
+   */
+  private List<IDataElement> annotations;
+
+  public AnnotatedRelationshipElementBuilder(
+    IReference first,
+    IReference second) {
+    this.first = Objects.requireNonNull(
+      first,
+      "Argument \"first\" must be non-null.");
+    this.second = Objects.requireNonNull(
+      second,
+      "Argument \"second\" must be non-null.");
+  }
+
+  public AnnotatedRelationshipElementBuilder setExtensions(List<IExtension> extensions) {
     this.extensions = extensions;
     return this;
   }
 
-  public SubmodelelementcollectionBuilder setCategory(String category) {
+  public AnnotatedRelationshipElementBuilder setCategory(String category) {
     this.category = category;
     return this;
   }
 
-  public SubmodelelementcollectionBuilder setIdshort(String idShort) {
+  public AnnotatedRelationshipElementBuilder setIdshort(String idShort) {
     this.idShort = idShort;
     return this;
   }
 
-  public SubmodelelementcollectionBuilder setDisplayname(List<ILangStringNameType> displayName) {
+  public AnnotatedRelationshipElementBuilder setDisplayname(List<ILangStringNameType> displayName) {
     this.displayName = displayName;
     return this;
   }
 
-  public SubmodelelementcollectionBuilder setDescription(List<ILangStringTextType> description) {
+  public AnnotatedRelationshipElementBuilder setDescription(List<ILangStringTextType> description) {
     this.description = description;
     return this;
   }
 
-  public SubmodelelementcollectionBuilder setSemanticid(IReference semanticId) {
+  public AnnotatedRelationshipElementBuilder setSemanticid(IReference semanticId) {
     this.semanticId = semanticId;
     return this;
   }
 
-  public SubmodelelementcollectionBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
+  public AnnotatedRelationshipElementBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
     this.supplementalSemanticIds = supplementalSemanticIds;
     return this;
   }
 
-  public SubmodelelementcollectionBuilder setQualifiers(List<IQualifier> qualifiers) {
+  public AnnotatedRelationshipElementBuilder setQualifiers(List<IQualifier> qualifiers) {
     this.qualifiers = qualifiers;
     return this;
   }
 
-  public SubmodelelementcollectionBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public AnnotatedRelationshipElementBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;
   }
 
-  public SubmodelelementcollectionBuilder setValue(List<ISubmodelElement> value) {
-    this.value = value;
+  public AnnotatedRelationshipElementBuilder setAnnotations(List<IDataElement> annotations) {
+    this.annotations = annotations;
     return this;
   }
 
-  public SubmodelElementCollection build() {
-    return new SubmodelElementCollection(
+  public AnnotatedRelationshipElement build() {
+    return new AnnotatedRelationshipElement(
+      this.first,
+      this.second,
       this.extensions,
       this.category,
       this.idShort,
@@ -159,6 +183,6 @@ public class SubmodelelementcollectionBuilder {
       this.supplementalSemanticIds,
       this.qualifiers,
       this.embeddedDataSpecifications,
-      this.value);
+      this.annotations);
   }
 }

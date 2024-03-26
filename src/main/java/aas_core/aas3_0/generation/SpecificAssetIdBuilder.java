@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * Builder for the SpecificAssetId type.
  */
-public class SpecificassetidBuilder {
+public class SpecificAssetIdBuilder {
   /**
    * Identifier of the semantic definition of the element. It is called semantic ID
    * of the element or also main semantic ID of the element.
@@ -44,7 +44,7 @@ public class SpecificassetidBuilder {
    */
   private IReference externalSubjectId;
 
-  public SpecificassetidBuilder(
+  public SpecificAssetIdBuilder(
     String name,
     String value) {
     this.name = Objects.requireNonNull(
@@ -55,17 +55,17 @@ public class SpecificassetidBuilder {
       "Argument \"value\" must be non-null.");
   }
 
-  public SpecificassetidBuilder setSemanticid(IReference semanticId) {
+  public SpecificAssetIdBuilder setSemanticid(IReference semanticId) {
     this.semanticId = semanticId;
     return this;
   }
 
-  public SpecificassetidBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
+  public SpecificAssetIdBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
     this.supplementalSemanticIds = supplementalSemanticIds;
     return this;
   }
 
-  public SpecificassetidBuilder setExternalsubjectid(IReference externalSubjectId) {
+  public SpecificAssetIdBuilder setExternalsubjectid(IReference externalSubjectId) {
     this.externalSubjectId = externalSubjectId;
     return this;
   }
