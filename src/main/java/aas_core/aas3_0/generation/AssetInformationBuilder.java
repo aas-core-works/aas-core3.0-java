@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * Builder for the AssetInformation type.
  */
-public class AssetinformationBuilder {
+public class AssetInformationBuilder {
   /**
    * Denotes whether the Asset is of kind {@link AssetKind#TYPE} or
    * {@link AssetKind#INSTANCE}.
@@ -53,28 +53,28 @@ public class AssetinformationBuilder {
    */
   private IResource defaultThumbnail;
 
-  public AssetinformationBuilder(AssetKind assetKind) {
+  public AssetInformationBuilder(AssetKind assetKind) {
     this.assetKind = Objects.requireNonNull(
       assetKind,
       "Argument \"assetKind\" must be non-null.");
   }
 
-  public AssetinformationBuilder setGlobalassetid(String globalAssetId) {
+  public AssetInformationBuilder setGlobalassetid(String globalAssetId) {
     this.globalAssetId = globalAssetId;
     return this;
   }
 
-  public AssetinformationBuilder setSpecificassetids(List<ISpecificAssetId> specificAssetIds) {
+  public AssetInformationBuilder setSpecificassetids(List<ISpecificAssetId> specificAssetIds) {
     this.specificAssetIds = specificAssetIds;
     return this;
   }
 
-  public AssetinformationBuilder setAssettype(String assetType) {
+  public AssetInformationBuilder setAssettype(String assetType) {
     this.assetType = assetType;
     return this;
   }
 
-  public AssetinformationBuilder setDefaultthumbnail(IResource defaultThumbnail) {
+  public AssetInformationBuilder setDefaultthumbnail(IResource defaultThumbnail) {
     this.defaultThumbnail = defaultThumbnail;
     return this;
   }

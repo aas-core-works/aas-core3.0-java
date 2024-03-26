@@ -8,9 +8,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Builder for the AnnotatedRelationshipElement type.
+ * Builder for the SubmodelElementList type.
  */
-public class AnnotatedrelationshipelementBuilder {
+public class SubmodelElementListBuilder {
   /**
    * An extension of the element.
    */
@@ -94,86 +94,111 @@ public class AnnotatedrelationshipelementBuilder {
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
   /**
-   * Reference to the first element in the relationship taking the role of the subject.
+   * Defines whether order in list is relevant. If {@link SubmodelElementList#getOrderRelevant orderRelevant} = {@literal False}
+   * then the list is representing a set or a bag.
+   *
+   * <p>Default: {@literal True}
    */
-  private IReference first;
+  private Boolean orderRelevant;
 
   /**
-   * Reference to the second element in the relationship taking the role of the object.
+   * Semantic ID the submodel elements contained in the list match to.
+   *
+   * <p>It is recommended to use a global reference.
    */
-  private IReference second;
+  private IReference semanticIdListElement;
 
   /**
-   * A data element that represents an annotation that holds for the relationship
-   * between the two elements
+   * The submodel element type of the submodel elements contained in the list.
    */
-  private List<IDataElement> annotations;
+  private AasSubmodelElements typeValueListElement;
 
-  public AnnotatedrelationshipelementBuilder(
-    IReference first,
-    IReference second) {
-    this.first = Objects.requireNonNull(
-      first,
-      "Argument \"first\" must be non-null.");
-    this.second = Objects.requireNonNull(
-      second,
-      "Argument \"second\" must be non-null.");
+  /**
+   * The value type of the submodel element contained in the list.
+   */
+  private DataTypeDefXsd valueTypeListElement;
+
+  /**
+   * Submodel element contained in the list.
+   *
+   * <p>The list is ordered.
+   */
+  private List<ISubmodelElement> value;
+
+  public SubmodelElementListBuilder(AasSubmodelElements typeValueListElement) {
+    this.typeValueListElement = Objects.requireNonNull(
+      typeValueListElement,
+      "Argument \"typeValueListElement\" must be non-null.");
   }
 
-  public AnnotatedrelationshipelementBuilder setExtensions(List<IExtension> extensions) {
+  public SubmodelElementListBuilder setExtensions(List<IExtension> extensions) {
     this.extensions = extensions;
     return this;
   }
 
-  public AnnotatedrelationshipelementBuilder setCategory(String category) {
+  public SubmodelElementListBuilder setCategory(String category) {
     this.category = category;
     return this;
   }
 
-  public AnnotatedrelationshipelementBuilder setIdshort(String idShort) {
+  public SubmodelElementListBuilder setIdshort(String idShort) {
     this.idShort = idShort;
     return this;
   }
 
-  public AnnotatedrelationshipelementBuilder setDisplayname(List<ILangStringNameType> displayName) {
+  public SubmodelElementListBuilder setDisplayname(List<ILangStringNameType> displayName) {
     this.displayName = displayName;
     return this;
   }
 
-  public AnnotatedrelationshipelementBuilder setDescription(List<ILangStringTextType> description) {
+  public SubmodelElementListBuilder setDescription(List<ILangStringTextType> description) {
     this.description = description;
     return this;
   }
 
-  public AnnotatedrelationshipelementBuilder setSemanticid(IReference semanticId) {
+  public SubmodelElementListBuilder setSemanticid(IReference semanticId) {
     this.semanticId = semanticId;
     return this;
   }
 
-  public AnnotatedrelationshipelementBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
+  public SubmodelElementListBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
     this.supplementalSemanticIds = supplementalSemanticIds;
     return this;
   }
 
-  public AnnotatedrelationshipelementBuilder setQualifiers(List<IQualifier> qualifiers) {
+  public SubmodelElementListBuilder setQualifiers(List<IQualifier> qualifiers) {
     this.qualifiers = qualifiers;
     return this;
   }
 
-  public AnnotatedrelationshipelementBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public SubmodelElementListBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;
   }
 
-  public AnnotatedrelationshipelementBuilder setAnnotations(List<IDataElement> annotations) {
-    this.annotations = annotations;
+  public SubmodelElementListBuilder setOrderrelevant(Boolean orderRelevant) {
+    this.orderRelevant = orderRelevant;
     return this;
   }
 
-  public AnnotatedRelationshipElement build() {
-    return new AnnotatedRelationshipElement(
-      this.first,
-      this.second,
+  public SubmodelElementListBuilder setSemanticidlistelement(IReference semanticIdListElement) {
+    this.semanticIdListElement = semanticIdListElement;
+    return this;
+  }
+
+  public SubmodelElementListBuilder setValuetypelistelement(DataTypeDefXsd valueTypeListElement) {
+    this.valueTypeListElement = valueTypeListElement;
+    return this;
+  }
+
+  public SubmodelElementListBuilder setValue(List<ISubmodelElement> value) {
+    this.value = value;
+    return this;
+  }
+
+  public SubmodelElementList build() {
+    return new SubmodelElementList(
+      this.typeValueListElement,
       this.extensions,
       this.category,
       this.idShort,
@@ -183,6 +208,9 @@ public class AnnotatedrelationshipelementBuilder {
       this.supplementalSemanticIds,
       this.qualifiers,
       this.embeddedDataSpecifications,
-      this.annotations);
+      this.orderRelevant,
+      this.semanticIdListElement,
+      this.valueTypeListElement,
+      this.value);
   }
 }

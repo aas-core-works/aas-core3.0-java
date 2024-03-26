@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * Builder for the AdministrativeInformation type.
  */
-public class AdministrativeinformationBuilder {
+public class AdministrativeInformationBuilder {
   /**
    * Embedded data specification.
    */
@@ -45,27 +45,27 @@ public class AdministrativeinformationBuilder {
    */
   private String templateId;
 
-  public AdministrativeinformationBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public AdministrativeInformationBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;
   }
 
-  public AdministrativeinformationBuilder setVersion(String version) {
+  public AdministrativeInformationBuilder setVersion(String version) {
     this.version = version;
     return this;
   }
 
-  public AdministrativeinformationBuilder setRevision(String revision) {
+  public AdministrativeInformationBuilder setRevision(String revision) {
     this.revision = revision;
     return this;
   }
 
-  public AdministrativeinformationBuilder setCreator(IReference creator) {
+  public AdministrativeInformationBuilder setCreator(IReference creator) {
     this.creator = creator;
     return this;
   }
 
-  public AdministrativeinformationBuilder setTemplateid(String templateId) {
+  public AdministrativeInformationBuilder setTemplateid(String templateId) {
     this.templateId = templateId;
     return this;
   }

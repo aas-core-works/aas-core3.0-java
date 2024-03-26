@@ -8,9 +8,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Builder for the SubmodelElementList type.
+ * Builder for the SubmodelElementCollection type.
  */
-public class SubmodelelementlistBuilder {
+public class SubmodelElementCollectionBuilder {
   /**
    * An extension of the element.
    */
@@ -94,111 +94,62 @@ public class SubmodelelementlistBuilder {
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
   /**
-   * Defines whether order in list is relevant. If {@link SubmodelElementList#getOrderRelevant orderRelevant} = {@literal False}
-   * then the list is representing a set or a bag.
-   *
-   * <p>Default: {@literal True}
-   */
-  private Boolean orderRelevant;
-
-  /**
-   * Semantic ID the submodel elements contained in the list match to.
-   *
-   * <p>It is recommended to use a global reference.
-   */
-  private IReference semanticIdListElement;
-
-  /**
-   * The submodel element type of the submodel elements contained in the list.
-   */
-  private AasSubmodelElements typeValueListElement;
-
-  /**
-   * The value type of the submodel element contained in the list.
-   */
-  private DataTypeDefXsd valueTypeListElement;
-
-  /**
-   * Submodel element contained in the list.
-   *
-   * <p>The list is ordered.
+   * Submodel element contained in the collection.
    */
   private List<ISubmodelElement> value;
 
-  public SubmodelelementlistBuilder(AasSubmodelElements typeValueListElement) {
-    this.typeValueListElement = Objects.requireNonNull(
-      typeValueListElement,
-      "Argument \"typeValueListElement\" must be non-null.");
-  }
-
-  public SubmodelelementlistBuilder setExtensions(List<IExtension> extensions) {
+  public SubmodelElementCollectionBuilder setExtensions(List<IExtension> extensions) {
     this.extensions = extensions;
     return this;
   }
 
-  public SubmodelelementlistBuilder setCategory(String category) {
+  public SubmodelElementCollectionBuilder setCategory(String category) {
     this.category = category;
     return this;
   }
 
-  public SubmodelelementlistBuilder setIdshort(String idShort) {
+  public SubmodelElementCollectionBuilder setIdshort(String idShort) {
     this.idShort = idShort;
     return this;
   }
 
-  public SubmodelelementlistBuilder setDisplayname(List<ILangStringNameType> displayName) {
+  public SubmodelElementCollectionBuilder setDisplayname(List<ILangStringNameType> displayName) {
     this.displayName = displayName;
     return this;
   }
 
-  public SubmodelelementlistBuilder setDescription(List<ILangStringTextType> description) {
+  public SubmodelElementCollectionBuilder setDescription(List<ILangStringTextType> description) {
     this.description = description;
     return this;
   }
 
-  public SubmodelelementlistBuilder setSemanticid(IReference semanticId) {
+  public SubmodelElementCollectionBuilder setSemanticid(IReference semanticId) {
     this.semanticId = semanticId;
     return this;
   }
 
-  public SubmodelelementlistBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
+  public SubmodelElementCollectionBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
     this.supplementalSemanticIds = supplementalSemanticIds;
     return this;
   }
 
-  public SubmodelelementlistBuilder setQualifiers(List<IQualifier> qualifiers) {
+  public SubmodelElementCollectionBuilder setQualifiers(List<IQualifier> qualifiers) {
     this.qualifiers = qualifiers;
     return this;
   }
 
-  public SubmodelelementlistBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public SubmodelElementCollectionBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;
   }
 
-  public SubmodelelementlistBuilder setOrderrelevant(Boolean orderRelevant) {
-    this.orderRelevant = orderRelevant;
-    return this;
-  }
-
-  public SubmodelelementlistBuilder setSemanticidlistelement(IReference semanticIdListElement) {
-    this.semanticIdListElement = semanticIdListElement;
-    return this;
-  }
-
-  public SubmodelelementlistBuilder setValuetypelistelement(DataTypeDefXsd valueTypeListElement) {
-    this.valueTypeListElement = valueTypeListElement;
-    return this;
-  }
-
-  public SubmodelelementlistBuilder setValue(List<ISubmodelElement> value) {
+  public SubmodelElementCollectionBuilder setValue(List<ISubmodelElement> value) {
     this.value = value;
     return this;
   }
 
-  public SubmodelElementList build() {
-    return new SubmodelElementList(
-      this.typeValueListElement,
+  public SubmodelElementCollection build() {
+    return new SubmodelElementCollection(
       this.extensions,
       this.category,
       this.idShort,
@@ -208,9 +159,6 @@ public class SubmodelelementlistBuilder {
       this.supplementalSemanticIds,
       this.qualifiers,
       this.embeddedDataSpecifications,
-      this.orderRelevant,
-      this.semanticIdListElement,
-      this.valueTypeListElement,
       this.value);
   }
 }

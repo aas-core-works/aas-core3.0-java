@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * Builder for the BasicEventElement type.
  */
-public class BasiceventelementBuilder {
+public class BasicEventElementBuilder {
   /**
    * An extension of the element.
    */
@@ -163,7 +163,7 @@ public class BasiceventelementBuilder {
    */
   private String maxInterval;
 
-  public BasiceventelementBuilder(
+  public BasicEventElementBuilder(
     IReference observed,
     Direction direction,
     StateOfEvent state) {
@@ -178,72 +178,72 @@ public class BasiceventelementBuilder {
       "Argument \"state\" must be non-null.");
   }
 
-  public BasiceventelementBuilder setExtensions(List<IExtension> extensions) {
+  public BasicEventElementBuilder setExtensions(List<IExtension> extensions) {
     this.extensions = extensions;
     return this;
   }
 
-  public BasiceventelementBuilder setCategory(String category) {
+  public BasicEventElementBuilder setCategory(String category) {
     this.category = category;
     return this;
   }
 
-  public BasiceventelementBuilder setIdshort(String idShort) {
+  public BasicEventElementBuilder setIdshort(String idShort) {
     this.idShort = idShort;
     return this;
   }
 
-  public BasiceventelementBuilder setDisplayname(List<ILangStringNameType> displayName) {
+  public BasicEventElementBuilder setDisplayname(List<ILangStringNameType> displayName) {
     this.displayName = displayName;
     return this;
   }
 
-  public BasiceventelementBuilder setDescription(List<ILangStringTextType> description) {
+  public BasicEventElementBuilder setDescription(List<ILangStringTextType> description) {
     this.description = description;
     return this;
   }
 
-  public BasiceventelementBuilder setSemanticid(IReference semanticId) {
+  public BasicEventElementBuilder setSemanticid(IReference semanticId) {
     this.semanticId = semanticId;
     return this;
   }
 
-  public BasiceventelementBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
+  public BasicEventElementBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
     this.supplementalSemanticIds = supplementalSemanticIds;
     return this;
   }
 
-  public BasiceventelementBuilder setQualifiers(List<IQualifier> qualifiers) {
+  public BasicEventElementBuilder setQualifiers(List<IQualifier> qualifiers) {
     this.qualifiers = qualifiers;
     return this;
   }
 
-  public BasiceventelementBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public BasicEventElementBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;
   }
 
-  public BasiceventelementBuilder setMessagetopic(String messageTopic) {
+  public BasicEventElementBuilder setMessagetopic(String messageTopic) {
     this.messageTopic = messageTopic;
     return this;
   }
 
-  public BasiceventelementBuilder setMessagebroker(IReference messageBroker) {
+  public BasicEventElementBuilder setMessagebroker(IReference messageBroker) {
     this.messageBroker = messageBroker;
     return this;
   }
 
-  public BasiceventelementBuilder setLastupdate(String lastUpdate) {
+  public BasicEventElementBuilder setLastupdate(String lastUpdate) {
     this.lastUpdate = lastUpdate;
     return this;
   }
 
-  public BasiceventelementBuilder setMininterval(String minInterval) {
+  public BasicEventElementBuilder setMininterval(String minInterval) {
     this.minInterval = minInterval;
     return this;
   }
 
-  public BasiceventelementBuilder setMaxinterval(String maxInterval) {
+  public BasicEventElementBuilder setMaxinterval(String maxInterval) {
     this.maxInterval = maxInterval;
     return this;
   }

@@ -8,9 +8,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Builder for the AssetAdministrationShell type.
+ * Builder for the ConceptDescription type.
  */
-public class AssetadministrationshellBuilder {
+public class ConceptDescriptionBuilder {
   /**
    * An extension of the element.
    */
@@ -79,86 +79,64 @@ public class AssetadministrationshellBuilder {
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
   /**
-   * The reference to the AAS the AAS was derived from.
-   */
-  private IReference derivedFrom;
-
-  /**
-   * Meta-information about the asset the AAS is representing.
-   */
-  private IAssetInformation assetInformation;
-
-  /**
-   * References to submodels of the AAS.
+   * Reference to an external definition the concept is compatible to or was derived
+   * from.
    *
-   * <p>A submodel is a description of an aspect of the asset the AAS is representing.
+   * <p>It is recommended to use a global reference.
    *
-   * <p>The asset of an AAS is typically described by one or more submodels.
-   *
-   * <p>Temporarily no submodel might be assigned to the AAS.
+   * <p>Compare to is-case-of relationship in ISO 13584-32 &amp; IEC EN 61360
    */
-  private List<IReference> submodels;
+  private List<IReference> isCaseOf;
 
-  public AssetadministrationshellBuilder(
-    String id,
-    IAssetInformation assetInformation) {
+  public ConceptDescriptionBuilder(String id) {
     this.id = Objects.requireNonNull(
       id,
       "Argument \"id\" must be non-null.");
-    this.assetInformation = Objects.requireNonNull(
-      assetInformation,
-      "Argument \"assetInformation\" must be non-null.");
   }
 
-  public AssetadministrationshellBuilder setExtensions(List<IExtension> extensions) {
+  public ConceptDescriptionBuilder setExtensions(List<IExtension> extensions) {
     this.extensions = extensions;
     return this;
   }
 
-  public AssetadministrationshellBuilder setCategory(String category) {
+  public ConceptDescriptionBuilder setCategory(String category) {
     this.category = category;
     return this;
   }
 
-  public AssetadministrationshellBuilder setIdshort(String idShort) {
+  public ConceptDescriptionBuilder setIdshort(String idShort) {
     this.idShort = idShort;
     return this;
   }
 
-  public AssetadministrationshellBuilder setDisplayname(List<ILangStringNameType> displayName) {
+  public ConceptDescriptionBuilder setDisplayname(List<ILangStringNameType> displayName) {
     this.displayName = displayName;
     return this;
   }
 
-  public AssetadministrationshellBuilder setDescription(List<ILangStringTextType> description) {
+  public ConceptDescriptionBuilder setDescription(List<ILangStringTextType> description) {
     this.description = description;
     return this;
   }
 
-  public AssetadministrationshellBuilder setAdministration(IAdministrativeInformation administration) {
+  public ConceptDescriptionBuilder setAdministration(IAdministrativeInformation administration) {
     this.administration = administration;
     return this;
   }
 
-  public AssetadministrationshellBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public ConceptDescriptionBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;
   }
 
-  public AssetadministrationshellBuilder setDerivedfrom(IReference derivedFrom) {
-    this.derivedFrom = derivedFrom;
+  public ConceptDescriptionBuilder setIscaseof(List<IReference> isCaseOf) {
+    this.isCaseOf = isCaseOf;
     return this;
   }
 
-  public AssetadministrationshellBuilder setSubmodels(List<IReference> submodels) {
-    this.submodels = submodels;
-    return this;
-  }
-
-  public AssetAdministrationShell build() {
-    return new AssetAdministrationShell(
+  public ConceptDescription build() {
+    return new ConceptDescription(
       this.id,
-      this.assetInformation,
       this.extensions,
       this.category,
       this.idShort,
@@ -166,7 +144,6 @@ public class AssetadministrationshellBuilder {
       this.description,
       this.administration,
       this.embeddedDataSpecifications,
-      this.derivedFrom,
-      this.submodels);
+      this.isCaseOf);
   }
 }

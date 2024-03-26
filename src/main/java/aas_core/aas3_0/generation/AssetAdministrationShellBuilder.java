@@ -8,9 +8,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Builder for the ConceptDescription type.
+ * Builder for the AssetAdministrationShell type.
  */
-public class ConceptdescriptionBuilder {
+public class AssetAdministrationShellBuilder {
   /**
    * An extension of the element.
    */
@@ -79,64 +79,86 @@ public class ConceptdescriptionBuilder {
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
   /**
-   * Reference to an external definition the concept is compatible to or was derived
-   * from.
-   *
-   * <p>It is recommended to use a global reference.
-   *
-   * <p>Compare to is-case-of relationship in ISO 13584-32 &amp; IEC EN 61360
+   * The reference to the AAS the AAS was derived from.
    */
-  private List<IReference> isCaseOf;
+  private IReference derivedFrom;
 
-  public ConceptdescriptionBuilder(String id) {
+  /**
+   * Meta-information about the asset the AAS is representing.
+   */
+  private IAssetInformation assetInformation;
+
+  /**
+   * References to submodels of the AAS.
+   *
+   * <p>A submodel is a description of an aspect of the asset the AAS is representing.
+   *
+   * <p>The asset of an AAS is typically described by one or more submodels.
+   *
+   * <p>Temporarily no submodel might be assigned to the AAS.
+   */
+  private List<IReference> submodels;
+
+  public AssetAdministrationShellBuilder(
+    String id,
+    IAssetInformation assetInformation) {
     this.id = Objects.requireNonNull(
       id,
       "Argument \"id\" must be non-null.");
+    this.assetInformation = Objects.requireNonNull(
+      assetInformation,
+      "Argument \"assetInformation\" must be non-null.");
   }
 
-  public ConceptdescriptionBuilder setExtensions(List<IExtension> extensions) {
+  public AssetAdministrationShellBuilder setExtensions(List<IExtension> extensions) {
     this.extensions = extensions;
     return this;
   }
 
-  public ConceptdescriptionBuilder setCategory(String category) {
+  public AssetAdministrationShellBuilder setCategory(String category) {
     this.category = category;
     return this;
   }
 
-  public ConceptdescriptionBuilder setIdshort(String idShort) {
+  public AssetAdministrationShellBuilder setIdshort(String idShort) {
     this.idShort = idShort;
     return this;
   }
 
-  public ConceptdescriptionBuilder setDisplayname(List<ILangStringNameType> displayName) {
+  public AssetAdministrationShellBuilder setDisplayname(List<ILangStringNameType> displayName) {
     this.displayName = displayName;
     return this;
   }
 
-  public ConceptdescriptionBuilder setDescription(List<ILangStringTextType> description) {
+  public AssetAdministrationShellBuilder setDescription(List<ILangStringTextType> description) {
     this.description = description;
     return this;
   }
 
-  public ConceptdescriptionBuilder setAdministration(IAdministrativeInformation administration) {
+  public AssetAdministrationShellBuilder setAdministration(IAdministrativeInformation administration) {
     this.administration = administration;
     return this;
   }
 
-  public ConceptdescriptionBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public AssetAdministrationShellBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;
   }
 
-  public ConceptdescriptionBuilder setIscaseof(List<IReference> isCaseOf) {
-    this.isCaseOf = isCaseOf;
+  public AssetAdministrationShellBuilder setDerivedfrom(IReference derivedFrom) {
+    this.derivedFrom = derivedFrom;
     return this;
   }
 
-  public ConceptDescription build() {
-    return new ConceptDescription(
+  public AssetAdministrationShellBuilder setSubmodels(List<IReference> submodels) {
+    this.submodels = submodels;
+    return this;
+  }
+
+  public AssetAdministrationShell build() {
+    return new AssetAdministrationShell(
       this.id,
+      this.assetInformation,
       this.extensions,
       this.category,
       this.idShort,
@@ -144,6 +166,7 @@ public class ConceptdescriptionBuilder {
       this.description,
       this.administration,
       this.embeddedDataSpecifications,
-      this.isCaseOf);
+      this.derivedFrom,
+      this.submodels);
   }
 }

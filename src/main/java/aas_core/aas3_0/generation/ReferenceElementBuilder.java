@@ -8,9 +8,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Builder for the RelationshipElement type.
+ * Builder for the ReferenceElement type.
  */
-public class RelationshipelementBuilder {
+public class ReferenceElementBuilder {
   /**
    * An extension of the element.
    */
@@ -94,75 +94,64 @@ public class RelationshipelementBuilder {
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
   /**
-   * Reference to the first element in the relationship taking the role of the subject.
+   * Global reference to an external object or entity or a logical reference to
+   * another element within the same or another AAS (i.e. a model reference to
+   * a Referable).
    */
-  private IReference first;
+  private IReference value;
 
-  /**
-   * Reference to the second element in the relationship taking the role of the object.
-   */
-  private IReference second;
-
-  public RelationshipelementBuilder(
-    IReference first,
-    IReference second) {
-    this.first = Objects.requireNonNull(
-      first,
-      "Argument \"first\" must be non-null.");
-    this.second = Objects.requireNonNull(
-      second,
-      "Argument \"second\" must be non-null.");
-  }
-
-  public RelationshipelementBuilder setExtensions(List<IExtension> extensions) {
+  public ReferenceElementBuilder setExtensions(List<IExtension> extensions) {
     this.extensions = extensions;
     return this;
   }
 
-  public RelationshipelementBuilder setCategory(String category) {
+  public ReferenceElementBuilder setCategory(String category) {
     this.category = category;
     return this;
   }
 
-  public RelationshipelementBuilder setIdshort(String idShort) {
+  public ReferenceElementBuilder setIdshort(String idShort) {
     this.idShort = idShort;
     return this;
   }
 
-  public RelationshipelementBuilder setDisplayname(List<ILangStringNameType> displayName) {
+  public ReferenceElementBuilder setDisplayname(List<ILangStringNameType> displayName) {
     this.displayName = displayName;
     return this;
   }
 
-  public RelationshipelementBuilder setDescription(List<ILangStringTextType> description) {
+  public ReferenceElementBuilder setDescription(List<ILangStringTextType> description) {
     this.description = description;
     return this;
   }
 
-  public RelationshipelementBuilder setSemanticid(IReference semanticId) {
+  public ReferenceElementBuilder setSemanticid(IReference semanticId) {
     this.semanticId = semanticId;
     return this;
   }
 
-  public RelationshipelementBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
+  public ReferenceElementBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
     this.supplementalSemanticIds = supplementalSemanticIds;
     return this;
   }
 
-  public RelationshipelementBuilder setQualifiers(List<IQualifier> qualifiers) {
+  public ReferenceElementBuilder setQualifiers(List<IQualifier> qualifiers) {
     this.qualifiers = qualifiers;
     return this;
   }
 
-  public RelationshipelementBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public ReferenceElementBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;
   }
 
-  public RelationshipElement build() {
-    return new RelationshipElement(
-      this.first,
-      this.second,
+  public ReferenceElementBuilder setValue(IReference value) {
+    this.value = value;
+    return this;
+  }
+
+  public ReferenceElement build() {
+    return new ReferenceElement(
       this.extensions,
       this.category,
       this.idShort,
@@ -171,6 +160,7 @@ public class RelationshipelementBuilder {
       this.semanticId,
       this.supplementalSemanticIds,
       this.qualifiers,
-      this.embeddedDataSpecifications);
+      this.embeddedDataSpecifications,
+      this.value);
   }
 }
