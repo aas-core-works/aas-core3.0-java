@@ -1,1 +1,0 @@
-The property payload of an instance of class EventPayload  could not be de-serialized: Failed to read base64 encoded data: Illegal base64 character a at: eventpayload/payload

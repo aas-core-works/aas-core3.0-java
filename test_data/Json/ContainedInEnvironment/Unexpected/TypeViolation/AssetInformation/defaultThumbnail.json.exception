@@ -1,1 +1,0 @@
-Expected a JsonObject, but got STRING at: assetAdministrationShells[0].assetInformation.defaultThumbnail
