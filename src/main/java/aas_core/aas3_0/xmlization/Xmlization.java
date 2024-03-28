@@ -102,7 +102,10 @@ public class Xmlization {
     @SuppressWarnings("unchecked")
     public <I> Result<I> castTo(Class<I> type){
       if(isError() || type.isInstance(result)) return (Result<I>) this;
-      throw new IllegalStateException("Result of type " + result.getClass().getName() + " is not an instance of " + type.getName());
+      throw new IllegalStateException("Result of type "
+        + result.getClass().getName()
+        + " is not an instance of "
+        + type.getName());
     }
 
     public T getResult() {
@@ -529,7 +532,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -671,7 +675,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("refersTo"));
                   return Result.failure(error);
@@ -1142,7 +1147,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -1493,7 +1499,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -1857,7 +1864,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -1947,7 +1955,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -1981,7 +1990,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -2059,7 +2069,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -2125,7 +2136,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("submodels"));
                   return Result.failure(error);
@@ -2391,7 +2403,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ISpecificAssetId, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ISpecificAssetId, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("specificAssetIds"));
                   return Result.failure(error);
@@ -2813,7 +2826,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -3073,7 +3087,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -3163,7 +3178,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -3197,7 +3213,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -3343,7 +3360,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -3377,7 +3395,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -3411,7 +3430,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -3445,7 +3465,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ISubmodelElement, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ISubmodelElement, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("submodelElements"));
                   return Result.failure(error);
@@ -3697,7 +3718,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -3787,7 +3809,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -3821,7 +3844,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -3871,7 +3895,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -3905,7 +3930,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -3939,7 +3965,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -4207,7 +4234,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -4297,7 +4325,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -4331,7 +4360,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -4381,7 +4411,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -4415,7 +4446,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -4449,7 +4481,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -4638,7 +4671,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ISubmodelElement, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ISubmodelElement, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("value"));
                   return Result.failure(error);
@@ -4825,7 +4859,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -4915,7 +4950,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -4949,7 +4985,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -4999,7 +5036,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -5033,7 +5071,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -5067,7 +5106,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -5101,7 +5141,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ISubmodelElement, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ISubmodelElement, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("value"));
                   return Result.failure(error);
@@ -5328,7 +5369,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -5418,7 +5460,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -5452,7 +5495,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -5502,7 +5546,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -5536,7 +5581,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -5570,7 +5616,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -5852,7 +5899,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -5942,7 +5990,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -5976,7 +6025,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -6026,7 +6076,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -6060,7 +6111,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -6094,7 +6146,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -6128,7 +6181,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("value"));
                   return Result.failure(error);
@@ -6323,7 +6377,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -6413,7 +6468,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -6447,7 +6503,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -6497,7 +6554,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -6531,7 +6589,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -6565,7 +6624,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -6858,7 +6918,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -6948,7 +7009,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -6982,7 +7044,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -7032,7 +7095,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -7066,7 +7130,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -7100,7 +7165,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -7293,7 +7359,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -7383,7 +7450,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -7417,7 +7485,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -7467,7 +7536,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -7501,7 +7571,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -7535,7 +7606,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -7783,7 +7855,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -7873,7 +7946,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -7907,7 +7981,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -7957,7 +8032,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -7991,7 +8067,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -8025,7 +8102,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -8267,7 +8345,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -8357,7 +8436,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -8391,7 +8471,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -8441,7 +8522,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -8475,7 +8557,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -8509,7 +8592,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -8575,7 +8659,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IDataElement, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IDataElement, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("annotations"));
                   return Result.failure(error);
@@ -8770,7 +8855,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -8860,7 +8946,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -8894,7 +8981,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -8944,7 +9032,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -8978,7 +9067,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -9012,7 +9102,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -9046,7 +9137,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ISubmodelElement, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ISubmodelElement, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("statements"));
                   return Result.failure(error);
@@ -9160,7 +9252,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ISpecificAssetId, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ISpecificAssetId, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("specificAssetIds"));
                   return Result.failure(error);
@@ -9722,7 +9815,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -9812,7 +9906,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -9846,7 +9941,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -9896,7 +9992,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -9930,7 +10027,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -9964,7 +10062,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -10418,7 +10517,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -10508,7 +10608,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -10542,7 +10643,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -10592,7 +10694,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -10626,7 +10729,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -10660,7 +10764,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -10694,7 +10799,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IOperationVariable, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IOperationVariable, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("inputVariables"));
                   return Result.failure(error);
@@ -10728,7 +10834,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IOperationVariable, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IOperationVariable, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("outputVariables"));
                   return Result.failure(error);
@@ -10762,7 +10869,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IOperationVariable, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IOperationVariable, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("inoutputVariables"));
                   return Result.failure(error);
@@ -11123,7 +11231,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -11213,7 +11322,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -11247,7 +11357,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -11297,7 +11408,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("supplementalSemanticIds"));
                   return Result.failure(error);
@@ -11331,7 +11443,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IQualifier, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IQualifier, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("qualifiers"));
                   return Result.failure(error);
@@ -11365,7 +11478,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -11539,7 +11653,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IExtension, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IExtension, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("extensions"));
                   return Result.failure(error);
@@ -11629,7 +11744,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringNameType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringNameType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("displayName"));
                   return Result.failure(error);
@@ -11663,7 +11779,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringTextType, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringTextType, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("description"));
                   return Result.failure(error);
@@ -11741,7 +11858,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IEmbeddedDataSpecification, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("embeddedDataSpecifications"));
                   return Result.failure(error);
@@ -11775,7 +11893,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IReference, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IReference, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("isCaseOf"));
                   return Result.failure(error);
@@ -12018,7 +12137,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IKey, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IKey, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("keys"));
                   return Result.failure(error);
@@ -12853,7 +12973,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IAssetAdministrationShell, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IAssetAdministrationShell, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("assetAdministrationShells"));
                   return Result.failure(error);
@@ -12887,7 +13008,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ISubmodel, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ISubmodel, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("submodels"));
                   return Result.failure(error);
@@ -12921,7 +13043,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IConceptDescription, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IConceptDescription, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("conceptDescriptions"));
                   return Result.failure(error);
@@ -13811,7 +13934,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of IValueReferencePair, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of IValueReferencePair, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("valueReferencePairs"));
                   return Result.failure(error);
@@ -14575,7 +14699,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringPreferredNameTypeIec61360, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringPreferredNameTypeIec61360, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("preferredName"));
                   return Result.failure(error);
@@ -14609,7 +14734,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringShortNameTypeIec61360, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringShortNameTypeIec61360, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("shortName"));
                   return Result.failure(error);
@@ -14795,7 +14921,8 @@ public class Xmlization {
                 int index = 0;
                 if(!currentEvent(reader).isStartElement()){
                   final Reporting.Error error = new Reporting.Error(
-                  "Expected a start element opening an instance of ILangStringDefinitionTypeIec61360, but got an XML " + getEventTypeAsString(currentEvent(reader)));
+                  "Expected a start element opening an instance of ILangStringDefinitionTypeIec61360, but got an XML "
+                    + getEventTypeAsString(currentEvent(reader)));
                   error.prependSegment(new Reporting.IndexSegment(index));
                   error.prependSegment(new Reporting.NameSegment("definition"));
                   return Result.failure(error);

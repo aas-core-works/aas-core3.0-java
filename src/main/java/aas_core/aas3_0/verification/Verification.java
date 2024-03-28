@@ -38,7 +38,7 @@ public class Verification {
     private static final Pattern regexMatchesIdShort = constructMatchesIdShort();
 
     /**
-     * Check that {@link text} is a valid short ID.
+     * Check that {@code text} is a valid short ID.
      */
     public static Boolean matchesIdShort(String text) {
         return regexMatchesIdShort.matcher(text).matches();
@@ -52,7 +52,7 @@ public class Verification {
     private static final Pattern regexMatchesVersionType = constructMatchesVersionType();
 
     /**
-     * Check that {@link text} is a valid version string.
+     * Check that {@code text} is a valid version string.
      */
     public static Boolean matchesVersionType(String text) {
         return regexMatchesVersionType.matcher(text).matches();
@@ -66,7 +66,7 @@ public class Verification {
     private static final Pattern regexMatchesRevisionType = constructMatchesRevisionType();
 
     /**
-     * Check that {@link text} is a valid revision string.
+     * Check that {@code text} is a valid revision string.
      */
     public static Boolean matchesRevisionType(String text) {
         return regexMatchesRevisionType.matcher(text).matches();
@@ -90,17 +90,16 @@ public class Verification {
     private static final Pattern regexMatchesXsDateTimeUtc = constructMatchesXsDateTimeUtc();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:dateTime}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:dateTime}.
      *
-     * <p>The time zone must be fixed to UTC. We verify only that the {@literal text} matches
+     * <p>The time zone must be fixed to UTC. We verify only that the {@code text} matches
      * a pre-defined pattern. We <em>do not</em> verify that the day of month is
      * correct nor do we check for leap seconds.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#dateTime
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23dateTime'>https://www.w3.org/TR/xmlschema-2/#dateTime</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsDateTimeUtc(String text) {
         return regexMatchesXsDateTimeUtc.matcher(text).matches();
@@ -137,16 +136,15 @@ public class Verification {
     private static final Pattern regexMatchesMimeType = constructMatchesMimeType();
 
     /**
-     * Check that {@link text} conforms to the pattern of MIME type.
+     * Check that {@code text} conforms to the pattern of MIME type.
      *
      * <p>The definition has been taken from:
-     * https://www.rfc-editor.org/rfc/rfc7231#section-3.1.1.1,
-     * https://www.rfc-editor.org/rfc/rfc7230#section-3.2.3 and
-     * https://www.rfc-editor.org/rfc/rfc7230#section-3.2.6.
+     * <a href='https%3A//www.rfc-editor.org/rfc/rfc7231%23section-3.1.1.1'>https://www.rfc-editor.org/rfc/rfc7231#section-3.1.1.1</a>,
+     * <a href='https%3A//www.rfc-editor.org/rfc/rfc7230%23section-3.2.3'>https://www.rfc-editor.org/rfc/rfc7230#section-3.2.3</a> and
+     * <a href='https%3A//www.rfc-editor.org/rfc/rfc7230%23section-3.2.6'>https://www.rfc-editor.org/rfc/rfc7230#section-3.2.6</a>.
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesMimeType(String text) {
         return regexMatchesMimeType.matcher(text).matches();
@@ -157,7 +155,7 @@ public class Verification {
         String decOctet = "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])";
         String ipv4address = decOctet + "\\." + decOctet + "\\." + decOctet + "\\." + decOctet;
         String ls32 = "(" + h16 + ":" + h16 + "|" + ipv4address + ")";
-        String ipv6address = "((" + h16 + ":){6}" + ls32 + "|::(" + h16 + ":){5}" + ls32 + "|(" + h16 + ")?::(" + h16 + ":){4}" + ls32 + "|((" + h16 + ":)?" + h16 + ")?::(" + h16 + ":){3}" + ls32 + "|((" + h16 + ":){2}" + h16 + ")?::(" + h16 + ":){2}" + ls32 + "|((" + h16 + ":){3}" + h16 + ")?::" + h16 + ":" + ls32 + "|((" + h16 + ":){4}" + h16 + ")?::" + ls32 + "|((" + h16 + ":){5}" + h16 + ")?::" + h16 + "|((" + h16 + ":){6}" + h16 + ")?::)";
+        String ipv6address = "((" + h16 + ":){6}" + ls32 + "|::(" + h16 + ":){5}" + ls32 + "|(" + h16 + ")?::(" + h16 + ":){4}" + ls32 + "|((" + h16 + ":)?" + h16 + ")?::(" + h16 + ":){3}" + ls32 + "|((" + h16 + ":){0,2}" + h16 + ")?::(" + h16 + ":){2}" + ls32 + "|((" + h16 + ":){0,3}" + h16 + ")?::" + h16 + ":" + ls32 + "|((" + h16 + ":){0,4}" + h16 + ")?::" + ls32 + "|((" + h16 + ":){0,5}" + h16 + ")?::" + h16 + "|((" + h16 + ":){0,6}" + h16 + ")?::)";
         String unreserved = "[a-zA-Z0-9\\-._~]";
         String subDelims = "[!$&\'()*+,;=]";
         String ipvfuture = "[vV][0-9A-Fa-f]+\\.(" + unreserved + "|" + subDelims + "|:)+";
@@ -182,14 +180,13 @@ public class Verification {
     private static final Automaton regexMatchesRfc8089Path = constructMatchesRfc8089Path();
 
     /**
-     * Check that {@link text} is a path conforming to the pattern of RFC 8089.
+     * Check that {@code text} is a path conforming to the pattern of RFC 8089.
      *
      * <p>The definition has been taken from:
-     * https://datatracker.ietf.org/doc/html/rfc8089
+     * <a href='https%3A//datatracker.ietf.org/doc/html/rfc8089'>https://datatracker.ietf.org/doc/html/rfc8089</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesRfc8089Path(String text) {
         return regexMatchesRfc8089Path.run(text);
@@ -199,7 +196,7 @@ public class Verification {
         String alphanum = "[a-zA-Z0-9]";
         String singleton = "[0-9A-WY-Za-wy-z]";
         String extension = singleton + "(-(" + alphanum + "){2,8})+";
-        String extlang = "[a-zA-Z]{3}(-[a-zA-Z]{3}){2}";
+        String extlang = "[a-zA-Z]{3}(-[a-zA-Z]{3}){0,2}";
         String irregular = "(en-GB-oed|i-ami|i-bnn|i-default|i-enochian|i-hak|i-klingon|i-lux|i-mingo|i-navajo|i-pwn|i-tao|i-tay|i-tsu|sgn-BE-FR|sgn-BE-NL|sgn-CH-DE)";
         String regular = "(art-lojban|cel-gaulish|no-bok|no-nyn|zh-guoyu|zh-hakka|zh-min|zh-min-nan|zh-xiang)";
         String grandfathered = "(" + irregular + "|" + regular + ")";
@@ -217,9 +214,9 @@ public class Verification {
     private static final Pattern regexMatchesBcp47 = constructMatchesBcp47();
 
     /**
-     * Check that {@link text} is a valid BCP 47 language tag.
+     * Check that {@code text} is a valid BCP 47 language tag.
      *
-     * <p>See: https://en.wikipedia.org/wiki/IETF_language_tag
+     * <p>See: <a href='https%3A//en.wikipedia.org/wiki/IETF_language_tag'>https://en.wikipedia.org/wiki/IETF_language_tag</a>
      */
     public static Boolean matchesBcp47(String text) {
         return regexMatchesBcp47.matcher(text).matches();
@@ -267,14 +264,13 @@ public class Verification {
     private static final Pattern regexMatchesXmlSerializableString = constructMatchesXmlSerializableString();
 
     /**
-     * Check that {@link text} conforms to the pattern of the Constraint AASd-130.
+     * Check that {@code text} conforms to the pattern of the Constraint AASd-130.
      *
      * <p>Ensures that encoding is possible and interoperability between different
      * serializations is possible.
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXmlSerializableString(String text) {
         return regexMatchesXmlSerializableString.matcher(text).matches();
@@ -291,7 +287,7 @@ public class Verification {
         String decOctet = "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])";
         String ipv4address = decOctet + "\\." + decOctet + "\\." + decOctet + "\\." + decOctet;
         String ls32 = "(" + h16 + ":" + h16 + "|" + ipv4address + ")";
-        String ipv6address = "((" + h16 + ":){6}" + ls32 + "|::(" + h16 + ":){5}" + ls32 + "|(" + h16 + ")?::(" + h16 + ":){4}" + ls32 + "|((" + h16 + ":)?" + h16 + ")?::(" + h16 + ":){3}" + ls32 + "|((" + h16 + ":){2}" + h16 + ")?::(" + h16 + ":){2}" + ls32 + "|((" + h16 + ":){3}" + h16 + ")?::" + h16 + ":" + ls32 + "|((" + h16 + ":){4}" + h16 + ")?::" + ls32 + "|((" + h16 + ":){5}" + h16 + ")?::" + h16 + "|((" + h16 + ":){6}" + h16 + ")?::)";
+        String ipv6address = "((" + h16 + ":){6}" + ls32 + "|::(" + h16 + ":){5}" + ls32 + "|(" + h16 + ")?::(" + h16 + ":){4}" + ls32 + "|((" + h16 + ":)?" + h16 + ")?::(" + h16 + ":){3}" + ls32 + "|((" + h16 + ":){0,2}" + h16 + ")?::(" + h16 + ":){2}" + ls32 + "|((" + h16 + ":){0,3}" + h16 + ")?::" + h16 + ":" + ls32 + "|((" + h16 + ":){0,4}" + h16 + ")?::" + ls32 + "|((" + h16 + ":){0,5}" + h16 + ")?::" + h16 + "|((" + h16 + ":){0,6}" + h16 + ")?::)";
         String unreserved = "[a-zA-Z0-9\\-._~]";
         String ipvfuture = "[vV][0-9A-Fa-f]+\\.(" + unreserved + "|" + subDelims + "|:)+";
         String ipLiteral = "\\[(" + ipv6address + "|" + ipvfuture + ")\\]";
@@ -323,14 +319,13 @@ public class Verification {
     private static final Pattern regexMatchesXsAnyUri = constructMatchesXsAnyUri();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:anyURI}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:anyURI}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#anyURI and
-     * https://datatracker.ietf.org/doc/html/rfc3987
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23anyURI'>https://www.w3.org/TR/xmlschema-2/#anyURI</a> and
+     * <a href='https%3A//datatracker.ietf.org/doc/html/rfc3987'>https://datatracker.ietf.org/doc/html/rfc3987</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsAnyUri(String text) {
         return regexMatchesXsAnyUri.matcher(text).matches();
@@ -356,13 +351,12 @@ public class Verification {
     private static final Pattern regexMatchesXsBase64Binary = constructMatchesXsBase64Binary();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:base64Binary}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:base64Binary}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#base64Binary
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23base64Binary'>https://www.w3.org/TR/xmlschema-2/#base64Binary</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsBase64Binary(String text) {
         return regexMatchesXsBase64Binary.matcher(text).matches();
@@ -376,13 +370,12 @@ public class Verification {
     private static final Pattern regexMatchesXsBoolean = constructMatchesXsBoolean();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:boolean}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:boolean}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#boolean
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23boolean'>https://www.w3.org/TR/xmlschema-2/#boolean</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsBoolean(String text) {
         return regexMatchesXsBoolean.matcher(text).matches();
@@ -394,7 +387,7 @@ public class Verification {
         String monthFrag = "((0[1-9])|(1[0-2]))";
         String dayFrag = "((0[1-9])|([12]" + digit + ")|(3[01]))";
         String minuteFrag = "[0-5]" + digit;
-        String timezoneFrag = "(Z|(\\+|-)(0" + digit + "|1[0-3]):" + minuteFrag + "|14:00)";
+        String timezoneFrag = "(Z|(\\+|-)((0" + digit + "|1[0-3]):" + minuteFrag + "|14:00))";
         String dateLexicalRep = yearFrag + "-" + monthFrag + "-" + dayFrag + timezoneFrag + "?";
         String pattern = "^" + dateLexicalRep + "$";
         return Pattern.compile(pattern);
@@ -403,13 +396,12 @@ public class Verification {
     private static final Pattern regexMatchesXsDate = constructMatchesXsDate();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:date}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:date}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#date
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23date'>https://www.w3.org/TR/xmlschema-2/#date</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsDate(String text) {
         return regexMatchesXsDate.matcher(text).matches();
@@ -424,7 +416,7 @@ public class Verification {
         String minuteFrag = "[0-5]" + digit;
         String secondFrag = "([0-5]" + digit + ")(\\." + digit + "+)?";
         String endOfDayFrag = "24:00:00(\\.0+)?";
-        String timezoneFrag = "(Z|(\\+|-)(0" + digit + "|1[0-3]):" + minuteFrag + "|14:00)";
+        String timezoneFrag = "(Z|(\\+|-)((0" + digit + "|1[0-3]):" + minuteFrag + "|14:00))";
         String dateTimeLexicalRep = yearFrag + "-" + monthFrag + "-" + dayFrag + "T((" + hourFrag + ":" + minuteFrag + ":" + secondFrag + ")|" + endOfDayFrag + ")" + timezoneFrag + "?";
         String pattern = "^" + dateTimeLexicalRep + "$";
         return Pattern.compile(pattern);
@@ -433,13 +425,12 @@ public class Verification {
     private static final Pattern regexMatchesXsDateTime = constructMatchesXsDateTime();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:dateTime}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:dateTime}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#dateTime
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23dateTime'>https://www.w3.org/TR/xmlschema-2/#dateTime</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsDateTime(String text) {
         return regexMatchesXsDateTime.matcher(text).matches();
@@ -595,13 +586,12 @@ public class Verification {
     private static final Pattern regexMatchesXsDecimal = constructMatchesXsDecimal();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:decimal}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:decimal}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#decimal
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23decimal'>https://www.w3.org/TR/xmlschema-2/#decimal</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsDecimal(String text) {
         return regexMatchesXsDecimal.matcher(text).matches();
@@ -616,13 +606,12 @@ public class Verification {
     private static final Pattern regexMatchesXsDouble = constructMatchesXsDouble();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:double}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:double}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#double
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23double'>https://www.w3.org/TR/xmlschema-2/#double</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsDouble(String text) {
         return regexMatchesXsDouble.matcher(text).matches();
@@ -637,13 +626,12 @@ public class Verification {
     private static final Pattern regexMatchesXsDuration = constructMatchesXsDuration();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:duration}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:duration}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#duration
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23duration'>https://www.w3.org/TR/xmlschema-2/#duration</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsDuration(String text) {
         return regexMatchesXsDuration.matcher(text).matches();
@@ -658,13 +646,12 @@ public class Verification {
     private static final Pattern regexMatchesXsFloat = constructMatchesXsFloat();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:float}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:float}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#float
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23float'>https://www.w3.org/TR/xmlschema-2/#float</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsFloat(String text) {
         return regexMatchesXsFloat.matcher(text).matches();
@@ -679,13 +666,12 @@ public class Verification {
     private static final Pattern regexMatchesXsGDay = constructMatchesXsGDay();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:gDay}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:gDay}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#gDay
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23gDay'>https://www.w3.org/TR/xmlschema-2/#gDay</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsGDay(String text) {
         return regexMatchesXsGDay.matcher(text).matches();
@@ -700,13 +686,12 @@ public class Verification {
     private static final Pattern regexMatchesXsGMonth = constructMatchesXsGMonth();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:gMonth}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:gMonth}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#gMonth
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23gMonth'>https://www.w3.org/TR/xmlschema-2/#gMonth</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsGMonth(String text) {
         return regexMatchesXsGMonth.matcher(text).matches();
@@ -721,13 +706,12 @@ public class Verification {
     private static final Pattern regexMatchesXsGMonthDay = constructMatchesXsGMonthDay();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:gMonthDay}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:gMonthDay}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#gMonthDay
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23gMonthDay'>https://www.w3.org/TR/xmlschema-2/#gMonthDay</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsGMonthDay(String text) {
         return regexMatchesXsGMonthDay.matcher(text).matches();
@@ -742,13 +726,12 @@ public class Verification {
     private static final Pattern regexMatchesXsGYear = constructMatchesXsGYear();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:gYear}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:gYear}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#gYear
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23gYear'>https://www.w3.org/TR/xmlschema-2/#gYear</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsGYear(String text) {
         return regexMatchesXsGYear.matcher(text).matches();
@@ -763,13 +746,12 @@ public class Verification {
     private static final Pattern regexMatchesXsGYearMonth = constructMatchesXsGYearMonth();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:gYearMonth}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:gYearMonth}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#gYearMonth
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23gYearMonth'>https://www.w3.org/TR/xmlschema-2/#gYearMonth</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsGYearMonth(String text) {
         return regexMatchesXsGYearMonth.matcher(text).matches();
@@ -784,13 +766,12 @@ public class Verification {
     private static final Pattern regexMatchesXsHexBinary = constructMatchesXsHexBinary();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:hexBinary}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:hexBinary}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#hexBinary
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23hexBinary'>https://www.w3.org/TR/xmlschema-2/#hexBinary</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsHexBinary(String text) {
         return regexMatchesXsHexBinary.matcher(text).matches();
@@ -805,13 +786,12 @@ public class Verification {
     private static final Pattern regexMatchesXsTime = constructMatchesXsTime();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:time}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:time}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#time
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23time'>https://www.w3.org/TR/xmlschema-2/#time</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsTime(String text) {
         return regexMatchesXsTime.matcher(text).matches();
@@ -826,13 +806,12 @@ public class Verification {
     private static final Pattern regexMatchesXsInteger = constructMatchesXsInteger();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:integer}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:integer}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#integer
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23integer'>https://www.w3.org/TR/xmlschema-2/#integer</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsInteger(String text) {
         return regexMatchesXsInteger.matcher(text).matches();
@@ -847,13 +826,12 @@ public class Verification {
     private static final Pattern regexMatchesXsLong = constructMatchesXsLong();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:long}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:long}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#long
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23long'>https://www.w3.org/TR/xmlschema-2/#long</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsLong(String text) {
         return regexMatchesXsLong.matcher(text).matches();
@@ -868,13 +846,12 @@ public class Verification {
     private static final Pattern regexMatchesXsInt = constructMatchesXsInt();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:int}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:int}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#int
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23int'>https://www.w3.org/TR/xmlschema-2/#int</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsInt(String text) {
         return regexMatchesXsInt.matcher(text).matches();
@@ -889,13 +866,12 @@ public class Verification {
     private static final Pattern regexMatchesXsShort = constructMatchesXsShort();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:short}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:short}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#short
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23short'>https://www.w3.org/TR/xmlschema-2/#short</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsShort(String text) {
         return regexMatchesXsShort.matcher(text).matches();
@@ -910,13 +886,12 @@ public class Verification {
     private static final Pattern regexMatchesXsByte = constructMatchesXsByte();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:byte}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:byte}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#byte
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23byte'>https://www.w3.org/TR/xmlschema-2/#byte</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsByte(String text) {
         return regexMatchesXsByte.matcher(text).matches();
@@ -931,13 +906,12 @@ public class Verification {
     private static final Pattern regexMatchesXsNonNegativeInteger = constructMatchesXsNonNegativeInteger();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:nonNegativeInteger}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:nonNegativeInteger}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#nonNegativeInteger
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23nonNegativeInteger'>https://www.w3.org/TR/xmlschema-2/#nonNegativeInteger</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsNonNegativeInteger(String text) {
         return regexMatchesXsNonNegativeInteger.matcher(text).matches();
@@ -952,13 +926,12 @@ public class Verification {
     private static final Pattern regexMatchesXsPositiveInteger = constructMatchesXsPositiveInteger();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:positiveInteger}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:positiveInteger}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#positiveInteger
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23positiveInteger'>https://www.w3.org/TR/xmlschema-2/#positiveInteger</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsPositiveInteger(String text) {
         return regexMatchesXsPositiveInteger.matcher(text).matches();
@@ -973,13 +946,12 @@ public class Verification {
     private static final Pattern regexMatchesXsUnsignedLong = constructMatchesXsUnsignedLong();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:unsignedLong}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:unsignedLong}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#unsignedLong
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23unsignedLong'>https://www.w3.org/TR/xmlschema-2/#unsignedLong</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsUnsignedLong(String text) {
         return regexMatchesXsUnsignedLong.matcher(text).matches();
@@ -994,13 +966,12 @@ public class Verification {
     private static final Pattern regexMatchesXsUnsignedInt = constructMatchesXsUnsignedInt();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:unsignedInt}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:unsignedInt}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#unsignedInt
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23unsignedInt'>https://www.w3.org/TR/xmlschema-2/#unsignedInt</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsUnsignedInt(String text) {
         return regexMatchesXsUnsignedInt.matcher(text).matches();
@@ -1015,13 +986,12 @@ public class Verification {
     private static final Pattern regexMatchesXsUnsignedShort = constructMatchesXsUnsignedShort();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:unsignedShort}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:unsignedShort}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#unsignedShort
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23unsignedShort'>https://www.w3.org/TR/xmlschema-2/#unsignedShort</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsUnsignedShort(String text) {
         return regexMatchesXsUnsignedShort.matcher(text).matches();
@@ -1036,13 +1006,12 @@ public class Verification {
     private static final Pattern regexMatchesXsUnsignedByte = constructMatchesXsUnsignedByte();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:unsignedByte}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:unsignedByte}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#unsignedByte
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23unsignedByte'>https://www.w3.org/TR/xmlschema-2/#unsignedByte</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsUnsignedByte(String text) {
         return regexMatchesXsUnsignedByte.matcher(text).matches();
@@ -1057,13 +1026,12 @@ public class Verification {
     private static final Pattern regexMatchesXsNonPositiveInteger = constructMatchesXsNonPositiveInteger();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:nonPositiveInteger}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:nonPositiveInteger}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#nonPositiveInteger
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23nonPositiveInteger'>https://www.w3.org/TR/xmlschema-2/#nonPositiveInteger</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsNonPositiveInteger(String text) {
         return regexMatchesXsNonPositiveInteger.matcher(text).matches();
@@ -1078,13 +1046,12 @@ public class Verification {
     private static final Pattern regexMatchesXsNegativeInteger = constructMatchesXsNegativeInteger();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:negativeInteger}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:negativeInteger}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#negativeInteger
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23negativeInteger'>https://www.w3.org/TR/xmlschema-2/#negativeInteger</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsNegativeInteger(String text) {
         return regexMatchesXsNegativeInteger.matcher(text).matches();
@@ -1098,13 +1065,12 @@ public class Verification {
     private static final Pattern regexMatchesXsString = constructMatchesXsString();
 
     /**
-     * Check that {@link text} conforms to the pattern of an {@literal xs:string}.
+     * Check that {@code text} conforms to the pattern of an {@code xs:string}.
      *
-     * <p>See: https://www.w3.org/TR/xmlschema-2/#string
+     * <p>See: <a href='https%3A//www.w3.org/TR/xmlschema-2/%23string'>https://www.w3.org/TR/xmlschema-2/#string</a>
      *
-     * @param textText to be checked
-     *
-     * @returns True if the {@link text} conforms to the pattern
+     * @param text Text to be checked
+     * @return True if the {@code text} conforms to the pattern
      */
     public static Boolean matchesXsString(String text) {
         return regexMatchesXsString.matcher(text).matches();
@@ -1381,14 +1347,14 @@ public class Verification {
     }
 
     /**
-     * Check that the target of the model reference matches the {@link expectedType}.
+     * Check that the target of the model reference matches the {@code expectedType}.
      */
     public static Boolean isModelReferenceTo(IReference reference, KeyTypes expectedType) {
         return reference.getType() == ReferenceTypes.MODEL_REFERENCE && reference.getKeys().size() != 0 && reference.getKeys().get(reference.getKeys().size() - 1).getType() == expectedType;
     }
 
     /**
-     * Check that the target of the reference matches a {@link Constants.aasReferables}.
+     * Check that the target of the reference matches a {@link aas_core.aas3_0.constants.Constants#aasReferables}.
      */
     public static Boolean isModelReferenceToReferable(IReference reference) {
         return reference.getType() == ReferenceTypes.MODEL_REFERENCE && reference.getKeys().size() != 0 && Constants.aasReferables.contains(reference.getKeys().get(reference.getKeys().size() - 1).getType());
@@ -1704,7 +1670,7 @@ public class Verification {
     private static final Pattern regexIsBcp47ForEnglish = constructIsBcp47ForEnglish();
 
     /**
-     * Check that the {@link text} corresponds to a BCP47 code for english.
+     * Check that the {@code text} corresponds to a BCP47 code for english.
      */
     public static Boolean isBcp47ForEnglish(String text) {
         return regexIsBcp47ForEnglish.matcher(text).matches();
@@ -5422,7 +5388,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyNonEmptyXmlSerializableString(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5436,7 +5402,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyDateTimeUtc(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5450,7 +5416,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyDuration(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5461,7 +5427,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyBlobType(byte[] that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5470,7 +5436,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyIdentifier(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5487,7 +5453,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyValueTypeIec61360(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5504,7 +5470,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyNameType(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5521,7 +5487,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyVersionType(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5541,7 +5507,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyRevisionType(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5561,7 +5527,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyLabelType(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5578,7 +5544,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyMessageTopicType(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5595,7 +5561,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyBcp47LanguageTag(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5606,7 +5572,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyContentType(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5626,7 +5592,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyPathType(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5646,7 +5612,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyQualifierType(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5663,7 +5629,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyValueDataType(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();
@@ -5672,7 +5638,7 @@ public class Verification {
     }
 
     /**
-     * Verify the constraints of <paramref name="that" />.
+     * Verify the constraints of {@code that}.
      */
     public static Stream<Reporting.Error> verifyIdShortType(String that) {
         Stream<Reporting.Error> errorStream = Stream.empty();

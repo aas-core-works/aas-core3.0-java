@@ -11396,7 +11396,10 @@ public class Jsonization {
       @SuppressWarnings("unchecked")
       public <I> Result<I> castTo(Class<I> type) {
         if (isError() || type.isInstance(result)) return (Result<I>) this;
-        throw new IllegalStateException("Result of type " + result.getClass().getName() + " is not an instance of " + type.getName());
+        throw new IllegalStateException("Result of type "
+          + result.getClass().getName()
+          + " is not an instance of "
+          + type.getName());
       }
 
       public T getResult() {
@@ -11409,7 +11412,7 @@ public class Jsonization {
       }
 
       public boolean isError() {
-                return !success;
+        return !success;
       }
 
       public Reporting.Error getError() {
@@ -11429,15 +11432,14 @@ public class Jsonization {
     /**
      * Deserialize instances of meta-model classes from JSON nodes.
      *
-     * <pre>
      * Here is an example how to parse an instance of IHasSemantics:
-     * {@code
+     * <pre>{@code
      * String someString = "... some JSON ...";
      * ObjectMapper objectMapper = new ObjectMapper();
      * JsonNode node = objectMapper.readTree(someString);
      * IHasSemantics anInstance = Deserialize.deserializeIHasSemantics(
      *   node);
-     * }
+     * }</pre>
      */
     public static class Deserialize
     {
@@ -14792,15 +14794,14 @@ public class Jsonization {
     /**
      * Serialize instances of meta-model classes to JSON elements.
      *
-     * <pre>
      * Here is an example how to serialize an instance of IHasSemantics:
-     * {@code
+     * <pre>{@code
      * IHasSemantics anInstance = new IHasSemantics(
      *     // ... some constructor arguments ...
      * );
      * JsonNode element = Jsonization.Serialize.toJsonObject(
      *     anInstance));
-     * }
+     * }</pre>
      */
     public static class Serialize
     {

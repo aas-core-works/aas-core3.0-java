@@ -16,6 +16,7 @@
         <dk.brics.version>1.12-4</dk.brics.version>
         <!--Note: For Java 8 we need the spotless plugin in version <= 2.30.0 -->
         <spotless.maven.plugin.version>2.30.0</spotless.maven.plugin.version>
+        <javadoc.maven.plugin.version>3.6.3</javadoc.maven.plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -41,7 +42,7 @@
         </dependency>
     </dependencies>
 
-     <build>
+    <build>
         <plugins>
             <plugin>
                 <!-- https://github.com/diffplug/spotless/tree/main/plugin-maven -->
@@ -73,6 +74,17 @@
                         <phase>validate</phase>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${javadoc.maven.plugin.version}</version>
+                <configuration>
+                    <doclint>all</doclint>
+                    <overview>
+                        ${basedir}/doc/overview.html
+                    </overview>
+                </configuration>
             </plugin>
         </plugins>
     </build>
