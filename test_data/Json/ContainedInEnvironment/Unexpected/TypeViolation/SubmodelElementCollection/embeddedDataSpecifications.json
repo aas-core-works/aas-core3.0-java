@@ -1,0 +1,65 @@
+{
+  "submodels": [
+    {
+      "id": "something_48c66017",
+      "modelType": "Submodel",
+      "submodelElements": [
+        {
+          "category": "something_d7cf2dff",
+          "description": [
+            {
+              "language": "es-419",
+              "text": "something_be9deae0"
+            }
+          ],
+          "displayName": [
+            {
+              "language": "zh-CN-a-myext-x-private",
+              "text": "something_535aeb51"
+            }
+          ],
+          "embeddedDataSpecifications": "Unexpected string value",
+          "extensions": [
+            {
+              "name": "something_aa1af8b3"
+            }
+          ],
+          "idShort": "PiXO1wyHierj",
+          "modelType": "SubmodelElementCollection",
+          "qualifiers": [
+            {
+              "type": "something_500f973e",
+              "valueType": "xs:long"
+            }
+          ],
+          "semanticId": {
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "urn:something00:f4547d0c"
+              }
+            ],
+            "type": "ExternalReference"
+          },
+          "supplementalSemanticIds": [
+            {
+              "keys": [
+                {
+                  "type": "Submodel",
+                  "value": "urn:another-example10:42487f5a"
+                }
+              ],
+              "type": "ModelReference"
+            }
+          ],
+          "value": [
+            {
+              "idShort": "somethingd2cab823",
+              "modelType": "MultiLanguageProperty"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

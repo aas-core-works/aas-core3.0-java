@@ -1,0 +1,2 @@
+The property direction of an instance of class BasicEventElement could not be de-serialized from an unexpected enumeration literal: 
+						 at: environment/submodels/*[0]/submodelElements/*[0]/direction

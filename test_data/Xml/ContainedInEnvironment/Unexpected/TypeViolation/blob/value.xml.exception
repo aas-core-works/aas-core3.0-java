@@ -1,0 +1,1 @@
+The property value of an instance of class Blob  could not be de-serialized: Failed to read base64 encoded data: Illegal base64 character a at: environment/submodels/*[0]/submodelElements/*[0]/value

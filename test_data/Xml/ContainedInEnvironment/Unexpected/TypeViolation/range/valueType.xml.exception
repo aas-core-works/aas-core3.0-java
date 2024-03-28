@@ -1,0 +1,2 @@
+The property valueType of an instance of class Range could not be de-serialized from an unexpected enumeration literal: 
+						 at: environment/submodels/*[0]/submodelElements/*[0]/valueType
