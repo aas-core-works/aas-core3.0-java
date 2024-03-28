@@ -20,10 +20,10 @@ jobs:
           distribution: 'corretto'
 
       - name: Create javadoc
-        run: javadoc -Xdoclint:none -d javadoc -sourcepath ./src/main/java -subpackages aas_core.aas3_0
+        run: mvn javadoc:javadoc
 
       - name: Deploy to gh-pages 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: javadoc
+          publish_dir: target/site/apidocs/

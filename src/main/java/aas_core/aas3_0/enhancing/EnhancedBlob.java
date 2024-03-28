@@ -5,26 +5,20 @@
 
 package aas_core.aas3_0.enhancing;
 
-import java.lang.Iterable;
-import java.util.Optional;
-import java.util.List;
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
-import aas_core.aas3_0.visitation.ITransformer;
-import aas_core.aas3_0.visitation.ITransformerWithContext;
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.visitation.ITransformer;
+import aas_core.aas3_0.visitation.ITransformerWithContext;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
+import java.util.List;
+import java.util.Optional;
 
-public class EnhancedBlob<EnhancementT>
-  extends Enhanced<EnhancementT>
-  implements IBlob {
+public class EnhancedBlob<EnhancementT> extends Enhanced<EnhancementT> implements IBlob {
   private final IBlob instance;
 
-  public EnhancedBlob(
-    IBlob instance,
-    EnhancementT enhancement
-  ) {
+  public EnhancedBlob(IBlob instance, EnhancementT enhancement) {
     super(enhancement);
     this.instance = instance;
   }
@@ -115,7 +109,8 @@ public class EnhancedBlob<EnhancementT>
   }
 
   @Override
-  public void setEmbeddedDataSpecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public void setEmbeddedDataSpecifications(
+      List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     instance.setEmbeddedDataSpecifications(embeddedDataSpecifications);
   }
 
@@ -179,10 +174,7 @@ public class EnhancedBlob<EnhancementT>
     visitor.visitBlob(instance);
   }
 
-  public <ContextT> void accept(
-    IVisitorWithContext<ContextT> visitor,
-    ContextT context
-  ) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitBlob(instance, context);
   }
 
@@ -191,9 +183,7 @@ public class EnhancedBlob<EnhancementT>
   }
 
   public <ContextT, T> T transform(
-    ITransformerWithContext<ContextT, T> transformer,
-    ContextT context
-  ) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformBlob(instance, context);
   }
 }

@@ -7,33 +7,26 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
-import java.util.List;
-import aas_core.aas3_0.types.model.IDataElement;
 import java.util.Optional;
 
 /**
  * A property is a data element that has a single value.
  *
  * <p>Constraints:
+ *
  * <ul>
- *   <li> Constraint AASd-007:
- *   If both, the {@link Property#getValue value} and the {@link Property#getValueId valueId} are
- *   present then the value of {@link Property#getValue value} needs to be identical to
- *   the value of the referenced coded value in {@link Property#getValueId valueId}.
+ *   <li>Constraint AASd-007: If both, the {@link #getValue()} and the {@link #getValueId()} are
+ *       present then the value of {@link #getValue()} needs to be identical to the value of the
+ *       referenced coded value in {@link #getValueId()}.
  * </ul>
  */
 public interface IProperty extends IDataElement {
-  /**
-   * Data type of the value
-   */
+  /** Data type of the value */
   DataTypeDefXsd getValueType();
 
   void setValueType(DataTypeDefXsd valueType);
 
-  /**
-   * The value of the property instance.
-   */
+  /** The value of the property instance. */
   Optional<String> getValue();
 
   void setValue(String value);

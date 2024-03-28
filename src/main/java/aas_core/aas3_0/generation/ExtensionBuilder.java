@@ -5,23 +5,20 @@ import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.types.model.*;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-/**
- * Builder for the Extension type.
- */
+/** Builder for the Extension type. */
 public class ExtensionBuilder {
   /**
-   * Identifier of the semantic definition of the element. It is called semantic ID
-   * of the element or also main semantic ID of the element.
+   * Identifier of the semantic definition of the element. It is called semantic ID of the element
+   * or also main semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
   private IReference semanticId;
 
   /**
-   * Identifier of a supplemental semantic definition of the element.
-   * It is called supplemental semantic ID of the element.
+   * Identifier of a supplemental semantic definition of the element. It is called supplemental
+   * semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
@@ -31,10 +28,10 @@ public class ExtensionBuilder {
    * Name of the extension.
    *
    * <p>Constraints:
+   *
    * <ul>
-   *   <li> Constraint AASd-077:
-   *   The name of an extension (Extension/name) within {@link IHasExtensions} needs
-   *   to be unique.
+   *   <li>Constraint AASd-077: The name of an extension (Extension/name) within {@link
+   *       aas_core.aas3_0.types.model.IHasExtensions} needs to be unique.
    * </ul>
    */
   private String name;
@@ -42,24 +39,18 @@ public class ExtensionBuilder {
   /**
    * Type of the value of the extension.
    *
-   * <p>Default: {@link DataTypeDefXsd#STRING}
+   * <p>Default: {@link aas_core.aas3_0.types.enums.DataTypeDefXsd#STRING}
    */
   private DataTypeDefXsd valueType;
 
-  /**
-   * Value of the extension
-   */
+  /** Value of the extension */
   private String value;
 
-  /**
-   * Reference to an element the extension refers to.
-   */
+  /** Reference to an element the extension refers to. */
   private List<IReference> refersTo;
 
   public ExtensionBuilder(String name) {
-    this.name = Objects.requireNonNull(
-      name,
-      "Argument \"name\" must be non-null.");
+    this.name = Objects.requireNonNull(name, "Argument \"name\" must be non-null.");
   }
 
   public ExtensionBuilder setSemanticid(IReference semanticId) {
@@ -89,11 +80,11 @@ public class ExtensionBuilder {
 
   public Extension build() {
     return new Extension(
-      this.name,
-      this.semanticId,
-      this.supplementalSemanticIds,
-      this.valueType,
-      this.value,
-      this.refersTo);
+        this.name,
+        this.semanticId,
+        this.supplementalSemanticIds,
+        this.valueType,
+        this.value,
+        this.refersTo);
   }
 }

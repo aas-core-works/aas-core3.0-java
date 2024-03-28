@@ -5,25 +5,20 @@
 
 package aas_core.aas3_0.types.impl;
 
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
+import aas_core.aas3_0.types.enums.*;
+import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.types.model.IResource;
 import aas_core.aas3_0.visitation.ITransformer;
 import aas_core.aas3_0.visitation.ITransformerWithContext;
-import aas_core.aas3_0.types.enums.*;
-import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
 import java.util.Collections;
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.Objects;
-import aas_core.aas3_0.types.model.IResource;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
- * Resource represents an address to a file (a locator). The value is an URI that
- * can represent an absolute or relative path
+ * Resource represents an address to a file (a locator). The value is an URI that can represent an
+ * absolute or relative path
  */
 public class Resource implements IResource {
   /**
@@ -41,17 +36,11 @@ public class Resource implements IResource {
   private String contentType;
 
   public Resource(String path) {
-    this.path = Objects.requireNonNull(
-      path,
-      "Argument \"path\" must be non-null.");
+    this.path = Objects.requireNonNull(path, "Argument \"path\" must be non-null.");
   }
 
-  public Resource(
-    String path,
-    String contentType) {
-    this.path = Objects.requireNonNull(
-      path,
-      "Argument \"path\" must be non-null.");
+  public Resource(String path, String contentType) {
+    this.path = Objects.requireNonNull(path, "Argument \"path\" must be non-null.");
     this.contentType = contentType;
   }
 
@@ -62,9 +51,7 @@ public class Resource implements IResource {
 
   @Override
   public void setPath(String path) {
-    this.path = Objects.requireNonNull(
-      path,
-      "Argument \"path\" must be non-null.");
+    this.path = Objects.requireNonNull(path, "Argument \"path\" must be non-null.");
   }
 
   @Override
@@ -77,55 +64,43 @@ public class Resource implements IResource {
     this.contentType = contentType;
   }
 
-  /**
-   * Iterate recursively over all the class instances referenced from this instance.
-   */
+  /** Iterate recursively over all the class instances referenced from this instance. */
   public Iterable<IClass> descend() {
     return Collections.emptyList();
   }
 
-  /**
-   * Iterate over all the class instances referenced from this instance.
-   */
+  /** Iterate over all the class instances referenced from this instance. */
   public Iterable<IClass> descendOnce() {
     return Collections.emptyList();
   }
 
-  /**
-   * Accept the {@code visitor} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code visitor} to visit this instance for double dispatch. */
   @Override
   public void accept(IVisitor visitor) {
     visitor.visitResource(this);
   }
 
   /**
-   * Accept the {@code visitor} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code visitor} to visit this instance for double dispatch with the {@code context}.
+   */
   @Override
-  public <ContextT> void accept(
-      IVisitorWithContext<ContextT> visitor,
-      ContextT context) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitResource(this, context);
   }
 
-  /**
-   * Accept the {@code transformer} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code transformer} to visit this instance for double dispatch. */
   @Override
   public <T> T transform(ITransformer<T> transformer) {
     return transformer.transformResource(this);
   }
 
   /**
-   * Accept the {@code transformer} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code transformer} to visit this instance for double dispatch with the {@code
+   * context}.
+   */
   @Override
   public <ContextT, T> T transform(
-      ITransformerWithContext<ContextT, T> transformer,
-      ContextT context) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformResource(this, context);
   }
 }

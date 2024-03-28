@@ -8,17 +8,13 @@ package aas_core.aas3_0.types.enums;
 /**
  * State of an event
  *
- * <p>This element is experimental and therefore may be subject to change or may be
- * removed completely in future versions of the meta-model.
+ * <p>This element is experimental and therefore may be subject to change or may be removed
+ * completely in future versions of the meta-model.
  */
 public enum StateOfEvent {
-  /**
-   * Event is on
-   */
+  /** Event is on */
   ON,
-  /**
-   * Event is off.
-   */
+  /** Event is off. */
   OFF
 }
 

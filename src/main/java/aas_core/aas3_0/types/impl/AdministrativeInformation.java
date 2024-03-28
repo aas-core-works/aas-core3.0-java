@@ -5,80 +5,66 @@
 
 package aas_core.aas3_0.types.impl;
 
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
+import aas_core.aas3_0.types.enums.*;
+import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.types.model.IAdministrativeInformation;
 import aas_core.aas3_0.visitation.ITransformer;
 import aas_core.aas3_0.visitation.ITransformerWithContext;
-import aas_core.aas3_0.types.enums.*;
-import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Objects;
-import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import aas_core.aas3_0.types.model.IAdministrativeInformation;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
- * Administrative meta-information for an element like version
- * information.
+ * Administrative meta-information for an element like version information.
  *
  * <p>Constraints:
+ *
  * <ul>
- *   <li> Constraint AASd-005:
- *   If {@link AdministrativeInformation#getVersion version} is not specified then also {@link AdministrativeInformation#getRevision revision} shall be
- *   unspecified. This means, a revision requires a version. If there is no version
- *   there is no revision neither. Revision is optional.
+ *   <li>Constraint AASd-005: If {@link #getVersion()} is not specified then also {@link
+ *       #getRevision()} shall be unspecified. This means, a revision requires a version. If there
+ *       is no version there is no revision neither. Revision is optional.
  * </ul>
  */
 public class AdministrativeInformation implements IAdministrativeInformation {
-  /**
-   * Embedded data specification.
-   */
+  /** Embedded data specification. */
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
-  /**
-   * Version of the element.
-   */
+  /** Version of the element. */
   private String version;
 
-  /**
-   * Revision of the element.
-   */
+  /** Revision of the element. */
   private String revision;
 
-  /**
-   * The subject ID of the subject responsible for making the element.
-   */
+  /** The subject ID of the subject responsible for making the element. */
   private IReference creator;
 
   /**
    * Identifier of the template that guided the creation of the element.
    *
-   * <p>In case of a submodel the {@link AdministrativeInformation#getTemplateId templateId} is the identifier
-   * of the submodel template ID that guided the creation of the submodel
+   * <p>In case of a submodel the {@link #getTemplateId()} is the identifier of the submodel
+   * template ID that guided the creation of the submodel
    *
-   * <p>The {@link AdministrativeInformation#getTemplateId templateId} is not relevant for validation in Submodels.
-   * For validation the {@link Submodel#getSemanticId semanticId} shall be used.
+   * <p>The {@link #getTemplateId()} is not relevant for validation in Submodels. For validation the
+   * {@link aas_core.aas3_0.types.impl.Submodel#getSemanticId()} shall be used.
    *
-   * <p>Usage of {@link AdministrativeInformation#getTemplateId templateId} is not restricted to submodel instances. So also
-   * the creation of submodel templates can be guided by another submodel template.
+   * <p>Usage of {@link #getTemplateId()} is not restricted to submodel instances. So also the
+   * creation of submodel templates can be guided by another submodel template.
    */
   private String templateId;
 
   public AdministrativeInformation(
-    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-    String version,
-    String revision,
-    IReference creator,
-    String templateId) {
+      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+      String version,
+      String revision,
+      IReference creator,
+      String templateId) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     this.version = version;
     this.revision = revision;
@@ -92,7 +78,8 @@ public class AdministrativeInformation implements IAdministrativeInformation {
   }
 
   @Override
-  public void setEmbeddedDataSpecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public void setEmbeddedDataSpecifications(
+      List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
   }
 
@@ -137,62 +124,50 @@ public class AdministrativeInformation implements IAdministrativeInformation {
   }
 
   /**
-   * Iterate over {@link AdministrativeInformation#embeddedDataSpecifications}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link AdministrativeInformation#embeddedDataSpecifications}, if set, and
+   * otherwise return an empty iterator.
    */
   public Iterable<IEmbeddedDataSpecification> overEmbeddedDataSpecificationsOrEmpty() {
     return getEmbeddedDataSpecifications().orElseGet(Collections::emptyList);
   }
 
-  /**
-   * Iterate recursively over all the class instances referenced from this instance.
-   */
+  /** Iterate recursively over all the class instances referenced from this instance. */
   public Iterable<IClass> descend() {
     return new AdministrativeInformationRecursiveIterable();
   }
 
-  /**
-   * Iterate over all the class instances referenced from this instance.
-   */
+  /** Iterate over all the class instances referenced from this instance. */
   public Iterable<IClass> descendOnce() {
     return new AdministrativeInformationIterable();
   }
 
-  /**
-   * Accept the {@code visitor} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code visitor} to visit this instance for double dispatch. */
   @Override
   public void accept(IVisitor visitor) {
     visitor.visitAdministrativeInformation(this);
   }
 
   /**
-   * Accept the {@code visitor} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code visitor} to visit this instance for double dispatch with the {@code context}.
+   */
   @Override
-  public <ContextT> void accept(
-      IVisitorWithContext<ContextT> visitor,
-      ContextT context) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitAdministrativeInformation(this, context);
   }
 
-  /**
-   * Accept the {@code transformer} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code transformer} to visit this instance for double dispatch. */
   @Override
   public <T> T transform(ITransformer<T> transformer) {
     return transformer.transformAdministrativeInformation(this);
   }
 
   /**
-   * Accept the {@code transformer} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code transformer} to visit this instance for double dispatch with the {@code
+   * context}.
+   */
   @Override
   public <ContextT, T> T transform(
-      ITransformerWithContext<ContextT, T> transformer,
-      ContextT context) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformAdministrativeInformation(this, context);
   }
 
@@ -222,13 +197,14 @@ public class AdministrativeInformation implements IAdministrativeInformation {
       Stream<IClass> memberStream = Stream.empty();
 
       if (embeddedDataSpecifications != null) {
-        memberStream = Stream.concat(memberStream,
-          AdministrativeInformation.this.embeddedDataSpecifications.stream());
+        memberStream =
+            Stream.concat(
+                memberStream, AdministrativeInformation.this.embeddedDataSpecifications.stream());
       }
 
       if (creator != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(AdministrativeInformation.this.creator));
+        memberStream =
+            Stream.concat(memberStream, Stream.<IClass>of(AdministrativeInformation.this.creator));
       }
 
       return memberStream;
@@ -261,16 +237,25 @@ public class AdministrativeInformation implements IAdministrativeInformation {
       Stream<IClass> memberStream = Stream.empty();
 
       if (embeddedDataSpecifications != null) {
-        memberStream = Stream.concat(memberStream,
-          AdministrativeInformation.this.embeddedDataSpecifications.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                AdministrativeInformation.this.embeddedDataSpecifications.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (creator != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(AdministrativeInformation.this.creator),
-            StreamSupport.stream(AdministrativeInformation.this.creator.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(AdministrativeInformation.this.creator),
+                    StreamSupport.stream(
+                        AdministrativeInformation.this.creator.descend().spliterator(), false)));
       }
 
       return memberStream;

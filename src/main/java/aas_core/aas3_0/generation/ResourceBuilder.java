@@ -3,13 +3,9 @@ package aas_core.aas3_0.generation;
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.types.model.*;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-/**
- * Builder for the Resource type.
- */
+/** Builder for the Resource type. */
 public class ResourceBuilder {
   /**
    * Path and name of the resource (with file extension).
@@ -26,9 +22,7 @@ public class ResourceBuilder {
   private String contentType;
 
   public ResourceBuilder(String path) {
-    this.path = Objects.requireNonNull(
-      path,
-      "Argument \"path\" must be non-null.");
+    this.path = Objects.requireNonNull(path, "Argument \"path\" must be non-null.");
   }
 
   public ResourceBuilder setContenttype(String contentType) {
@@ -37,8 +31,6 @@ public class ResourceBuilder {
   }
 
   public Resource build() {
-    return new Resource(
-      this.path,
-      this.contentType);
+    return new Resource(this.path, this.contentType);
   }
 }

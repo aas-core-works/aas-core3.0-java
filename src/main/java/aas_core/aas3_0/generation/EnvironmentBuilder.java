@@ -4,29 +4,20 @@ import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.types.model.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
-/**
- * Builder for the Environment type.
- */
+/** Builder for the Environment type. */
 public class EnvironmentBuilder {
-  /**
-   * Asset administration shell
-   */
+  /** Asset administration shell */
   private List<IAssetAdministrationShell> assetAdministrationShells;
 
-  /**
-   * Submodel
-   */
+  /** Submodel */
   private List<ISubmodel> submodels;
 
-  /**
-   * Concept description
-   */
+  /** Concept description */
   private List<IConceptDescription> conceptDescriptions;
 
-  public EnvironmentBuilder setAssetadministrationshells(List<IAssetAdministrationShell> assetAdministrationShells) {
+  public EnvironmentBuilder setAssetadministrationshells(
+      List<IAssetAdministrationShell> assetAdministrationShells) {
     this.assetAdministrationShells = assetAdministrationShells;
     return this;
   }
@@ -43,8 +34,6 @@ public class EnvironmentBuilder {
 
   public Environment build() {
     return new Environment(
-      this.assetAdministrationShells,
-      this.submodels,
-      this.conceptDescriptions);
+        this.assetAdministrationShells, this.submodels, this.conceptDescriptions);
   }
 }

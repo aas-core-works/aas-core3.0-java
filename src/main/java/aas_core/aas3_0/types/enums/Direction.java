@@ -8,17 +8,13 @@ package aas_core.aas3_0.types.enums;
 /**
  * Direction
  *
- * <p>This element is experimental and therefore may be subject to change or may be
- * removed completely in future versions of the meta-model.
+ * <p>This element is experimental and therefore may be subject to change or may be removed
+ * completely in future versions of the meta-model.
  */
 public enum Direction {
-  /**
-   * Input direction.
-   */
+  /** Input direction. */
   INPUT,
-  /**
-   * Output direction
-   */
+  /** Output direction */
   OUTPUT
 }
 

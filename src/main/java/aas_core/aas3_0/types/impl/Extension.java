@@ -5,42 +5,36 @@
 
 package aas_core.aas3_0.types.impl;
 
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
+import aas_core.aas3_0.types.enums.*;
+import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.types.model.IExtension;
 import aas_core.aas3_0.visitation.ITransformer;
 import aas_core.aas3_0.visitation.ITransformerWithContext;
-import aas_core.aas3_0.types.enums.*;
-import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Objects;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import aas_core.aas3_0.types.model.IExtension;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
-/**
- * Single extension of an element.
- */
+/** Single extension of an element. */
 public class Extension implements IExtension {
   /**
-   * Identifier of the semantic definition of the element. It is called semantic ID
-   * of the element or also main semantic ID of the element.
+   * Identifier of the semantic definition of the element. It is called semantic ID of the element
+   * or also main semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
   private IReference semanticId;
 
   /**
-   * Identifier of a supplemental semantic definition of the element.
-   * It is called supplemental semantic ID of the element.
+   * Identifier of a supplemental semantic definition of the element. It is called supplemental
+   * semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
@@ -50,10 +44,10 @@ public class Extension implements IExtension {
    * Name of the extension.
    *
    * <p>Constraints:
+   *
    * <ul>
-   *   <li> Constraint AASd-077:
-   *   The name of an extension (Extension/name) within {@link IHasExtensions} needs
-   *   to be unique.
+   *   <li>Constraint AASd-077: The name of an extension (Extension/name) within {@link
+   *       aas_core.aas3_0.types.model.IHasExtensions} needs to be unique.
    * </ul>
    */
   private String name;
@@ -61,38 +55,30 @@ public class Extension implements IExtension {
   /**
    * Type of the value of the extension.
    *
-   * <p>Default: {@link DataTypeDefXsd#STRING}
+   * <p>Default: {@link aas_core.aas3_0.types.enums.DataTypeDefXsd#STRING}
    */
   private DataTypeDefXsd valueType;
 
-  /**
-   * Value of the extension
-   */
+  /** Value of the extension */
   private String value;
 
-  /**
-   * Reference to an element the extension refers to.
-   */
+  /** Reference to an element the extension refers to. */
   private List<IReference> refersTo;
 
   public Extension(String name) {
-    this.name = Objects.requireNonNull(
-      name,
-      "Argument \"name\" must be non-null.");
+    this.name = Objects.requireNonNull(name, "Argument \"name\" must be non-null.");
   }
 
   public Extension(
-    String name,
-    IReference semanticId,
-    List<IReference> supplementalSemanticIds,
-    DataTypeDefXsd valueType,
-    String value,
-    List<IReference> refersTo) {
+      String name,
+      IReference semanticId,
+      List<IReference> supplementalSemanticIds,
+      DataTypeDefXsd valueType,
+      String value,
+      List<IReference> refersTo) {
     this.semanticId = semanticId;
     this.supplementalSemanticIds = supplementalSemanticIds;
-    this.name = Objects.requireNonNull(
-      name,
-      "Argument \"name\" must be non-null.");
+    this.name = Objects.requireNonNull(name, "Argument \"name\" must be non-null.");
     this.valueType = valueType;
     this.value = value;
     this.refersTo = refersTo;
@@ -125,9 +111,7 @@ public class Extension implements IExtension {
 
   @Override
   public void setName(String name) {
-    this.name = Objects.requireNonNull(
-      name,
-      "Argument \"name\" must be non-null.");
+    this.name = Objects.requireNonNull(name, "Argument \"name\" must be non-null.");
   }
 
   @Override
@@ -161,77 +145,60 @@ public class Extension implements IExtension {
   }
 
   /**
-   * Iterate over {@link Extension#supplementalSemanticIds}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link Extension#supplementalSemanticIds}, if set, and otherwise return an empty
+   * iterator.
    */
   public Iterable<IReference> overSupplementalSemanticIdsOrEmpty() {
     return getSupplementalSemanticIds().orElseGet(Collections::emptyList);
   }
 
-  /**
-   * Iterate over {@link Extension#refersTo}, if set,
-   * and otherwise return an empty iterator.
-   */
+  /** Iterate over {@link Extension#refersTo}, if set, and otherwise return an empty iterator. */
   public Iterable<IReference> overRefersToOrEmpty() {
     return getRefersTo().orElseGet(Collections::emptyList);
   }
 
-  /**
-   * @return the value type {@link DataTypeDefXsd} or the default value if it has not been set.
-   */
+  /** @return the value type {@link DataTypeDefXsd} or the default value if it has not been set. */
   public DataTypeDefXsd valueTypeOrDefault() {
     return valueType != null ? valueType : DataTypeDefXsd.STRING;
   }
 
-  /**
-   * Iterate recursively over all the class instances referenced from this instance.
-   */
+  /** Iterate recursively over all the class instances referenced from this instance. */
   public Iterable<IClass> descend() {
     return new ExtensionRecursiveIterable();
   }
 
-  /**
-   * Iterate over all the class instances referenced from this instance.
-   */
+  /** Iterate over all the class instances referenced from this instance. */
   public Iterable<IClass> descendOnce() {
     return new ExtensionIterable();
   }
 
-  /**
-   * Accept the {@code visitor} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code visitor} to visit this instance for double dispatch. */
   @Override
   public void accept(IVisitor visitor) {
     visitor.visitExtension(this);
   }
 
   /**
-   * Accept the {@code visitor} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code visitor} to visit this instance for double dispatch with the {@code context}.
+   */
   @Override
-  public <ContextT> void accept(
-      IVisitorWithContext<ContextT> visitor,
-      ContextT context) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitExtension(this, context);
   }
 
-  /**
-   * Accept the {@code transformer} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code transformer} to visit this instance for double dispatch. */
   @Override
   public <T> T transform(ITransformer<T> transformer) {
     return transformer.transformExtension(this);
   }
 
   /**
-   * Accept the {@code transformer} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code transformer} to visit this instance for double dispatch with the {@code
+   * context}.
+   */
   @Override
   public <ContextT, T> T transform(
-      ITransformerWithContext<ContextT, T> transformer,
-      ContextT context) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformExtension(this, context);
   }
 
@@ -261,18 +228,15 @@ public class Extension implements IExtension {
       Stream<IClass> memberStream = Stream.empty();
 
       if (semanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(Extension.this.semanticId));
+        memberStream = Stream.concat(memberStream, Stream.<IClass>of(Extension.this.semanticId));
       }
 
       if (supplementalSemanticIds != null) {
-        memberStream = Stream.concat(memberStream,
-          Extension.this.supplementalSemanticIds.stream());
+        memberStream = Stream.concat(memberStream, Extension.this.supplementalSemanticIds.stream());
       }
 
       if (refersTo != null) {
-        memberStream = Stream.concat(memberStream,
-          Extension.this.refersTo.stream());
+        memberStream = Stream.concat(memberStream, Extension.this.refersTo.stream());
       }
 
       return memberStream;
@@ -305,23 +269,37 @@ public class Extension implements IExtension {
       Stream<IClass> memberStream = Stream.empty();
 
       if (semanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(Extension.this.semanticId),
-            StreamSupport.stream(Extension.this.semanticId.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(Extension.this.semanticId),
+                    StreamSupport.stream(
+                        Extension.this.semanticId.descend().spliterator(), false)));
       }
 
       if (supplementalSemanticIds != null) {
-        memberStream = Stream.concat(memberStream,
-          Extension.this.supplementalSemanticIds.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Extension.this.supplementalSemanticIds.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (refersTo != null) {
-        memberStream = Stream.concat(memberStream,
-          Extension.this.refersTo.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Extension.this.refersTo.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       return memberStream;

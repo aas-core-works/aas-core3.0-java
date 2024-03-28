@@ -5,21 +5,13 @@
 
 package aas_core.aas3_0.types.enums;
 
-/**
- * Enumeration for denoting whether an asset is a type asset or an instance asset.
- */
+/** Enumeration for denoting whether an asset is a type asset or an instance asset. */
 public enum AssetKind {
-  /**
-   * Type asset
-   */
+  /** Type asset */
   TYPE,
-  /**
-   * Instance asset
-   */
+  /** Instance asset */
   INSTANCE,
-  /**
-   * Neither a type asset nor an instance asset
-   */
+  /** Neither a type asset nor an instance asset */
   NOT_APPLICABLE
 }
 

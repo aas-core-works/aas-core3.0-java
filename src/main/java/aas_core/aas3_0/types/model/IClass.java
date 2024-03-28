@@ -9,50 +9,31 @@ import aas_core.aas3_0.visitation.ITransformer;
 import aas_core.aas3_0.visitation.ITransformerWithContext;
 import aas_core.aas3_0.visitation.IVisitor;
 import aas_core.aas3_0.visitation.IVisitorWithContext;
-import java.lang.Iterable;
 
-/**
- * Represent a general class of an AAS model.
- */
+/** Represent a general class of an AAS model. */
 public interface IClass {
   /**
-   * Iterate over all the class instances referenced from this instance
-   * without further recursion.
+   * Iterate over all the class instances referenced from this instance without further recursion.
    */
   Iterable<IClass> descendOnce();
 
-  /**
-   * Iterate recursively over all the class instances referenced from this instance.
-   */
+  /** Iterate recursively over all the class instances referenced from this instance. */
   Iterable<IClass> descend();
 
-  /**
-   * Accept the {@code visitor} to visit this instance
-   * for double dispatch.
-   */
+  /** Accept the {@code visitor} to visit this instance for double dispatch. */
   void accept(IVisitor visitor);
 
-  /**
-   * Accept the visitor to visit this instance for double dispatch
-   * with the {@code context}.
-   */
-  <ContextT> void accept(
-      IVisitorWithContext<ContextT> visitor,
-      ContextT context);
+  /** Accept the visitor to visit this instance for double dispatch with the {@code context}. */
+  <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context);
 
-  /**
-   * Accept the {@code transformer} to transform this instance
-   * for double dispatch.
-   */
+  /** Accept the {@code transformer} to transform this instance for double dispatch. */
   <T> T transform(ITransformer<T> transformer);
 
   /**
-   * Accept the {@code transformer} to visit this instance
-   * for double dispatch with the {@code context}.
+   * Accept the {@code transformer} to visit this instance for double dispatch with the {@code
+   * context}.
    */
-  <ContextT, T> T transform(
-      ITransformerWithContext<ContextT, T> transformer,
-      ContextT context);
+  <ContextT, T> T transform(ITransformerWithContext<ContextT, T> transformer, ContextT context);
 }
 
 /*

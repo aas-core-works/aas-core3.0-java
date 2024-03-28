@@ -5,41 +5,30 @@
 
 package aas_core.aas3_0.types.impl;
 
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
+import aas_core.aas3_0.types.enums.*;
+import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.types.model.IOperationVariable;
 import aas_core.aas3_0.visitation.ITransformer;
 import aas_core.aas3_0.visitation.ITransformerWithContext;
-import aas_core.aas3_0.types.enums.*;
-import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Objects;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import aas_core.aas3_0.types.model.IOperationVariable;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
- * The value of an operation variable is a submodel element that is used as input
- * and/or output variable of an operation.
+ * The value of an operation variable is a submodel element that is used as input and/or output
+ * variable of an operation.
  */
 public class OperationVariable implements IOperationVariable {
-  /**
-   * Describes an argument or result of an operation via a submodel element
-   */
+  /** Describes an argument or result of an operation via a submodel element */
   private ISubmodelElement value;
 
   public OperationVariable(ISubmodelElement value) {
-    this.value = Objects.requireNonNull(
-      value,
-      "Argument \"value\" must be non-null.");
+    this.value = Objects.requireNonNull(value, "Argument \"value\" must be non-null.");
   }
 
   @Override
@@ -49,60 +38,46 @@ public class OperationVariable implements IOperationVariable {
 
   @Override
   public void setValue(ISubmodelElement value) {
-    this.value = Objects.requireNonNull(
-      value,
-      "Argument \"value\" must be non-null.");
+    this.value = Objects.requireNonNull(value, "Argument \"value\" must be non-null.");
   }
 
-  /**
-   * Iterate recursively over all the class instances referenced from this instance.
-   */
+  /** Iterate recursively over all the class instances referenced from this instance. */
   public Iterable<IClass> descend() {
     return new OperationVariableRecursiveIterable();
   }
 
-  /**
-   * Iterate over all the class instances referenced from this instance.
-   */
+  /** Iterate over all the class instances referenced from this instance. */
   public Iterable<IClass> descendOnce() {
     return new OperationVariableIterable();
   }
 
-  /**
-   * Accept the {@code visitor} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code visitor} to visit this instance for double dispatch. */
   @Override
   public void accept(IVisitor visitor) {
     visitor.visitOperationVariable(this);
   }
 
   /**
-   * Accept the {@code visitor} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code visitor} to visit this instance for double dispatch with the {@code context}.
+   */
   @Override
-  public <ContextT> void accept(
-      IVisitorWithContext<ContextT> visitor,
-      ContextT context) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitOperationVariable(this, context);
   }
 
-  /**
-   * Accept the {@code transformer} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code transformer} to visit this instance for double dispatch. */
   @Override
   public <T> T transform(ITransformer<T> transformer) {
     return transformer.transformOperationVariable(this);
   }
 
   /**
-   * Accept the {@code transformer} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code transformer} to visit this instance for double dispatch with the {@code
+   * context}.
+   */
   @Override
   public <ContextT, T> T transform(
-      ITransformerWithContext<ContextT, T> transformer,
-      ContextT context) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformOperationVariable(this, context);
   }
 
@@ -132,8 +107,7 @@ public class OperationVariable implements IOperationVariable {
       Stream<IClass> memberStream = Stream.empty();
 
       if (value != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(OperationVariable.this.value));
+        memberStream = Stream.concat(memberStream, Stream.<IClass>of(OperationVariable.this.value));
       }
 
       return memberStream;
@@ -166,9 +140,13 @@ public class OperationVariable implements IOperationVariable {
       Stream<IClass> memberStream = Stream.empty();
 
       if (value != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(OperationVariable.this.value),
-            StreamSupport.stream(OperationVariable.this.value.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(OperationVariable.this.value),
+                    StreamSupport.stream(
+                        OperationVariable.this.value.descend().spliterator(), false)));
       }
 
       return memberStream;

@@ -7,56 +7,45 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
-import java.util.List;
-import aas_core.aas3_0.types.model.IHasSemantics;
 import java.util.Optional;
 
 /**
- * A qualifier is a type-value-pair that makes additional statements w.r.t. the value
- * of the element.
+ * A qualifier is a type-value-pair that makes additional statements w.r.t. the value of the
+ * element.
  *
  * <p>Constraints:
+ *
  * <ul>
- *   <li> Constraint AASd-006:
- *   If both the {@link Qualifier#getValue value} and the {@link Qualifier#getValueId valueId} of
- *   a {@link Qualifier} are present then the {@link Qualifier#getValue value} needs
- *   to be identical to the value of the referenced coded value
- *   in {@link Qualifier#getValueId valueId}.
- *   <li> Constraint AASd-020:
- *   The value of {@link Qualifier#getValue value} shall be consistent to the data type as
- *   defined in {@link Qualifier#getValueType valueType}.
+ *   <li>Constraint AASd-006: If both the {@link #getValue()} and the {@link #getValueId()} of a
+ *       {@link aas_core.aas3_0.types.impl.Qualifier} are present then the {@link #getValue()} needs
+ *       to be identical to the value of the referenced coded value in {@link #getValueId()}.
+ *   <li>Constraint AASd-020: The value of {@link #getValue()} shall be consistent to the data type
+ *       as defined in {@link #getValueType()}.
  * </ul>
  */
 public interface IQualifier extends IHasSemantics {
   /**
-   * The qualifier kind describes the kind of the qualifier that is applied to the
-   * element.
+   * The qualifier kind describes the kind of the qualifier that is applied to the element.
    *
-   * <p>Default: {@link QualifierKind#CONCEPT_QUALIFIER}
+   * <p>Default: {@link aas_core.aas3_0.types.enums.QualifierKind#CONCEPT_QUALIFIER}
    */
   Optional<QualifierKind> getKind();
 
   void setKind(QualifierKind kind);
 
   /**
-   * The qualifier <em>type</em> describes the type of the qualifier that is applied to
-   * the element.
+   * The qualifier <em>type</em> describes the type of the qualifier that is applied to the element.
    */
   String getType();
 
   void setType(String type);
 
-  /**
-   * Data type of the qualifier value.
-   */
+  /** Data type of the qualifier value. */
   DataTypeDefXsd getValueType();
 
   void setValueType(DataTypeDefXsd valueType);
 
-  /**
-   * The qualifier value is the value of the qualifier.
-   */
+  /** The qualifier value is the value of the qualifier. */
   Optional<String> getValue();
 
   void setValue(String value);

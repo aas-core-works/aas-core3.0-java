@@ -7,35 +7,28 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
-import java.util.List;
-import aas_core.aas3_0.types.model.IHasSemantics;
 import java.util.Optional;
 
 /**
- * A specific asset ID describes a generic supplementary identifying attribute of the
- * asset.
+ * A specific asset ID describes a generic supplementary identifying attribute of the asset.
  *
  * <p>The specific asset ID is not necessarily globally unique.
  *
  * <p>Constraints:
+ *
  * <ul>
- *   <li> Constraint AASd-133:
- *   {@link SpecificAssetId#getExternalSubjectId externalSubjectId} shall be an external reference,
- *   i.e. {@link Reference#getType type} = {@link ReferenceTypes#EXTERNAL_REFERENCE}.
+ *   <li>Constraint AASd-133: {@link #getExternalSubjectId()} shall be an external reference, i.e.
+ *       {@link aas_core.aas3_0.types.impl.Reference#getType()} = {@link
+ *       aas_core.aas3_0.types.enums.ReferenceTypes#EXTERNAL_REFERENCE}.
  * </ul>
  */
 public interface ISpecificAssetId extends IHasSemantics {
-  /**
-   * Name of the identifier
-   */
+  /** Name of the identifier */
   String getName();
 
   void setName(String name);
 
-  /**
-   * The value of the specific asset identifier with the corresponding name.
-   */
+  /** The value of the specific asset identifier with the corresponding name. */
   String getValue();
 
   void setValue(String value);

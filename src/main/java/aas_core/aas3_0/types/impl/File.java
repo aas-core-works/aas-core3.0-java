@@ -5,26 +5,22 @@
 
 package aas_core.aas3_0.types.impl;
 
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
+import aas_core.aas3_0.types.enums.*;
+import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.types.model.IFile;
 import aas_core.aas3_0.visitation.ITransformer;
 import aas_core.aas3_0.visitation.ITransformerWithContext;
-import aas_core.aas3_0.types.enums.*;
-import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Objects;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import aas_core.aas3_0.types.model.IFile;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * A File is a data element that represents an address to a file (a locator).
@@ -32,38 +28,32 @@ import java.util.Objects;
  * <p>The value is an URI that can represent an absolute or relative path.
  */
 public class File implements IFile {
-  /**
-   * An extension of the element.
-   */
+  /** An extension of the element. */
   private List<IExtension> extensions;
 
   /**
-   * The category is a value that gives further meta information
-   * w.r.t. to the class of the element.
-   * It affects the expected existence of attributes and the applicability of
-   * constraints.
+   * The category is a value that gives further meta information w.r.t. to the class of the element.
+   * It affects the expected existence of attributes and the applicability of constraints.
    *
-   * <p>The category is not identical to the semantic definition
-   * ({@link IHasSemantics}) of an element. The category e.g. could denote that
-   * the element is a measurement value whereas the semantic definition of
-   * the element would denote that it is the measured temperature.
+   * <p>The category is not identical to the semantic definition ({@link
+   * aas_core.aas3_0.types.model.IHasSemantics}) of an element. The category e.g. could denote that
+   * the element is a measurement value whereas the semantic definition of the element would denote
+   * that it is the measured temperature.
    */
   private String category;
 
   /**
-   * In case of identifiables this attribute is a short name of the element.
-   * In case of referable this ID is an identifying string of the element within
-   * its name space.
+   * In case of identifiables this attribute is a short name of the element. In case of referable
+   * this ID is an identifying string of the element within its name space.
    *
-   * <p>In case the element is a property and the property has a semantic definition
-   * ({@link IHasSemantics#getSemanticId semanticId}) conformant to IEC61360
-   * the {@link IReferable#getIdShort idShort} is typically identical to the short name in English.
+   * <p>In case the element is a property and the property has a semantic definition ({@link
+   * aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()}) conformant to IEC61360 the {@link
+   * aas_core.aas3_0.types.model.IReferable#getIdShort()} is typically identical to the short name
+   * in English.
    */
   private String idShort;
 
-  /**
-   * Display name. Can be provided in several languages.
-   */
+  /** Display name. Can be provided in several languages. */
   private List<ILangStringNameType> displayName;
 
   /**
@@ -71,27 +61,26 @@ public class File implements IFile {
    *
    * <p>The description can be provided in several languages.
    *
-   * <p>If no description is defined, then the definition of the concept
-   * description that defines the semantics of the element is used.
+   * <p>If no description is defined, then the definition of the concept description that defines
+   * the semantics of the element is used.
    *
-   * <p>Additional information can be provided, e.g., if the element is
-   * qualified and which qualifier types can be expected in which
-   * context or which additional data specification templates are
-   * provided.
+   * <p>Additional information can be provided, e.g., if the element is qualified and which
+   * qualifier types can be expected in which context or which additional data specification
+   * templates are provided.
    */
   private List<ILangStringTextType> description;
 
   /**
-   * Identifier of the semantic definition of the element. It is called semantic ID
-   * of the element or also main semantic ID of the element.
+   * Identifier of the semantic definition of the element. It is called semantic ID of the element
+   * or also main semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
   private IReference semanticId;
 
   /**
-   * Identifier of a supplemental semantic definition of the element.
-   * It is called supplemental semantic ID of the element.
+   * Identifier of a supplemental semantic definition of the element. It is called supplemental
+   * semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
@@ -101,17 +90,15 @@ public class File implements IFile {
    * Additional qualification of a qualifiable element.
    *
    * <p>Constraints:
+   *
    * <ul>
-   *   <li> Constraint AASd-021:
-   *   Every qualifiable can only have one qualifier with the same
-   *   {@link Qualifier#getType type}.
+   *   <li>Constraint AASd-021: Every qualifiable can only have one qualifier with the same {@link
+   *       aas_core.aas3_0.types.impl.Qualifier#getType()}.
    * </ul>
    */
   private List<IQualifier> qualifiers;
 
-  /**
-   * Embedded data specification.
-   */
+  /** Embedded data specification. */
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
   /**
@@ -129,23 +116,22 @@ public class File implements IFile {
   private String contentType;
 
   public File(String contentType) {
-    this.contentType = Objects.requireNonNull(
-      contentType,
-      "Argument \"contentType\" must be non-null.");
+    this.contentType =
+        Objects.requireNonNull(contentType, "Argument \"contentType\" must be non-null.");
   }
 
   public File(
-    String contentType,
-    List<IExtension> extensions,
-    String category,
-    String idShort,
-    List<ILangStringNameType> displayName,
-    List<ILangStringTextType> description,
-    IReference semanticId,
-    List<IReference> supplementalSemanticIds,
-    List<IQualifier> qualifiers,
-    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-    String value) {
+      String contentType,
+      List<IExtension> extensions,
+      String category,
+      String idShort,
+      List<ILangStringNameType> displayName,
+      List<ILangStringTextType> description,
+      IReference semanticId,
+      List<IReference> supplementalSemanticIds,
+      List<IQualifier> qualifiers,
+      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+      String value) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;
@@ -155,9 +141,8 @@ public class File implements IFile {
     this.supplementalSemanticIds = supplementalSemanticIds;
     this.qualifiers = qualifiers;
     this.embeddedDataSpecifications = embeddedDataSpecifications;
-    this.contentType = Objects.requireNonNull(
-      contentType,
-      "Argument \"contentType\" must be non-null.");
+    this.contentType =
+        Objects.requireNonNull(contentType, "Argument \"contentType\" must be non-null.");
     this.value = value;
   }
 
@@ -247,7 +232,8 @@ public class File implements IFile {
   }
 
   @Override
-  public void setEmbeddedDataSpecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public void setEmbeddedDataSpecifications(
+      List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
   }
 
@@ -268,115 +254,88 @@ public class File implements IFile {
 
   @Override
   public void setContentType(String contentType) {
-    this.contentType = Objects.requireNonNull(
-      contentType,
-      "Argument \"contentType\" must be non-null.");
+    this.contentType =
+        Objects.requireNonNull(contentType, "Argument \"contentType\" must be non-null.");
   }
 
-  /**
-   * Iterate over {@link File#extensions}, if set,
-   * and otherwise return an empty iterator.
-   */
+  /** Iterate over {@link File#extensions}, if set, and otherwise return an empty iterator. */
   public Iterable<IExtension> overExtensionsOrEmpty() {
     return getExtensions().orElseGet(Collections::emptyList);
   }
 
-  /**
-   * Iterate over {@link File#displayName}, if set,
-   * and otherwise return an empty iterator.
-   */
+  /** Iterate over {@link File#displayName}, if set, and otherwise return an empty iterator. */
   public Iterable<ILangStringNameType> overDisplayNameOrEmpty() {
     return getDisplayName().orElseGet(Collections::emptyList);
   }
 
-  /**
-   * Iterate over {@link File#description}, if set,
-   * and otherwise return an empty iterator.
-   */
+  /** Iterate over {@link File#description}, if set, and otherwise return an empty iterator. */
   public Iterable<ILangStringTextType> overDescriptionOrEmpty() {
     return getDescription().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link File#supplementalSemanticIds}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link File#supplementalSemanticIds}, if set, and otherwise return an empty
+   * iterator.
    */
   public Iterable<IReference> overSupplementalSemanticIdsOrEmpty() {
     return getSupplementalSemanticIds().orElseGet(Collections::emptyList);
   }
 
-  /**
-   * Iterate over {@link File#qualifiers}, if set,
-   * and otherwise return an empty iterator.
-   */
+  /** Iterate over {@link File#qualifiers}, if set, and otherwise return an empty iterator. */
   public Iterable<IQualifier> overQualifiersOrEmpty() {
     return getQualifiers().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link File#embeddedDataSpecifications}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link File#embeddedDataSpecifications}, if set, and otherwise return an empty
+   * iterator.
    */
   public Iterable<IEmbeddedDataSpecification> overEmbeddedDataSpecificationsOrEmpty() {
     return getEmbeddedDataSpecifications().orElseGet(Collections::emptyList);
   }
 
-  /**
-   * @return the category or the default value if it has not been set.
-   */
+  /** @return the category or the default value if it has not been set. */
   public String categoryOrDefault() {
     return category != null ? category : "VARIABLE";
   }
 
-  /**
-   * Iterate recursively over all the class instances referenced from this instance.
-   */
+  /** Iterate recursively over all the class instances referenced from this instance. */
   public Iterable<IClass> descend() {
     return new FileRecursiveIterable();
   }
 
-  /**
-   * Iterate over all the class instances referenced from this instance.
-   */
+  /** Iterate over all the class instances referenced from this instance. */
   public Iterable<IClass> descendOnce() {
     return new FileIterable();
   }
 
-  /**
-   * Accept the {@code visitor} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code visitor} to visit this instance for double dispatch. */
   @Override
   public void accept(IVisitor visitor) {
     visitor.visitFile(this);
   }
 
   /**
-   * Accept the {@code visitor} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code visitor} to visit this instance for double dispatch with the {@code context}.
+   */
   @Override
-  public <ContextT> void accept(
-      IVisitorWithContext<ContextT> visitor,
-      ContextT context) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitFile(this, context);
   }
 
-  /**
-   * Accept the {@code transformer} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code transformer} to visit this instance for double dispatch. */
   @Override
   public <T> T transform(ITransformer<T> transformer) {
     return transformer.transformFile(this);
   }
 
   /**
-   * Accept the {@code transformer} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code transformer} to visit this instance for double dispatch with the {@code
+   * context}.
+   */
   @Override
   public <ContextT, T> T transform(
-      ITransformerWithContext<ContextT, T> transformer,
-      ContextT context) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformFile(this, context);
   }
 
@@ -406,38 +365,31 @@ public class File implements IFile {
       Stream<IClass> memberStream = Stream.empty();
 
       if (extensions != null) {
-        memberStream = Stream.concat(memberStream,
-          File.this.extensions.stream());
+        memberStream = Stream.concat(memberStream, File.this.extensions.stream());
       }
 
       if (displayName != null) {
-        memberStream = Stream.concat(memberStream,
-          File.this.displayName.stream());
+        memberStream = Stream.concat(memberStream, File.this.displayName.stream());
       }
 
       if (description != null) {
-        memberStream = Stream.concat(memberStream,
-          File.this.description.stream());
+        memberStream = Stream.concat(memberStream, File.this.description.stream());
       }
 
       if (semanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(File.this.semanticId));
+        memberStream = Stream.concat(memberStream, Stream.<IClass>of(File.this.semanticId));
       }
 
       if (supplementalSemanticIds != null) {
-        memberStream = Stream.concat(memberStream,
-          File.this.supplementalSemanticIds.stream());
+        memberStream = Stream.concat(memberStream, File.this.supplementalSemanticIds.stream());
       }
 
       if (qualifiers != null) {
-        memberStream = Stream.concat(memberStream,
-          File.this.qualifiers.stream());
+        memberStream = Stream.concat(memberStream, File.this.qualifiers.stream());
       }
 
       if (embeddedDataSpecifications != null) {
-        memberStream = Stream.concat(memberStream,
-          File.this.embeddedDataSpecifications.stream());
+        memberStream = Stream.concat(memberStream, File.this.embeddedDataSpecifications.stream());
       }
 
       return memberStream;
@@ -470,51 +422,84 @@ public class File implements IFile {
       Stream<IClass> memberStream = Stream.empty();
 
       if (extensions != null) {
-        memberStream = Stream.concat(memberStream,
-          File.this.extensions.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                File.this.extensions.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (displayName != null) {
-        memberStream = Stream.concat(memberStream,
-          File.this.displayName.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                File.this.displayName.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (description != null) {
-        memberStream = Stream.concat(memberStream,
-          File.this.description.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                File.this.description.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (semanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(File.this.semanticId),
-            StreamSupport.stream(File.this.semanticId.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(File.this.semanticId),
+                    StreamSupport.stream(File.this.semanticId.descend().spliterator(), false)));
       }
 
       if (supplementalSemanticIds != null) {
-        memberStream = Stream.concat(memberStream,
-          File.this.supplementalSemanticIds.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                File.this.supplementalSemanticIds.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (qualifiers != null) {
-        memberStream = Stream.concat(memberStream,
-          File.this.qualifiers.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                File.this.qualifiers.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (embeddedDataSpecifications != null) {
-        memberStream = Stream.concat(memberStream,
-          File.this.embeddedDataSpecifications.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                File.this.embeddedDataSpecifications.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       return memberStream;

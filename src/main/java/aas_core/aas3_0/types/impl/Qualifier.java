@@ -5,82 +5,70 @@
 
 package aas_core.aas3_0.types.impl;
 
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
+import aas_core.aas3_0.types.enums.*;
+import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.types.model.IQualifier;
 import aas_core.aas3_0.visitation.ITransformer;
 import aas_core.aas3_0.visitation.ITransformerWithContext;
-import aas_core.aas3_0.types.enums.*;
-import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Objects;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import aas_core.aas3_0.types.model.IQualifier;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
- * A qualifier is a type-value-pair that makes additional statements w.r.t. the value
- * of the element.
+ * A qualifier is a type-value-pair that makes additional statements w.r.t. the value of the
+ * element.
  *
  * <p>Constraints:
+ *
  * <ul>
- *   <li> Constraint AASd-006:
- *   If both the {@link Qualifier#getValue value} and the {@link Qualifier#getValueId valueId} of
- *   a {@link Qualifier} are present then the {@link Qualifier#getValue value} needs
- *   to be identical to the value of the referenced coded value
- *   in {@link Qualifier#getValueId valueId}.
- *   <li> Constraint AASd-020:
- *   The value of {@link Qualifier#getValue value} shall be consistent to the data type as
- *   defined in {@link Qualifier#getValueType valueType}.
+ *   <li>Constraint AASd-006: If both the {@link #getValue()} and the {@link #getValueId()} of a
+ *       {@link aas_core.aas3_0.types.impl.Qualifier} are present then the {@link #getValue()} needs
+ *       to be identical to the value of the referenced coded value in {@link #getValueId()}.
+ *   <li>Constraint AASd-020: The value of {@link #getValue()} shall be consistent to the data type
+ *       as defined in {@link #getValueType()}.
  * </ul>
  */
 public class Qualifier implements IQualifier {
   /**
-   * Identifier of the semantic definition of the element. It is called semantic ID
-   * of the element or also main semantic ID of the element.
+   * Identifier of the semantic definition of the element. It is called semantic ID of the element
+   * or also main semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
   private IReference semanticId;
 
   /**
-   * Identifier of a supplemental semantic definition of the element.
-   * It is called supplemental semantic ID of the element.
+   * Identifier of a supplemental semantic definition of the element. It is called supplemental
+   * semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
   private List<IReference> supplementalSemanticIds;
 
   /**
-   * The qualifier kind describes the kind of the qualifier that is applied to the
-   * element.
+   * The qualifier kind describes the kind of the qualifier that is applied to the element.
    *
-   * <p>Default: {@link QualifierKind#CONCEPT_QUALIFIER}
+   * <p>Default: {@link aas_core.aas3_0.types.enums.QualifierKind#CONCEPT_QUALIFIER}
    */
   private QualifierKind kind;
 
   /**
-   * The qualifier <em>type</em> describes the type of the qualifier that is applied to
-   * the element.
+   * The qualifier <em>type</em> describes the type of the qualifier that is applied to the element.
    */
   private String type;
 
-  /**
-   * Data type of the qualifier value.
-   */
+  /** Data type of the qualifier value. */
   private DataTypeDefXsd valueType;
 
-  /**
-   * The qualifier value is the value of the qualifier.
-   */
+  /** The qualifier value is the value of the qualifier. */
   private String value;
 
   /**
@@ -90,33 +78,23 @@ public class Qualifier implements IQualifier {
    */
   private IReference valueId;
 
-  public Qualifier(
-    String type,
-    DataTypeDefXsd valueType) {
-    this.type = Objects.requireNonNull(
-      type,
-      "Argument \"type\" must be non-null.");
-    this.valueType = Objects.requireNonNull(
-      valueType,
-      "Argument \"valueType\" must be non-null.");
+  public Qualifier(String type, DataTypeDefXsd valueType) {
+    this.type = Objects.requireNonNull(type, "Argument \"type\" must be non-null.");
+    this.valueType = Objects.requireNonNull(valueType, "Argument \"valueType\" must be non-null.");
   }
 
   public Qualifier(
-    String type,
-    DataTypeDefXsd valueType,
-    IReference semanticId,
-    List<IReference> supplementalSemanticIds,
-    QualifierKind kind,
-    String value,
-    IReference valueId) {
+      String type,
+      DataTypeDefXsd valueType,
+      IReference semanticId,
+      List<IReference> supplementalSemanticIds,
+      QualifierKind kind,
+      String value,
+      IReference valueId) {
     this.semanticId = semanticId;
     this.supplementalSemanticIds = supplementalSemanticIds;
-    this.type = Objects.requireNonNull(
-      type,
-      "Argument \"type\" must be non-null.");
-    this.valueType = Objects.requireNonNull(
-      valueType,
-      "Argument \"valueType\" must be non-null.");
+    this.type = Objects.requireNonNull(type, "Argument \"type\" must be non-null.");
+    this.valueType = Objects.requireNonNull(valueType, "Argument \"valueType\" must be non-null.");
     this.kind = kind;
     this.value = value;
     this.valueId = valueId;
@@ -159,9 +137,7 @@ public class Qualifier implements IQualifier {
 
   @Override
   public void setType(String type) {
-    this.type = Objects.requireNonNull(
-      type,
-      "Argument \"type\" must be non-null.");
+    this.type = Objects.requireNonNull(type, "Argument \"type\" must be non-null.");
   }
 
   @Override
@@ -171,9 +147,7 @@ public class Qualifier implements IQualifier {
 
   @Override
   public void setValueType(DataTypeDefXsd valueType) {
-    this.valueType = Objects.requireNonNull(
-      valueType,
-      "Argument \"valueType\" must be non-null.");
+    this.valueType = Objects.requireNonNull(valueType, "Argument \"valueType\" must be non-null.");
   }
 
   @Override
@@ -197,69 +171,55 @@ public class Qualifier implements IQualifier {
   }
 
   /**
-   * Iterate over {@link Qualifier#supplementalSemanticIds}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link Qualifier#supplementalSemanticIds}, if set, and otherwise return an empty
+   * iterator.
    */
   public Iterable<IReference> overSupplementalSemanticIdsOrEmpty() {
     return getSupplementalSemanticIds().orElseGet(Collections::emptyList);
   }
 
-  /**
-   * @return the {@link QualifierKind} or the default value if it has not been set.
-   */
+  /** @return the {@link QualifierKind} or the default value if it has not been set. */
   public QualifierKind kindOrDefault() {
     return kind != null ? kind : QualifierKind.CONCEPT_QUALIFIER;
   }
 
-  /**
-   * Iterate recursively over all the class instances referenced from this instance.
-   */
+  /** Iterate recursively over all the class instances referenced from this instance. */
   public Iterable<IClass> descend() {
     return new QualifierRecursiveIterable();
   }
 
-  /**
-   * Iterate over all the class instances referenced from this instance.
-   */
+  /** Iterate over all the class instances referenced from this instance. */
   public Iterable<IClass> descendOnce() {
     return new QualifierIterable();
   }
 
-  /**
-   * Accept the {@code visitor} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code visitor} to visit this instance for double dispatch. */
   @Override
   public void accept(IVisitor visitor) {
     visitor.visitQualifier(this);
   }
 
   /**
-   * Accept the {@code visitor} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code visitor} to visit this instance for double dispatch with the {@code context}.
+   */
   @Override
-  public <ContextT> void accept(
-      IVisitorWithContext<ContextT> visitor,
-      ContextT context) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitQualifier(this, context);
   }
 
-  /**
-   * Accept the {@code transformer} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code transformer} to visit this instance for double dispatch. */
   @Override
   public <T> T transform(ITransformer<T> transformer) {
     return transformer.transformQualifier(this);
   }
 
   /**
-   * Accept the {@code transformer} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code transformer} to visit this instance for double dispatch with the {@code
+   * context}.
+   */
   @Override
   public <ContextT, T> T transform(
-      ITransformerWithContext<ContextT, T> transformer,
-      ContextT context) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformQualifier(this, context);
   }
 
@@ -289,18 +249,15 @@ public class Qualifier implements IQualifier {
       Stream<IClass> memberStream = Stream.empty();
 
       if (semanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(Qualifier.this.semanticId));
+        memberStream = Stream.concat(memberStream, Stream.<IClass>of(Qualifier.this.semanticId));
       }
 
       if (supplementalSemanticIds != null) {
-        memberStream = Stream.concat(memberStream,
-          Qualifier.this.supplementalSemanticIds.stream());
+        memberStream = Stream.concat(memberStream, Qualifier.this.supplementalSemanticIds.stream());
       }
 
       if (valueId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(Qualifier.this.valueId));
+        memberStream = Stream.concat(memberStream, Stream.<IClass>of(Qualifier.this.valueId));
       }
 
       return memberStream;
@@ -333,22 +290,34 @@ public class Qualifier implements IQualifier {
       Stream<IClass> memberStream = Stream.empty();
 
       if (semanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(Qualifier.this.semanticId),
-            StreamSupport.stream(Qualifier.this.semanticId.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(Qualifier.this.semanticId),
+                    StreamSupport.stream(
+                        Qualifier.this.semanticId.descend().spliterator(), false)));
       }
 
       if (supplementalSemanticIds != null) {
-        memberStream = Stream.concat(memberStream,
-          Qualifier.this.supplementalSemanticIds.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Qualifier.this.supplementalSemanticIds.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (valueId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(Qualifier.this.valueId),
-            StreamSupport.stream(Qualifier.this.valueId.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(Qualifier.this.valueId),
+                    StreamSupport.stream(Qualifier.this.valueId.descend().spliterator(), false)));
       }
 
       return memberStream;

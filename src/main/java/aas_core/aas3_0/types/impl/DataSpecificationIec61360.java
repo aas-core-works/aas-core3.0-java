@@ -5,68 +5,59 @@
 
 package aas_core.aas3_0.types.impl;
 
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
+import aas_core.aas3_0.types.enums.*;
+import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.types.model.IDataSpecificationIec61360;
 import aas_core.aas3_0.visitation.ITransformer;
 import aas_core.aas3_0.visitation.ITransformerWithContext;
-import aas_core.aas3_0.types.enums.*;
-import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Objects;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import aas_core.aas3_0.types.model.IDataSpecificationIec61360;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
- * Content of data specification template for concept descriptions for properties,
- * values and value lists conformant to IEC 61360.
+ * Content of data specification template for concept descriptions for properties, values and value
+ * lists conformant to IEC 61360.
  *
- * <p>IEC61360 requires also a globally unique identifier for a concept
- * description. This ID is not part of the data specification template.
- * Instead the {@link ConceptDescription#getId id} as inherited via
- * {@link IIdentifiable} is used. Same holds for administrative
- * information like the version and revision.
+ * <p>IEC61360 requires also a globally unique identifier for a concept description. This ID is not
+ * part of the data specification template. Instead the {@link
+ * aas_core.aas3_0.types.impl.ConceptDescription#getId()} as inherited via {@link
+ * aas_core.aas3_0.types.model.IIdentifiable} is used. Same holds for administrative information
+ * like the version and revision.
  *
- * <p>{@link ConceptDescription#getIdShort idShort} and {@link DataSpecificationIec61360#getShortName shortName} are very
- * similar. However, in this case the decision was to add
- * {@link DataSpecificationIec61360#getShortName shortName} explicitly to the data specification. Same holds for
- * {@link ConceptDescription#getDisplayName displayName} and
- * {@link DataSpecificationIec61360#getPreferredName preferredName}. Same holds for
- * {@link ConceptDescription#getDescription description} and {@link DataSpecificationIec61360#getDefinition definition}.
+ * <p>{@link aas_core.aas3_0.types.impl.ConceptDescription#getIdShort()} and {@link #getShortName()}
+ * are very similar. However, in this case the decision was to add {@link #getShortName()}
+ * explicitly to the data specification. Same holds for {@link
+ * aas_core.aas3_0.types.impl.ConceptDescription#getDisplayName()} and {@link #getPreferredName()}.
+ * Same holds for {@link aas_core.aas3_0.types.impl.ConceptDescription#getDescription()} and {@link
+ * #getDefinition()}.
  *
  * <p>Constraints:
+ *
  * <ul>
- *   <li> Constraint AASc-3a-010:
- *   If {@link DataSpecificationIec61360#getValue value} is not empty then {@link DataSpecificationIec61360#getValueList valueList} shall be empty
- *   and vice versa.
- *
- *   <p>It is also possible that both {@link DataSpecificationIec61360#getValue value} and {@link DataSpecificationIec61360#getValueList valueList} are
- *   empty. This is the case for concept descriptions that define the semantics
- *   of a property but do not have an enumeration ({@link DataSpecificationIec61360#getValueList valueList}) as
- *   data type.
- *
- *   <p>Although it is possible to define a {@link ConceptDescription} for a
- *   :attr:´value_list`,
- *   it is not possible to reuse this {@link DataSpecificationIec61360#getValueList valueList}.
- *   It is only possible to directly add a {@link DataSpecificationIec61360#getValueList valueList} as data type
- *   to a specific semantic definition of a property.
- *   <li> Constraint AASc-3a-009:
- *   If {@link DataSpecificationIec61360#getDataType dataType} one of:
- *   {@link DataTypeIec61360#INTEGER_MEASURE},
- *   {@link DataTypeIec61360#REAL_MEASURE},
- *   {@link DataTypeIec61360#RATIONAL_MEASURE},
- *   {@link DataTypeIec61360#INTEGER_CURRENCY},
- *   {@link DataTypeIec61360#REAL_CURRENCY}, then {@link DataSpecificationIec61360#getUnit unit} or
- *   {@link DataSpecificationIec61360#getUnitId unitId} shall be defined.
+ *   <li>Constraint AASc-3a-010: If {@link #getValue()} is not empty then {@link #getValueList()}
+ *       shall be empty and vice versa.
+ *       <p>It is also possible that both {@link #getValue()} and {@link #getValueList()} are empty.
+ *       This is the case for concept descriptions that define the semantics of a property but do
+ *       not have an enumeration ({@link #getValueList()}) as data type.
+ *       <p>Although it is possible to define a {@link
+ *       aas_core.aas3_0.types.impl.ConceptDescription} for a :attr:´value_list`, it is not possible
+ *       to reuse this {@link #getValueList()}. It is only possible to directly add a {@link
+ *       #getValueList()} as data type to a specific semantic definition of a property.
+ *   <li>Constraint AASc-3a-009: If {@link #getDataType()} one of: {@link
+ *       aas_core.aas3_0.types.enums.DataTypeIec61360#INTEGER_MEASURE}, {@link
+ *       aas_core.aas3_0.types.enums.DataTypeIec61360#REAL_MEASURE}, {@link
+ *       aas_core.aas3_0.types.enums.DataTypeIec61360#RATIONAL_MEASURE}, {@link
+ *       aas_core.aas3_0.types.enums.DataTypeIec61360#INTEGER_CURRENCY}, {@link
+ *       aas_core.aas3_0.types.enums.DataTypeIec61360#REAL_CURRENCY}, then {@link #getUnit()} or
+ *       {@link #getUnitId()} shall be defined.
  * </ul>
  */
 public class DataSpecificationIec61360 implements IDataSpecificationIec61360 {
@@ -76,51 +67,39 @@ public class DataSpecificationIec61360 implements IDataSpecificationIec61360 {
    * <p>It is advised to keep the length of the name limited to 35 characters.
    *
    * <p>Constraints:
+   *
    * <ul>
-   *   <li> Constraint AASc-3a-002:
-   *   {@link DataSpecificationIec61360#getPreferredName preferredName} shall be provided at least in English.
+   *   <li>Constraint AASc-3a-002: {@link #getPreferredName()} shall be provided at least in
+   *       English.
    * </ul>
    */
   private List<ILangStringPreferredNameTypeIec61360> preferredName;
 
-  /**
-   * Short name
-   */
+  /** Short name */
   private List<ILangStringShortNameTypeIec61360> shortName;
 
-  /**
-   * Unit
-   */
+  /** Unit */
   private String unit;
 
   /**
    * Unique unit id
    *
-   * <p>{@link DataSpecificationIec61360#getUnit unit} and {@link DataSpecificationIec61360#getUnitId unitId} need to be consistent if both attributes
-   * are set
+   * <p>{@link #getUnit()} and {@link #getUnitId()} need to be consistent if both attributes are set
    *
    * <p>It is recommended to use an external reference ID.
    */
   private IReference unitId;
 
-  /**
-   * Source of definition
-   */
+  /** Source of definition */
   private String sourceOfDefinition;
 
-  /**
-   * Symbol
-   */
+  /** Symbol */
   private String symbol;
 
-  /**
-   * Data Type
-   */
+  /** Data Type */
   private DataTypeIec61360 dataType;
 
-  /**
-   * Definition in different languages
-   */
+  /** Definition in different languages */
   private List<ILangStringDefinitionTypeIec61360> definition;
 
   /**
@@ -130,43 +109,35 @@ public class DataSpecificationIec61360 implements IDataSpecificationIec61360 {
    */
   private String valueFormat;
 
-  /**
-   * List of allowed values
-   */
+  /** List of allowed values */
   private IValueList valueList;
 
-  /**
-   * Value
-   */
+  /** Value */
   private String value;
 
-  /**
-   * Set of levels.
-   */
+  /** Set of levels. */
   private ILevelType levelType;
 
   public DataSpecificationIec61360(List<ILangStringPreferredNameTypeIec61360> preferredName) {
-    this.preferredName = Objects.requireNonNull(
-      preferredName,
-      "Argument \"preferredName\" must be non-null.");
+    this.preferredName =
+        Objects.requireNonNull(preferredName, "Argument \"preferredName\" must be non-null.");
   }
 
   public DataSpecificationIec61360(
-    List<ILangStringPreferredNameTypeIec61360> preferredName,
-    List<ILangStringShortNameTypeIec61360> shortName,
-    String unit,
-    IReference unitId,
-    String sourceOfDefinition,
-    String symbol,
-    DataTypeIec61360 dataType,
-    List<ILangStringDefinitionTypeIec61360> definition,
-    String valueFormat,
-    IValueList valueList,
-    String value,
-    ILevelType levelType) {
-    this.preferredName = Objects.requireNonNull(
-      preferredName,
-      "Argument \"preferredName\" must be non-null.");
+      List<ILangStringPreferredNameTypeIec61360> preferredName,
+      List<ILangStringShortNameTypeIec61360> shortName,
+      String unit,
+      IReference unitId,
+      String sourceOfDefinition,
+      String symbol,
+      DataTypeIec61360 dataType,
+      List<ILangStringDefinitionTypeIec61360> definition,
+      String valueFormat,
+      IValueList valueList,
+      String value,
+      ILevelType levelType) {
+    this.preferredName =
+        Objects.requireNonNull(preferredName, "Argument \"preferredName\" must be non-null.");
     this.shortName = shortName;
     this.unit = unit;
     this.unitId = unitId;
@@ -187,9 +158,8 @@ public class DataSpecificationIec61360 implements IDataSpecificationIec61360 {
 
   @Override
   public void setPreferredName(List<ILangStringPreferredNameTypeIec61360> preferredName) {
-    this.preferredName = Objects.requireNonNull(
-      preferredName,
-      "Argument \"preferredName\" must be non-null.");
+    this.preferredName =
+        Objects.requireNonNull(preferredName, "Argument \"preferredName\" must be non-null.");
   }
 
   @Override
@@ -303,70 +273,58 @@ public class DataSpecificationIec61360 implements IDataSpecificationIec61360 {
   }
 
   /**
-   * Iterate over {@link DataSpecificationIec61360#shortName}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link DataSpecificationIec61360#shortName}, if set, and otherwise return an empty
+   * iterator.
    */
   public Iterable<ILangStringShortNameTypeIec61360> overShortNameOrEmpty() {
     return getShortName().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link DataSpecificationIec61360#definition}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link DataSpecificationIec61360#definition}, if set, and otherwise return an
+   * empty iterator.
    */
   public Iterable<ILangStringDefinitionTypeIec61360> overDefinitionOrEmpty() {
     return getDefinition().orElseGet(Collections::emptyList);
   }
 
-  /**
-   * Iterate recursively over all the class instances referenced from this instance.
-   */
+  /** Iterate recursively over all the class instances referenced from this instance. */
   public Iterable<IClass> descend() {
     return new DataSpecificationIec61360RecursiveIterable();
   }
 
-  /**
-   * Iterate over all the class instances referenced from this instance.
-   */
+  /** Iterate over all the class instances referenced from this instance. */
   public Iterable<IClass> descendOnce() {
     return new DataSpecificationIec61360Iterable();
   }
 
-  /**
-   * Accept the {@code visitor} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code visitor} to visit this instance for double dispatch. */
   @Override
   public void accept(IVisitor visitor) {
     visitor.visitDataSpecificationIec61360(this);
   }
 
   /**
-   * Accept the {@code visitor} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code visitor} to visit this instance for double dispatch with the {@code context}.
+   */
   @Override
-  public <ContextT> void accept(
-      IVisitorWithContext<ContextT> visitor,
-      ContextT context) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitDataSpecificationIec61360(this, context);
   }
 
-  /**
-   * Accept the {@code transformer} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code transformer} to visit this instance for double dispatch. */
   @Override
   public <T> T transform(ITransformer<T> transformer) {
     return transformer.transformDataSpecificationIec61360(this);
   }
 
   /**
-   * Accept the {@code transformer} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code transformer} to visit this instance for double dispatch with the {@code
+   * context}.
+   */
   @Override
   public <ContextT, T> T transform(
-      ITransformerWithContext<ContextT, T> transformer,
-      ContextT context) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformDataSpecificationIec61360(this, context);
   }
 
@@ -396,33 +354,35 @@ public class DataSpecificationIec61360 implements IDataSpecificationIec61360 {
       Stream<IClass> memberStream = Stream.empty();
 
       if (preferredName != null) {
-        memberStream = Stream.concat(memberStream,
-          DataSpecificationIec61360.this.preferredName.stream());
+        memberStream =
+            Stream.concat(memberStream, DataSpecificationIec61360.this.preferredName.stream());
       }
 
       if (shortName != null) {
-        memberStream = Stream.concat(memberStream,
-          DataSpecificationIec61360.this.shortName.stream());
+        memberStream =
+            Stream.concat(memberStream, DataSpecificationIec61360.this.shortName.stream());
       }
 
       if (unitId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(DataSpecificationIec61360.this.unitId));
+        memberStream =
+            Stream.concat(memberStream, Stream.<IClass>of(DataSpecificationIec61360.this.unitId));
       }
 
       if (definition != null) {
-        memberStream = Stream.concat(memberStream,
-          DataSpecificationIec61360.this.definition.stream());
+        memberStream =
+            Stream.concat(memberStream, DataSpecificationIec61360.this.definition.stream());
       }
 
       if (valueList != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(DataSpecificationIec61360.this.valueList));
+        memberStream =
+            Stream.concat(
+                memberStream, Stream.<IClass>of(DataSpecificationIec61360.this.valueList));
       }
 
       if (levelType != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(DataSpecificationIec61360.this.levelType));
+        memberStream =
+            Stream.concat(
+                memberStream, Stream.<IClass>of(DataSpecificationIec61360.this.levelType));
       }
 
       return memberStream;
@@ -455,42 +415,69 @@ public class DataSpecificationIec61360 implements IDataSpecificationIec61360 {
       Stream<IClass> memberStream = Stream.empty();
 
       if (preferredName != null) {
-        memberStream = Stream.concat(memberStream,
-          DataSpecificationIec61360.this.preferredName.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                DataSpecificationIec61360.this.preferredName.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (shortName != null) {
-        memberStream = Stream.concat(memberStream,
-          DataSpecificationIec61360.this.shortName.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                DataSpecificationIec61360.this.shortName.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (unitId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(DataSpecificationIec61360.this.unitId),
-            StreamSupport.stream(DataSpecificationIec61360.this.unitId.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(DataSpecificationIec61360.this.unitId),
+                    StreamSupport.stream(
+                        DataSpecificationIec61360.this.unitId.descend().spliterator(), false)));
       }
 
       if (definition != null) {
-        memberStream = Stream.concat(memberStream,
-          DataSpecificationIec61360.this.definition.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                DataSpecificationIec61360.this.definition.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (valueList != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(DataSpecificationIec61360.this.valueList),
-            StreamSupport.stream(DataSpecificationIec61360.this.valueList.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(DataSpecificationIec61360.this.valueList),
+                    StreamSupport.stream(
+                        DataSpecificationIec61360.this.valueList.descend().spliterator(), false)));
       }
 
       if (levelType != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(DataSpecificationIec61360.this.levelType),
-            StreamSupport.stream(DataSpecificationIec61360.this.levelType.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(DataSpecificationIec61360.this.levelType),
+                    StreamSupport.stream(
+                        DataSpecificationIec61360.this.levelType.descend().spliterator(), false)));
       }
 
       return memberStream;

@@ -5,9 +5,7 @@
 
 package aas_core.aas3_0.types.enums;
 
-/**
- * Enumeration listing all XSD anySimpleTypes
- */
+/** Enumeration listing all XSD anySimpleTypes */
 public enum DataTypeDefXsd {
   ANY_URI,
   BASE_64_BINARY,

@@ -7,26 +7,22 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
 import java.util.List;
-import aas_core.aas3_0.types.model.IDataElement;
 import java.util.Optional;
 
 /**
  * A property is a data element that has a multi-language value.
  *
  * <p>Constraints:
+ *
  * <ul>
- *   <li> Constraint AASd-012:
- *   If both the {@link MultiLanguageProperty#getValue value} and the {@link MultiLanguageProperty#getValueId valueId} are present then for each
- *   string in a specific language the meaning must be the same as specified in
- *   {@link MultiLanguageProperty#getValueId valueId}.
+ *   <li>Constraint AASd-012: If both the {@link #getValue()} and the {@link #getValueId()} are
+ *       present then for each string in a specific language the meaning must be the same as
+ *       specified in {@link #getValueId()}.
  * </ul>
  */
 public interface IMultiLanguageProperty extends IDataElement {
-  /**
-   * The value of the property instance.
-   */
+  /** The value of the property instance. */
   Optional<List<ILangStringTextType>> getValue();
 
   void setValue(List<ILangStringTextType> value);
@@ -40,9 +36,7 @@ public interface IMultiLanguageProperty extends IDataElement {
 
   void setValueId(IReference valueId);
 
-  /**
-   * Iterate over value, if set, and otherwise return an empty enumerable.
-   */
+  /** Iterate over value, if set, and otherwise return an empty enumerable. */
   Iterable<ILangStringTextType> overValueOrEmpty();
 }
 

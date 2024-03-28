@@ -7,29 +7,17 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
 import java.util.List;
-import aas_core.aas3_0.types.model.IIdentifiable;
-import aas_core.aas3_0.types.model.IHasDataSpecification;
 import java.util.Optional;
 
-/**
- * An asset administration shell.
- */
-
-public interface IAssetAdministrationShell extends
-    IIdentifiable,
-    IHasDataSpecification {
-  /**
-   * The reference to the AAS the AAS was derived from.
-   */
+/** An asset administration shell. */
+public interface IAssetAdministrationShell extends IIdentifiable, IHasDataSpecification {
+  /** The reference to the AAS the AAS was derived from. */
   Optional<IReference> getDerivedFrom();
 
   void setDerivedFrom(IReference derivedFrom);
 
-  /**
-   * Meta-information about the asset the AAS is representing.
-   */
+  /** Meta-information about the asset the AAS is representing. */
   IAssetInformation getAssetInformation();
 
   void setAssetInformation(IAssetInformation assetInformation);
@@ -47,9 +35,7 @@ public interface IAssetAdministrationShell extends
 
   void setSubmodels(List<IReference> submodels);
 
-  /**
-   * Iterate over submodels, if set, and otherwise return an empty enumerable.
-   */
+  /** Iterate over submodels, if set, and otherwise return an empty enumerable. */
   Iterable<IReference> overSubmodelsOrEmpty();
 }
 

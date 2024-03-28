@@ -3,855 +3,919 @@
  * Do NOT edit or append.
  */
 
-import javax.xml.stream.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.xmlization.Xmlization;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import javax.xml.stream.*;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-
-/** 
-* Test de/serialization of classes contained in a container <i>outside</i>
-* of that container.
-* This is necessary so that we also test the methods that directly de/serialize
-* an instance in rare use cases where it does not reside within a container such
-* as {@link Environment}.
-*/
+/**
+ * Test de/serialization of classes contained in a container <i>outside</i> of that container. This
+ * is necessary so that we also test the methods that directly de/serialize an instance in rare use
+ * cases where it does not reside within a container such as {@link Environment}.
+ */
 public class TestXmlizationOfConcreteClassesOutsideContainer {
-        @Test
-        public void testRoundTripExtension() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final Extension instance = CommonJsonization.loadMaximalExtension();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final Extension  anotherInstance = Xmlization.Deserialize.deserializeExtension (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripExtension
+  @Test
+  public void testRoundTripExtension() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final Extension instance = CommonJsonization.loadMaximalExtension();
 
-        @Test
-        public void testRoundTripAdministrativeInformation() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final AdministrativeInformation instance = CommonJsonization.loadMaximalAdministrativeInformation();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final AdministrativeInformation  anotherInstance = Xmlization.Deserialize.deserializeAdministrativeInformation (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripAdministrativeInformation
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
 
-        @Test
-        public void testRoundTripQualifier() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final Qualifier instance = CommonJsonization.loadMaximalQualifier();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final Qualifier  anotherInstance = Xmlization.Deserialize.deserializeQualifier (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripQualifier
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final Extension anotherInstance = Xmlization.Deserialize.deserializeExtension(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripExtension
 
-        @Test
-        public void testRoundTripAssetAdministrationShell() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final AssetAdministrationShell instance = CommonJsonization.loadMaximalAssetAdministrationShell();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final AssetAdministrationShell  anotherInstance = Xmlization.Deserialize.deserializeAssetAdministrationShell (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripAssetAdministrationShell
+  @Test
+  public void testRoundTripAdministrativeInformation() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final AdministrativeInformation instance =
+        CommonJsonization.loadMaximalAdministrativeInformation();
 
-        @Test
-        public void testRoundTripAssetInformation() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final AssetInformation instance = CommonJsonization.loadMaximalAssetInformation();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final AssetInformation  anotherInstance = Xmlization.Deserialize.deserializeAssetInformation (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripAssetInformation
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
 
-        @Test
-        public void testRoundTripResource() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final Resource instance = CommonJsonization.loadMaximalResource();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final Resource  anotherInstance = Xmlization.Deserialize.deserializeResource (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripResource
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final AdministrativeInformation anotherInstance =
+        Xmlization.Deserialize.deserializeAdministrativeInformation(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripAdministrativeInformation
 
-        @Test
-        public void testRoundTripSpecificAssetId() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final SpecificAssetId instance = CommonJsonization.loadMaximalSpecificAssetId();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final SpecificAssetId  anotherInstance = Xmlization.Deserialize.deserializeSpecificAssetId (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripSpecificAssetId
+  @Test
+  public void testRoundTripQualifier() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final Qualifier instance = CommonJsonization.loadMaximalQualifier();
 
-        @Test
-        public void testRoundTripSubmodel() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final Submodel instance = CommonJsonization.loadMaximalSubmodel();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final Submodel  anotherInstance = Xmlization.Deserialize.deserializeSubmodel (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripSubmodel
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
 
-        @Test
-        public void testRoundTripRelationshipElement() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final RelationshipElement  anotherInstance = Xmlization.Deserialize.deserializeRelationshipElement (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripRelationshipElement
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final Qualifier anotherInstance = Xmlization.Deserialize.deserializeQualifier(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripQualifier
 
-        @Test
-        public void testRoundTripSubmodelElementList() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final SubmodelElementList  anotherInstance = Xmlization.Deserialize.deserializeSubmodelElementList (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripSubmodelElementList
+  @Test
+  public void testRoundTripAssetAdministrationShell() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final AssetAdministrationShell instance =
+        CommonJsonization.loadMaximalAssetAdministrationShell();
 
-        @Test
-        public void testRoundTripSubmodelElementCollection() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final SubmodelElementCollection instance = CommonJsonization.loadMaximalSubmodelElementCollection();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final SubmodelElementCollection  anotherInstance = Xmlization.Deserialize.deserializeSubmodelElementCollection (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripSubmodelElementCollection
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
 
-        @Test
-        public void testRoundTripProperty() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final Property instance = CommonJsonization.loadMaximalProperty();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final Property  anotherInstance = Xmlization.Deserialize.deserializeProperty (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripProperty
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final AssetAdministrationShell anotherInstance =
+        Xmlization.Deserialize.deserializeAssetAdministrationShell(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripAssetAdministrationShell
 
-        @Test
-        public void testRoundTripMultiLanguageProperty() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final MultiLanguageProperty  anotherInstance = Xmlization.Deserialize.deserializeMultiLanguageProperty (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripMultiLanguageProperty
+  @Test
+  public void testRoundTripAssetInformation() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final AssetInformation instance = CommonJsonization.loadMaximalAssetInformation();
 
-        @Test
-        public void testRoundTripRange() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final Range instance = CommonJsonization.loadMaximalRange();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final Range  anotherInstance = Xmlization.Deserialize.deserializeRange (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripRange
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
 
-        @Test
-        public void testRoundTripReferenceElement() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final ReferenceElement  anotherInstance = Xmlization.Deserialize.deserializeReferenceElement (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripReferenceElement
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final AssetInformation anotherInstance =
+        Xmlization.Deserialize.deserializeAssetInformation(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripAssetInformation
 
-        @Test
-        public void testRoundTripBlob() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final Blob instance = CommonJsonization.loadMaximalBlob();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final Blob  anotherInstance = Xmlization.Deserialize.deserializeBlob (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripBlob
+  @Test
+  public void testRoundTripResource() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final Resource instance = CommonJsonization.loadMaximalResource();
 
-        @Test
-        public void testRoundTripFile() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final File instance = CommonJsonization.loadMaximalFile();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final File  anotherInstance = Xmlization.Deserialize.deserializeFile (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripFile
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
 
-        @Test
-        public void testRoundTripAnnotatedRelationshipElement() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMaximalAnnotatedRelationshipElement();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final AnnotatedRelationshipElement  anotherInstance = Xmlization.Deserialize.deserializeAnnotatedRelationshipElement (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripAnnotatedRelationshipElement
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final Resource anotherInstance = Xmlization.Deserialize.deserializeResource(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripResource
 
-        @Test
-        public void testRoundTripEntity() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final Entity instance = CommonJsonization.loadMaximalEntity();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final Entity  anotherInstance = Xmlization.Deserialize.deserializeEntity (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripEntity
+  @Test
+  public void testRoundTripSpecificAssetId() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final SpecificAssetId instance = CommonJsonization.loadMaximalSpecificAssetId();
 
-        @Test
-        public void testRoundTripBasicEventElement() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final BasicEventElement  anotherInstance = Xmlization.Deserialize.deserializeBasicEventElement (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripBasicEventElement
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
 
-        @Test
-        public void testRoundTripOperation() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final Operation instance = CommonJsonization.loadMaximalOperation();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final Operation  anotherInstance = Xmlization.Deserialize.deserializeOperation (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripOperation
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final SpecificAssetId anotherInstance =
+        Xmlization.Deserialize.deserializeSpecificAssetId(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripSpecificAssetId
 
-        @Test
-        public void testRoundTripOperationVariable() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final OperationVariable instance = CommonJsonization.loadMaximalOperationVariable();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final OperationVariable  anotherInstance = Xmlization.Deserialize.deserializeOperationVariable (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripOperationVariable
+  @Test
+  public void testRoundTripSubmodel() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final Submodel instance = CommonJsonization.loadMaximalSubmodel();
 
-        @Test
-        public void testRoundTripCapability() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final Capability instance = CommonJsonization.loadMaximalCapability();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final Capability  anotherInstance = Xmlization.Deserialize.deserializeCapability (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripCapability
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
 
-        @Test
-        public void testRoundTripConceptDescription() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final ConceptDescription  anotherInstance = Xmlization.Deserialize.deserializeConceptDescription (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripConceptDescription
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final Submodel anotherInstance = Xmlization.Deserialize.deserializeSubmodel(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripSubmodel
 
-        @Test
-        public void testRoundTripReference() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final Reference instance = CommonJsonization.loadMaximalReference();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final Reference  anotherInstance = Xmlization.Deserialize.deserializeReference (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripReference
+  @Test
+  public void testRoundTripRelationshipElement() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
 
-        @Test
-        public void testRoundTripKey() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final Key instance = CommonJsonization.loadMaximalKey();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final Key  anotherInstance = Xmlization.Deserialize.deserializeKey (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripKey
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
 
-        @Test
-        public void testRoundTripLangStringNameType() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final LangStringNameType instance = CommonJsonization.loadMaximalLangStringNameType();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final LangStringNameType  anotherInstance = Xmlization.Deserialize.deserializeLangStringNameType (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripLangStringNameType
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final RelationshipElement anotherInstance =
+        Xmlization.Deserialize.deserializeRelationshipElement(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripRelationshipElement
 
-        @Test
-        public void testRoundTripLangStringTextType() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final LangStringTextType instance = CommonJsonization.loadMaximalLangStringTextType();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final LangStringTextType  anotherInstance = Xmlization.Deserialize.deserializeLangStringTextType (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripLangStringTextType
+  @Test
+  public void testRoundTripSubmodelElementList() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
 
-        @Test
-        public void testRoundTripEmbeddedDataSpecification() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final EmbeddedDataSpecification instance = CommonJsonization.loadMaximalEmbeddedDataSpecification();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final EmbeddedDataSpecification  anotherInstance = Xmlization.Deserialize.deserializeEmbeddedDataSpecification (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripEmbeddedDataSpecification
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
 
-        @Test
-        public void testRoundTripLevelType() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final LevelType instance = CommonJsonization.loadMaximalLevelType();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final LevelType  anotherInstance = Xmlization.Deserialize.deserializeLevelType (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripLevelType
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final SubmodelElementList anotherInstance =
+        Xmlization.Deserialize.deserializeSubmodelElementList(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripSubmodelElementList
 
-        @Test
-        public void testRoundTripValueReferencePair() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final ValueReferencePair instance = CommonJsonization.loadMaximalValueReferencePair();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final ValueReferencePair  anotherInstance = Xmlization.Deserialize.deserializeValueReferencePair (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripValueReferencePair
+  @Test
+  public void testRoundTripSubmodelElementCollection() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMaximalSubmodelElementCollection();
 
-        @Test
-        public void testRoundTripValueList() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final ValueList instance = CommonJsonization.loadMaximalValueList();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final ValueList  anotherInstance = Xmlization.Deserialize.deserializeValueList (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripValueList
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
 
-        @Test
-        public void testRoundTripLangStringPreferredNameTypeIec61360() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final LangStringPreferredNameTypeIec61360 instance = CommonJsonization.loadMaximalLangStringPreferredNameTypeIec61360();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final LangStringPreferredNameTypeIec61360  anotherInstance = Xmlization.Deserialize.deserializeLangStringPreferredNameTypeIec61360 (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripLangStringPreferredNameTypeIec61360
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final SubmodelElementCollection anotherInstance =
+        Xmlization.Deserialize.deserializeSubmodelElementCollection(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripSubmodelElementCollection
 
-        @Test
-        public void testRoundTripLangStringShortNameTypeIec61360() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final LangStringShortNameTypeIec61360 instance = CommonJsonization.loadMaximalLangStringShortNameTypeIec61360();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final LangStringShortNameTypeIec61360  anotherInstance = Xmlization.Deserialize.deserializeLangStringShortNameTypeIec61360 (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripLangStringShortNameTypeIec61360
+  @Test
+  public void testRoundTripProperty() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final Property instance = CommonJsonization.loadMaximalProperty();
 
-        @Test
-        public void testRoundTripLangStringDefinitionTypeIec61360() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final LangStringDefinitionTypeIec61360 instance = CommonJsonization.loadMaximalLangStringDefinitionTypeIec61360();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final LangStringDefinitionTypeIec61360  anotherInstance = Xmlization.Deserialize.deserializeLangStringDefinitionTypeIec61360 (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripLangStringDefinitionTypeIec61360
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
 
-        @Test
-        public void testRoundTripDataSpecificationIec61360() throws IOException, XMLStreamException {
-          // We load from JSON here just to jump-start the round trip.
-          // The round-trip goes then over XML.
-          final DataSpecificationIec61360 instance = CommonJsonization.loadMaximalDataSpecificationIec61360();
-  
-          final StringWriter stringOut = new StringWriter();
-          final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
-          final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-  
-          Xmlization.Serialize.to(instance, xmlWriter);
-          // De-serialize from XML
-          final String outputText = stringOut.toString();
-          final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-          final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(new StringReader(outputText));
-          final DataSpecificationIec61360  anotherInstance = Xmlization.Deserialize.deserializeDataSpecificationIec61360 (xmlReader);
-          // Serialize back to XML
-          final StringWriter anotherStringOut = new StringWriter();
-          final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
-          Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
-          assertEquals(outputText, anotherStringOut.toString());
-        }  // public void testRoundTripDataSpecificationIec61360
-}  // class TestXmlizationOfConcreteClassesOutsideContainer
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final Property anotherInstance = Xmlization.Deserialize.deserializeProperty(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripProperty
+
+  @Test
+  public void testRoundTripMultiLanguageProperty() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final MultiLanguageProperty anotherInstance =
+        Xmlization.Deserialize.deserializeMultiLanguageProperty(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripMultiLanguageProperty
+
+  @Test
+  public void testRoundTripRange() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final Range instance = CommonJsonization.loadMaximalRange();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final Range anotherInstance = Xmlization.Deserialize.deserializeRange(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripRange
+
+  @Test
+  public void testRoundTripReferenceElement() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final ReferenceElement anotherInstance =
+        Xmlization.Deserialize.deserializeReferenceElement(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripReferenceElement
+
+  @Test
+  public void testRoundTripBlob() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final Blob instance = CommonJsonization.loadMaximalBlob();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final Blob anotherInstance = Xmlization.Deserialize.deserializeBlob(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripBlob
+
+  @Test
+  public void testRoundTripFile() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final File instance = CommonJsonization.loadMaximalFile();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final File anotherInstance = Xmlization.Deserialize.deserializeFile(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripFile
+
+  @Test
+  public void testRoundTripAnnotatedRelationshipElement() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMaximalAnnotatedRelationshipElement();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final AnnotatedRelationshipElement anotherInstance =
+        Xmlization.Deserialize.deserializeAnnotatedRelationshipElement(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripAnnotatedRelationshipElement
+
+  @Test
+  public void testRoundTripEntity() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final Entity instance = CommonJsonization.loadMaximalEntity();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final Entity anotherInstance = Xmlization.Deserialize.deserializeEntity(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripEntity
+
+  @Test
+  public void testRoundTripBasicEventElement() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final BasicEventElement anotherInstance =
+        Xmlization.Deserialize.deserializeBasicEventElement(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripBasicEventElement
+
+  @Test
+  public void testRoundTripOperation() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final Operation instance = CommonJsonization.loadMaximalOperation();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final Operation anotherInstance = Xmlization.Deserialize.deserializeOperation(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripOperation
+
+  @Test
+  public void testRoundTripOperationVariable() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final OperationVariable instance = CommonJsonization.loadMaximalOperationVariable();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final OperationVariable anotherInstance =
+        Xmlization.Deserialize.deserializeOperationVariable(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripOperationVariable
+
+  @Test
+  public void testRoundTripCapability() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final Capability instance = CommonJsonization.loadMaximalCapability();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final Capability anotherInstance = Xmlization.Deserialize.deserializeCapability(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripCapability
+
+  @Test
+  public void testRoundTripConceptDescription() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final ConceptDescription anotherInstance =
+        Xmlization.Deserialize.deserializeConceptDescription(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripConceptDescription
+
+  @Test
+  public void testRoundTripReference() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final Reference instance = CommonJsonization.loadMaximalReference();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final Reference anotherInstance = Xmlization.Deserialize.deserializeReference(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripReference
+
+  @Test
+  public void testRoundTripKey() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final Key instance = CommonJsonization.loadMaximalKey();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final Key anotherInstance = Xmlization.Deserialize.deserializeKey(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripKey
+
+  @Test
+  public void testRoundTripLangStringNameType() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final LangStringNameType instance = CommonJsonization.loadMaximalLangStringNameType();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final LangStringNameType anotherInstance =
+        Xmlization.Deserialize.deserializeLangStringNameType(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripLangStringNameType
+
+  @Test
+  public void testRoundTripLangStringTextType() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final LangStringTextType instance = CommonJsonization.loadMaximalLangStringTextType();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final LangStringTextType anotherInstance =
+        Xmlization.Deserialize.deserializeLangStringTextType(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripLangStringTextType
+
+  @Test
+  public void testRoundTripEmbeddedDataSpecification() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final EmbeddedDataSpecification instance =
+        CommonJsonization.loadMaximalEmbeddedDataSpecification();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final EmbeddedDataSpecification anotherInstance =
+        Xmlization.Deserialize.deserializeEmbeddedDataSpecification(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripEmbeddedDataSpecification
+
+  @Test
+  public void testRoundTripLevelType() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final LevelType instance = CommonJsonization.loadMaximalLevelType();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final LevelType anotherInstance = Xmlization.Deserialize.deserializeLevelType(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripLevelType
+
+  @Test
+  public void testRoundTripValueReferencePair() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final ValueReferencePair instance = CommonJsonization.loadMaximalValueReferencePair();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final ValueReferencePair anotherInstance =
+        Xmlization.Deserialize.deserializeValueReferencePair(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripValueReferencePair
+
+  @Test
+  public void testRoundTripValueList() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final ValueList instance = CommonJsonization.loadMaximalValueList();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final ValueList anotherInstance = Xmlization.Deserialize.deserializeValueList(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripValueList
+
+  @Test
+  public void testRoundTripLangStringPreferredNameTypeIec61360()
+      throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final LangStringPreferredNameTypeIec61360 instance =
+        CommonJsonization.loadMaximalLangStringPreferredNameTypeIec61360();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final LangStringPreferredNameTypeIec61360 anotherInstance =
+        Xmlization.Deserialize.deserializeLangStringPreferredNameTypeIec61360(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripLangStringPreferredNameTypeIec61360
+
+  @Test
+  public void testRoundTripLangStringShortNameTypeIec61360()
+      throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final LangStringShortNameTypeIec61360 instance =
+        CommonJsonization.loadMaximalLangStringShortNameTypeIec61360();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final LangStringShortNameTypeIec61360 anotherInstance =
+        Xmlization.Deserialize.deserializeLangStringShortNameTypeIec61360(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripLangStringShortNameTypeIec61360
+
+  @Test
+  public void testRoundTripLangStringDefinitionTypeIec61360()
+      throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final LangStringDefinitionTypeIec61360 instance =
+        CommonJsonization.loadMaximalLangStringDefinitionTypeIec61360();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final LangStringDefinitionTypeIec61360 anotherInstance =
+        Xmlization.Deserialize.deserializeLangStringDefinitionTypeIec61360(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripLangStringDefinitionTypeIec61360
+
+  @Test
+  public void testRoundTripDataSpecificationIec61360() throws IOException, XMLStreamException {
+    // We load from JSON here just to jump-start the round trip.
+    // The round-trip goes then over XML.
+    final DataSpecificationIec61360 instance =
+        CommonJsonization.loadMaximalDataSpecificationIec61360();
+
+    final StringWriter stringOut = new StringWriter();
+    final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
+    final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
+
+    Xmlization.Serialize.to(instance, xmlWriter);
+    // De-serialize from XML
+    final String outputText = stringOut.toString();
+    final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final XMLEventReader xmlReader =
+        xmlInputFactory.createXMLEventReader(new StringReader(outputText));
+    final DataSpecificationIec61360 anotherInstance =
+        Xmlization.Deserialize.deserializeDataSpecificationIec61360(xmlReader);
+    // Serialize back to XML
+    final StringWriter anotherStringOut = new StringWriter();
+    final XMLStreamWriter anotherXmlWriter = outputFactory.createXMLStreamWriter(anotherStringOut);
+    Xmlization.Serialize.to(anotherInstance, anotherXmlWriter);
+    assertEquals(outputText, anotherStringOut.toString());
+  } // public void testRoundTripDataSpecificationIec61360
+} // class TestXmlizationOfConcreteClassesOutsideContainer
 
 /*
  * This code has been automatically generated by testgen.
