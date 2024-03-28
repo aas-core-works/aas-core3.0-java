@@ -5,26 +5,22 @@
 
 package aas_core.aas3_0.enhancing;
 
-import java.lang.Iterable;
-import java.util.Optional;
-import java.util.List;
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
-import aas_core.aas3_0.visitation.ITransformer;
-import aas_core.aas3_0.visitation.ITransformerWithContext;
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.visitation.ITransformer;
+import aas_core.aas3_0.visitation.ITransformerWithContext;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
+import java.util.List;
+import java.util.Optional;
 
-public class EnhancedAnnotatedRelationshipElement<EnhancementT>
-  extends Enhanced<EnhancementT>
-  implements IAnnotatedRelationshipElement {
+public class EnhancedAnnotatedRelationshipElement<EnhancementT> extends Enhanced<EnhancementT>
+    implements IAnnotatedRelationshipElement {
   private final IAnnotatedRelationshipElement instance;
 
   public EnhancedAnnotatedRelationshipElement(
-    IAnnotatedRelationshipElement instance,
-    EnhancementT enhancement
-  ) {
+      IAnnotatedRelationshipElement instance, EnhancementT enhancement) {
     super(enhancement);
     this.instance = instance;
   }
@@ -115,7 +111,8 @@ public class EnhancedAnnotatedRelationshipElement<EnhancementT>
   }
 
   @Override
-  public void setEmbeddedDataSpecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public void setEmbeddedDataSpecifications(
+      List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     instance.setEmbeddedDataSpecifications(embeddedDataSpecifications);
   }
 
@@ -189,10 +186,7 @@ public class EnhancedAnnotatedRelationshipElement<EnhancementT>
     visitor.visitAnnotatedRelationshipElement(instance);
   }
 
-  public <ContextT> void accept(
-    IVisitorWithContext<ContextT> visitor,
-    ContextT context
-  ) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitAnnotatedRelationshipElement(instance, context);
   }
 
@@ -201,9 +195,7 @@ public class EnhancedAnnotatedRelationshipElement<EnhancementT>
   }
 
   public <ContextT, T> T transform(
-    ITransformerWithContext<ContextT, T> transformer,
-    ContextT context
-  ) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformAnnotatedRelationshipElement(instance, context);
   }
 }

@@ -7,21 +7,18 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
-import java.util.List;
-import aas_core.aas3_0.types.model.IDataElement;
 import java.util.Optional;
 
 /**
- * A {@link aas_core.aas3_0.types.impl.Blob} is a data element that represents a file that is contained with its
- * source code in the value attribute.
+ * A {@link aas_core.aas3_0.types.impl.Blob} is a data element that represents a file that is
+ * contained with its source code in the value attribute.
  */
 public interface IBlob extends IDataElement {
   /**
    * The value of the {@link aas_core.aas3_0.types.impl.Blob} instance of a blob data element.
    *
-   * <p>In contrast to the file property the file content is stored directly as value
-   * in the {@link aas_core.aas3_0.types.impl.Blob} data element.
+   * <p>In contrast to the file property the file content is stored directly as value in the {@link
+   * aas_core.aas3_0.types.impl.Blob} data element.
    */
   Optional<byte[]> getValue();
 

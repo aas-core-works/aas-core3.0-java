@@ -5,50 +5,41 @@ import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.types.model.*;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-/**
- * Builder for the Qualifier type.
- */
+/** Builder for the Qualifier type. */
 public class QualifierBuilder {
   /**
-   * Identifier of the semantic definition of the element. It is called semantic ID
-   * of the element or also main semantic ID of the element.
+   * Identifier of the semantic definition of the element. It is called semantic ID of the element
+   * or also main semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
   private IReference semanticId;
 
   /**
-   * Identifier of a supplemental semantic definition of the element.
-   * It is called supplemental semantic ID of the element.
+   * Identifier of a supplemental semantic definition of the element. It is called supplemental
+   * semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
   private List<IReference> supplementalSemanticIds;
 
   /**
-   * The qualifier kind describes the kind of the qualifier that is applied to the
-   * element.
+   * The qualifier kind describes the kind of the qualifier that is applied to the element.
    *
    * <p>Default: {@link aas_core.aas3_0.types.enums.QualifierKind#CONCEPT_QUALIFIER}
    */
   private QualifierKind kind;
 
   /**
-   * The qualifier <em>type</em> describes the type of the qualifier that is applied to
-   * the element.
+   * The qualifier <em>type</em> describes the type of the qualifier that is applied to the element.
    */
   private String type;
 
-  /**
-   * Data type of the qualifier value.
-   */
+  /** Data type of the qualifier value. */
   private DataTypeDefXsd valueType;
 
-  /**
-   * The qualifier value is the value of the qualifier.
-   */
+  /** The qualifier value is the value of the qualifier. */
   private String value;
 
   /**
@@ -58,15 +49,9 @@ public class QualifierBuilder {
    */
   private IReference valueId;
 
-  public QualifierBuilder(
-    String type,
-    DataTypeDefXsd valueType) {
-    this.type = Objects.requireNonNull(
-      type,
-      "Argument \"type\" must be non-null.");
-    this.valueType = Objects.requireNonNull(
-      valueType,
-      "Argument \"valueType\" must be non-null.");
+  public QualifierBuilder(String type, DataTypeDefXsd valueType) {
+    this.type = Objects.requireNonNull(type, "Argument \"type\" must be non-null.");
+    this.valueType = Objects.requireNonNull(valueType, "Argument \"valueType\" must be non-null.");
   }
 
   public QualifierBuilder setSemanticid(IReference semanticId) {
@@ -96,12 +81,12 @@ public class QualifierBuilder {
 
   public Qualifier build() {
     return new Qualifier(
-      this.type,
-      this.valueType,
-      this.semanticId,
-      this.supplementalSemanticIds,
-      this.kind,
-      this.value,
-      this.valueId);
+        this.type,
+        this.valueType,
+        this.semanticId,
+        this.supplementalSemanticIds,
+        this.kind,
+        this.value,
+        this.valueId);
   }
 }

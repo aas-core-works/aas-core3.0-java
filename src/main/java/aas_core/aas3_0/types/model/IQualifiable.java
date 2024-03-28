@@ -7,25 +7,22 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
 import java.util.List;
-import aas_core.aas3_0.types.model.IClass;
 import java.util.Optional;
 
 /**
- * The value of a qualifiable element may be further qualified by one or more
- * qualifiers.
+ * The value of a qualifiable element may be further qualified by one or more qualifiers.
  *
  * <p>Constraints:
  *
  * <ul>
- *   <li> Constraint AASd-119:
- *   If any {@link aas_core.aas3_0.types.impl.Qualifier#getKind()} value of {@link #getQualifiers()} is
- *   equal to {@link aas_core.aas3_0.types.enums.QualifierKind#TEMPLATE_QUALIFIER} and the qualified element
- *   inherits from {@link aas_core.aas3_0.types.model.IHasKind} then the qualified element shall be of
- *   kind Template ({@link aas_core.aas3_0.types.model.IHasKind#getKind()} = {@link aas_core.aas3_0.types.enums.ModellingKind#TEMPLATE}).
- *
- *   <p>This constraint is checked at {@link aas_core.aas3_0.types.impl.Submodel}.
+ *   <li>Constraint AASd-119: If any {@link aas_core.aas3_0.types.impl.Qualifier#getKind()} value of
+ *       {@link #getQualifiers()} is equal to {@link
+ *       aas_core.aas3_0.types.enums.QualifierKind#TEMPLATE_QUALIFIER} and the qualified element
+ *       inherits from {@link aas_core.aas3_0.types.model.IHasKind} then the qualified element shall
+ *       be of kind Template ({@link aas_core.aas3_0.types.model.IHasKind#getKind()} = {@link
+ *       aas_core.aas3_0.types.enums.ModellingKind#TEMPLATE}).
+ *       <p>This constraint is checked at {@link aas_core.aas3_0.types.impl.Submodel}.
  * </ul>
  */
 public interface IQualifiable extends IClass {
@@ -35,18 +32,15 @@ public interface IQualifiable extends IClass {
    * <p>Constraints:
    *
    * <ul>
-   *   <li> Constraint AASd-021:
-   *   Every qualifiable can only have one qualifier with the same
-   *   {@link aas_core.aas3_0.types.impl.Qualifier#getType()}.
+   *   <li>Constraint AASd-021: Every qualifiable can only have one qualifier with the same {@link
+   *       aas_core.aas3_0.types.impl.Qualifier#getType()}.
    * </ul>
    */
   Optional<List<IQualifier>> getQualifiers();
 
   void setQualifiers(List<IQualifier> qualifiers);
 
-  /**
-   * Iterate over qualifiers, if set, and otherwise return an empty enumerable.
-   */
+  /** Iterate over qualifiers, if set, and otherwise return an empty enumerable. */
   Iterable<IQualifier> overQualifiersOrEmpty();
 }
 

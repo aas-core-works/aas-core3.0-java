@@ -7,25 +7,15 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
-import java.util.List;
-import aas_core.aas3_0.types.model.IClass;
-import java.util.Optional;
 
-/**
- * Strings with language tags
- */
+/** Strings with language tags */
 public interface IAbstractLangString extends IClass {
-  /**
-   * Language tag conforming to BCP 47
-   */
+  /** Language tag conforming to BCP 47 */
   String getLanguage();
 
   void setLanguage(String language);
 
-  /**
-   * Text in the {@link #getLanguage()}
-   */
+  /** Text in the {@link #getLanguage()} */
   String getText();
 
   void setText(String text);

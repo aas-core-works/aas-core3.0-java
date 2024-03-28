@@ -5,36 +5,29 @@ import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.types.model.*;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-/**
- * Builder for the SpecificAssetId type.
- */
+/** Builder for the SpecificAssetId type. */
 public class SpecificAssetIdBuilder {
   /**
-   * Identifier of the semantic definition of the element. It is called semantic ID
-   * of the element or also main semantic ID of the element.
+   * Identifier of the semantic definition of the element. It is called semantic ID of the element
+   * or also main semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
   private IReference semanticId;
 
   /**
-   * Identifier of a supplemental semantic definition of the element.
-   * It is called supplemental semantic ID of the element.
+   * Identifier of a supplemental semantic definition of the element. It is called supplemental
+   * semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
   private List<IReference> supplementalSemanticIds;
 
-  /**
-   * Name of the identifier
-   */
+  /** Name of the identifier */
   private String name;
 
-  /**
-   * The value of the specific asset identifier with the corresponding name.
-   */
+  /** The value of the specific asset identifier with the corresponding name. */
   private String value;
 
   /**
@@ -44,15 +37,9 @@ public class SpecificAssetIdBuilder {
    */
   private IReference externalSubjectId;
 
-  public SpecificAssetIdBuilder(
-    String name,
-    String value) {
-    this.name = Objects.requireNonNull(
-      name,
-      "Argument \"name\" must be non-null.");
-    this.value = Objects.requireNonNull(
-      value,
-      "Argument \"value\" must be non-null.");
+  public SpecificAssetIdBuilder(String name, String value) {
+    this.name = Objects.requireNonNull(name, "Argument \"name\" must be non-null.");
+    this.value = Objects.requireNonNull(value, "Argument \"value\" must be non-null.");
   }
 
   public SpecificAssetIdBuilder setSemanticid(IReference semanticId) {
@@ -60,7 +47,8 @@ public class SpecificAssetIdBuilder {
     return this;
   }
 
-  public SpecificAssetIdBuilder setSupplementalsemanticids(List<IReference> supplementalSemanticIds) {
+  public SpecificAssetIdBuilder setSupplementalsemanticids(
+      List<IReference> supplementalSemanticIds) {
     this.supplementalSemanticIds = supplementalSemanticIds;
     return this;
   }
@@ -72,10 +60,10 @@ public class SpecificAssetIdBuilder {
 
   public SpecificAssetId build() {
     return new SpecificAssetId(
-      this.name,
-      this.value,
-      this.semanticId,
-      this.supplementalSemanticIds,
-      this.externalSubjectId);
+        this.name,
+        this.value,
+        this.semanticId,
+        this.supplementalSemanticIds,
+        this.externalSubjectId);
   }
 }

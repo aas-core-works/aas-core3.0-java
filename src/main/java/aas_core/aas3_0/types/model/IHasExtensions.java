@@ -7,9 +7,7 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
 import java.util.List;
-import aas_core.aas3_0.types.model.IClass;
 import java.util.Optional;
 
 /**
@@ -18,16 +16,12 @@ import java.util.Optional;
  * <p>Extensions are proprietary, i.e. they do not support global interoperability.
  */
 public interface IHasExtensions extends IClass {
-  /**
-   * An extension of the element.
-   */
+  /** An extension of the element. */
   Optional<List<IExtension>> getExtensions();
 
   void setExtensions(List<IExtension> extensions);
 
-  /**
-   * Iterate over extensions, if set, and otherwise return an empty enumerable.
-   */
+  /** Iterate over extensions, if set, and otherwise return an empty enumerable. */
   Iterable<IExtension> overExtensionsOrEmpty();
 }
 

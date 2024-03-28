@@ -5,10 +5,9 @@
 
 package aas_core.aas3_0.enhancing;
 
-import java.util.function.Function;
-import java.util.Optional;
-import aas_core.aas3_0.enhancing.Unwrapper;
 import aas_core.aas3_0.types.model.*;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Wrap and unwrap the instances of model classes with enhancement.
@@ -20,13 +19,10 @@ public class Enhancer<EnhancementT> extends Unwrapper<EnhancementT> {
 
   /**
    * @param enhancementFactory how to enhance the instances.
-   *
-   * <p>If it returns {@code null}, the instance will not be wrapped. However,
-   * the wrapping will continue recursively.
+   *     <p>If it returns {@code null}, the instance will not be wrapped. However, the wrapping will
+   *     continue recursively.
    */
-  public Enhancer(
-    Function<IClass, Optional<EnhancementT>> enhancementFactory
-  ) {
+  public Enhancer(Function<IClass, Optional<EnhancementT>> enhancementFactory) {
     this.wrapper = new Wrapper<>(enhancementFactory);
   }
 
@@ -35,23 +31,19 @@ public class Enhancer<EnhancementT> extends Unwrapper<EnhancementT> {
    *
    * <p>Double wraps are not allowed to prevent runtime leakage.
    *
-   * <p>If you use references to the instance objects, you have to update them
-   * after the wrapping, as the wrapping is recursive.
+   * <p>If you use references to the instance objects, you have to update them after the wrapping,
+   * as the wrapping is recursive.
    *
    * @param that model instance to be wrapped
    * @return {@code that} instance wrapped recursively with enhancements
    */
-  public IClass wrap(
-    IClass that
-  ) {
+  public IClass wrap(IClass that) {
     IClass wrapped;
     try {
       wrapped = wrapper.transform(that);
     } catch (IllegalArgumentException exception) {
       throw new UnsupportedOperationException(
-        "Expected the wrapped instance to be an instance of IClass, " +
-        "but got: " + that
-      );
+          "Expected the wrapped instance to be an instance of IClass, " + "but got: " + that);
     }
 
     return wrapped;

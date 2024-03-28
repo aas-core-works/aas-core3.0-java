@@ -7,13 +7,8 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
-import java.util.List;
-import aas_core.aas3_0.types.model.IAbstractLangString;
 
-/**
- * String with length 128 maximum and minimum 1 characters and with language tags
- */
+/** String with length 128 maximum and minimum 1 characters and with language tags */
 public interface ILangStringNameType extends IAbstractLangString {
   // Intentionally empty.
 }

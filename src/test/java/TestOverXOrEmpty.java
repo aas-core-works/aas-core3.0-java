@@ -3,3861 +3,3527 @@
  * Do NOT edit or append.
  */
 
-import aas_core.aas3_0.types.impl.*;
-import org.junit.jupiter.api.Test;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import aas_core.aas3_0.types.impl.*;
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.junit.jupiter.api.Test;
+
 public class TestOverXOrEmpty {
-        @Test
-        public void testExtensionoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final Extension instance = CommonJsonization.loadMaximalExtension();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "Extension"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testExtensionoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testExtensionoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final Extension instance = CommonJsonization.loadMinimalExtension();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "Extension"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Extension_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testExtensionoverRefersToOrEmptyNonDefault() throws IOException {
-          final Extension instance = CommonJsonization.loadMaximalExtension();
-          if(!instance.getRefersTo().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "refersTo is not present " +
-              "in the maximal example of " +
-              "Extension"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overRefersToOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getRefersTo().get().size());
-        }  // public void testExtensionoverRefersToOrEmptyNonDefault
-
-        @Test
-        public void testExtensionoverRefersToOrEmptyDefault() throws IOException {
-          final Extension instance = CommonJsonization.loadMinimalExtension();
-          if(instance.getRefersTo().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "refersTo is present " +
-              "in the minimal example of " +
-              "Extension"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overRefersToOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Extension_overRefersToOrEmpty_default
-
-        @Test
-        public void testAdministrativeInformationoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final AdministrativeInformation instance = CommonJsonization.loadMaximalAdministrativeInformation();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "AdministrativeInformation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testAdministrativeInformationoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testAdministrativeInformationoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final AdministrativeInformation instance = CommonJsonization.loadMinimalAdministrativeInformation();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "AdministrativeInformation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AdministrativeInformation_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testQualifieroverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final Qualifier instance = CommonJsonization.loadMaximalQualifier();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "Qualifier"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testQualifieroverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testQualifieroverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final Qualifier instance = CommonJsonization.loadMinimalQualifier();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "Qualifier"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Qualifier_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testAssetAdministrationShelloverExtensionsOrEmptyNonDefault() throws IOException {
-          final AssetAdministrationShell instance = CommonJsonization.loadMaximalAssetAdministrationShell();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "AssetAdministrationShell"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testAssetAdministrationShelloverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testAssetAdministrationShelloverExtensionsOrEmptyDefault() throws IOException {
-          final AssetAdministrationShell instance = CommonJsonization.loadMinimalAssetAdministrationShell();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "AssetAdministrationShell"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AssetAdministrationShell_overExtensionsOrEmpty_default
-
-        @Test
-        public void testAssetAdministrationShelloverDisplayNameOrEmptyNonDefault() throws IOException {
-          final AssetAdministrationShell instance = CommonJsonization.loadMaximalAssetAdministrationShell();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "AssetAdministrationShell"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testAssetAdministrationShelloverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testAssetAdministrationShelloverDisplayNameOrEmptyDefault() throws IOException {
-          final AssetAdministrationShell instance = CommonJsonization.loadMinimalAssetAdministrationShell();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "AssetAdministrationShell"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AssetAdministrationShell_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testAssetAdministrationShelloverDescriptionOrEmptyNonDefault() throws IOException {
-          final AssetAdministrationShell instance = CommonJsonization.loadMaximalAssetAdministrationShell();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "AssetAdministrationShell"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testAssetAdministrationShelloverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testAssetAdministrationShelloverDescriptionOrEmptyDefault() throws IOException {
-          final AssetAdministrationShell instance = CommonJsonization.loadMinimalAssetAdministrationShell();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "AssetAdministrationShell"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AssetAdministrationShell_overDescriptionOrEmpty_default
-
-        @Test
-        public void testAssetAdministrationShelloverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final AssetAdministrationShell instance = CommonJsonization.loadMaximalAssetAdministrationShell();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "AssetAdministrationShell"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testAssetAdministrationShelloverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testAssetAdministrationShelloverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final AssetAdministrationShell instance = CommonJsonization.loadMinimalAssetAdministrationShell();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "AssetAdministrationShell"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AssetAdministrationShell_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testAssetAdministrationShelloverSubmodelsOrEmptyNonDefault() throws IOException {
-          final AssetAdministrationShell instance = CommonJsonization.loadMaximalAssetAdministrationShell();
-          if(!instance.getSubmodels().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "submodels is not present " +
-              "in the maximal example of " +
-              "AssetAdministrationShell"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSubmodelsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSubmodels().get().size());
-        }  // public void testAssetAdministrationShelloverSubmodelsOrEmptyNonDefault
-
-        @Test
-        public void testAssetAdministrationShelloverSubmodelsOrEmptyDefault() throws IOException {
-          final AssetAdministrationShell instance = CommonJsonization.loadMinimalAssetAdministrationShell();
-          if(instance.getSubmodels().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "submodels is present " +
-              "in the minimal example of " +
-              "AssetAdministrationShell"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSubmodelsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AssetAdministrationShell_overSubmodelsOrEmpty_default
-
-        // The maximal example of AssetInformation contains no specificAssetIds,
-        // so we can not generate the corresponding test case 
-        // Test_AssetInformation_overSpecificAssetIdsOrEmpty_non_default.
-
-        @Test
-        public void testAssetInformationoverSpecificAssetIdsOrEmptyDefault() throws IOException {
-          final AssetInformation instance = CommonJsonization.loadMinimalAssetInformation();
-          if(instance.getSpecificAssetIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "specificAssetIds is present " +
-              "in the minimal example of " +
-              "AssetInformation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSpecificAssetIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AssetInformation_overSpecificAssetIdsOrEmpty_default
-
-        @Test
-        public void testSpecificAssetIdoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final SpecificAssetId instance = CommonJsonization.loadMaximalSpecificAssetId();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "SpecificAssetId"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testSpecificAssetIdoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testSpecificAssetIdoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final SpecificAssetId instance = CommonJsonization.loadMinimalSpecificAssetId();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "SpecificAssetId"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SpecificAssetId_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testSubmodeloverExtensionsOrEmptyNonDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMaximalSubmodel();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testSubmodeloverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testSubmodeloverExtensionsOrEmptyDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMinimalSubmodel();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Submodel_overExtensionsOrEmpty_default
-
-        @Test
-        public void testSubmodeloverDisplayNameOrEmptyNonDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMaximalSubmodel();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testSubmodeloverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testSubmodeloverDisplayNameOrEmptyDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMinimalSubmodel();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Submodel_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testSubmodeloverDescriptionOrEmptyNonDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMaximalSubmodel();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testSubmodeloverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testSubmodeloverDescriptionOrEmptyDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMinimalSubmodel();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Submodel_overDescriptionOrEmpty_default
-
-        @Test
-        public void testSubmodeloverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMaximalSubmodel();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testSubmodeloverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testSubmodeloverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMinimalSubmodel();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Submodel_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testSubmodeloverQualifiersOrEmptyNonDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMaximalSubmodel();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testSubmodeloverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testSubmodeloverQualifiersOrEmptyDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMinimalSubmodel();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Submodel_overQualifiersOrEmpty_default
-
-        @Test
-        public void testSubmodeloverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMaximalSubmodel();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testSubmodeloverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testSubmodeloverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMinimalSubmodel();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Submodel_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testSubmodeloverSubmodelElementsOrEmptyNonDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMaximalSubmodel();
-          if(!instance.getSubmodelElements().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "submodelElements is not present " +
-              "in the maximal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSubmodelElementsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSubmodelElements().get().size());
-        }  // public void testSubmodeloverSubmodelElementsOrEmptyNonDefault
-
-        @Test
-        public void testSubmodeloverSubmodelElementsOrEmptyDefault() throws IOException {
-          final Submodel instance = CommonJsonization.loadMinimalSubmodel();
-          if(instance.getSubmodelElements().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "submodelElements is present " +
-              "in the minimal example of " +
-              "Submodel"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSubmodelElementsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Submodel_overSubmodelElementsOrEmpty_default
-
-        @Test
-        public void testRelationshipElementoverExtensionsOrEmptyNonDefault() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "RelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testRelationshipElementoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testRelationshipElementoverExtensionsOrEmptyDefault() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMinimalRelationshipElement();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "RelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_RelationshipElement_overExtensionsOrEmpty_default
-
-        @Test
-        public void testRelationshipElementoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "RelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testRelationshipElementoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testRelationshipElementoverDisplayNameOrEmptyDefault() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMinimalRelationshipElement();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "RelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_RelationshipElement_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testRelationshipElementoverDescriptionOrEmptyNonDefault() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "RelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testRelationshipElementoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testRelationshipElementoverDescriptionOrEmptyDefault() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMinimalRelationshipElement();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "RelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_RelationshipElement_overDescriptionOrEmpty_default
-
-        @Test
-        public void testRelationshipElementoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "RelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testRelationshipElementoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testRelationshipElementoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMinimalRelationshipElement();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "RelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_RelationshipElement_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testRelationshipElementoverQualifiersOrEmptyNonDefault() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "RelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testRelationshipElementoverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testRelationshipElementoverQualifiersOrEmptyDefault() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMinimalRelationshipElement();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "RelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_RelationshipElement_overQualifiersOrEmpty_default
-
-        @Test
-        public void testRelationshipElementoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "RelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testRelationshipElementoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testRelationshipElementoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMinimalRelationshipElement();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "RelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_RelationshipElement_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testSubmodelElementListoverExtensionsOrEmptyNonDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testSubmodelElementListoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementListoverExtensionsOrEmptyDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementList_overExtensionsOrEmpty_default
-
-        @Test
-        public void testSubmodelElementListoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testSubmodelElementListoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementListoverDisplayNameOrEmptyDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementList_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testSubmodelElementListoverDescriptionOrEmptyNonDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testSubmodelElementListoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementListoverDescriptionOrEmptyDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementList_overDescriptionOrEmpty_default
-
-        @Test
-        public void testSubmodelElementListoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testSubmodelElementListoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementListoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementList_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testSubmodelElementListoverQualifiersOrEmptyNonDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testSubmodelElementListoverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementListoverQualifiersOrEmptyDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementList_overQualifiersOrEmpty_default
-
-        @Test
-        public void testSubmodelElementListoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testSubmodelElementListoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementListoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementList_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testSubmodelElementListoverValueOrEmptyNonDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
-          if(!instance.getValue().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "value is not present " +
-              "in the maximal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overValueOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getValue().get().size());
-        }  // public void testSubmodelElementListoverValueOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementListoverValueOrEmptyDefault() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
-          if(instance.getValue().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "value is present " +
-              "in the minimal example of " +
-              "SubmodelElementList"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overValueOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementList_overValueOrEmpty_default
-
-        @Test
-        public void testSubmodelElementCollectionoverExtensionsOrEmptyNonDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMaximalSubmodelElementCollection();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testSubmodelElementCollectionoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementCollectionoverExtensionsOrEmptyDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMinimalSubmodelElementCollection();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementCollection_overExtensionsOrEmpty_default
-
-        @Test
-        public void testSubmodelElementCollectionoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMaximalSubmodelElementCollection();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testSubmodelElementCollectionoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementCollectionoverDisplayNameOrEmptyDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMinimalSubmodelElementCollection();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementCollection_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testSubmodelElementCollectionoverDescriptionOrEmptyNonDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMaximalSubmodelElementCollection();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testSubmodelElementCollectionoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementCollectionoverDescriptionOrEmptyDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMinimalSubmodelElementCollection();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementCollection_overDescriptionOrEmpty_default
-
-        @Test
-        public void testSubmodelElementCollectionoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMaximalSubmodelElementCollection();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testSubmodelElementCollectionoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementCollectionoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMinimalSubmodelElementCollection();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementCollection_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testSubmodelElementCollectionoverQualifiersOrEmptyNonDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMaximalSubmodelElementCollection();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testSubmodelElementCollectionoverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementCollectionoverQualifiersOrEmptyDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMinimalSubmodelElementCollection();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementCollection_overQualifiersOrEmpty_default
-
-        @Test
-        public void testSubmodelElementCollectionoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMaximalSubmodelElementCollection();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testSubmodelElementCollectionoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementCollectionoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMinimalSubmodelElementCollection();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementCollection_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testSubmodelElementCollectionoverValueOrEmptyNonDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMaximalSubmodelElementCollection();
-          if(!instance.getValue().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "value is not present " +
-              "in the maximal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overValueOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getValue().get().size());
-        }  // public void testSubmodelElementCollectionoverValueOrEmptyNonDefault
-
-        @Test
-        public void testSubmodelElementCollectionoverValueOrEmptyDefault() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMinimalSubmodelElementCollection();
-          if(instance.getValue().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "value is present " +
-              "in the minimal example of " +
-              "SubmodelElementCollection"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overValueOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_SubmodelElementCollection_overValueOrEmpty_default
-
-        @Test
-        public void testPropertyoverExtensionsOrEmptyNonDefault() throws IOException {
-          final Property instance = CommonJsonization.loadMaximalProperty();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "Property"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testPropertyoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testPropertyoverExtensionsOrEmptyDefault() throws IOException {
-          final Property instance = CommonJsonization.loadMinimalProperty();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "Property"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Property_overExtensionsOrEmpty_default
-
-        @Test
-        public void testPropertyoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final Property instance = CommonJsonization.loadMaximalProperty();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "Property"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testPropertyoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testPropertyoverDisplayNameOrEmptyDefault() throws IOException {
-          final Property instance = CommonJsonization.loadMinimalProperty();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "Property"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Property_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testPropertyoverDescriptionOrEmptyNonDefault() throws IOException {
-          final Property instance = CommonJsonization.loadMaximalProperty();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "Property"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testPropertyoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testPropertyoverDescriptionOrEmptyDefault() throws IOException {
-          final Property instance = CommonJsonization.loadMinimalProperty();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "Property"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Property_overDescriptionOrEmpty_default
-
-        @Test
-        public void testPropertyoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final Property instance = CommonJsonization.loadMaximalProperty();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "Property"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testPropertyoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testPropertyoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final Property instance = CommonJsonization.loadMinimalProperty();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "Property"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Property_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testPropertyoverQualifiersOrEmptyNonDefault() throws IOException {
-          final Property instance = CommonJsonization.loadMaximalProperty();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "Property"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testPropertyoverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testPropertyoverQualifiersOrEmptyDefault() throws IOException {
-          final Property instance = CommonJsonization.loadMinimalProperty();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "Property"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Property_overQualifiersOrEmpty_default
-
-        @Test
-        public void testPropertyoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final Property instance = CommonJsonization.loadMaximalProperty();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "Property"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testPropertyoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testPropertyoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final Property instance = CommonJsonization.loadMinimalProperty();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "Property"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Property_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testMultiLanguagePropertyoverExtensionsOrEmptyNonDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testMultiLanguagePropertyoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testMultiLanguagePropertyoverExtensionsOrEmptyDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_MultiLanguageProperty_overExtensionsOrEmpty_default
-
-        @Test
-        public void testMultiLanguagePropertyoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testMultiLanguagePropertyoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testMultiLanguagePropertyoverDisplayNameOrEmptyDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_MultiLanguageProperty_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testMultiLanguagePropertyoverDescriptionOrEmptyNonDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testMultiLanguagePropertyoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testMultiLanguagePropertyoverDescriptionOrEmptyDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_MultiLanguageProperty_overDescriptionOrEmpty_default
-
-        @Test
-        public void testMultiLanguagePropertyoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testMultiLanguagePropertyoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testMultiLanguagePropertyoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_MultiLanguageProperty_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testMultiLanguagePropertyoverQualifiersOrEmptyNonDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testMultiLanguagePropertyoverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testMultiLanguagePropertyoverQualifiersOrEmptyDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_MultiLanguageProperty_overQualifiersOrEmpty_default
-
-        @Test
-        public void testMultiLanguagePropertyoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testMultiLanguagePropertyoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testMultiLanguagePropertyoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_MultiLanguageProperty_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testMultiLanguagePropertyoverValueOrEmptyNonDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
-          if(!instance.getValue().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "value is not present " +
-              "in the maximal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overValueOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getValue().get().size());
-        }  // public void testMultiLanguagePropertyoverValueOrEmptyNonDefault
-
-        @Test
-        public void testMultiLanguagePropertyoverValueOrEmptyDefault() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
-          if(instance.getValue().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "value is present " +
-              "in the minimal example of " +
-              "MultiLanguageProperty"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overValueOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_MultiLanguageProperty_overValueOrEmpty_default
-
-        @Test
-        public void testRangeoverExtensionsOrEmptyNonDefault() throws IOException {
-          final Range instance = CommonJsonization.loadMaximalRange();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "Range"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testRangeoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testRangeoverExtensionsOrEmptyDefault() throws IOException {
-          final Range instance = CommonJsonization.loadMinimalRange();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "Range"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Range_overExtensionsOrEmpty_default
-
-        @Test
-        public void testRangeoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final Range instance = CommonJsonization.loadMaximalRange();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "Range"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testRangeoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testRangeoverDisplayNameOrEmptyDefault() throws IOException {
-          final Range instance = CommonJsonization.loadMinimalRange();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "Range"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Range_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testRangeoverDescriptionOrEmptyNonDefault() throws IOException {
-          final Range instance = CommonJsonization.loadMaximalRange();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "Range"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testRangeoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testRangeoverDescriptionOrEmptyDefault() throws IOException {
-          final Range instance = CommonJsonization.loadMinimalRange();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "Range"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Range_overDescriptionOrEmpty_default
-
-        @Test
-        public void testRangeoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final Range instance = CommonJsonization.loadMaximalRange();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "Range"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testRangeoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testRangeoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final Range instance = CommonJsonization.loadMinimalRange();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "Range"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Range_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testRangeoverQualifiersOrEmptyNonDefault() throws IOException {
-          final Range instance = CommonJsonization.loadMaximalRange();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "Range"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testRangeoverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testRangeoverQualifiersOrEmptyDefault() throws IOException {
-          final Range instance = CommonJsonization.loadMinimalRange();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "Range"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Range_overQualifiersOrEmpty_default
-
-        @Test
-        public void testRangeoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final Range instance = CommonJsonization.loadMaximalRange();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "Range"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testRangeoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testRangeoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final Range instance = CommonJsonization.loadMinimalRange();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "Range"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Range_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testReferenceElementoverExtensionsOrEmptyNonDefault() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "ReferenceElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testReferenceElementoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testReferenceElementoverExtensionsOrEmptyDefault() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMinimalReferenceElement();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "ReferenceElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_ReferenceElement_overExtensionsOrEmpty_default
-
-        @Test
-        public void testReferenceElementoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "ReferenceElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testReferenceElementoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testReferenceElementoverDisplayNameOrEmptyDefault() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMinimalReferenceElement();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "ReferenceElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_ReferenceElement_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testReferenceElementoverDescriptionOrEmptyNonDefault() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "ReferenceElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testReferenceElementoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testReferenceElementoverDescriptionOrEmptyDefault() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMinimalReferenceElement();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "ReferenceElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_ReferenceElement_overDescriptionOrEmpty_default
-
-        @Test
-        public void testReferenceElementoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "ReferenceElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testReferenceElementoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testReferenceElementoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMinimalReferenceElement();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "ReferenceElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_ReferenceElement_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testReferenceElementoverQualifiersOrEmptyNonDefault() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "ReferenceElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testReferenceElementoverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testReferenceElementoverQualifiersOrEmptyDefault() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMinimalReferenceElement();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "ReferenceElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_ReferenceElement_overQualifiersOrEmpty_default
-
-        @Test
-        public void testReferenceElementoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "ReferenceElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testReferenceElementoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testReferenceElementoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMinimalReferenceElement();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "ReferenceElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_ReferenceElement_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testBloboverExtensionsOrEmptyNonDefault() throws IOException {
-          final Blob instance = CommonJsonization.loadMaximalBlob();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "Blob"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testBloboverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testBloboverExtensionsOrEmptyDefault() throws IOException {
-          final Blob instance = CommonJsonization.loadMinimalBlob();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "Blob"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Blob_overExtensionsOrEmpty_default
-
-        @Test
-        public void testBloboverDisplayNameOrEmptyNonDefault() throws IOException {
-          final Blob instance = CommonJsonization.loadMaximalBlob();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "Blob"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testBloboverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testBloboverDisplayNameOrEmptyDefault() throws IOException {
-          final Blob instance = CommonJsonization.loadMinimalBlob();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "Blob"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Blob_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testBloboverDescriptionOrEmptyNonDefault() throws IOException {
-          final Blob instance = CommonJsonization.loadMaximalBlob();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "Blob"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testBloboverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testBloboverDescriptionOrEmptyDefault() throws IOException {
-          final Blob instance = CommonJsonization.loadMinimalBlob();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "Blob"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Blob_overDescriptionOrEmpty_default
-
-        @Test
-        public void testBloboverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final Blob instance = CommonJsonization.loadMaximalBlob();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "Blob"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testBloboverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testBloboverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final Blob instance = CommonJsonization.loadMinimalBlob();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "Blob"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Blob_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testBloboverQualifiersOrEmptyNonDefault() throws IOException {
-          final Blob instance = CommonJsonization.loadMaximalBlob();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "Blob"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testBloboverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testBloboverQualifiersOrEmptyDefault() throws IOException {
-          final Blob instance = CommonJsonization.loadMinimalBlob();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "Blob"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Blob_overQualifiersOrEmpty_default
-
-        @Test
-        public void testBloboverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final Blob instance = CommonJsonization.loadMaximalBlob();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "Blob"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testBloboverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testBloboverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final Blob instance = CommonJsonization.loadMinimalBlob();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "Blob"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Blob_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testFileoverExtensionsOrEmptyNonDefault() throws IOException {
-          final File instance = CommonJsonization.loadMaximalFile();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "File"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testFileoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testFileoverExtensionsOrEmptyDefault() throws IOException {
-          final File instance = CommonJsonization.loadMinimalFile();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "File"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_File_overExtensionsOrEmpty_default
-
-        @Test
-        public void testFileoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final File instance = CommonJsonization.loadMaximalFile();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "File"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testFileoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testFileoverDisplayNameOrEmptyDefault() throws IOException {
-          final File instance = CommonJsonization.loadMinimalFile();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "File"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_File_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testFileoverDescriptionOrEmptyNonDefault() throws IOException {
-          final File instance = CommonJsonization.loadMaximalFile();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "File"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testFileoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testFileoverDescriptionOrEmptyDefault() throws IOException {
-          final File instance = CommonJsonization.loadMinimalFile();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "File"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_File_overDescriptionOrEmpty_default
-
-        @Test
-        public void testFileoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final File instance = CommonJsonization.loadMaximalFile();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "File"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testFileoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testFileoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final File instance = CommonJsonization.loadMinimalFile();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "File"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_File_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testFileoverQualifiersOrEmptyNonDefault() throws IOException {
-          final File instance = CommonJsonization.loadMaximalFile();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "File"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testFileoverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testFileoverQualifiersOrEmptyDefault() throws IOException {
-          final File instance = CommonJsonization.loadMinimalFile();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "File"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_File_overQualifiersOrEmpty_default
-
-        @Test
-        public void testFileoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final File instance = CommonJsonization.loadMaximalFile();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "File"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testFileoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testFileoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final File instance = CommonJsonization.loadMinimalFile();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "File"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_File_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testAnnotatedRelationshipElementoverExtensionsOrEmptyNonDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMaximalAnnotatedRelationshipElement();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testAnnotatedRelationshipElementoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testAnnotatedRelationshipElementoverExtensionsOrEmptyDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMinimalAnnotatedRelationshipElement();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AnnotatedRelationshipElement_overExtensionsOrEmpty_default
-
-        @Test
-        public void testAnnotatedRelationshipElementoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMaximalAnnotatedRelationshipElement();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testAnnotatedRelationshipElementoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testAnnotatedRelationshipElementoverDisplayNameOrEmptyDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMinimalAnnotatedRelationshipElement();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AnnotatedRelationshipElement_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testAnnotatedRelationshipElementoverDescriptionOrEmptyNonDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMaximalAnnotatedRelationshipElement();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testAnnotatedRelationshipElementoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testAnnotatedRelationshipElementoverDescriptionOrEmptyDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMinimalAnnotatedRelationshipElement();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AnnotatedRelationshipElement_overDescriptionOrEmpty_default
-
-        @Test
-        public void testAnnotatedRelationshipElementoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMaximalAnnotatedRelationshipElement();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testAnnotatedRelationshipElementoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testAnnotatedRelationshipElementoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMinimalAnnotatedRelationshipElement();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AnnotatedRelationshipElement_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testAnnotatedRelationshipElementoverQualifiersOrEmptyNonDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMaximalAnnotatedRelationshipElement();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testAnnotatedRelationshipElementoverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testAnnotatedRelationshipElementoverQualifiersOrEmptyDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMinimalAnnotatedRelationshipElement();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AnnotatedRelationshipElement_overQualifiersOrEmpty_default
-
-        @Test
-        public void testAnnotatedRelationshipElementoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMaximalAnnotatedRelationshipElement();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testAnnotatedRelationshipElementoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testAnnotatedRelationshipElementoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMinimalAnnotatedRelationshipElement();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AnnotatedRelationshipElement_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testAnnotatedRelationshipElementoverAnnotationsOrEmptyNonDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMaximalAnnotatedRelationshipElement();
-          if(!instance.getAnnotations().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "annotations is not present " +
-              "in the maximal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overAnnotationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getAnnotations().get().size());
-        }  // public void testAnnotatedRelationshipElementoverAnnotationsOrEmptyNonDefault
-
-        @Test
-        public void testAnnotatedRelationshipElementoverAnnotationsOrEmptyDefault() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMinimalAnnotatedRelationshipElement();
-          if(instance.getAnnotations().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "annotations is present " +
-              "in the minimal example of " +
-              "AnnotatedRelationshipElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overAnnotationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_AnnotatedRelationshipElement_overAnnotationsOrEmpty_default
-
-        @Test
-        public void testEntityoverExtensionsOrEmptyNonDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMaximalEntity();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testEntityoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testEntityoverExtensionsOrEmptyDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMinimalEntity();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Entity_overExtensionsOrEmpty_default
-
-        @Test
-        public void testEntityoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMaximalEntity();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testEntityoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testEntityoverDisplayNameOrEmptyDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMinimalEntity();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Entity_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testEntityoverDescriptionOrEmptyNonDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMaximalEntity();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testEntityoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testEntityoverDescriptionOrEmptyDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMinimalEntity();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Entity_overDescriptionOrEmpty_default
-
-        @Test
-        public void testEntityoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMaximalEntity();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testEntityoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testEntityoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMinimalEntity();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Entity_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testEntityoverQualifiersOrEmptyNonDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMaximalEntity();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testEntityoverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testEntityoverQualifiersOrEmptyDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMinimalEntity();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Entity_overQualifiersOrEmpty_default
-
-        @Test
-        public void testEntityoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMaximalEntity();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testEntityoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testEntityoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMinimalEntity();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Entity_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testEntityoverStatementsOrEmptyNonDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMaximalEntity();
-          if(!instance.getStatements().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "statements is not present " +
-              "in the maximal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overStatementsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getStatements().get().size());
-        }  // public void testEntityoverStatementsOrEmptyNonDefault
-
-        @Test
-        public void testEntityoverStatementsOrEmptyDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMinimalEntity();
-          if(instance.getStatements().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "statements is present " +
-              "in the minimal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overStatementsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Entity_overStatementsOrEmpty_default
-
-        // The maximal example of Entity contains no specificAssetIds,
-        // so we can not generate the corresponding test case 
-        // Test_Entity_overSpecificAssetIdsOrEmpty_non_default.
-
-        @Test
-        public void testEntityoverSpecificAssetIdsOrEmptyDefault() throws IOException {
-          final Entity instance = CommonJsonization.loadMinimalEntity();
-          if(instance.getSpecificAssetIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "specificAssetIds is present " +
-              "in the minimal example of " +
-              "Entity"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSpecificAssetIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Entity_overSpecificAssetIdsOrEmpty_default
-
-        @Test
-        public void testBasicEventElementoverExtensionsOrEmptyNonDefault() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "BasicEventElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testBasicEventElementoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testBasicEventElementoverExtensionsOrEmptyDefault() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMinimalBasicEventElement();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "BasicEventElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_BasicEventElement_overExtensionsOrEmpty_default
-
-        @Test
-        public void testBasicEventElementoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "BasicEventElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testBasicEventElementoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testBasicEventElementoverDisplayNameOrEmptyDefault() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMinimalBasicEventElement();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "BasicEventElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_BasicEventElement_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testBasicEventElementoverDescriptionOrEmptyNonDefault() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "BasicEventElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testBasicEventElementoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testBasicEventElementoverDescriptionOrEmptyDefault() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMinimalBasicEventElement();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "BasicEventElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_BasicEventElement_overDescriptionOrEmpty_default
-
-        @Test
-        public void testBasicEventElementoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "BasicEventElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testBasicEventElementoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testBasicEventElementoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMinimalBasicEventElement();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "BasicEventElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_BasicEventElement_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testBasicEventElementoverQualifiersOrEmptyNonDefault() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "BasicEventElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testBasicEventElementoverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testBasicEventElementoverQualifiersOrEmptyDefault() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMinimalBasicEventElement();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "BasicEventElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_BasicEventElement_overQualifiersOrEmpty_default
-
-        @Test
-        public void testBasicEventElementoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "BasicEventElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testBasicEventElementoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testBasicEventElementoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMinimalBasicEventElement();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "BasicEventElement"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_BasicEventElement_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testOperationoverExtensionsOrEmptyNonDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMaximalOperation();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testOperationoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testOperationoverExtensionsOrEmptyDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMinimalOperation();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Operation_overExtensionsOrEmpty_default
-
-        @Test
-        public void testOperationoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMaximalOperation();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testOperationoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testOperationoverDisplayNameOrEmptyDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMinimalOperation();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Operation_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testOperationoverDescriptionOrEmptyNonDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMaximalOperation();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testOperationoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testOperationoverDescriptionOrEmptyDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMinimalOperation();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Operation_overDescriptionOrEmpty_default
-
-        @Test
-        public void testOperationoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMaximalOperation();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testOperationoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testOperationoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMinimalOperation();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Operation_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testOperationoverQualifiersOrEmptyNonDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMaximalOperation();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testOperationoverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testOperationoverQualifiersOrEmptyDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMinimalOperation();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Operation_overQualifiersOrEmpty_default
-
-        @Test
-        public void testOperationoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMaximalOperation();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testOperationoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testOperationoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMinimalOperation();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Operation_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testOperationoverInputVariablesOrEmptyNonDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMaximalOperation();
-          if(!instance.getInputVariables().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "inputVariables is not present " +
-              "in the maximal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overInputVariablesOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getInputVariables().get().size());
-        }  // public void testOperationoverInputVariablesOrEmptyNonDefault
-
-        @Test
-        public void testOperationoverInputVariablesOrEmptyDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMinimalOperation();
-          if(instance.getInputVariables().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "inputVariables is present " +
-              "in the minimal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overInputVariablesOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Operation_overInputVariablesOrEmpty_default
-
-        @Test
-        public void testOperationoverOutputVariablesOrEmptyNonDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMaximalOperation();
-          if(!instance.getOutputVariables().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "outputVariables is not present " +
-              "in the maximal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overOutputVariablesOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getOutputVariables().get().size());
-        }  // public void testOperationoverOutputVariablesOrEmptyNonDefault
-
-        @Test
-        public void testOperationoverOutputVariablesOrEmptyDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMinimalOperation();
-          if(instance.getOutputVariables().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "outputVariables is present " +
-              "in the minimal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overOutputVariablesOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Operation_overOutputVariablesOrEmpty_default
-
-        @Test
-        public void testOperationoverInoutputVariablesOrEmptyNonDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMaximalOperation();
-          if(!instance.getInoutputVariables().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "inoutputVariables is not present " +
-              "in the maximal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overInoutputVariablesOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getInoutputVariables().get().size());
-        }  // public void testOperationoverInoutputVariablesOrEmptyNonDefault
-
-        @Test
-        public void testOperationoverInoutputVariablesOrEmptyDefault() throws IOException {
-          final Operation instance = CommonJsonization.loadMinimalOperation();
-          if(instance.getInoutputVariables().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "inoutputVariables is present " +
-              "in the minimal example of " +
-              "Operation"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overInoutputVariablesOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Operation_overInoutputVariablesOrEmpty_default
-
-        @Test
-        public void testCapabilityoverExtensionsOrEmptyNonDefault() throws IOException {
-          final Capability instance = CommonJsonization.loadMaximalCapability();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "Capability"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testCapabilityoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testCapabilityoverExtensionsOrEmptyDefault() throws IOException {
-          final Capability instance = CommonJsonization.loadMinimalCapability();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "Capability"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Capability_overExtensionsOrEmpty_default
-
-        @Test
-        public void testCapabilityoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final Capability instance = CommonJsonization.loadMaximalCapability();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "Capability"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testCapabilityoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testCapabilityoverDisplayNameOrEmptyDefault() throws IOException {
-          final Capability instance = CommonJsonization.loadMinimalCapability();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "Capability"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Capability_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testCapabilityoverDescriptionOrEmptyNonDefault() throws IOException {
-          final Capability instance = CommonJsonization.loadMaximalCapability();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "Capability"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testCapabilityoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testCapabilityoverDescriptionOrEmptyDefault() throws IOException {
-          final Capability instance = CommonJsonization.loadMinimalCapability();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "Capability"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Capability_overDescriptionOrEmpty_default
-
-        @Test
-        public void testCapabilityoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
-          final Capability instance = CommonJsonization.loadMaximalCapability();
-          if(!instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is not present " +
-              "in the maximal example of " +
-              "Capability"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSupplementalSemanticIds().get().size());
-        }  // public void testCapabilityoverSupplementalSemanticIdsOrEmptyNonDefault
-
-        @Test
-        public void testCapabilityoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
-          final Capability instance = CommonJsonization.loadMinimalCapability();
-          if(instance.getSupplementalSemanticIds().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "supplementalSemanticIds is present " +
-              "in the minimal example of " +
-              "Capability"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Capability_overSupplementalSemanticIdsOrEmpty_default
-
-        @Test
-        public void testCapabilityoverQualifiersOrEmptyNonDefault() throws IOException {
-          final Capability instance = CommonJsonization.loadMaximalCapability();
-          if(!instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is not present " +
-              "in the maximal example of " +
-              "Capability"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getQualifiers().get().size());
-        }  // public void testCapabilityoverQualifiersOrEmptyNonDefault
-
-        @Test
-        public void testCapabilityoverQualifiersOrEmptyDefault() throws IOException {
-          final Capability instance = CommonJsonization.loadMinimalCapability();
-          if(instance.getQualifiers().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "qualifiers is present " +
-              "in the minimal example of " +
-              "Capability"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Capability_overQualifiersOrEmpty_default
-
-        @Test
-        public void testCapabilityoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final Capability instance = CommonJsonization.loadMaximalCapability();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "Capability"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testCapabilityoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testCapabilityoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final Capability instance = CommonJsonization.loadMinimalCapability();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "Capability"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Capability_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testConceptDescriptionoverExtensionsOrEmptyNonDefault() throws IOException {
-          final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
-          if(!instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is not present " +
-              "in the maximal example of " +
-              "ConceptDescription"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getExtensions().get().size());
-        }  // public void testConceptDescriptionoverExtensionsOrEmptyNonDefault
-
-        @Test
-        public void testConceptDescriptionoverExtensionsOrEmptyDefault() throws IOException {
-          final ConceptDescription instance = CommonJsonization.loadMinimalConceptDescription();
-          if(instance.getExtensions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "extensions is present " +
-              "in the minimal example of " +
-              "ConceptDescription"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_ConceptDescription_overExtensionsOrEmpty_default
-
-        @Test
-        public void testConceptDescriptionoverDisplayNameOrEmptyNonDefault() throws IOException {
-          final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
-          if(!instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is not present " +
-              "in the maximal example of " +
-              "ConceptDescription"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDisplayName().get().size());
-        }  // public void testConceptDescriptionoverDisplayNameOrEmptyNonDefault
-
-        @Test
-        public void testConceptDescriptionoverDisplayNameOrEmptyDefault() throws IOException {
-          final ConceptDescription instance = CommonJsonization.loadMinimalConceptDescription();
-          if(instance.getDisplayName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "displayName is present " +
-              "in the minimal example of " +
-              "ConceptDescription"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_ConceptDescription_overDisplayNameOrEmpty_default
-
-        @Test
-        public void testConceptDescriptionoverDescriptionOrEmptyNonDefault() throws IOException {
-          final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
-          if(!instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is not present " +
-              "in the maximal example of " +
-              "ConceptDescription"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDescription().get().size());
-        }  // public void testConceptDescriptionoverDescriptionOrEmptyNonDefault
-
-        @Test
-        public void testConceptDescriptionoverDescriptionOrEmptyDefault() throws IOException {
-          final ConceptDescription instance = CommonJsonization.loadMinimalConceptDescription();
-          if(instance.getDescription().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "description is present " +
-              "in the minimal example of " +
-              "ConceptDescription"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_ConceptDescription_overDescriptionOrEmpty_default
-
-        @Test
-        public void testConceptDescriptionoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
-          final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
-          if(!instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is not present " +
-              "in the maximal example of " +
-              "ConceptDescription"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getEmbeddedDataSpecifications().get().size());
-        }  // public void testConceptDescriptionoverEmbeddedDataSpecificationsOrEmptyNonDefault
-
-        @Test
-        public void testConceptDescriptionoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
-          final ConceptDescription instance = CommonJsonization.loadMinimalConceptDescription();
-          if(instance.getEmbeddedDataSpecifications().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "embeddedDataSpecifications is present " +
-              "in the minimal example of " +
-              "ConceptDescription"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_ConceptDescription_overEmbeddedDataSpecificationsOrEmpty_default
-
-        @Test
-        public void testConceptDescriptionoverIsCaseOfOrEmptyNonDefault() throws IOException {
-          final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
-          if(!instance.getIsCaseOf().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "isCaseOf is not present " +
-              "in the maximal example of " +
-              "ConceptDescription"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overIsCaseOfOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getIsCaseOf().get().size());
-        }  // public void testConceptDescriptionoverIsCaseOfOrEmptyNonDefault
-
-        @Test
-        public void testConceptDescriptionoverIsCaseOfOrEmptyDefault() throws IOException {
-          final ConceptDescription instance = CommonJsonization.loadMinimalConceptDescription();
-          if(instance.getIsCaseOf().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "isCaseOf is present " +
-              "in the minimal example of " +
-              "ConceptDescription"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overIsCaseOfOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_ConceptDescription_overIsCaseOfOrEmpty_default
-
-        @Test
-        public void testEnvironmentoverAssetAdministrationShellsOrEmptyNonDefault() throws IOException {
-          final Environment instance = CommonJsonization.loadMaximalEnvironment();
-          if(!instance.getAssetAdministrationShells().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "assetAdministrationShells is not present " +
-              "in the maximal example of " +
-              "Environment"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overAssetAdministrationShellsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getAssetAdministrationShells().get().size());
-        }  // public void testEnvironmentoverAssetAdministrationShellsOrEmptyNonDefault
-
-        @Test
-        public void testEnvironmentoverAssetAdministrationShellsOrEmptyDefault() throws IOException {
-          final Environment instance = CommonJsonization.loadMinimalEnvironment();
-          if(instance.getAssetAdministrationShells().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "assetAdministrationShells is present " +
-              "in the minimal example of " +
-              "Environment"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overAssetAdministrationShellsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Environment_overAssetAdministrationShellsOrEmpty_default
-
-        @Test
-        public void testEnvironmentoverSubmodelsOrEmptyNonDefault() throws IOException {
-          final Environment instance = CommonJsonization.loadMaximalEnvironment();
-          if(!instance.getSubmodels().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "submodels is not present " +
-              "in the maximal example of " +
-              "Environment"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSubmodelsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getSubmodels().get().size());
-        }  // public void testEnvironmentoverSubmodelsOrEmptyNonDefault
-
-        @Test
-        public void testEnvironmentoverSubmodelsOrEmptyDefault() throws IOException {
-          final Environment instance = CommonJsonization.loadMinimalEnvironment();
-          if(instance.getSubmodels().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "submodels is present " +
-              "in the minimal example of " +
-              "Environment"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overSubmodelsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Environment_overSubmodelsOrEmpty_default
-
-        @Test
-        public void testEnvironmentoverConceptDescriptionsOrEmptyNonDefault() throws IOException {
-          final Environment instance = CommonJsonization.loadMaximalEnvironment();
-          if(!instance.getConceptDescriptions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "conceptDescriptions is not present " +
-              "in the maximal example of " +
-              "Environment"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overConceptDescriptionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getConceptDescriptions().get().size());
-        }  // public void testEnvironmentoverConceptDescriptionsOrEmptyNonDefault
-
-        @Test
-        public void testEnvironmentoverConceptDescriptionsOrEmptyDefault() throws IOException {
-          final Environment instance = CommonJsonization.loadMinimalEnvironment();
-          if(instance.getConceptDescriptions().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "conceptDescriptions is present " +
-              "in the minimal example of " +
-              "Environment"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overConceptDescriptionsOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_Environment_overConceptDescriptionsOrEmpty_default
-
-        @Test
-        public void testDataSpecificationIec61360overShortNameOrEmptyNonDefault() throws IOException {
-          final DataSpecificationIec61360 instance = CommonJsonization.loadMaximalDataSpecificationIec61360();
-          if(!instance.getShortName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "shortName is not present " +
-              "in the maximal example of " +
-              "DataSpecificationIec61360"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overShortNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getShortName().get().size());
-        }  // public void testDataSpecificationIec61360overShortNameOrEmptyNonDefault
-
-        @Test
-        public void testDataSpecificationIec61360overShortNameOrEmptyDefault() throws IOException {
-          final DataSpecificationIec61360 instance = CommonJsonization.loadMinimalDataSpecificationIec61360();
-          if(instance.getShortName().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "shortName is present " +
-              "in the minimal example of " +
-              "DataSpecificationIec61360"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overShortNameOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_DataSpecificationIec61360_overShortNameOrEmpty_default
-
-        @Test
-        public void testDataSpecificationIec61360overDefinitionOrEmptyNonDefault() throws IOException {
-          final DataSpecificationIec61360 instance = CommonJsonization.loadMaximalDataSpecificationIec61360();
-          if(!instance.getDefinition().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "definition is not present " +
-              "in the maximal example of " +
-              "DataSpecificationIec61360"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDefinitionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(count.get(),instance.getDefinition().get().size());
-        }  // public void testDataSpecificationIec61360overDefinitionOrEmptyNonDefault
-
-        @Test
-        public void testDataSpecificationIec61360overDefinitionOrEmptyDefault() throws IOException {
-          final DataSpecificationIec61360 instance = CommonJsonization.loadMinimalDataSpecificationIec61360();
-          if(instance.getDefinition().isPresent()){
-            throw new IllegalArgumentException(
-              "Unexpected " +
-              "definition is present " +
-              "in the minimal example of " +
-              "DataSpecificationIec61360"
-            );
-          }
-          AtomicInteger count = new AtomicInteger();
-          instance.overDefinitionOrEmpty().forEach(i -> count.getAndIncrement());
-          assertEquals(0 , count.get());
-        }  // public void Test_DataSpecificationIec61360_overDefinitionOrEmpty_default
-}  // class TestOverXOrEmpty
+  @Test
+  public void testExtensionoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
+    final Extension instance = CommonJsonization.loadMaximalExtension();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "Extension");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testExtensionoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testExtensionoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
+    final Extension instance = CommonJsonization.loadMinimalExtension();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "Extension");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Extension_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testExtensionoverRefersToOrEmptyNonDefault() throws IOException {
+    final Extension instance = CommonJsonization.loadMaximalExtension();
+    if (!instance.getRefersTo().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "refersTo is not present " + "in the maximal example of " + "Extension");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overRefersToOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getRefersTo().get().size());
+  } // public void testExtensionoverRefersToOrEmptyNonDefault
+
+  @Test
+  public void testExtensionoverRefersToOrEmptyDefault() throws IOException {
+    final Extension instance = CommonJsonization.loadMinimalExtension();
+    if (instance.getRefersTo().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "refersTo is present " + "in the minimal example of " + "Extension");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overRefersToOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Extension_overRefersToOrEmpty_default
+
+  @Test
+  public void testAdministrativeInformationoverEmbeddedDataSpecificationsOrEmptyNonDefault()
+      throws IOException {
+    final AdministrativeInformation instance =
+        CommonJsonization.loadMaximalAdministrativeInformation();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "AdministrativeInformation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testAdministrativeInformationoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testAdministrativeInformationoverEmbeddedDataSpecificationsOrEmptyDefault()
+      throws IOException {
+    final AdministrativeInformation instance =
+        CommonJsonization.loadMinimalAdministrativeInformation();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "AdministrativeInformation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AdministrativeInformation_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testQualifieroverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
+    final Qualifier instance = CommonJsonization.loadMaximalQualifier();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "Qualifier");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testQualifieroverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testQualifieroverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
+    final Qualifier instance = CommonJsonization.loadMinimalQualifier();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "Qualifier");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Qualifier_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testAssetAdministrationShelloverExtensionsOrEmptyNonDefault() throws IOException {
+    final AssetAdministrationShell instance =
+        CommonJsonization.loadMaximalAssetAdministrationShell();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is not present "
+              + "in the maximal example of "
+              + "AssetAdministrationShell");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testAssetAdministrationShelloverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testAssetAdministrationShelloverExtensionsOrEmptyDefault() throws IOException {
+    final AssetAdministrationShell instance =
+        CommonJsonization.loadMinimalAssetAdministrationShell();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is present "
+              + "in the minimal example of "
+              + "AssetAdministrationShell");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AssetAdministrationShell_overExtensionsOrEmpty_default
+
+  @Test
+  public void testAssetAdministrationShelloverDisplayNameOrEmptyNonDefault() throws IOException {
+    final AssetAdministrationShell instance =
+        CommonJsonization.loadMaximalAssetAdministrationShell();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is not present "
+              + "in the maximal example of "
+              + "AssetAdministrationShell");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testAssetAdministrationShelloverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testAssetAdministrationShelloverDisplayNameOrEmptyDefault() throws IOException {
+    final AssetAdministrationShell instance =
+        CommonJsonization.loadMinimalAssetAdministrationShell();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is present "
+              + "in the minimal example of "
+              + "AssetAdministrationShell");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AssetAdministrationShell_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testAssetAdministrationShelloverDescriptionOrEmptyNonDefault() throws IOException {
+    final AssetAdministrationShell instance =
+        CommonJsonization.loadMaximalAssetAdministrationShell();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is not present "
+              + "in the maximal example of "
+              + "AssetAdministrationShell");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testAssetAdministrationShelloverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testAssetAdministrationShelloverDescriptionOrEmptyDefault() throws IOException {
+    final AssetAdministrationShell instance =
+        CommonJsonization.loadMinimalAssetAdministrationShell();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is present "
+              + "in the minimal example of "
+              + "AssetAdministrationShell");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AssetAdministrationShell_overDescriptionOrEmpty_default
+
+  @Test
+  public void testAssetAdministrationShelloverEmbeddedDataSpecificationsOrEmptyNonDefault()
+      throws IOException {
+    final AssetAdministrationShell instance =
+        CommonJsonization.loadMaximalAssetAdministrationShell();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "AssetAdministrationShell");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testAssetAdministrationShelloverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testAssetAdministrationShelloverEmbeddedDataSpecificationsOrEmptyDefault()
+      throws IOException {
+    final AssetAdministrationShell instance =
+        CommonJsonization.loadMinimalAssetAdministrationShell();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "AssetAdministrationShell");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AssetAdministrationShell_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testAssetAdministrationShelloverSubmodelsOrEmptyNonDefault() throws IOException {
+    final AssetAdministrationShell instance =
+        CommonJsonization.loadMaximalAssetAdministrationShell();
+    if (!instance.getSubmodels().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "submodels is not present "
+              + "in the maximal example of "
+              + "AssetAdministrationShell");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSubmodelsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSubmodels().get().size());
+  } // public void testAssetAdministrationShelloverSubmodelsOrEmptyNonDefault
+
+  @Test
+  public void testAssetAdministrationShelloverSubmodelsOrEmptyDefault() throws IOException {
+    final AssetAdministrationShell instance =
+        CommonJsonization.loadMinimalAssetAdministrationShell();
+    if (instance.getSubmodels().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "submodels is present "
+              + "in the minimal example of "
+              + "AssetAdministrationShell");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSubmodelsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AssetAdministrationShell_overSubmodelsOrEmpty_default
+
+  // The maximal example of AssetInformation contains no specificAssetIds,
+  // so we can not generate the corresponding test case
+  // Test_AssetInformation_overSpecificAssetIdsOrEmpty_non_default.
+
+  @Test
+  public void testAssetInformationoverSpecificAssetIdsOrEmptyDefault() throws IOException {
+    final AssetInformation instance = CommonJsonization.loadMinimalAssetInformation();
+    if (instance.getSpecificAssetIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "specificAssetIds is present "
+              + "in the minimal example of "
+              + "AssetInformation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSpecificAssetIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AssetInformation_overSpecificAssetIdsOrEmpty_default
+
+  @Test
+  public void testSpecificAssetIdoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
+    final SpecificAssetId instance = CommonJsonization.loadMaximalSpecificAssetId();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "SpecificAssetId");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testSpecificAssetIdoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testSpecificAssetIdoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
+    final SpecificAssetId instance = CommonJsonization.loadMinimalSpecificAssetId();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "SpecificAssetId");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SpecificAssetId_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testSubmodeloverExtensionsOrEmptyNonDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMaximalSubmodel();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is not present " + "in the maximal example of " + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testSubmodeloverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testSubmodeloverExtensionsOrEmptyDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMinimalSubmodel();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is present " + "in the minimal example of " + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Submodel_overExtensionsOrEmpty_default
+
+  @Test
+  public void testSubmodeloverDisplayNameOrEmptyNonDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMaximalSubmodel();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is not present "
+              + "in the maximal example of "
+              + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testSubmodeloverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testSubmodeloverDisplayNameOrEmptyDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMinimalSubmodel();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "displayName is present " + "in the minimal example of " + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Submodel_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testSubmodeloverDescriptionOrEmptyNonDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMaximalSubmodel();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is not present "
+              + "in the maximal example of "
+              + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testSubmodeloverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testSubmodeloverDescriptionOrEmptyDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMinimalSubmodel();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "description is present " + "in the minimal example of " + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Submodel_overDescriptionOrEmpty_default
+
+  @Test
+  public void testSubmodeloverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMaximalSubmodel();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testSubmodeloverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testSubmodeloverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMinimalSubmodel();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Submodel_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testSubmodeloverQualifiersOrEmptyNonDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMaximalSubmodel();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is not present " + "in the maximal example of " + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testSubmodeloverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testSubmodeloverQualifiersOrEmptyDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMinimalSubmodel();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is present " + "in the minimal example of " + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Submodel_overQualifiersOrEmpty_default
+
+  @Test
+  public void testSubmodeloverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMaximalSubmodel();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testSubmodeloverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testSubmodeloverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMinimalSubmodel();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Submodel_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testSubmodeloverSubmodelElementsOrEmptyNonDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMaximalSubmodel();
+    if (!instance.getSubmodelElements().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "submodelElements is not present "
+              + "in the maximal example of "
+              + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSubmodelElementsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSubmodelElements().get().size());
+  } // public void testSubmodeloverSubmodelElementsOrEmptyNonDefault
+
+  @Test
+  public void testSubmodeloverSubmodelElementsOrEmptyDefault() throws IOException {
+    final Submodel instance = CommonJsonization.loadMinimalSubmodel();
+    if (instance.getSubmodelElements().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "submodelElements is present "
+              + "in the minimal example of "
+              + "Submodel");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSubmodelElementsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Submodel_overSubmodelElementsOrEmpty_default
+
+  @Test
+  public void testRelationshipElementoverExtensionsOrEmptyNonDefault() throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is not present "
+              + "in the maximal example of "
+              + "RelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testRelationshipElementoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testRelationshipElementoverExtensionsOrEmptyDefault() throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMinimalRelationshipElement();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is present "
+              + "in the minimal example of "
+              + "RelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_RelationshipElement_overExtensionsOrEmpty_default
+
+  @Test
+  public void testRelationshipElementoverDisplayNameOrEmptyNonDefault() throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is not present "
+              + "in the maximal example of "
+              + "RelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testRelationshipElementoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testRelationshipElementoverDisplayNameOrEmptyDefault() throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMinimalRelationshipElement();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is present "
+              + "in the minimal example of "
+              + "RelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_RelationshipElement_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testRelationshipElementoverDescriptionOrEmptyNonDefault() throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is not present "
+              + "in the maximal example of "
+              + "RelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testRelationshipElementoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testRelationshipElementoverDescriptionOrEmptyDefault() throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMinimalRelationshipElement();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is present "
+              + "in the minimal example of "
+              + "RelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_RelationshipElement_overDescriptionOrEmpty_default
+
+  @Test
+  public void testRelationshipElementoverSupplementalSemanticIdsOrEmptyNonDefault()
+      throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "RelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testRelationshipElementoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testRelationshipElementoverSupplementalSemanticIdsOrEmptyDefault()
+      throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMinimalRelationshipElement();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "RelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_RelationshipElement_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testRelationshipElementoverQualifiersOrEmptyNonDefault() throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is not present "
+              + "in the maximal example of "
+              + "RelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testRelationshipElementoverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testRelationshipElementoverQualifiersOrEmptyDefault() throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMinimalRelationshipElement();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is present "
+              + "in the minimal example of "
+              + "RelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_RelationshipElement_overQualifiersOrEmpty_default
+
+  @Test
+  public void testRelationshipElementoverEmbeddedDataSpecificationsOrEmptyNonDefault()
+      throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "RelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testRelationshipElementoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testRelationshipElementoverEmbeddedDataSpecificationsOrEmptyDefault()
+      throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMinimalRelationshipElement();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "RelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_RelationshipElement_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testSubmodelElementListoverExtensionsOrEmptyNonDefault() throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is not present "
+              + "in the maximal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testSubmodelElementListoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementListoverExtensionsOrEmptyDefault() throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is present "
+              + "in the minimal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementList_overExtensionsOrEmpty_default
+
+  @Test
+  public void testSubmodelElementListoverDisplayNameOrEmptyNonDefault() throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is not present "
+              + "in the maximal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testSubmodelElementListoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementListoverDisplayNameOrEmptyDefault() throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is present "
+              + "in the minimal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementList_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testSubmodelElementListoverDescriptionOrEmptyNonDefault() throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is not present "
+              + "in the maximal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testSubmodelElementListoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementListoverDescriptionOrEmptyDefault() throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is present "
+              + "in the minimal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementList_overDescriptionOrEmpty_default
+
+  @Test
+  public void testSubmodelElementListoverSupplementalSemanticIdsOrEmptyNonDefault()
+      throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testSubmodelElementListoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementListoverSupplementalSemanticIdsOrEmptyDefault()
+      throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementList_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testSubmodelElementListoverQualifiersOrEmptyNonDefault() throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is not present "
+              + "in the maximal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testSubmodelElementListoverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementListoverQualifiersOrEmptyDefault() throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is present "
+              + "in the minimal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementList_overQualifiersOrEmpty_default
+
+  @Test
+  public void testSubmodelElementListoverEmbeddedDataSpecificationsOrEmptyNonDefault()
+      throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testSubmodelElementListoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementListoverEmbeddedDataSpecificationsOrEmptyDefault()
+      throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementList_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testSubmodelElementListoverValueOrEmptyNonDefault() throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
+    if (!instance.getValue().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "value is not present "
+              + "in the maximal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overValueOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getValue().get().size());
+  } // public void testSubmodelElementListoverValueOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementListoverValueOrEmptyDefault() throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMinimalSubmodelElementList();
+    if (instance.getValue().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "value is present "
+              + "in the minimal example of "
+              + "SubmodelElementList");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overValueOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementList_overValueOrEmpty_default
+
+  @Test
+  public void testSubmodelElementCollectionoverExtensionsOrEmptyNonDefault() throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMaximalSubmodelElementCollection();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is not present "
+              + "in the maximal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testSubmodelElementCollectionoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementCollectionoverExtensionsOrEmptyDefault() throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMinimalSubmodelElementCollection();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is present "
+              + "in the minimal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementCollection_overExtensionsOrEmpty_default
+
+  @Test
+  public void testSubmodelElementCollectionoverDisplayNameOrEmptyNonDefault() throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMaximalSubmodelElementCollection();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is not present "
+              + "in the maximal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testSubmodelElementCollectionoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementCollectionoverDisplayNameOrEmptyDefault() throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMinimalSubmodelElementCollection();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is present "
+              + "in the minimal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementCollection_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testSubmodelElementCollectionoverDescriptionOrEmptyNonDefault() throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMaximalSubmodelElementCollection();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is not present "
+              + "in the maximal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testSubmodelElementCollectionoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementCollectionoverDescriptionOrEmptyDefault() throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMinimalSubmodelElementCollection();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is present "
+              + "in the minimal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementCollection_overDescriptionOrEmpty_default
+
+  @Test
+  public void testSubmodelElementCollectionoverSupplementalSemanticIdsOrEmptyNonDefault()
+      throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMaximalSubmodelElementCollection();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testSubmodelElementCollectionoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementCollectionoverSupplementalSemanticIdsOrEmptyDefault()
+      throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMinimalSubmodelElementCollection();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementCollection_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testSubmodelElementCollectionoverQualifiersOrEmptyNonDefault() throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMaximalSubmodelElementCollection();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is not present "
+              + "in the maximal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testSubmodelElementCollectionoverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementCollectionoverQualifiersOrEmptyDefault() throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMinimalSubmodelElementCollection();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is present "
+              + "in the minimal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementCollection_overQualifiersOrEmpty_default
+
+  @Test
+  public void testSubmodelElementCollectionoverEmbeddedDataSpecificationsOrEmptyNonDefault()
+      throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMaximalSubmodelElementCollection();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testSubmodelElementCollectionoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementCollectionoverEmbeddedDataSpecificationsOrEmptyDefault()
+      throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMinimalSubmodelElementCollection();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementCollection_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testSubmodelElementCollectionoverValueOrEmptyNonDefault() throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMaximalSubmodelElementCollection();
+    if (!instance.getValue().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "value is not present "
+              + "in the maximal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overValueOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getValue().get().size());
+  } // public void testSubmodelElementCollectionoverValueOrEmptyNonDefault
+
+  @Test
+  public void testSubmodelElementCollectionoverValueOrEmptyDefault() throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMinimalSubmodelElementCollection();
+    if (instance.getValue().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "value is present "
+              + "in the minimal example of "
+              + "SubmodelElementCollection");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overValueOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_SubmodelElementCollection_overValueOrEmpty_default
+
+  @Test
+  public void testPropertyoverExtensionsOrEmptyNonDefault() throws IOException {
+    final Property instance = CommonJsonization.loadMaximalProperty();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is not present " + "in the maximal example of " + "Property");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testPropertyoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testPropertyoverExtensionsOrEmptyDefault() throws IOException {
+    final Property instance = CommonJsonization.loadMinimalProperty();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is present " + "in the minimal example of " + "Property");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Property_overExtensionsOrEmpty_default
+
+  @Test
+  public void testPropertyoverDisplayNameOrEmptyNonDefault() throws IOException {
+    final Property instance = CommonJsonization.loadMaximalProperty();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is not present "
+              + "in the maximal example of "
+              + "Property");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testPropertyoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testPropertyoverDisplayNameOrEmptyDefault() throws IOException {
+    final Property instance = CommonJsonization.loadMinimalProperty();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "displayName is present " + "in the minimal example of " + "Property");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Property_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testPropertyoverDescriptionOrEmptyNonDefault() throws IOException {
+    final Property instance = CommonJsonization.loadMaximalProperty();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is not present "
+              + "in the maximal example of "
+              + "Property");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testPropertyoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testPropertyoverDescriptionOrEmptyDefault() throws IOException {
+    final Property instance = CommonJsonization.loadMinimalProperty();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "description is present " + "in the minimal example of " + "Property");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Property_overDescriptionOrEmpty_default
+
+  @Test
+  public void testPropertyoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
+    final Property instance = CommonJsonization.loadMaximalProperty();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "Property");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testPropertyoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testPropertyoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
+    final Property instance = CommonJsonization.loadMinimalProperty();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "Property");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Property_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testPropertyoverQualifiersOrEmptyNonDefault() throws IOException {
+    final Property instance = CommonJsonization.loadMaximalProperty();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is not present " + "in the maximal example of " + "Property");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testPropertyoverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testPropertyoverQualifiersOrEmptyDefault() throws IOException {
+    final Property instance = CommonJsonization.loadMinimalProperty();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is present " + "in the minimal example of " + "Property");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Property_overQualifiersOrEmpty_default
+
+  @Test
+  public void testPropertyoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
+    final Property instance = CommonJsonization.loadMaximalProperty();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "Property");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testPropertyoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testPropertyoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
+    final Property instance = CommonJsonization.loadMinimalProperty();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "Property");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Property_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testMultiLanguagePropertyoverExtensionsOrEmptyNonDefault() throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is not present "
+              + "in the maximal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testMultiLanguagePropertyoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testMultiLanguagePropertyoverExtensionsOrEmptyDefault() throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is present "
+              + "in the minimal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_MultiLanguageProperty_overExtensionsOrEmpty_default
+
+  @Test
+  public void testMultiLanguagePropertyoverDisplayNameOrEmptyNonDefault() throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is not present "
+              + "in the maximal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testMultiLanguagePropertyoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testMultiLanguagePropertyoverDisplayNameOrEmptyDefault() throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is present "
+              + "in the minimal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_MultiLanguageProperty_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testMultiLanguagePropertyoverDescriptionOrEmptyNonDefault() throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is not present "
+              + "in the maximal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testMultiLanguagePropertyoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testMultiLanguagePropertyoverDescriptionOrEmptyDefault() throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is present "
+              + "in the minimal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_MultiLanguageProperty_overDescriptionOrEmpty_default
+
+  @Test
+  public void testMultiLanguagePropertyoverSupplementalSemanticIdsOrEmptyNonDefault()
+      throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testMultiLanguagePropertyoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testMultiLanguagePropertyoverSupplementalSemanticIdsOrEmptyDefault()
+      throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_MultiLanguageProperty_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testMultiLanguagePropertyoverQualifiersOrEmptyNonDefault() throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is not present "
+              + "in the maximal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testMultiLanguagePropertyoverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testMultiLanguagePropertyoverQualifiersOrEmptyDefault() throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is present "
+              + "in the minimal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_MultiLanguageProperty_overQualifiersOrEmpty_default
+
+  @Test
+  public void testMultiLanguagePropertyoverEmbeddedDataSpecificationsOrEmptyNonDefault()
+      throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testMultiLanguagePropertyoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testMultiLanguagePropertyoverEmbeddedDataSpecificationsOrEmptyDefault()
+      throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_MultiLanguageProperty_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testMultiLanguagePropertyoverValueOrEmptyNonDefault() throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
+    if (!instance.getValue().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "value is not present "
+              + "in the maximal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overValueOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getValue().get().size());
+  } // public void testMultiLanguagePropertyoverValueOrEmptyNonDefault
+
+  @Test
+  public void testMultiLanguagePropertyoverValueOrEmptyDefault() throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMinimalMultiLanguageProperty();
+    if (instance.getValue().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "value is present "
+              + "in the minimal example of "
+              + "MultiLanguageProperty");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overValueOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_MultiLanguageProperty_overValueOrEmpty_default
+
+  @Test
+  public void testRangeoverExtensionsOrEmptyNonDefault() throws IOException {
+    final Range instance = CommonJsonization.loadMaximalRange();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is not present " + "in the maximal example of " + "Range");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testRangeoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testRangeoverExtensionsOrEmptyDefault() throws IOException {
+    final Range instance = CommonJsonization.loadMinimalRange();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is present " + "in the minimal example of " + "Range");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Range_overExtensionsOrEmpty_default
+
+  @Test
+  public void testRangeoverDisplayNameOrEmptyNonDefault() throws IOException {
+    final Range instance = CommonJsonization.loadMaximalRange();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "displayName is not present " + "in the maximal example of " + "Range");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testRangeoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testRangeoverDisplayNameOrEmptyDefault() throws IOException {
+    final Range instance = CommonJsonization.loadMinimalRange();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "displayName is present " + "in the minimal example of " + "Range");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Range_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testRangeoverDescriptionOrEmptyNonDefault() throws IOException {
+    final Range instance = CommonJsonization.loadMaximalRange();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "description is not present " + "in the maximal example of " + "Range");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testRangeoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testRangeoverDescriptionOrEmptyDefault() throws IOException {
+    final Range instance = CommonJsonization.loadMinimalRange();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "description is present " + "in the minimal example of " + "Range");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Range_overDescriptionOrEmpty_default
+
+  @Test
+  public void testRangeoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
+    final Range instance = CommonJsonization.loadMaximalRange();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "Range");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testRangeoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testRangeoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
+    final Range instance = CommonJsonization.loadMinimalRange();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "Range");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Range_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testRangeoverQualifiersOrEmptyNonDefault() throws IOException {
+    final Range instance = CommonJsonization.loadMaximalRange();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is not present " + "in the maximal example of " + "Range");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testRangeoverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testRangeoverQualifiersOrEmptyDefault() throws IOException {
+    final Range instance = CommonJsonization.loadMinimalRange();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is present " + "in the minimal example of " + "Range");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Range_overQualifiersOrEmpty_default
+
+  @Test
+  public void testRangeoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
+    final Range instance = CommonJsonization.loadMaximalRange();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "Range");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testRangeoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testRangeoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
+    final Range instance = CommonJsonization.loadMinimalRange();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "Range");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Range_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testReferenceElementoverExtensionsOrEmptyNonDefault() throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is not present "
+              + "in the maximal example of "
+              + "ReferenceElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testReferenceElementoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testReferenceElementoverExtensionsOrEmptyDefault() throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMinimalReferenceElement();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is present "
+              + "in the minimal example of "
+              + "ReferenceElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_ReferenceElement_overExtensionsOrEmpty_default
+
+  @Test
+  public void testReferenceElementoverDisplayNameOrEmptyNonDefault() throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is not present "
+              + "in the maximal example of "
+              + "ReferenceElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testReferenceElementoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testReferenceElementoverDisplayNameOrEmptyDefault() throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMinimalReferenceElement();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is present "
+              + "in the minimal example of "
+              + "ReferenceElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_ReferenceElement_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testReferenceElementoverDescriptionOrEmptyNonDefault() throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is not present "
+              + "in the maximal example of "
+              + "ReferenceElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testReferenceElementoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testReferenceElementoverDescriptionOrEmptyDefault() throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMinimalReferenceElement();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is present "
+              + "in the minimal example of "
+              + "ReferenceElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_ReferenceElement_overDescriptionOrEmpty_default
+
+  @Test
+  public void testReferenceElementoverSupplementalSemanticIdsOrEmptyNonDefault()
+      throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "ReferenceElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testReferenceElementoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testReferenceElementoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMinimalReferenceElement();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "ReferenceElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_ReferenceElement_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testReferenceElementoverQualifiersOrEmptyNonDefault() throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is not present "
+              + "in the maximal example of "
+              + "ReferenceElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testReferenceElementoverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testReferenceElementoverQualifiersOrEmptyDefault() throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMinimalReferenceElement();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is present "
+              + "in the minimal example of "
+              + "ReferenceElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_ReferenceElement_overQualifiersOrEmpty_default
+
+  @Test
+  public void testReferenceElementoverEmbeddedDataSpecificationsOrEmptyNonDefault()
+      throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "ReferenceElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testReferenceElementoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testReferenceElementoverEmbeddedDataSpecificationsOrEmptyDefault()
+      throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMinimalReferenceElement();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "ReferenceElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_ReferenceElement_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testBloboverExtensionsOrEmptyNonDefault() throws IOException {
+    final Blob instance = CommonJsonization.loadMaximalBlob();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is not present " + "in the maximal example of " + "Blob");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testBloboverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testBloboverExtensionsOrEmptyDefault() throws IOException {
+    final Blob instance = CommonJsonization.loadMinimalBlob();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is present " + "in the minimal example of " + "Blob");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Blob_overExtensionsOrEmpty_default
+
+  @Test
+  public void testBloboverDisplayNameOrEmptyNonDefault() throws IOException {
+    final Blob instance = CommonJsonization.loadMaximalBlob();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "displayName is not present " + "in the maximal example of " + "Blob");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testBloboverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testBloboverDisplayNameOrEmptyDefault() throws IOException {
+    final Blob instance = CommonJsonization.loadMinimalBlob();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "displayName is present " + "in the minimal example of " + "Blob");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Blob_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testBloboverDescriptionOrEmptyNonDefault() throws IOException {
+    final Blob instance = CommonJsonization.loadMaximalBlob();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "description is not present " + "in the maximal example of " + "Blob");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testBloboverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testBloboverDescriptionOrEmptyDefault() throws IOException {
+    final Blob instance = CommonJsonization.loadMinimalBlob();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "description is present " + "in the minimal example of " + "Blob");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Blob_overDescriptionOrEmpty_default
+
+  @Test
+  public void testBloboverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
+    final Blob instance = CommonJsonization.loadMaximalBlob();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "Blob");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testBloboverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testBloboverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
+    final Blob instance = CommonJsonization.loadMinimalBlob();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "Blob");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Blob_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testBloboverQualifiersOrEmptyNonDefault() throws IOException {
+    final Blob instance = CommonJsonization.loadMaximalBlob();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is not present " + "in the maximal example of " + "Blob");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testBloboverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testBloboverQualifiersOrEmptyDefault() throws IOException {
+    final Blob instance = CommonJsonization.loadMinimalBlob();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is present " + "in the minimal example of " + "Blob");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Blob_overQualifiersOrEmpty_default
+
+  @Test
+  public void testBloboverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
+    final Blob instance = CommonJsonization.loadMaximalBlob();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "Blob");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testBloboverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testBloboverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
+    final Blob instance = CommonJsonization.loadMinimalBlob();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "Blob");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Blob_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testFileoverExtensionsOrEmptyNonDefault() throws IOException {
+    final File instance = CommonJsonization.loadMaximalFile();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is not present " + "in the maximal example of " + "File");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testFileoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testFileoverExtensionsOrEmptyDefault() throws IOException {
+    final File instance = CommonJsonization.loadMinimalFile();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is present " + "in the minimal example of " + "File");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_File_overExtensionsOrEmpty_default
+
+  @Test
+  public void testFileoverDisplayNameOrEmptyNonDefault() throws IOException {
+    final File instance = CommonJsonization.loadMaximalFile();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "displayName is not present " + "in the maximal example of " + "File");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testFileoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testFileoverDisplayNameOrEmptyDefault() throws IOException {
+    final File instance = CommonJsonization.loadMinimalFile();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "displayName is present " + "in the minimal example of " + "File");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_File_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testFileoverDescriptionOrEmptyNonDefault() throws IOException {
+    final File instance = CommonJsonization.loadMaximalFile();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "description is not present " + "in the maximal example of " + "File");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testFileoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testFileoverDescriptionOrEmptyDefault() throws IOException {
+    final File instance = CommonJsonization.loadMinimalFile();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "description is present " + "in the minimal example of " + "File");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_File_overDescriptionOrEmpty_default
+
+  @Test
+  public void testFileoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
+    final File instance = CommonJsonization.loadMaximalFile();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "File");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testFileoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testFileoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
+    final File instance = CommonJsonization.loadMinimalFile();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "File");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_File_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testFileoverQualifiersOrEmptyNonDefault() throws IOException {
+    final File instance = CommonJsonization.loadMaximalFile();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is not present " + "in the maximal example of " + "File");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testFileoverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testFileoverQualifiersOrEmptyDefault() throws IOException {
+    final File instance = CommonJsonization.loadMinimalFile();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is present " + "in the minimal example of " + "File");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_File_overQualifiersOrEmpty_default
+
+  @Test
+  public void testFileoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
+    final File instance = CommonJsonization.loadMaximalFile();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "File");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testFileoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testFileoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
+    final File instance = CommonJsonization.loadMinimalFile();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "File");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_File_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testAnnotatedRelationshipElementoverExtensionsOrEmptyNonDefault() throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMaximalAnnotatedRelationshipElement();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is not present "
+              + "in the maximal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testAnnotatedRelationshipElementoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testAnnotatedRelationshipElementoverExtensionsOrEmptyDefault() throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMinimalAnnotatedRelationshipElement();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is present "
+              + "in the minimal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AnnotatedRelationshipElement_overExtensionsOrEmpty_default
+
+  @Test
+  public void testAnnotatedRelationshipElementoverDisplayNameOrEmptyNonDefault()
+      throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMaximalAnnotatedRelationshipElement();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is not present "
+              + "in the maximal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testAnnotatedRelationshipElementoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testAnnotatedRelationshipElementoverDisplayNameOrEmptyDefault() throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMinimalAnnotatedRelationshipElement();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is present "
+              + "in the minimal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AnnotatedRelationshipElement_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testAnnotatedRelationshipElementoverDescriptionOrEmptyNonDefault()
+      throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMaximalAnnotatedRelationshipElement();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is not present "
+              + "in the maximal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testAnnotatedRelationshipElementoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testAnnotatedRelationshipElementoverDescriptionOrEmptyDefault() throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMinimalAnnotatedRelationshipElement();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is present "
+              + "in the minimal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AnnotatedRelationshipElement_overDescriptionOrEmpty_default
+
+  @Test
+  public void testAnnotatedRelationshipElementoverSupplementalSemanticIdsOrEmptyNonDefault()
+      throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMaximalAnnotatedRelationshipElement();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testAnnotatedRelationshipElementoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testAnnotatedRelationshipElementoverSupplementalSemanticIdsOrEmptyDefault()
+      throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMinimalAnnotatedRelationshipElement();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AnnotatedRelationshipElement_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testAnnotatedRelationshipElementoverQualifiersOrEmptyNonDefault() throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMaximalAnnotatedRelationshipElement();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is not present "
+              + "in the maximal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testAnnotatedRelationshipElementoverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testAnnotatedRelationshipElementoverQualifiersOrEmptyDefault() throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMinimalAnnotatedRelationshipElement();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is present "
+              + "in the minimal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AnnotatedRelationshipElement_overQualifiersOrEmpty_default
+
+  @Test
+  public void testAnnotatedRelationshipElementoverEmbeddedDataSpecificationsOrEmptyNonDefault()
+      throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMaximalAnnotatedRelationshipElement();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testAnnotatedRelationshipElementoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testAnnotatedRelationshipElementoverEmbeddedDataSpecificationsOrEmptyDefault()
+      throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMinimalAnnotatedRelationshipElement();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AnnotatedRelationshipElement_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testAnnotatedRelationshipElementoverAnnotationsOrEmptyNonDefault()
+      throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMaximalAnnotatedRelationshipElement();
+    if (!instance.getAnnotations().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "annotations is not present "
+              + "in the maximal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overAnnotationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getAnnotations().get().size());
+  } // public void testAnnotatedRelationshipElementoverAnnotationsOrEmptyNonDefault
+
+  @Test
+  public void testAnnotatedRelationshipElementoverAnnotationsOrEmptyDefault() throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMinimalAnnotatedRelationshipElement();
+    if (instance.getAnnotations().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "annotations is present "
+              + "in the minimal example of "
+              + "AnnotatedRelationshipElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overAnnotationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_AnnotatedRelationshipElement_overAnnotationsOrEmpty_default
+
+  @Test
+  public void testEntityoverExtensionsOrEmptyNonDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMaximalEntity();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is not present " + "in the maximal example of " + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testEntityoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testEntityoverExtensionsOrEmptyDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMinimalEntity();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is present " + "in the minimal example of " + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Entity_overExtensionsOrEmpty_default
+
+  @Test
+  public void testEntityoverDisplayNameOrEmptyNonDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMaximalEntity();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "displayName is not present " + "in the maximal example of " + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testEntityoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testEntityoverDisplayNameOrEmptyDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMinimalEntity();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "displayName is present " + "in the minimal example of " + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Entity_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testEntityoverDescriptionOrEmptyNonDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMaximalEntity();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "description is not present " + "in the maximal example of " + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testEntityoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testEntityoverDescriptionOrEmptyDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMinimalEntity();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "description is present " + "in the minimal example of " + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Entity_overDescriptionOrEmpty_default
+
+  @Test
+  public void testEntityoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMaximalEntity();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testEntityoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testEntityoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMinimalEntity();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Entity_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testEntityoverQualifiersOrEmptyNonDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMaximalEntity();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is not present " + "in the maximal example of " + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testEntityoverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testEntityoverQualifiersOrEmptyDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMinimalEntity();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is present " + "in the minimal example of " + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Entity_overQualifiersOrEmpty_default
+
+  @Test
+  public void testEntityoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMaximalEntity();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testEntityoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testEntityoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMinimalEntity();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Entity_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testEntityoverStatementsOrEmptyNonDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMaximalEntity();
+    if (!instance.getStatements().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "statements is not present " + "in the maximal example of " + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overStatementsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getStatements().get().size());
+  } // public void testEntityoverStatementsOrEmptyNonDefault
+
+  @Test
+  public void testEntityoverStatementsOrEmptyDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMinimalEntity();
+    if (instance.getStatements().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "statements is present " + "in the minimal example of " + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overStatementsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Entity_overStatementsOrEmpty_default
+
+  // The maximal example of Entity contains no specificAssetIds,
+  // so we can not generate the corresponding test case
+  // Test_Entity_overSpecificAssetIdsOrEmpty_non_default.
+
+  @Test
+  public void testEntityoverSpecificAssetIdsOrEmptyDefault() throws IOException {
+    final Entity instance = CommonJsonization.loadMinimalEntity();
+    if (instance.getSpecificAssetIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "specificAssetIds is present " + "in the minimal example of " + "Entity");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSpecificAssetIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Entity_overSpecificAssetIdsOrEmpty_default
+
+  @Test
+  public void testBasicEventElementoverExtensionsOrEmptyNonDefault() throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is not present "
+              + "in the maximal example of "
+              + "BasicEventElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testBasicEventElementoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testBasicEventElementoverExtensionsOrEmptyDefault() throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMinimalBasicEventElement();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is present "
+              + "in the minimal example of "
+              + "BasicEventElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_BasicEventElement_overExtensionsOrEmpty_default
+
+  @Test
+  public void testBasicEventElementoverDisplayNameOrEmptyNonDefault() throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is not present "
+              + "in the maximal example of "
+              + "BasicEventElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testBasicEventElementoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testBasicEventElementoverDisplayNameOrEmptyDefault() throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMinimalBasicEventElement();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is present "
+              + "in the minimal example of "
+              + "BasicEventElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_BasicEventElement_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testBasicEventElementoverDescriptionOrEmptyNonDefault() throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is not present "
+              + "in the maximal example of "
+              + "BasicEventElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testBasicEventElementoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testBasicEventElementoverDescriptionOrEmptyDefault() throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMinimalBasicEventElement();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is present "
+              + "in the minimal example of "
+              + "BasicEventElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_BasicEventElement_overDescriptionOrEmpty_default
+
+  @Test
+  public void testBasicEventElementoverSupplementalSemanticIdsOrEmptyNonDefault()
+      throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "BasicEventElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testBasicEventElementoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testBasicEventElementoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMinimalBasicEventElement();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "BasicEventElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_BasicEventElement_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testBasicEventElementoverQualifiersOrEmptyNonDefault() throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is not present "
+              + "in the maximal example of "
+              + "BasicEventElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testBasicEventElementoverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testBasicEventElementoverQualifiersOrEmptyDefault() throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMinimalBasicEventElement();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is present "
+              + "in the minimal example of "
+              + "BasicEventElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_BasicEventElement_overQualifiersOrEmpty_default
+
+  @Test
+  public void testBasicEventElementoverEmbeddedDataSpecificationsOrEmptyNonDefault()
+      throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "BasicEventElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testBasicEventElementoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testBasicEventElementoverEmbeddedDataSpecificationsOrEmptyDefault()
+      throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMinimalBasicEventElement();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "BasicEventElement");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_BasicEventElement_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testOperationoverExtensionsOrEmptyNonDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMaximalOperation();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is not present "
+              + "in the maximal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testOperationoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testOperationoverExtensionsOrEmptyDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMinimalOperation();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is present " + "in the minimal example of " + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Operation_overExtensionsOrEmpty_default
+
+  @Test
+  public void testOperationoverDisplayNameOrEmptyNonDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMaximalOperation();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is not present "
+              + "in the maximal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testOperationoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testOperationoverDisplayNameOrEmptyDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMinimalOperation();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "displayName is present " + "in the minimal example of " + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Operation_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testOperationoverDescriptionOrEmptyNonDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMaximalOperation();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is not present "
+              + "in the maximal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testOperationoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testOperationoverDescriptionOrEmptyDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMinimalOperation();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "description is present " + "in the minimal example of " + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Operation_overDescriptionOrEmpty_default
+
+  @Test
+  public void testOperationoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMaximalOperation();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testOperationoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testOperationoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMinimalOperation();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Operation_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testOperationoverQualifiersOrEmptyNonDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMaximalOperation();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is not present "
+              + "in the maximal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testOperationoverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testOperationoverQualifiersOrEmptyDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMinimalOperation();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is present " + "in the minimal example of " + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Operation_overQualifiersOrEmpty_default
+
+  @Test
+  public void testOperationoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMaximalOperation();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testOperationoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testOperationoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMinimalOperation();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Operation_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testOperationoverInputVariablesOrEmptyNonDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMaximalOperation();
+    if (!instance.getInputVariables().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "inputVariables is not present "
+              + "in the maximal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overInputVariablesOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getInputVariables().get().size());
+  } // public void testOperationoverInputVariablesOrEmptyNonDefault
+
+  @Test
+  public void testOperationoverInputVariablesOrEmptyDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMinimalOperation();
+    if (instance.getInputVariables().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "inputVariables is present "
+              + "in the minimal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overInputVariablesOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Operation_overInputVariablesOrEmpty_default
+
+  @Test
+  public void testOperationoverOutputVariablesOrEmptyNonDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMaximalOperation();
+    if (!instance.getOutputVariables().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "outputVariables is not present "
+              + "in the maximal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overOutputVariablesOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getOutputVariables().get().size());
+  } // public void testOperationoverOutputVariablesOrEmptyNonDefault
+
+  @Test
+  public void testOperationoverOutputVariablesOrEmptyDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMinimalOperation();
+    if (instance.getOutputVariables().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "outputVariables is present "
+              + "in the minimal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overOutputVariablesOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Operation_overOutputVariablesOrEmpty_default
+
+  @Test
+  public void testOperationoverInoutputVariablesOrEmptyNonDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMaximalOperation();
+    if (!instance.getInoutputVariables().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "inoutputVariables is not present "
+              + "in the maximal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overInoutputVariablesOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getInoutputVariables().get().size());
+  } // public void testOperationoverInoutputVariablesOrEmptyNonDefault
+
+  @Test
+  public void testOperationoverInoutputVariablesOrEmptyDefault() throws IOException {
+    final Operation instance = CommonJsonization.loadMinimalOperation();
+    if (instance.getInoutputVariables().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "inoutputVariables is present "
+              + "in the minimal example of "
+              + "Operation");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overInoutputVariablesOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Operation_overInoutputVariablesOrEmpty_default
+
+  @Test
+  public void testCapabilityoverExtensionsOrEmptyNonDefault() throws IOException {
+    final Capability instance = CommonJsonization.loadMaximalCapability();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is not present "
+              + "in the maximal example of "
+              + "Capability");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testCapabilityoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testCapabilityoverExtensionsOrEmptyDefault() throws IOException {
+    final Capability instance = CommonJsonization.loadMinimalCapability();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "extensions is present " + "in the minimal example of " + "Capability");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Capability_overExtensionsOrEmpty_default
+
+  @Test
+  public void testCapabilityoverDisplayNameOrEmptyNonDefault() throws IOException {
+    final Capability instance = CommonJsonization.loadMaximalCapability();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is not present "
+              + "in the maximal example of "
+              + "Capability");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testCapabilityoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testCapabilityoverDisplayNameOrEmptyDefault() throws IOException {
+    final Capability instance = CommonJsonization.loadMinimalCapability();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "displayName is present " + "in the minimal example of " + "Capability");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Capability_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testCapabilityoverDescriptionOrEmptyNonDefault() throws IOException {
+    final Capability instance = CommonJsonization.loadMaximalCapability();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is not present "
+              + "in the maximal example of "
+              + "Capability");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testCapabilityoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testCapabilityoverDescriptionOrEmptyDefault() throws IOException {
+    final Capability instance = CommonJsonization.loadMinimalCapability();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "description is present " + "in the minimal example of " + "Capability");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Capability_overDescriptionOrEmpty_default
+
+  @Test
+  public void testCapabilityoverSupplementalSemanticIdsOrEmptyNonDefault() throws IOException {
+    final Capability instance = CommonJsonization.loadMaximalCapability();
+    if (!instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is not present "
+              + "in the maximal example of "
+              + "Capability");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSupplementalSemanticIds().get().size());
+  } // public void testCapabilityoverSupplementalSemanticIdsOrEmptyNonDefault
+
+  @Test
+  public void testCapabilityoverSupplementalSemanticIdsOrEmptyDefault() throws IOException {
+    final Capability instance = CommonJsonization.loadMinimalCapability();
+    if (instance.getSupplementalSemanticIds().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "supplementalSemanticIds is present "
+              + "in the minimal example of "
+              + "Capability");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSupplementalSemanticIdsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Capability_overSupplementalSemanticIdsOrEmpty_default
+
+  @Test
+  public void testCapabilityoverQualifiersOrEmptyNonDefault() throws IOException {
+    final Capability instance = CommonJsonization.loadMaximalCapability();
+    if (!instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "qualifiers is not present "
+              + "in the maximal example of "
+              + "Capability");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getQualifiers().get().size());
+  } // public void testCapabilityoverQualifiersOrEmptyNonDefault
+
+  @Test
+  public void testCapabilityoverQualifiersOrEmptyDefault() throws IOException {
+    final Capability instance = CommonJsonization.loadMinimalCapability();
+    if (instance.getQualifiers().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "qualifiers is present " + "in the minimal example of " + "Capability");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overQualifiersOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Capability_overQualifiersOrEmpty_default
+
+  @Test
+  public void testCapabilityoverEmbeddedDataSpecificationsOrEmptyNonDefault() throws IOException {
+    final Capability instance = CommonJsonization.loadMaximalCapability();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "Capability");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testCapabilityoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testCapabilityoverEmbeddedDataSpecificationsOrEmptyDefault() throws IOException {
+    final Capability instance = CommonJsonization.loadMinimalCapability();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "Capability");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Capability_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testConceptDescriptionoverExtensionsOrEmptyNonDefault() throws IOException {
+    final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
+    if (!instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is not present "
+              + "in the maximal example of "
+              + "ConceptDescription");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getExtensions().get().size());
+  } // public void testConceptDescriptionoverExtensionsOrEmptyNonDefault
+
+  @Test
+  public void testConceptDescriptionoverExtensionsOrEmptyDefault() throws IOException {
+    final ConceptDescription instance = CommonJsonization.loadMinimalConceptDescription();
+    if (instance.getExtensions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "extensions is present "
+              + "in the minimal example of "
+              + "ConceptDescription");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overExtensionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_ConceptDescription_overExtensionsOrEmpty_default
+
+  @Test
+  public void testConceptDescriptionoverDisplayNameOrEmptyNonDefault() throws IOException {
+    final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
+    if (!instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is not present "
+              + "in the maximal example of "
+              + "ConceptDescription");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDisplayName().get().size());
+  } // public void testConceptDescriptionoverDisplayNameOrEmptyNonDefault
+
+  @Test
+  public void testConceptDescriptionoverDisplayNameOrEmptyDefault() throws IOException {
+    final ConceptDescription instance = CommonJsonization.loadMinimalConceptDescription();
+    if (instance.getDisplayName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "displayName is present "
+              + "in the minimal example of "
+              + "ConceptDescription");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDisplayNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_ConceptDescription_overDisplayNameOrEmpty_default
+
+  @Test
+  public void testConceptDescriptionoverDescriptionOrEmptyNonDefault() throws IOException {
+    final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
+    if (!instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is not present "
+              + "in the maximal example of "
+              + "ConceptDescription");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDescription().get().size());
+  } // public void testConceptDescriptionoverDescriptionOrEmptyNonDefault
+
+  @Test
+  public void testConceptDescriptionoverDescriptionOrEmptyDefault() throws IOException {
+    final ConceptDescription instance = CommonJsonization.loadMinimalConceptDescription();
+    if (instance.getDescription().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "description is present "
+              + "in the minimal example of "
+              + "ConceptDescription");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDescriptionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_ConceptDescription_overDescriptionOrEmpty_default
+
+  @Test
+  public void testConceptDescriptionoverEmbeddedDataSpecificationsOrEmptyNonDefault()
+      throws IOException {
+    final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
+    if (!instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is not present "
+              + "in the maximal example of "
+              + "ConceptDescription");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getEmbeddedDataSpecifications().get().size());
+  } // public void testConceptDescriptionoverEmbeddedDataSpecificationsOrEmptyNonDefault
+
+  @Test
+  public void testConceptDescriptionoverEmbeddedDataSpecificationsOrEmptyDefault()
+      throws IOException {
+    final ConceptDescription instance = CommonJsonization.loadMinimalConceptDescription();
+    if (instance.getEmbeddedDataSpecifications().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "embeddedDataSpecifications is present "
+              + "in the minimal example of "
+              + "ConceptDescription");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overEmbeddedDataSpecificationsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_ConceptDescription_overEmbeddedDataSpecificationsOrEmpty_default
+
+  @Test
+  public void testConceptDescriptionoverIsCaseOfOrEmptyNonDefault() throws IOException {
+    final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
+    if (!instance.getIsCaseOf().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "isCaseOf is not present "
+              + "in the maximal example of "
+              + "ConceptDescription");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overIsCaseOfOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getIsCaseOf().get().size());
+  } // public void testConceptDescriptionoverIsCaseOfOrEmptyNonDefault
+
+  @Test
+  public void testConceptDescriptionoverIsCaseOfOrEmptyDefault() throws IOException {
+    final ConceptDescription instance = CommonJsonization.loadMinimalConceptDescription();
+    if (instance.getIsCaseOf().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "isCaseOf is present "
+              + "in the minimal example of "
+              + "ConceptDescription");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overIsCaseOfOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_ConceptDescription_overIsCaseOfOrEmpty_default
+
+  @Test
+  public void testEnvironmentoverAssetAdministrationShellsOrEmptyNonDefault() throws IOException {
+    final Environment instance = CommonJsonization.loadMaximalEnvironment();
+    if (!instance.getAssetAdministrationShells().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "assetAdministrationShells is not present "
+              + "in the maximal example of "
+              + "Environment");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overAssetAdministrationShellsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getAssetAdministrationShells().get().size());
+  } // public void testEnvironmentoverAssetAdministrationShellsOrEmptyNonDefault
+
+  @Test
+  public void testEnvironmentoverAssetAdministrationShellsOrEmptyDefault() throws IOException {
+    final Environment instance = CommonJsonization.loadMinimalEnvironment();
+    if (instance.getAssetAdministrationShells().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "assetAdministrationShells is present "
+              + "in the minimal example of "
+              + "Environment");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overAssetAdministrationShellsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Environment_overAssetAdministrationShellsOrEmpty_default
+
+  @Test
+  public void testEnvironmentoverSubmodelsOrEmptyNonDefault() throws IOException {
+    final Environment instance = CommonJsonization.loadMaximalEnvironment();
+    if (!instance.getSubmodels().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "submodels is not present "
+              + "in the maximal example of "
+              + "Environment");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSubmodelsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getSubmodels().get().size());
+  } // public void testEnvironmentoverSubmodelsOrEmptyNonDefault
+
+  @Test
+  public void testEnvironmentoverSubmodelsOrEmptyDefault() throws IOException {
+    final Environment instance = CommonJsonization.loadMinimalEnvironment();
+    if (instance.getSubmodels().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected " + "submodels is present " + "in the minimal example of " + "Environment");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overSubmodelsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Environment_overSubmodelsOrEmpty_default
+
+  @Test
+  public void testEnvironmentoverConceptDescriptionsOrEmptyNonDefault() throws IOException {
+    final Environment instance = CommonJsonization.loadMaximalEnvironment();
+    if (!instance.getConceptDescriptions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "conceptDescriptions is not present "
+              + "in the maximal example of "
+              + "Environment");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overConceptDescriptionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getConceptDescriptions().get().size());
+  } // public void testEnvironmentoverConceptDescriptionsOrEmptyNonDefault
+
+  @Test
+  public void testEnvironmentoverConceptDescriptionsOrEmptyDefault() throws IOException {
+    final Environment instance = CommonJsonization.loadMinimalEnvironment();
+    if (instance.getConceptDescriptions().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "conceptDescriptions is present "
+              + "in the minimal example of "
+              + "Environment");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overConceptDescriptionsOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_Environment_overConceptDescriptionsOrEmpty_default
+
+  @Test
+  public void testDataSpecificationIec61360overShortNameOrEmptyNonDefault() throws IOException {
+    final DataSpecificationIec61360 instance =
+        CommonJsonization.loadMaximalDataSpecificationIec61360();
+    if (!instance.getShortName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "shortName is not present "
+              + "in the maximal example of "
+              + "DataSpecificationIec61360");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overShortNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getShortName().get().size());
+  } // public void testDataSpecificationIec61360overShortNameOrEmptyNonDefault
+
+  @Test
+  public void testDataSpecificationIec61360overShortNameOrEmptyDefault() throws IOException {
+    final DataSpecificationIec61360 instance =
+        CommonJsonization.loadMinimalDataSpecificationIec61360();
+    if (instance.getShortName().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "shortName is present "
+              + "in the minimal example of "
+              + "DataSpecificationIec61360");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overShortNameOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_DataSpecificationIec61360_overShortNameOrEmpty_default
+
+  @Test
+  public void testDataSpecificationIec61360overDefinitionOrEmptyNonDefault() throws IOException {
+    final DataSpecificationIec61360 instance =
+        CommonJsonization.loadMaximalDataSpecificationIec61360();
+    if (!instance.getDefinition().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "definition is not present "
+              + "in the maximal example of "
+              + "DataSpecificationIec61360");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDefinitionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(count.get(), instance.getDefinition().get().size());
+  } // public void testDataSpecificationIec61360overDefinitionOrEmptyNonDefault
+
+  @Test
+  public void testDataSpecificationIec61360overDefinitionOrEmptyDefault() throws IOException {
+    final DataSpecificationIec61360 instance =
+        CommonJsonization.loadMinimalDataSpecificationIec61360();
+    if (instance.getDefinition().isPresent()) {
+      throw new IllegalArgumentException(
+          "Unexpected "
+              + "definition is present "
+              + "in the minimal example of "
+              + "DataSpecificationIec61360");
+    }
+    AtomicInteger count = new AtomicInteger();
+    instance.overDefinitionOrEmpty().forEach(i -> count.getAndIncrement());
+    assertEquals(0, count.get());
+  } // public void Test_DataSpecificationIec61360_overDefinitionOrEmpty_default
+} // class TestOverXOrEmpty
 
 /*
  * This code has been automatically generated by testgen.

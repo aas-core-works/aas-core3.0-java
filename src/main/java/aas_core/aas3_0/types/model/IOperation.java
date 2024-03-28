@@ -7,9 +7,7 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
 import java.util.List;
-import aas_core.aas3_0.types.model.ISubmodelElement;
 import java.util.Optional;
 
 /**
@@ -18,48 +16,35 @@ import java.util.Optional;
  * <p>Constraints:
  *
  * <ul>
- *   <li> Constraint AASd-134:
- *   For an {@link aas_core.aas3_0.types.impl.Operation} the {@link aas_core.aas3_0.types.model.IReferable#getIdShort()} of all
- *   {@link aas_core.aas3_0.types.impl.OperationVariable#getValue()}'s in
- *   {@link #getInputVariables()}, {@link #getOutputVariables()}
- *   and {@link #getInoutputVariables()} shall be unique.
+ *   <li>Constraint AASd-134: For an {@link aas_core.aas3_0.types.impl.Operation} the {@link
+ *       aas_core.aas3_0.types.model.IReferable#getIdShort()} of all {@link
+ *       aas_core.aas3_0.types.impl.OperationVariable#getValue()}'s in {@link #getInputVariables()},
+ *       {@link #getOutputVariables()} and {@link #getInoutputVariables()} shall be unique.
  * </ul>
  */
 public interface IOperation extends ISubmodelElement {
-  /**
-   * Input parameter of the operation.
-   */
+  /** Input parameter of the operation. */
   Optional<List<IOperationVariable>> getInputVariables();
 
   void setInputVariables(List<IOperationVariable> inputVariables);
 
-  /**
-   * Output parameter of the operation.
-   */
+  /** Output parameter of the operation. */
   Optional<List<IOperationVariable>> getOutputVariables();
 
   void setOutputVariables(List<IOperationVariable> outputVariables);
 
-  /**
-   * Parameter that is input and output of the operation.
-   */
+  /** Parameter that is input and output of the operation. */
   Optional<List<IOperationVariable>> getInoutputVariables();
 
   void setInoutputVariables(List<IOperationVariable> inoutputVariables);
 
-  /**
-   * Iterate over inputVariables, if set, and otherwise return an empty enumerable.
-   */
+  /** Iterate over inputVariables, if set, and otherwise return an empty enumerable. */
   Iterable<IOperationVariable> overInputVariablesOrEmpty();
 
-  /**
-   * Iterate over outputVariables, if set, and otherwise return an empty enumerable.
-   */
+  /** Iterate over outputVariables, if set, and otherwise return an empty enumerable. */
   Iterable<IOperationVariable> overOutputVariablesOrEmpty();
 
-  /**
-   * Iterate over inoutputVariables, if set, and otherwise return an empty enumerable.
-   */
+  /** Iterate over inoutputVariables, if set, and otherwise return an empty enumerable. */
   Iterable<IOperationVariable> overInoutputVariablesOrEmpty();
 }
 

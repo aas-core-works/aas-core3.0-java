@@ -5,44 +5,35 @@ import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.types.model.*;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-/**
- * Builder for the ConceptDescription type.
- */
+/** Builder for the ConceptDescription type. */
 public class ConceptDescriptionBuilder {
-  /**
-   * An extension of the element.
-   */
+  /** An extension of the element. */
   private List<IExtension> extensions;
 
   /**
-   * The category is a value that gives further meta information
-   * w.r.t. to the class of the element.
-   * It affects the expected existence of attributes and the applicability of
-   * constraints.
+   * The category is a value that gives further meta information w.r.t. to the class of the element.
+   * It affects the expected existence of attributes and the applicability of constraints.
    *
-   * <p>The category is not identical to the semantic definition
-   * ({@link aas_core.aas3_0.types.model.IHasSemantics}) of an element. The category e.g. could denote that
-   * the element is a measurement value whereas the semantic definition of
-   * the element would denote that it is the measured temperature.
+   * <p>The category is not identical to the semantic definition ({@link
+   * aas_core.aas3_0.types.model.IHasSemantics}) of an element. The category e.g. could denote that
+   * the element is a measurement value whereas the semantic definition of the element would denote
+   * that it is the measured temperature.
    */
   private String category;
 
   /**
-   * In case of identifiables this attribute is a short name of the element.
-   * In case of referable this ID is an identifying string of the element within
-   * its name space.
+   * In case of identifiables this attribute is a short name of the element. In case of referable
+   * this ID is an identifying string of the element within its name space.
    *
-   * <p>In case the element is a property and the property has a semantic definition
-   * ({@link aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()}) conformant to IEC61360
-   * the {@link aas_core.aas3_0.types.model.IReferable#getIdShort()} is typically identical to the short name in English.
+   * <p>In case the element is a property and the property has a semantic definition ({@link
+   * aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()}) conformant to IEC61360 the {@link
+   * aas_core.aas3_0.types.model.IReferable#getIdShort()} is typically identical to the short name
+   * in English.
    */
   private String idShort;
 
-  /**
-   * Display name. Can be provided in several languages.
-   */
+  /** Display name. Can be provided in several languages. */
   private List<ILangStringNameType> displayName;
 
   /**
@@ -50,37 +41,31 @@ public class ConceptDescriptionBuilder {
    *
    * <p>The description can be provided in several languages.
    *
-   * <p>If no description is defined, then the definition of the concept
-   * description that defines the semantics of the element is used.
+   * <p>If no description is defined, then the definition of the concept description that defines
+   * the semantics of the element is used.
    *
-   * <p>Additional information can be provided, e.g., if the element is
-   * qualified and which qualifier types can be expected in which
-   * context or which additional data specification templates are
-   * provided.
+   * <p>Additional information can be provided, e.g., if the element is qualified and which
+   * qualifier types can be expected in which context or which additional data specification
+   * templates are provided.
    */
   private List<ILangStringTextType> description;
 
   /**
    * Administrative information of an identifiable element.
    *
-   * <p>Some of the administrative information like the version number might need to
-   * be part of the identification.
+   * <p>Some of the administrative information like the version number might need to be part of the
+   * identification.
    */
   private IAdministrativeInformation administration;
 
-  /**
-   * The globally unique identification of the element.
-   */
+  /** The globally unique identification of the element. */
   private String id;
 
-  /**
-   * Embedded data specification.
-   */
+  /** Embedded data specification. */
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
   /**
-   * Reference to an external definition the concept is compatible to or was derived
-   * from.
+   * Reference to an external definition the concept is compatible to or was derived from.
    *
    * <p>It is recommended to use a global reference.
    *
@@ -89,9 +74,7 @@ public class ConceptDescriptionBuilder {
   private List<IReference> isCaseOf;
 
   public ConceptDescriptionBuilder(String id) {
-    this.id = Objects.requireNonNull(
-      id,
-      "Argument \"id\" must be non-null.");
+    this.id = Objects.requireNonNull(id, "Argument \"id\" must be non-null.");
   }
 
   public ConceptDescriptionBuilder setExtensions(List<IExtension> extensions) {
@@ -124,7 +107,8 @@ public class ConceptDescriptionBuilder {
     return this;
   }
 
-  public ConceptDescriptionBuilder setEmbeddeddataspecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public ConceptDescriptionBuilder setEmbeddeddataspecifications(
+      List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;
   }
@@ -136,14 +120,14 @@ public class ConceptDescriptionBuilder {
 
   public ConceptDescription build() {
     return new ConceptDescription(
-      this.id,
-      this.extensions,
-      this.category,
-      this.idShort,
-      this.displayName,
-      this.description,
-      this.administration,
-      this.embeddedDataSpecifications,
-      this.isCaseOf);
+        this.id,
+        this.extensions,
+        this.category,
+        this.idShort,
+        this.displayName,
+        this.description,
+        this.administration,
+        this.embeddedDataSpecifications,
+        this.isCaseOf);
   }
 }

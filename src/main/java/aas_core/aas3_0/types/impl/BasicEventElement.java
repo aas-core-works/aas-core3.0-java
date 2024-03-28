@@ -5,66 +5,56 @@
 
 package aas_core.aas3_0.types.impl;
 
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
+import aas_core.aas3_0.types.enums.*;
+import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.types.model.IBasicEventElement;
 import aas_core.aas3_0.visitation.ITransformer;
 import aas_core.aas3_0.visitation.ITransformerWithContext;
-import aas_core.aas3_0.types.enums.*;
-import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Objects;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import aas_core.aas3_0.types.model.IBasicEventElement;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * A basic event element.
  *
- * <p>This element is experimental and therefore may be subject to change or may be
- * removed completely in future versions of the meta-model.
+ * <p>This element is experimental and therefore may be subject to change or may be removed
+ * completely in future versions of the meta-model.
  */
 public class BasicEventElement implements IBasicEventElement {
-  /**
-   * An extension of the element.
-   */
+  /** An extension of the element. */
   private List<IExtension> extensions;
 
   /**
-   * The category is a value that gives further meta information
-   * w.r.t. to the class of the element.
-   * It affects the expected existence of attributes and the applicability of
-   * constraints.
+   * The category is a value that gives further meta information w.r.t. to the class of the element.
+   * It affects the expected existence of attributes and the applicability of constraints.
    *
-   * <p>The category is not identical to the semantic definition
-   * ({@link aas_core.aas3_0.types.model.IHasSemantics}) of an element. The category e.g. could denote that
-   * the element is a measurement value whereas the semantic definition of
-   * the element would denote that it is the measured temperature.
+   * <p>The category is not identical to the semantic definition ({@link
+   * aas_core.aas3_0.types.model.IHasSemantics}) of an element. The category e.g. could denote that
+   * the element is a measurement value whereas the semantic definition of the element would denote
+   * that it is the measured temperature.
    */
   private String category;
 
   /**
-   * In case of identifiables this attribute is a short name of the element.
-   * In case of referable this ID is an identifying string of the element within
-   * its name space.
+   * In case of identifiables this attribute is a short name of the element. In case of referable
+   * this ID is an identifying string of the element within its name space.
    *
-   * <p>In case the element is a property and the property has a semantic definition
-   * ({@link aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()}) conformant to IEC61360
-   * the {@link aas_core.aas3_0.types.model.IReferable#getIdShort()} is typically identical to the short name in English.
+   * <p>In case the element is a property and the property has a semantic definition ({@link
+   * aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()}) conformant to IEC61360 the {@link
+   * aas_core.aas3_0.types.model.IReferable#getIdShort()} is typically identical to the short name
+   * in English.
    */
   private String idShort;
 
-  /**
-   * Display name. Can be provided in several languages.
-   */
+  /** Display name. Can be provided in several languages. */
   private List<ILangStringNameType> displayName;
 
   /**
@@ -72,27 +62,26 @@ public class BasicEventElement implements IBasicEventElement {
    *
    * <p>The description can be provided in several languages.
    *
-   * <p>If no description is defined, then the definition of the concept
-   * description that defines the semantics of the element is used.
+   * <p>If no description is defined, then the definition of the concept description that defines
+   * the semantics of the element is used.
    *
-   * <p>Additional information can be provided, e.g., if the element is
-   * qualified and which qualifier types can be expected in which
-   * context or which additional data specification templates are
-   * provided.
+   * <p>Additional information can be provided, e.g., if the element is qualified and which
+   * qualifier types can be expected in which context or which additional data specification
+   * templates are provided.
    */
   private List<ILangStringTextType> description;
 
   /**
-   * Identifier of the semantic definition of the element. It is called semantic ID
-   * of the element or also main semantic ID of the element.
+   * Identifier of the semantic definition of the element. It is called semantic ID of the element
+   * or also main semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
   private IReference semanticId;
 
   /**
-   * Identifier of a supplemental semantic definition of the element.
-   * It is called supplemental semantic ID of the element.
+   * Identifier of a supplemental semantic definition of the element. It is called supplemental
+   * semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
@@ -104,25 +93,21 @@ public class BasicEventElement implements IBasicEventElement {
    * <p>Constraints:
    *
    * <ul>
-   *   <li> Constraint AASd-021:
-   *   Every qualifiable can only have one qualifier with the same
-   *   {@link aas_core.aas3_0.types.impl.Qualifier#getType()}.
+   *   <li>Constraint AASd-021: Every qualifiable can only have one qualifier with the same {@link
+   *       aas_core.aas3_0.types.impl.Qualifier#getType()}.
    * </ul>
    */
   private List<IQualifier> qualifiers;
 
-  /**
-   * Embedded data specification.
-   */
+  /** Embedded data specification. */
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
   /**
-   * Reference to the {@link aas_core.aas3_0.types.model.IReferable}, which defines the scope of the event.
-   * Can be {@link aas_core.aas3_0.types.impl.AssetAdministrationShell}, {@link aas_core.aas3_0.types.impl.Submodel}, or
-   * {@link aas_core.aas3_0.types.model.ISubmodelElement}.
+   * Reference to the {@link aas_core.aas3_0.types.model.IReferable}, which defines the scope of the
+   * event. Can be {@link aas_core.aas3_0.types.impl.AssetAdministrationShell}, {@link
+   * aas_core.aas3_0.types.impl.Submodel}, or {@link aas_core.aas3_0.types.model.ISubmodelElement}.
    *
-   * <p>Reference to a referable, e.g., a data element or
-   * a submodel, that is being observed.
+   * <p>Reference to a referable, e.g., a data element or a submodel, that is being observed.
    */
   private IReference observed;
 
@@ -141,35 +126,37 @@ public class BasicEventElement implements IBasicEventElement {
   private StateOfEvent state;
 
   /**
-   * Information for the outer message infrastructure for scheduling the event to the
-   * respective communication channel.
+   * Information for the outer message infrastructure for scheduling the event to the respective
+   * communication channel.
    */
   private String messageTopic;
 
   /**
-   * Information, which outer message infrastructure shall handle messages for
-   * the {@link aas_core.aas3_0.types.model.IEventElement}. Refers to a {@link aas_core.aas3_0.types.impl.Submodel},
-   * {@link aas_core.aas3_0.types.impl.SubmodelElementList}, {@link aas_core.aas3_0.types.impl.SubmodelElementCollection} or
-   * {@link aas_core.aas3_0.types.impl.Entity}, which contains {@link aas_core.aas3_0.types.model.IDataElement}'s describing
-   * the proprietary specification for the message broker.
+   * Information, which outer message infrastructure shall handle messages for the {@link
+   * aas_core.aas3_0.types.model.IEventElement}. Refers to a {@link
+   * aas_core.aas3_0.types.impl.Submodel}, {@link aas_core.aas3_0.types.impl.SubmodelElementList},
+   * {@link aas_core.aas3_0.types.impl.SubmodelElementCollection} or {@link
+   * aas_core.aas3_0.types.impl.Entity}, which contains {@link
+   * aas_core.aas3_0.types.model.IDataElement}'s describing the proprietary specification for the
+   * message broker.
    *
-   * <p>For different message infrastructure, e.g., OPC UA or MQTT or AMQP, this
-   * proprietary specification could be standardized by having respective Submodels.
+   * <p>For different message infrastructure, e.g., OPC UA or MQTT or AMQP, this proprietary
+   * specification could be standardized by having respective Submodels.
    */
   private IReference messageBroker;
 
   /**
-   * Timestamp in UTC, when the last event was received (input direction) or sent
-   * (output direction).
+   * Timestamp in UTC, when the last event was received (input direction) or sent (output
+   * direction).
    */
   private String lastUpdate;
 
   /**
-   * For input direction, reports on the maximum frequency, the software entity behind
-   * the respective Referable can handle input events.
+   * For input direction, reports on the maximum frequency, the software entity behind the
+   * respective Referable can handle input events.
    *
-   * <p>For output events, specifies the maximum frequency of outputting this event to
-   * an outer infrastructure.
+   * <p>For output events, specifies the maximum frequency of outputting this event to an outer
+   * infrastructure.
    *
    * <p>Might be not specified, that is, there is no minimum interval.
    */
@@ -178,47 +165,38 @@ public class BasicEventElement implements IBasicEventElement {
   /**
    * For input direction: not applicable.
    *
-   * <p>For output direction: maximum interval in time, the respective Referable shall send
-   * an update of the status of the event, even if no other trigger condition for
-   * the event was not met.
+   * <p>For output direction: maximum interval in time, the respective Referable shall send an
+   * update of the status of the event, even if no other trigger condition for the event was not
+   * met.
    *
    * <p>Might be not specified, that is, there is no maximum interval
    */
   private String maxInterval;
 
-  public BasicEventElement(
-    IReference observed,
-    Direction direction,
-    StateOfEvent state) {
-    this.observed = Objects.requireNonNull(
-      observed,
-      "Argument \"observed\" must be non-null.");
-    this.direction = Objects.requireNonNull(
-      direction,
-      "Argument \"direction\" must be non-null.");
-    this.state = Objects.requireNonNull(
-      state,
-      "Argument \"state\" must be non-null.");
+  public BasicEventElement(IReference observed, Direction direction, StateOfEvent state) {
+    this.observed = Objects.requireNonNull(observed, "Argument \"observed\" must be non-null.");
+    this.direction = Objects.requireNonNull(direction, "Argument \"direction\" must be non-null.");
+    this.state = Objects.requireNonNull(state, "Argument \"state\" must be non-null.");
   }
 
   public BasicEventElement(
-    IReference observed,
-    Direction direction,
-    StateOfEvent state,
-    List<IExtension> extensions,
-    String category,
-    String idShort,
-    List<ILangStringNameType> displayName,
-    List<ILangStringTextType> description,
-    IReference semanticId,
-    List<IReference> supplementalSemanticIds,
-    List<IQualifier> qualifiers,
-    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-    String messageTopic,
-    IReference messageBroker,
-    String lastUpdate,
-    String minInterval,
-    String maxInterval) {
+      IReference observed,
+      Direction direction,
+      StateOfEvent state,
+      List<IExtension> extensions,
+      String category,
+      String idShort,
+      List<ILangStringNameType> displayName,
+      List<ILangStringTextType> description,
+      IReference semanticId,
+      List<IReference> supplementalSemanticIds,
+      List<IQualifier> qualifiers,
+      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+      String messageTopic,
+      IReference messageBroker,
+      String lastUpdate,
+      String minInterval,
+      String maxInterval) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;
@@ -228,15 +206,9 @@ public class BasicEventElement implements IBasicEventElement {
     this.supplementalSemanticIds = supplementalSemanticIds;
     this.qualifiers = qualifiers;
     this.embeddedDataSpecifications = embeddedDataSpecifications;
-    this.observed = Objects.requireNonNull(
-      observed,
-      "Argument \"observed\" must be non-null.");
-    this.direction = Objects.requireNonNull(
-      direction,
-      "Argument \"direction\" must be non-null.");
-    this.state = Objects.requireNonNull(
-      state,
-      "Argument \"state\" must be non-null.");
+    this.observed = Objects.requireNonNull(observed, "Argument \"observed\" must be non-null.");
+    this.direction = Objects.requireNonNull(direction, "Argument \"direction\" must be non-null.");
+    this.state = Objects.requireNonNull(state, "Argument \"state\" must be non-null.");
     this.messageTopic = messageTopic;
     this.messageBroker = messageBroker;
     this.lastUpdate = lastUpdate;
@@ -330,7 +302,8 @@ public class BasicEventElement implements IBasicEventElement {
   }
 
   @Override
-  public void setEmbeddedDataSpecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public void setEmbeddedDataSpecifications(
+      List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
   }
 
@@ -341,9 +314,7 @@ public class BasicEventElement implements IBasicEventElement {
 
   @Override
   public void setObserved(IReference observed) {
-    this.observed = Objects.requireNonNull(
-      observed,
-      "Argument \"observed\" must be non-null.");
+    this.observed = Objects.requireNonNull(observed, "Argument \"observed\" must be non-null.");
   }
 
   @Override
@@ -353,9 +324,7 @@ public class BasicEventElement implements IBasicEventElement {
 
   @Override
   public void setDirection(Direction direction) {
-    this.direction = Objects.requireNonNull(
-      direction,
-      "Argument \"direction\" must be non-null.");
+    this.direction = Objects.requireNonNull(direction, "Argument \"direction\" must be non-null.");
   }
 
   @Override
@@ -365,9 +334,7 @@ public class BasicEventElement implements IBasicEventElement {
 
   @Override
   public void setState(StateOfEvent state) {
-    this.state = Objects.requireNonNull(
-      state,
-      "Argument \"state\" must be non-null.");
+    this.state = Objects.requireNonNull(state, "Argument \"state\" must be non-null.");
   }
 
   @Override
@@ -421,102 +388,90 @@ public class BasicEventElement implements IBasicEventElement {
   }
 
   /**
-   * Iterate over {@link BasicEventElement#extensions}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link BasicEventElement#extensions}, if set, and otherwise return an empty
+   * iterator.
    */
   public Iterable<IExtension> overExtensionsOrEmpty() {
     return getExtensions().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link BasicEventElement#displayName}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link BasicEventElement#displayName}, if set, and otherwise return an empty
+   * iterator.
    */
   public Iterable<ILangStringNameType> overDisplayNameOrEmpty() {
     return getDisplayName().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link BasicEventElement#description}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link BasicEventElement#description}, if set, and otherwise return an empty
+   * iterator.
    */
   public Iterable<ILangStringTextType> overDescriptionOrEmpty() {
     return getDescription().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link BasicEventElement#supplementalSemanticIds}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link BasicEventElement#supplementalSemanticIds}, if set, and otherwise return an
+   * empty iterator.
    */
   public Iterable<IReference> overSupplementalSemanticIdsOrEmpty() {
     return getSupplementalSemanticIds().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link BasicEventElement#qualifiers}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link BasicEventElement#qualifiers}, if set, and otherwise return an empty
+   * iterator.
    */
   public Iterable<IQualifier> overQualifiersOrEmpty() {
     return getQualifiers().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link BasicEventElement#embeddedDataSpecifications}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link BasicEventElement#embeddedDataSpecifications}, if set, and otherwise return
+   * an empty iterator.
    */
   public Iterable<IEmbeddedDataSpecification> overEmbeddedDataSpecificationsOrEmpty() {
     return getEmbeddedDataSpecifications().orElseGet(Collections::emptyList);
   }
 
-  /**
-   * Iterate recursively over all the class instances referenced from this instance.
-   */
+  /** Iterate recursively over all the class instances referenced from this instance. */
   public Iterable<IClass> descend() {
     return new BasicEventElementRecursiveIterable();
   }
 
-  /**
-   * Iterate over all the class instances referenced from this instance.
-   */
+  /** Iterate over all the class instances referenced from this instance. */
   public Iterable<IClass> descendOnce() {
     return new BasicEventElementIterable();
   }
 
-  /**
-   * Accept the {@code visitor} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code visitor} to visit this instance for double dispatch. */
   @Override
   public void accept(IVisitor visitor) {
     visitor.visitBasicEventElement(this);
   }
 
   /**
-   * Accept the {@code visitor} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code visitor} to visit this instance for double dispatch with the {@code context}.
+   */
   @Override
-  public <ContextT> void accept(
-      IVisitorWithContext<ContextT> visitor,
-      ContextT context) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitBasicEventElement(this, context);
   }
 
-  /**
-   * Accept the {@code transformer} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code transformer} to visit this instance for double dispatch. */
   @Override
   public <T> T transform(ITransformer<T> transformer) {
     return transformer.transformBasicEventElement(this);
   }
 
   /**
-   * Accept the {@code transformer} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code transformer} to visit this instance for double dispatch with the {@code
+   * context}.
+   */
   @Override
   public <ContextT, T> T transform(
-      ITransformerWithContext<ContextT, T> transformer,
-      ContextT context) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformBasicEventElement(this, context);
   }
 
@@ -546,48 +501,44 @@ public class BasicEventElement implements IBasicEventElement {
       Stream<IClass> memberStream = Stream.empty();
 
       if (extensions != null) {
-        memberStream = Stream.concat(memberStream,
-          BasicEventElement.this.extensions.stream());
+        memberStream = Stream.concat(memberStream, BasicEventElement.this.extensions.stream());
       }
 
       if (displayName != null) {
-        memberStream = Stream.concat(memberStream,
-          BasicEventElement.this.displayName.stream());
+        memberStream = Stream.concat(memberStream, BasicEventElement.this.displayName.stream());
       }
 
       if (description != null) {
-        memberStream = Stream.concat(memberStream,
-          BasicEventElement.this.description.stream());
+        memberStream = Stream.concat(memberStream, BasicEventElement.this.description.stream());
       }
 
       if (semanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(BasicEventElement.this.semanticId));
+        memberStream =
+            Stream.concat(memberStream, Stream.<IClass>of(BasicEventElement.this.semanticId));
       }
 
       if (supplementalSemanticIds != null) {
-        memberStream = Stream.concat(memberStream,
-          BasicEventElement.this.supplementalSemanticIds.stream());
+        memberStream =
+            Stream.concat(memberStream, BasicEventElement.this.supplementalSemanticIds.stream());
       }
 
       if (qualifiers != null) {
-        memberStream = Stream.concat(memberStream,
-          BasicEventElement.this.qualifiers.stream());
+        memberStream = Stream.concat(memberStream, BasicEventElement.this.qualifiers.stream());
       }
 
       if (embeddedDataSpecifications != null) {
-        memberStream = Stream.concat(memberStream,
-          BasicEventElement.this.embeddedDataSpecifications.stream());
+        memberStream =
+            Stream.concat(memberStream, BasicEventElement.this.embeddedDataSpecifications.stream());
       }
 
       if (observed != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(BasicEventElement.this.observed));
+        memberStream =
+            Stream.concat(memberStream, Stream.<IClass>of(BasicEventElement.this.observed));
       }
 
       if (messageBroker != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(BasicEventElement.this.messageBroker));
+        memberStream =
+            Stream.concat(memberStream, Stream.<IClass>of(BasicEventElement.this.messageBroker));
       }
 
       return memberStream;
@@ -620,63 +571,105 @@ public class BasicEventElement implements IBasicEventElement {
       Stream<IClass> memberStream = Stream.empty();
 
       if (extensions != null) {
-        memberStream = Stream.concat(memberStream,
-          BasicEventElement.this.extensions.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                BasicEventElement.this.extensions.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (displayName != null) {
-        memberStream = Stream.concat(memberStream,
-          BasicEventElement.this.displayName.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                BasicEventElement.this.displayName.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (description != null) {
-        memberStream = Stream.concat(memberStream,
-          BasicEventElement.this.description.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                BasicEventElement.this.description.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (semanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(BasicEventElement.this.semanticId),
-            StreamSupport.stream(BasicEventElement.this.semanticId.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(BasicEventElement.this.semanticId),
+                    StreamSupport.stream(
+                        BasicEventElement.this.semanticId.descend().spliterator(), false)));
       }
 
       if (supplementalSemanticIds != null) {
-        memberStream = Stream.concat(memberStream,
-          BasicEventElement.this.supplementalSemanticIds.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                BasicEventElement.this.supplementalSemanticIds.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (qualifiers != null) {
-        memberStream = Stream.concat(memberStream,
-          BasicEventElement.this.qualifiers.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                BasicEventElement.this.qualifiers.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (embeddedDataSpecifications != null) {
-        memberStream = Stream.concat(memberStream,
-          BasicEventElement.this.embeddedDataSpecifications.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                BasicEventElement.this.embeddedDataSpecifications.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (observed != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(BasicEventElement.this.observed),
-            StreamSupport.stream(BasicEventElement.this.observed.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(BasicEventElement.this.observed),
+                    StreamSupport.stream(
+                        BasicEventElement.this.observed.descend().spliterator(), false)));
       }
 
       if (messageBroker != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(BasicEventElement.this.messageBroker),
-            StreamSupport.stream(BasicEventElement.this.messageBroker.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(BasicEventElement.this.messageBroker),
+                    StreamSupport.stream(
+                        BasicEventElement.this.messageBroker.descend().spliterator(), false)));
       }
 
       return memberStream;

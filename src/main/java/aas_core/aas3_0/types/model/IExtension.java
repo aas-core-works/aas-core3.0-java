@@ -7,14 +7,10 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
 import java.util.List;
-import aas_core.aas3_0.types.model.IHasSemantics;
 import java.util.Optional;
 
-/**
- * Single extension of an element.
- */
+/** Single extension of an element. */
 public interface IExtension extends IHasSemantics {
   /**
    * Name of the extension.
@@ -22,9 +18,8 @@ public interface IExtension extends IHasSemantics {
    * <p>Constraints:
    *
    * <ul>
-   *   <li> Constraint AASd-077:
-   *   The name of an extension (Extension/name) within {@link aas_core.aas3_0.types.model.IHasExtensions} needs
-   *   to be unique.
+   *   <li>Constraint AASd-077: The name of an extension (Extension/name) within {@link
+   *       aas_core.aas3_0.types.model.IHasExtensions} needs to be unique.
    * </ul>
    */
   String getName();
@@ -40,25 +35,19 @@ public interface IExtension extends IHasSemantics {
 
   void setValueType(DataTypeDefXsd valueType);
 
-  /**
-   * Value of the extension
-   */
+  /** Value of the extension */
   Optional<String> getValue();
 
   void setValue(String value);
 
-  /**
-   * Reference to an element the extension refers to.
-   */
+  /** Reference to an element the extension refers to. */
   Optional<List<IReference>> getRefersTo();
 
   void setRefersTo(List<IReference> refersTo);
 
   DataTypeDefXsd valueTypeOrDefault();
 
-  /**
-   * Iterate over refersTo, if set, and otherwise return an empty enumerable.
-   */
+  /** Iterate over refersTo, if set, and otherwise return an empty enumerable. */
   Iterable<IReference> overRefersToOrEmpty();
 }
 

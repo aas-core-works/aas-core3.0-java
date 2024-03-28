@@ -5,26 +5,22 @@
 
 package aas_core.aas3_0.types.impl;
 
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
+import aas_core.aas3_0.types.enums.*;
+import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.types.model.ISubmodelElementList;
 import aas_core.aas3_0.visitation.ITransformer;
 import aas_core.aas3_0.visitation.ITransformerWithContext;
-import aas_core.aas3_0.types.enums.*;
-import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Objects;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import aas_core.aas3_0.types.model.ISubmodelElementList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * A submodel element list is an ordered list of submodel elements.
@@ -34,65 +30,58 @@ import java.util.Objects;
  * <p>Constraints:
  *
  * <ul>
- *   <li> Constraint AASd-107:
- *   If a first level child element in a {@link aas_core.aas3_0.types.impl.SubmodelElementList} has
- *   a {@link aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()} it
- *   shall be identical to {@link #getSemanticIdListElement()}.
- *   <li> Constraint AASd-114:
- *   If two first level child elements in a {@link aas_core.aas3_0.types.impl.SubmodelElementList} have
- *   a {@link aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()} then they shall be identical.
- *   <li> Constraint AASd-115:
- *   If a first level child element in a {@link aas_core.aas3_0.types.impl.SubmodelElementList} does not
- *   specify a {@link aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()} then the value is assumed to be
- *   identical to {@link #getSemanticIdListElement()}.
- *   <li> Constraint AASd-120:
- *   The {@link #getIdShort()} of a {@link aas_core.aas3_0.types.model.ISubmodelElement} being a direct child of a
- *   {@link aas_core.aas3_0.types.impl.SubmodelElementList} shall not be specified.
- *   <li> Constraint AASd-108:
- *   All first level child elements in a {@link aas_core.aas3_0.types.impl.SubmodelElementList} shall have
- *   the same submodel element type as specified in {@link #getTypeValueListElement()}.
- *   <li> Constraint AASd-109:
- *   If {@link #getTypeValueListElement()} is equal to
- *   {@link aas_core.aas3_0.types.enums.AasSubmodelElements#PROPERTY} or
- *   {@link aas_core.aas3_0.types.enums.AasSubmodelElements#RANGE}
- *   {@link #getValueTypeListElement()} shall be set and all first
- *   level child elements in the {@link aas_core.aas3_0.types.impl.SubmodelElementList} shall have
- *   the value type as specified in {@link #getValueTypeListElement()}.
+ *   <li>Constraint AASd-107: If a first level child element in a {@link
+ *       aas_core.aas3_0.types.impl.SubmodelElementList} has a {@link
+ *       aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()} it shall be identical to {@link
+ *       #getSemanticIdListElement()}.
+ *   <li>Constraint AASd-114: If two first level child elements in a {@link
+ *       aas_core.aas3_0.types.impl.SubmodelElementList} have a {@link
+ *       aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()} then they shall be identical.
+ *   <li>Constraint AASd-115: If a first level child element in a {@link
+ *       aas_core.aas3_0.types.impl.SubmodelElementList} does not specify a {@link
+ *       aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()} then the value is assumed to be
+ *       identical to {@link #getSemanticIdListElement()}.
+ *   <li>Constraint AASd-120: The {@link #getIdShort()} of a {@link
+ *       aas_core.aas3_0.types.model.ISubmodelElement} being a direct child of a {@link
+ *       aas_core.aas3_0.types.impl.SubmodelElementList} shall not be specified.
+ *   <li>Constraint AASd-108: All first level child elements in a {@link
+ *       aas_core.aas3_0.types.impl.SubmodelElementList} shall have the same submodel element type
+ *       as specified in {@link #getTypeValueListElement()}.
+ *   <li>Constraint AASd-109: If {@link #getTypeValueListElement()} is equal to {@link
+ *       aas_core.aas3_0.types.enums.AasSubmodelElements#PROPERTY} or {@link
+ *       aas_core.aas3_0.types.enums.AasSubmodelElements#RANGE} {@link #getValueTypeListElement()}
+ *       shall be set and all first level child elements in the {@link
+ *       aas_core.aas3_0.types.impl.SubmodelElementList} shall have the value type as specified in
+ *       {@link #getValueTypeListElement()}.
  * </ul>
  */
 public class SubmodelElementList implements ISubmodelElementList {
-  /**
-   * An extension of the element.
-   */
+  /** An extension of the element. */
   private List<IExtension> extensions;
 
   /**
-   * The category is a value that gives further meta information
-   * w.r.t. to the class of the element.
-   * It affects the expected existence of attributes and the applicability of
-   * constraints.
+   * The category is a value that gives further meta information w.r.t. to the class of the element.
+   * It affects the expected existence of attributes and the applicability of constraints.
    *
-   * <p>The category is not identical to the semantic definition
-   * ({@link aas_core.aas3_0.types.model.IHasSemantics}) of an element. The category e.g. could denote that
-   * the element is a measurement value whereas the semantic definition of
-   * the element would denote that it is the measured temperature.
+   * <p>The category is not identical to the semantic definition ({@link
+   * aas_core.aas3_0.types.model.IHasSemantics}) of an element. The category e.g. could denote that
+   * the element is a measurement value whereas the semantic definition of the element would denote
+   * that it is the measured temperature.
    */
   private String category;
 
   /**
-   * In case of identifiables this attribute is a short name of the element.
-   * In case of referable this ID is an identifying string of the element within
-   * its name space.
+   * In case of identifiables this attribute is a short name of the element. In case of referable
+   * this ID is an identifying string of the element within its name space.
    *
-   * <p>In case the element is a property and the property has a semantic definition
-   * ({@link aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()}) conformant to IEC61360
-   * the {@link aas_core.aas3_0.types.model.IReferable#getIdShort()} is typically identical to the short name in English.
+   * <p>In case the element is a property and the property has a semantic definition ({@link
+   * aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()}) conformant to IEC61360 the {@link
+   * aas_core.aas3_0.types.model.IReferable#getIdShort()} is typically identical to the short name
+   * in English.
    */
   private String idShort;
 
-  /**
-   * Display name. Can be provided in several languages.
-   */
+  /** Display name. Can be provided in several languages. */
   private List<ILangStringNameType> displayName;
 
   /**
@@ -100,27 +89,26 @@ public class SubmodelElementList implements ISubmodelElementList {
    *
    * <p>The description can be provided in several languages.
    *
-   * <p>If no description is defined, then the definition of the concept
-   * description that defines the semantics of the element is used.
+   * <p>If no description is defined, then the definition of the concept description that defines
+   * the semantics of the element is used.
    *
-   * <p>Additional information can be provided, e.g., if the element is
-   * qualified and which qualifier types can be expected in which
-   * context or which additional data specification templates are
-   * provided.
+   * <p>Additional information can be provided, e.g., if the element is qualified and which
+   * qualifier types can be expected in which context or which additional data specification
+   * templates are provided.
    */
   private List<ILangStringTextType> description;
 
   /**
-   * Identifier of the semantic definition of the element. It is called semantic ID
-   * of the element or also main semantic ID of the element.
+   * Identifier of the semantic definition of the element. It is called semantic ID of the element
+   * or also main semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
   private IReference semanticId;
 
   /**
-   * Identifier of a supplemental semantic definition of the element.
-   * It is called supplemental semantic ID of the element.
+   * Identifier of a supplemental semantic definition of the element. It is called supplemental
+   * semantic ID of the element.
    *
    * <p>It is recommended to use a global reference.
    */
@@ -132,21 +120,18 @@ public class SubmodelElementList implements ISubmodelElementList {
    * <p>Constraints:
    *
    * <ul>
-   *   <li> Constraint AASd-021:
-   *   Every qualifiable can only have one qualifier with the same
-   *   {@link aas_core.aas3_0.types.impl.Qualifier#getType()}.
+   *   <li>Constraint AASd-021: Every qualifiable can only have one qualifier with the same {@link
+   *       aas_core.aas3_0.types.impl.Qualifier#getType()}.
    * </ul>
    */
   private List<IQualifier> qualifiers;
 
-  /**
-   * Embedded data specification.
-   */
+  /** Embedded data specification. */
   private List<IEmbeddedDataSpecification> embeddedDataSpecifications;
 
   /**
-   * Defines whether order in list is relevant. If {@link #getOrderRelevant()} = {@code False}
-   * then the list is representing a set or a bag.
+   * Defines whether order in list is relevant. If {@link #getOrderRelevant()} = {@code False} then
+   * the list is representing a set or a bag.
    *
    * <p>Default: {@code True}
    */
@@ -159,14 +144,10 @@ public class SubmodelElementList implements ISubmodelElementList {
    */
   private IReference semanticIdListElement;
 
-  /**
-   * The submodel element type of the submodel elements contained in the list.
-   */
+  /** The submodel element type of the submodel elements contained in the list. */
   private AasSubmodelElements typeValueListElement;
 
-  /**
-   * The value type of the submodel element contained in the list.
-   */
+  /** The value type of the submodel element contained in the list. */
   private DataTypeDefXsd valueTypeListElement;
 
   /**
@@ -177,26 +158,26 @@ public class SubmodelElementList implements ISubmodelElementList {
   private List<ISubmodelElement> value;
 
   public SubmodelElementList(AasSubmodelElements typeValueListElement) {
-    this.typeValueListElement = Objects.requireNonNull(
-      typeValueListElement,
-      "Argument \"typeValueListElement\" must be non-null.");
+    this.typeValueListElement =
+        Objects.requireNonNull(
+            typeValueListElement, "Argument \"typeValueListElement\" must be non-null.");
   }
 
   public SubmodelElementList(
-    AasSubmodelElements typeValueListElement,
-    List<IExtension> extensions,
-    String category,
-    String idShort,
-    List<ILangStringNameType> displayName,
-    List<ILangStringTextType> description,
-    IReference semanticId,
-    List<IReference> supplementalSemanticIds,
-    List<IQualifier> qualifiers,
-    List<IEmbeddedDataSpecification> embeddedDataSpecifications,
-    Boolean orderRelevant,
-    IReference semanticIdListElement,
-    DataTypeDefXsd valueTypeListElement,
-    List<ISubmodelElement> value) {
+      AasSubmodelElements typeValueListElement,
+      List<IExtension> extensions,
+      String category,
+      String idShort,
+      List<ILangStringNameType> displayName,
+      List<ILangStringTextType> description,
+      IReference semanticId,
+      List<IReference> supplementalSemanticIds,
+      List<IQualifier> qualifiers,
+      List<IEmbeddedDataSpecification> embeddedDataSpecifications,
+      Boolean orderRelevant,
+      IReference semanticIdListElement,
+      DataTypeDefXsd valueTypeListElement,
+      List<ISubmodelElement> value) {
     this.extensions = extensions;
     this.idShort = idShort;
     this.displayName = displayName;
@@ -206,9 +187,9 @@ public class SubmodelElementList implements ISubmodelElementList {
     this.supplementalSemanticIds = supplementalSemanticIds;
     this.qualifiers = qualifiers;
     this.embeddedDataSpecifications = embeddedDataSpecifications;
-    this.typeValueListElement = Objects.requireNonNull(
-      typeValueListElement,
-      "Argument \"typeValueListElement\" must be non-null.");
+    this.typeValueListElement =
+        Objects.requireNonNull(
+            typeValueListElement, "Argument \"typeValueListElement\" must be non-null.");
     this.orderRelevant = orderRelevant;
     this.semanticIdListElement = semanticIdListElement;
     this.valueTypeListElement = valueTypeListElement;
@@ -301,7 +282,8 @@ public class SubmodelElementList implements ISubmodelElementList {
   }
 
   @Override
-  public void setEmbeddedDataSpecifications(List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
+  public void setEmbeddedDataSpecifications(
+      List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
   }
 
@@ -332,9 +314,9 @@ public class SubmodelElementList implements ISubmodelElementList {
 
   @Override
   public void setTypeValueListElement(AasSubmodelElements typeValueListElement) {
-    this.typeValueListElement = Objects.requireNonNull(
-      typeValueListElement,
-      "Argument \"typeValueListElement\" must be non-null.");
+    this.typeValueListElement =
+        Objects.requireNonNull(
+            typeValueListElement, "Argument \"typeValueListElement\" must be non-null.");
   }
 
   @Override
@@ -358,117 +340,105 @@ public class SubmodelElementList implements ISubmodelElementList {
   }
 
   /**
-   * Iterate over {@link SubmodelElementList#extensions}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link SubmodelElementList#extensions}, if set, and otherwise return an empty
+   * iterator.
    */
   public Iterable<IExtension> overExtensionsOrEmpty() {
     return getExtensions().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link SubmodelElementList#displayName}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link SubmodelElementList#displayName}, if set, and otherwise return an empty
+   * iterator.
    */
   public Iterable<ILangStringNameType> overDisplayNameOrEmpty() {
     return getDisplayName().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link SubmodelElementList#description}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link SubmodelElementList#description}, if set, and otherwise return an empty
+   * iterator.
    */
   public Iterable<ILangStringTextType> overDescriptionOrEmpty() {
     return getDescription().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link SubmodelElementList#supplementalSemanticIds}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link SubmodelElementList#supplementalSemanticIds}, if set, and otherwise return
+   * an empty iterator.
    */
   public Iterable<IReference> overSupplementalSemanticIdsOrEmpty() {
     return getSupplementalSemanticIds().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link SubmodelElementList#qualifiers}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link SubmodelElementList#qualifiers}, if set, and otherwise return an empty
+   * iterator.
    */
   public Iterable<IQualifier> overQualifiersOrEmpty() {
     return getQualifiers().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link SubmodelElementList#embeddedDataSpecifications}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link SubmodelElementList#embeddedDataSpecifications}, if set, and otherwise
+   * return an empty iterator.
    */
   public Iterable<IEmbeddedDataSpecification> overEmbeddedDataSpecificationsOrEmpty() {
     return getEmbeddedDataSpecifications().orElseGet(Collections::emptyList);
   }
 
   /**
-   * Iterate over {@link SubmodelElementList#value}, if set,
-   * and otherwise return an empty iterator.
+   * Iterate over {@link SubmodelElementList#value}, if set, and otherwise return an empty iterator.
    */
   public Iterable<ISubmodelElement> overValueOrEmpty() {
     return getValue().orElseGet(Collections::emptyList);
   }
 
   /**
-   * @return if the order of the {@link SubmodelElementList} or the default value if it has not been set.
+   * @return if the order of the {@link SubmodelElementList} or the default value if it has not been
+   *     set.
    */
   public Boolean orderRelevantOrDefault() {
     return orderRelevant != null ? orderRelevant : true;
   }
 
-  /**
-   * Iterate recursively over all the class instances referenced from this instance.
-   */
+  /** Iterate recursively over all the class instances referenced from this instance. */
   public Iterable<IClass> descend() {
     return new SubmodelElementListRecursiveIterable();
   }
 
-  /**
-   * Iterate over all the class instances referenced from this instance.
-   */
+  /** Iterate over all the class instances referenced from this instance. */
   public Iterable<IClass> descendOnce() {
     return new SubmodelElementListIterable();
   }
 
-  /**
-   * Accept the {@code visitor} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code visitor} to visit this instance for double dispatch. */
   @Override
   public void accept(IVisitor visitor) {
     visitor.visitSubmodelElementList(this);
   }
 
   /**
-   * Accept the {@code visitor} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code visitor} to visit this instance for double dispatch with the {@code context}.
+   */
   @Override
-  public <ContextT> void accept(
-      IVisitorWithContext<ContextT> visitor,
-      ContextT context) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitSubmodelElementList(this, context);
   }
 
-  /**
-   * Accept the {@code transformer} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code transformer} to visit this instance for double dispatch. */
   @Override
   public <T> T transform(ITransformer<T> transformer) {
     return transformer.transformSubmodelElementList(this);
   }
 
   /**
-   * Accept the {@code transformer} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code transformer} to visit this instance for double dispatch with the {@code
+   * context}.
+   */
   @Override
   public <ContextT, T> T transform(
-      ITransformerWithContext<ContextT, T> transformer,
-      ContextT context) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformSubmodelElementList(this, context);
   }
 
@@ -498,48 +468,45 @@ public class SubmodelElementList implements ISubmodelElementList {
       Stream<IClass> memberStream = Stream.empty();
 
       if (extensions != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.extensions.stream());
+        memberStream = Stream.concat(memberStream, SubmodelElementList.this.extensions.stream());
       }
 
       if (displayName != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.displayName.stream());
+        memberStream = Stream.concat(memberStream, SubmodelElementList.this.displayName.stream());
       }
 
       if (description != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.description.stream());
+        memberStream = Stream.concat(memberStream, SubmodelElementList.this.description.stream());
       }
 
       if (semanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(SubmodelElementList.this.semanticId));
+        memberStream =
+            Stream.concat(memberStream, Stream.<IClass>of(SubmodelElementList.this.semanticId));
       }
 
       if (supplementalSemanticIds != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.supplementalSemanticIds.stream());
+        memberStream =
+            Stream.concat(memberStream, SubmodelElementList.this.supplementalSemanticIds.stream());
       }
 
       if (qualifiers != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.qualifiers.stream());
+        memberStream = Stream.concat(memberStream, SubmodelElementList.this.qualifiers.stream());
       }
 
       if (embeddedDataSpecifications != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.embeddedDataSpecifications.stream());
+        memberStream =
+            Stream.concat(
+                memberStream, SubmodelElementList.this.embeddedDataSpecifications.stream());
       }
 
       if (semanticIdListElement != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(SubmodelElementList.this.semanticIdListElement));
+        memberStream =
+            Stream.concat(
+                memberStream, Stream.<IClass>of(SubmodelElementList.this.semanticIdListElement));
       }
 
       if (value != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.value.stream());
+        memberStream = Stream.concat(memberStream, SubmodelElementList.this.value.stream());
       }
 
       return memberStream;
@@ -572,64 +539,108 @@ public class SubmodelElementList implements ISubmodelElementList {
       Stream<IClass> memberStream = Stream.empty();
 
       if (extensions != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.extensions.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                SubmodelElementList.this.extensions.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (displayName != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.displayName.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                SubmodelElementList.this.displayName.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (description != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.description.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                SubmodelElementList.this.description.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (semanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(SubmodelElementList.this.semanticId),
-            StreamSupport.stream(SubmodelElementList.this.semanticId.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(SubmodelElementList.this.semanticId),
+                    StreamSupport.stream(
+                        SubmodelElementList.this.semanticId.descend().spliterator(), false)));
       }
 
       if (supplementalSemanticIds != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.supplementalSemanticIds.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                SubmodelElementList.this.supplementalSemanticIds.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (qualifiers != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.qualifiers.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                SubmodelElementList.this.qualifiers.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (embeddedDataSpecifications != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.embeddedDataSpecifications.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                SubmodelElementList.this.embeddedDataSpecifications.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       if (semanticIdListElement != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(SubmodelElementList.this.semanticIdListElement),
-            StreamSupport.stream(SubmodelElementList.this.semanticIdListElement.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(SubmodelElementList.this.semanticIdListElement),
+                    StreamSupport.stream(
+                        SubmodelElementList.this.semanticIdListElement.descend().spliterator(),
+                        false)));
       }
 
       if (value != null) {
-        memberStream = Stream.concat(memberStream,
-          SubmodelElementList.this.value.stream()
-            .flatMap(item -> Stream.concat(Stream.<IClass>of(item),
-              StreamSupport.stream(item.descend().spliterator(), false))));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                SubmodelElementList.this.value.stream()
+                    .flatMap(
+                        item ->
+                            Stream.concat(
+                                Stream.<IClass>of(item),
+                                StreamSupport.stream(item.descend().spliterator(), false))));
       }
 
       return memberStream;

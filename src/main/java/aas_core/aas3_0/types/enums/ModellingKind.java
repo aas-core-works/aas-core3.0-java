@@ -5,18 +5,16 @@
 
 package aas_core.aas3_0.types.enums;
 
-/**
- * Enumeration for denoting whether an element is a template or an instance.
- */
+/** Enumeration for denoting whether an element is a template or an instance. */
 public enum ModellingKind {
   /**
-   * Specification of the common features of a structured element in sufficient detail
-   * that such a instance can be instantiated using it
+   * Specification of the common features of a structured element in sufficient detail that such a
+   * instance can be instantiated using it
    */
   TEMPLATE,
   /**
-   * Concrete, clearly identifiable element instance. Its creation and validation
-   * may be guided by a corresponding element template.
+   * Concrete, clearly identifiable element instance. Its creation and validation may be guided by a
+   * corresponding element template.
    */
   INSTANCE
 }

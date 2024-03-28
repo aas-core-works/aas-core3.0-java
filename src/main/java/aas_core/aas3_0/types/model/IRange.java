@@ -7,18 +7,11 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
-import java.util.List;
-import aas_core.aas3_0.types.model.IDataElement;
 import java.util.Optional;
 
-/**
- * A range data element is a data element that defines a range with min and max.
- */
+/** A range data element is a data element that defines a range with min and max. */
 public interface IRange extends IDataElement {
-  /**
-   * Data type of the min und max
-   */
+  /** Data type of the min und max */
   DataTypeDefXsd getValueType();
 
   void setValueType(DataTypeDefXsd valueType);

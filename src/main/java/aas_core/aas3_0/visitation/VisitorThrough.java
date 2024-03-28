@@ -6,356 +6,278 @@
 package aas_core.aas3_0.visitation;
 
 import aas_core.aas3_0.types.model.*;
-import aas_core.aas3_0.visitation.IVisitor;
 
 /**
  * Just descend through the instances without any action.
  *
- * <p>This class is meaningless for itself. However, it is a good base if you
- * want to descend through instances and apply actions only on a subset of
- * classes.
+ * <p>This class is meaningless for itself. However, it is a good base if you want to descend
+ * through instances and apply actions only on a subset of classes.
  */
 public class VisitorThrough implements IVisitor {
   public void visit(IClass that) {
     that.accept(this);
   }
 
-  public void visitExtension(
-    IExtension that
-  ) {
+  public void visitExtension(IExtension that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitAdministrativeInformation(
-    IAdministrativeInformation that
-  ) {
+  public void visitAdministrativeInformation(IAdministrativeInformation that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitQualifier(
-    IQualifier that
-  ) {
+  public void visitQualifier(IQualifier that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitAssetAdministrationShell(
-    IAssetAdministrationShell that
-  ) {
+  public void visitAssetAdministrationShell(IAssetAdministrationShell that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitAssetInformation(
-    IAssetInformation that
-  ) {
+  public void visitAssetInformation(IAssetInformation that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitResource(
-    IResource that
-  ) {
+  public void visitResource(IResource that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitSpecificAssetId(
-    ISpecificAssetId that
-  ) {
+  public void visitSpecificAssetId(ISpecificAssetId that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitSubmodel(
-    ISubmodel that
-  ) {
+  public void visitSubmodel(ISubmodel that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitRelationshipElement(
-    IRelationshipElement that
-  ) {
+  public void visitRelationshipElement(IRelationshipElement that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitSubmodelElementList(
-    ISubmodelElementList that
-  ) {
+  public void visitSubmodelElementList(ISubmodelElementList that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitSubmodelElementCollection(
-    ISubmodelElementCollection that
-  ) {
+  public void visitSubmodelElementCollection(ISubmodelElementCollection that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitProperty(
-    IProperty that
-  ) {
+  public void visitProperty(IProperty that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitMultiLanguageProperty(
-    IMultiLanguageProperty that
-  ) {
+  public void visitMultiLanguageProperty(IMultiLanguageProperty that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitRange(
-    IRange that
-  ) {
+  public void visitRange(IRange that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitReferenceElement(
-    IReferenceElement that
-  ) {
+  public void visitReferenceElement(IReferenceElement that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitBlob(
-    IBlob that
-  ) {
+  public void visitBlob(IBlob that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitFile(
-    IFile that
-  ) {
+  public void visitFile(IFile that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitAnnotatedRelationshipElement(
-    IAnnotatedRelationshipElement that
-  ) {
+  public void visitAnnotatedRelationshipElement(IAnnotatedRelationshipElement that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitEntity(
-    IEntity that
-  ) {
+  public void visitEntity(IEntity that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitEventPayload(
-    IEventPayload that
-  ) {
+  public void visitEventPayload(IEventPayload that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitBasicEventElement(
-    IBasicEventElement that
-  ) {
+  public void visitBasicEventElement(IBasicEventElement that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitOperation(
-    IOperation that
-  ) {
+  public void visitOperation(IOperation that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitOperationVariable(
-    IOperationVariable that
-  ) {
+  public void visitOperationVariable(IOperationVariable that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitCapability(
-    ICapability that
-  ) {
+  public void visitCapability(ICapability that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitConceptDescription(
-    IConceptDescription that
-  ) {
+  public void visitConceptDescription(IConceptDescription that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitReference(
-    IReference that
-  ) {
+  public void visitReference(IReference that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitKey(
-    IKey that
-  ) {
+  public void visitKey(IKey that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitLangStringNameType(
-    ILangStringNameType that
-  ) {
+  public void visitLangStringNameType(ILangStringNameType that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitLangStringTextType(
-    ILangStringTextType that
-  ) {
+  public void visitLangStringTextType(ILangStringTextType that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitEnvironment(
-    IEnvironment that
-  ) {
+  public void visitEnvironment(IEnvironment that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitEmbeddedDataSpecification(
-    IEmbeddedDataSpecification that
-  ) {
+  public void visitEmbeddedDataSpecification(IEmbeddedDataSpecification that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitLevelType(
-    ILevelType that
-  ) {
+  public void visitLevelType(ILevelType that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitValueReferencePair(
-    IValueReferencePair that
-  ) {
+  public void visitValueReferencePair(IValueReferencePair that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitValueList(
-    IValueList that
-  ) {
+  public void visitValueList(IValueList that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitLangStringPreferredNameTypeIec61360(
-    ILangStringPreferredNameTypeIec61360 that
-  ) {
+  public void visitLangStringPreferredNameTypeIec61360(ILangStringPreferredNameTypeIec61360 that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitLangStringShortNameTypeIec61360(
-    ILangStringShortNameTypeIec61360 that
-  ) {
+  public void visitLangStringShortNameTypeIec61360(ILangStringShortNameTypeIec61360 that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitLangStringDefinitionTypeIec61360(
-    ILangStringDefinitionTypeIec61360 that
-  ) {
+  public void visitLangStringDefinitionTypeIec61360(ILangStringDefinitionTypeIec61360 that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);
     }
   }
 
-  public void visitDataSpecificationIec61360(
-    IDataSpecificationIec61360 that
-  ) {
+  public void visitDataSpecificationIec61360(IDataSpecificationIec61360 that) {
     // Just descend through, do nothing with {@code that}
     for (IClass something : that.descendOnce()) {
       visit(something);

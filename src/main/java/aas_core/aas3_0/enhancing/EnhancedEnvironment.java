@@ -5,26 +5,21 @@
 
 package aas_core.aas3_0.enhancing;
 
-import java.lang.Iterable;
-import java.util.Optional;
-import java.util.List;
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
-import aas_core.aas3_0.visitation.ITransformer;
-import aas_core.aas3_0.visitation.ITransformerWithContext;
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.visitation.ITransformer;
+import aas_core.aas3_0.visitation.ITransformerWithContext;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
+import java.util.List;
+import java.util.Optional;
 
-public class EnhancedEnvironment<EnhancementT>
-  extends Enhanced<EnhancementT>
-  implements IEnvironment {
+public class EnhancedEnvironment<EnhancementT> extends Enhanced<EnhancementT>
+    implements IEnvironment {
   private final IEnvironment instance;
 
-  public EnhancedEnvironment(
-    IEnvironment instance,
-    EnhancementT enhancement
-  ) {
+  public EnhancedEnvironment(IEnvironment instance, EnhancementT enhancement) {
     super(enhancement);
     this.instance = instance;
   }
@@ -35,7 +30,8 @@ public class EnhancedEnvironment<EnhancementT>
   }
 
   @Override
-  public void setAssetAdministrationShells(List<IAssetAdministrationShell> assetAdministrationShells) {
+  public void setAssetAdministrationShells(
+      List<IAssetAdministrationShell> assetAdministrationShells) {
     instance.setAssetAdministrationShells(assetAdministrationShells);
   }
 
@@ -83,10 +79,7 @@ public class EnhancedEnvironment<EnhancementT>
     visitor.visitEnvironment(instance);
   }
 
-  public <ContextT> void accept(
-    IVisitorWithContext<ContextT> visitor,
-    ContextT context
-  ) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitEnvironment(instance, context);
   }
 
@@ -95,9 +88,7 @@ public class EnhancedEnvironment<EnhancementT>
   }
 
   public <ContextT, T> T transform(
-    ITransformerWithContext<ContextT, T> transformer,
-    ContextT context
-  ) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformEnvironment(instance, context);
   }
 }

@@ -7,18 +7,11 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
 import java.util.List;
-import aas_core.aas3_0.types.model.IClass;
-import java.util.Optional;
 
-/**
- * A set of value reference pairs.
- */
+/** A set of value reference pairs. */
 public interface IValueList extends IClass {
-  /**
-   * A pair of a value together with its global unique id.
-   */
+  /** A pair of a value together with its global unique id. */
   List<IValueReferencePair> getValueReferencePairs();
 
   void setValueReferencePairs(List<IValueReferencePair> valueReferencePairs);

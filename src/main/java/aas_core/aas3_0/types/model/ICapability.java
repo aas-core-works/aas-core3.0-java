@@ -7,16 +7,13 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
-import java.util.List;
-import aas_core.aas3_0.types.model.ISubmodelElement;
 
 /**
- * A capability is the implementation-independent description of the potential of an
- * asset to achieve a certain effect in the physical or virtual world.
+ * A capability is the implementation-independent description of the potential of an asset to
+ * achieve a certain effect in the physical or virtual world.
  *
- * <p>The {@link #getSemanticId()} of a capability is typically an ontology.
- * Thus, reasoning on capabilities is enabled.
+ * <p>The {@link #getSemanticId()} of a capability is typically an ontology. Thus, reasoning on
+ * capabilities is enabled.
  */
 public interface ICapability extends ISubmodelElement {
   // Intentionally empty.

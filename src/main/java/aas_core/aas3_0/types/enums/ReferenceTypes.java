@@ -5,17 +5,11 @@
 
 package aas_core.aas3_0.types.enums;
 
-/**
- * Reference types
- */
+/** Reference types */
 public enum ReferenceTypes {
-  /**
-   * External reference.
-   */
+  /** External reference. */
   EXTERNAL_REFERENCE,
-  /**
-   * Model reference.
-   */
+  /** Model reference. */
   MODEL_REFERENCE
 }
 

@@ -3,3577 +3,4212 @@
  * Do NOT edit or append.
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import aas_core.aas3_0.copying.Copying;
 import aas_core.aas3_0.types.enums.DataTypeDefXsd;
 import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.types.model.*;
-import org.junit.jupiter.api.Test;
 import aas_core.aas3_0.types.model.IClass;
 import aas_core.aas3_0.visitation.AbstractTransformerWithContext;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 public class TestCopying {
-        private static class Pair<A, B> {
-          private final A first;
-          private final B second;
-  
-          public Pair(A first, B second) {
-            this.first = first;
-            this.second = second;
-          }
-  
-          public A getFirst() {
-            return first;
-          }
-  
-          public B getSecond() {
-            return second;
-          }
-        }
+  private static class Pair<A, B> {
+    private final A first;
+    private final B second;
 
-        // Java 8 doesn't provide a split operation out of the box, so we have to ship our own.
-        // Adapted from: https://stackoverflow.com/a/23529010
-        private static <A, B> Stream<Pair<A, B>> zip(
-          Stream<? extends A> a,
-          Stream<? extends B> b) {
-          Spliterator<? extends A> aSplit = Objects.requireNonNull(a).spliterator();
-          Spliterator<? extends B> bSplit = Objects.requireNonNull(b).spliterator();
-  
-          int characteristics = aSplit.characteristics() & bSplit.characteristics() &
-            ~(Spliterator.DISTINCT | Spliterator.SORTED);
-  
-          long zipSize = ((characteristics & Spliterator.SIZED) != 0)
+    public Pair(A first, B second) {
+      this.first = first;
+      this.second = second;
+    }
+
+    public A getFirst() {
+      return first;
+    }
+
+    public B getSecond() {
+      return second;
+    }
+  }
+
+  // Java 8 doesn't provide a split operation out of the box, so we have to ship our own.
+  // Adapted from: https://stackoverflow.com/a/23529010
+  private static <A, B> Stream<Pair<A, B>> zip(Stream<? extends A> a, Stream<? extends B> b) {
+    Spliterator<? extends A> aSplit = Objects.requireNonNull(a).spliterator();
+    Spliterator<? extends B> bSplit = Objects.requireNonNull(b).spliterator();
+
+    int characteristics =
+        aSplit.characteristics()
+            & bSplit.characteristics()
+            & ~(Spliterator.DISTINCT | Spliterator.SORTED);
+
+    long zipSize =
+        ((characteristics & Spliterator.SIZED) != 0)
             ? Math.min(aSplit.getExactSizeIfKnown(), bSplit.getExactSizeIfKnown())
             : -1;
-  
-          Iterator<A> aIter = Spliterators.iterator(aSplit);
-          Iterator<B> bIter = Spliterators.iterator(bSplit);
-          Iterator<Pair<A, B>> cIter = new Iterator<Pair<A, B>>() {
-            @Override
-            public boolean hasNext() {
-              return aIter.hasNext() && bIter.hasNext();
-            }
-    
-            @Override
-            public Pair<A, B> next() {
-              return new Pair<>(aIter.next(), bIter.next());
-            }
-          };
-  
-          Spliterator<Pair<A, B>> split = Spliterators.spliterator(cIter, zipSize, characteristics);
-          return StreamSupport.stream(split, false);
-        }
 
-        private static class DeepEqualTransformer extends AbstractTransformerWithContext<IClass, Boolean> {
+    Iterator<A> aIter = Spliterators.iterator(aSplit);
+    Iterator<B> bIter = Spliterators.iterator(bSplit);
+    Iterator<Pair<A, B>> cIter =
+        new Iterator<Pair<A, B>>() {
           @Override
-          public Boolean transformExtension(
-            IExtension that,
-            IClass other)
-          {
-            final Extension casted;
-            try {
-              casted = (Extension) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+          public boolean hasNext() {
+            return aIter.hasNext() && bIter.hasNext();
+          }
 
-            return (
-              ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
+          @Override
+          public Pair<A, B> next() {
+            return new Pair<>(aIter.next(), bIter.next());
+          }
+        };
+
+    Spliterator<Pair<A, B>> split = Spliterators.spliterator(cIter, zipSize, characteristics);
+    return StreamSupport.stream(split, false);
+  }
+
+  private static class DeepEqualTransformer
+      extends AbstractTransformerWithContext<IClass, Boolean> {
+    @Override
+    public Boolean transformExtension(IExtension that, IClass other) {
+      final Extension casted;
+      try {
+        casted = (Extension) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
+
+      return ((that.getSemanticId().isPresent()
+                  ? casted.getSemanticId().isPresent()
+                      && transform(that.getSemanticId().get(), casted.getSemanticId().get())
+                  : !casted.getSemanticId().isPresent())
               && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getName() == casted.getName()
-              && that.getValueType().isPresent() ?
-                ( casted.getValueType().isPresent()
-                && that.getValueType().get() == casted.getValueType().get() )
-                : ! casted.getValueType().isPresent()
-              && that.getValue().isPresent() 
-                ? casted.getValue().isPresent() 
-                && that.getValue().get() == casted.getValue().get() 
-                : ! casted.getValue().isPresent()
-              && that.getRefersTo().isPresent()
-                ? ( casted.getRefersTo().isPresent()
-                && that.getRefersTo().get().size() == casted.getRefersTo().get().size()
-                && zip(
-                  that.getRefersTo().get().stream(),
-                  casted.getRefersTo().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getRefersTo().isPresent());
-          }
+          ? (casted.getSupplementalSemanticIds().isPresent()
+              && that.getSupplementalSemanticIds().get().size()
+                  == casted.getSupplementalSemanticIds().get().size()
+              && zip(
+                      that.getSupplementalSemanticIds().get().stream(),
+                      casted.getSupplementalSemanticIds().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getSupplementalSemanticIds().isPresent()
+                  && that.getName() == casted.getName()
+                  && that.getValueType().isPresent()
+              ? (casted.getValueType().isPresent()
+                  && that.getValueType().get() == casted.getValueType().get())
+              : !casted.getValueType().isPresent() && that.getValue().isPresent()
+                  ? casted.getValue().isPresent()
+                      && that.getValue().get() == casted.getValue().get()
+                  : !casted.getValue().isPresent() && that.getRefersTo().isPresent()
+                      ? (casted.getRefersTo().isPresent()
+                          && that.getRefersTo().get().size() == casted.getRefersTo().get().size()
+                          && zip(
+                                  that.getRefersTo().get().stream(),
+                                  casted.getRefersTo().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getRefersTo().isPresent());
+    }
 
-          @Override
-          public Boolean transformAdministrativeInformation(
-            IAdministrativeInformation that,
-            IClass other)
-          {
-            final AdministrativeInformation casted;
-            try {
-              casted = (AdministrativeInformation) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformAdministrativeInformation(
+        IAdministrativeInformation that, IClass other) {
+      final AdministrativeInformation casted;
+      try {
+        casted = (AdministrativeInformation) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && that.getVersion().isPresent() 
-                ? casted.getVersion().isPresent() 
-                && that.getVersion().get() == casted.getVersion().get() 
-                : ! casted.getVersion().isPresent()
-              && that.getRevision().isPresent() 
-                ? casted.getRevision().isPresent() 
-                && that.getRevision().get() == casted.getRevision().get() 
-                : ! casted.getRevision().isPresent()
-              && ( that.getCreator().isPresent() 
-                ? casted.getCreator().isPresent() 
-                && transform( that.getCreator().get(), casted.getCreator().get()) 
-                : ! casted.getCreator().isPresent())
-              && that.getTemplateId().isPresent() 
-                ? casted.getTemplateId().isPresent() 
-                && that.getTemplateId().get() == casted.getTemplateId().get() 
-                : ! casted.getTemplateId().isPresent());
-          }
+      return (that.getEmbeddedDataSpecifications().isPresent()
+          ? (casted.getEmbeddedDataSpecifications().isPresent()
+              && that.getEmbeddedDataSpecifications().get().size()
+                  == casted.getEmbeddedDataSpecifications().get().size()
+              && zip(
+                      that.getEmbeddedDataSpecifications().get().stream(),
+                      casted.getEmbeddedDataSpecifications().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getEmbeddedDataSpecifications().isPresent() && that.getVersion().isPresent()
+              ? casted.getVersion().isPresent()
+                  && that.getVersion().get() == casted.getVersion().get()
+              : !casted.getVersion().isPresent() && that.getRevision().isPresent()
+                  ? casted.getRevision().isPresent()
+                      && that.getRevision().get() == casted.getRevision().get()
+                  : !casted.getRevision().isPresent()
+                          && (that.getCreator().isPresent()
+                              ? casted.getCreator().isPresent()
+                                  && transform(that.getCreator().get(), casted.getCreator().get())
+                              : !casted.getCreator().isPresent())
+                          && that.getTemplateId().isPresent()
+                      ? casted.getTemplateId().isPresent()
+                          && that.getTemplateId().get() == casted.getTemplateId().get()
+                      : !casted.getTemplateId().isPresent());
+    }
 
-          @Override
-          public Boolean transformQualifier(
-            IQualifier that,
-            IClass other)
-          {
-            final Qualifier casted;
-            try {
-              casted = (Qualifier) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformQualifier(IQualifier that, IClass other) {
+      final Qualifier casted;
+      try {
+        casted = (Qualifier) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
+      return ((that.getSemanticId().isPresent()
+                  ? casted.getSemanticId().isPresent()
+                      && transform(that.getSemanticId().get(), casted.getSemanticId().get())
+                  : !casted.getSemanticId().isPresent())
               && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getKind().isPresent() ?
-                ( casted.getKind().isPresent()
-                && that.getKind().get() == casted.getKind().get() )
-                : ! casted.getKind().isPresent()
-              && that.getType() == casted.getType()
-              && that.getValueType() == casted.getValueType()
-              && that.getValue().isPresent() 
-                ? casted.getValue().isPresent() 
-                && that.getValue().get() == casted.getValue().get() 
-                : ! casted.getValue().isPresent()
-              && ( that.getValueId().isPresent() 
-                ? casted.getValueId().isPresent() 
-                && transform( that.getValueId().get(), casted.getValueId().get()) 
-                : ! casted.getValueId().isPresent()));
-          }
+          ? (casted.getSupplementalSemanticIds().isPresent()
+              && that.getSupplementalSemanticIds().get().size()
+                  == casted.getSupplementalSemanticIds().get().size()
+              && zip(
+                      that.getSupplementalSemanticIds().get().stream(),
+                      casted.getSupplementalSemanticIds().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getSupplementalSemanticIds().isPresent() && that.getKind().isPresent()
+              ? (casted.getKind().isPresent() && that.getKind().get() == casted.getKind().get())
+              : !casted.getKind().isPresent()
+                      && that.getType() == casted.getType()
+                      && that.getValueType() == casted.getValueType()
+                      && that.getValue().isPresent()
+                  ? casted.getValue().isPresent()
+                      && that.getValue().get() == casted.getValue().get()
+                  : !casted.getValue().isPresent()
+                      && (that.getValueId().isPresent()
+                          ? casted.getValueId().isPresent()
+                              && transform(that.getValueId().get(), casted.getValueId().get())
+                          : !casted.getValueId().isPresent()));
+    }
 
-          @Override
-          public Boolean transformAssetAdministrationShell(
-            IAssetAdministrationShell that,
-            IClass other)
-          {
-            final AssetAdministrationShell casted;
-            try {
-              casted = (AssetAdministrationShell) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformAssetAdministrationShell(IAssetAdministrationShell that, IClass other) {
+      final AssetAdministrationShell casted;
+      try {
+        casted = (AssetAdministrationShell) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getAdministration().isPresent() 
-                ? casted.getAdministration().isPresent() 
-                && transform( that.getAdministration().get(), casted.getAdministration().get()) 
-                : ! casted.getAdministration().isPresent())
-              && that.getId() == casted.getId()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && ( that.getDerivedFrom().isPresent() 
-                ? casted.getDerivedFrom().isPresent() 
-                && transform( that.getDerivedFrom().get(), casted.getDerivedFrom().get()) 
-                : ! casted.getDerivedFrom().isPresent())
-              && transform(
-                that.getAssetInformation(),
-                casted.getAssetInformation())
-              && that.getSubmodels().isPresent()
-                ? ( casted.getSubmodels().isPresent()
-                && that.getSubmodels().get().size() == casted.getSubmodels().get().size()
-                && zip(
-                  that.getSubmodels().get().stream(),
-                  casted.getSubmodels().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSubmodels().isPresent());
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getAdministration().isPresent()
+                                      ? casted.getAdministration().isPresent()
+                                          && transform(
+                                              that.getAdministration().get(),
+                                              casted.getAdministration().get())
+                                      : !casted.getAdministration().isPresent())
+                                  && that.getId() == casted.getId()
+                                  && that.getEmbeddedDataSpecifications().isPresent()
+                              ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                  && that.getEmbeddedDataSpecifications().get().size()
+                                      == casted.getEmbeddedDataSpecifications().get().size()
+                                  && zip(
+                                          that.getEmbeddedDataSpecifications().get().stream(),
+                                          casted.getEmbeddedDataSpecifications().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getEmbeddedDataSpecifications().isPresent()
+                                      && (that.getDerivedFrom().isPresent()
+                                          ? casted.getDerivedFrom().isPresent()
+                                              && transform(
+                                                  that.getDerivedFrom().get(),
+                                                  casted.getDerivedFrom().get())
+                                          : !casted.getDerivedFrom().isPresent())
+                                      && transform(
+                                          that.getAssetInformation(), casted.getAssetInformation())
+                                      && that.getSubmodels().isPresent()
+                                  ? (casted.getSubmodels().isPresent()
+                                      && that.getSubmodels().get().size()
+                                          == casted.getSubmodels().get().size()
+                                      && zip(
+                                              that.getSubmodels().get().stream(),
+                                              casted.getSubmodels().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getSubmodels().isPresent());
+    }
 
-          @Override
-          public Boolean transformAssetInformation(
-            IAssetInformation that,
-            IClass other)
-          {
-            final AssetInformation casted;
-            try {
-              casted = (AssetInformation) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformAssetInformation(IAssetInformation that, IClass other) {
+      final AssetInformation casted;
+      try {
+        casted = (AssetInformation) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getAssetKind() == casted.getAssetKind()
-              && that.getGlobalAssetId().isPresent() 
-                ? casted.getGlobalAssetId().isPresent() 
-                && that.getGlobalAssetId().get() == casted.getGlobalAssetId().get() 
-                : ! casted.getGlobalAssetId().isPresent()
-              && that.getSpecificAssetIds().isPresent()
-                ? ( casted.getSpecificAssetIds().isPresent()
-                && that.getSpecificAssetIds().get().size() == casted.getSpecificAssetIds().get().size()
-                && zip(
-                  that.getSpecificAssetIds().get().stream(),
-                  casted.getSpecificAssetIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSpecificAssetIds().isPresent()
-              && that.getAssetType().isPresent() 
-                ? casted.getAssetType().isPresent() 
-                && that.getAssetType().get() == casted.getAssetType().get() 
-                : ! casted.getAssetType().isPresent()
-              && ( that.getDefaultThumbnail().isPresent() 
-                ? casted.getDefaultThumbnail().isPresent() 
-                && transform( that.getDefaultThumbnail().get(), casted.getDefaultThumbnail().get()) 
-                : ! casted.getDefaultThumbnail().isPresent()));
-          }
+      return (that.getAssetKind() == casted.getAssetKind() && that.getGlobalAssetId().isPresent()
+          ? casted.getGlobalAssetId().isPresent()
+              && that.getGlobalAssetId().get() == casted.getGlobalAssetId().get()
+          : !casted.getGlobalAssetId().isPresent() && that.getSpecificAssetIds().isPresent()
+              ? (casted.getSpecificAssetIds().isPresent()
+                  && that.getSpecificAssetIds().get().size()
+                      == casted.getSpecificAssetIds().get().size()
+                  && zip(
+                          that.getSpecificAssetIds().get().stream(),
+                          casted.getSpecificAssetIds().get().stream())
+                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                      .collect(Collectors.toList()).stream()
+                      .allMatch(Boolean.TRUE::equals))
+              : !casted.getSpecificAssetIds().isPresent() && that.getAssetType().isPresent()
+                  ? casted.getAssetType().isPresent()
+                      && that.getAssetType().get() == casted.getAssetType().get()
+                  : !casted.getAssetType().isPresent()
+                      && (that.getDefaultThumbnail().isPresent()
+                          ? casted.getDefaultThumbnail().isPresent()
+                              && transform(
+                                  that.getDefaultThumbnail().get(),
+                                  casted.getDefaultThumbnail().get())
+                          : !casted.getDefaultThumbnail().isPresent()));
+    }
 
-          @Override
-          public Boolean transformResource(
-            IResource that,
-            IClass other)
-          {
-            final Resource casted;
-            try {
-              casted = (Resource) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformResource(IResource that, IClass other) {
+      final Resource casted;
+      try {
+        casted = (Resource) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getPath() == casted.getPath()
-              && that.getContentType().isPresent() 
-                ? casted.getContentType().isPresent() 
-                && that.getContentType().get() == casted.getContentType().get() 
-                : ! casted.getContentType().isPresent());
-          }
+      return (that.getPath() == casted.getPath() && that.getContentType().isPresent()
+          ? casted.getContentType().isPresent()
+              && that.getContentType().get() == casted.getContentType().get()
+          : !casted.getContentType().isPresent());
+    }
 
-          @Override
-          public Boolean transformSpecificAssetId(
-            ISpecificAssetId that,
-            IClass other)
-          {
-            final SpecificAssetId casted;
-            try {
-              casted = (SpecificAssetId) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformSpecificAssetId(ISpecificAssetId that, IClass other) {
+      final SpecificAssetId casted;
+      try {
+        casted = (SpecificAssetId) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
+      return ((that.getSemanticId().isPresent()
+                  ? casted.getSemanticId().isPresent()
+                      && transform(that.getSemanticId().get(), casted.getSemanticId().get())
+                  : !casted.getSemanticId().isPresent())
               && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
+          ? (casted.getSupplementalSemanticIds().isPresent()
+              && that.getSupplementalSemanticIds().get().size()
+                  == casted.getSupplementalSemanticIds().get().size()
+              && zip(
+                      that.getSupplementalSemanticIds().get().stream(),
+                      casted.getSupplementalSemanticIds().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getSupplementalSemanticIds().isPresent()
               && that.getName() == casted.getName()
               && that.getValue() == casted.getValue()
-              && ( that.getExternalSubjectId().isPresent() 
-                ? casted.getExternalSubjectId().isPresent() 
-                && transform( that.getExternalSubjectId().get(), casted.getExternalSubjectId().get()) 
-                : ! casted.getExternalSubjectId().isPresent()));
-          }
+              && (that.getExternalSubjectId().isPresent()
+                  ? casted.getExternalSubjectId().isPresent()
+                      && transform(
+                          that.getExternalSubjectId().get(), casted.getExternalSubjectId().get())
+                  : !casted.getExternalSubjectId().isPresent()));
+    }
 
-          @Override
-          public Boolean transformSubmodel(
-            ISubmodel that,
-            IClass other)
-          {
-            final Submodel casted;
-            try {
-              casted = (Submodel) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformSubmodel(ISubmodel that, IClass other) {
+      final Submodel casted;
+      try {
+        casted = (Submodel) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getAdministration().isPresent() 
-                ? casted.getAdministration().isPresent() 
-                && transform( that.getAdministration().get(), casted.getAdministration().get()) 
-                : ! casted.getAdministration().isPresent())
-              && that.getId() == casted.getId()
-              && that.getKind().isPresent() ?
-                ( casted.getKind().isPresent()
-                && that.getKind().get() == casted.getKind().get() )
-                : ! casted.getKind().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && that.getSubmodelElements().isPresent()
-                ? ( casted.getSubmodelElements().isPresent()
-                && that.getSubmodelElements().get().size() == casted.getSubmodelElements().get().size()
-                && zip(
-                  that.getSubmodelElements().get().stream(),
-                  casted.getSubmodelElements().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSubmodelElements().isPresent());
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getAdministration().isPresent()
+                                      ? casted.getAdministration().isPresent()
+                                          && transform(
+                                              that.getAdministration().get(),
+                                              casted.getAdministration().get())
+                                      : !casted.getAdministration().isPresent())
+                                  && that.getId() == casted.getId()
+                                  && that.getKind().isPresent()
+                              ? (casted.getKind().isPresent()
+                                  && that.getKind().get() == casted.getKind().get())
+                              : !casted.getKind().isPresent()
+                                      && (that.getSemanticId().isPresent()
+                                          ? casted.getSemanticId().isPresent()
+                                              && transform(
+                                                  that.getSemanticId().get(),
+                                                  casted.getSemanticId().get())
+                                          : !casted.getSemanticId().isPresent())
+                                      && that.getSupplementalSemanticIds().isPresent()
+                                  ? (casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getSupplementalSemanticIds().get().size()
+                                          == casted.getSupplementalSemanticIds().get().size()
+                                      && zip(
+                                              that.getSupplementalSemanticIds().get().stream(),
+                                              casted.getSupplementalSemanticIds().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getSupplementalSemanticIds().isPresent()
+                                          && that.getQualifiers().isPresent()
+                                      ? (casted.getQualifiers().isPresent()
+                                          && that.getQualifiers().get().size()
+                                              == casted.getQualifiers().get().size()
+                                          && zip(
+                                                  that.getQualifiers().get().stream(),
+                                                  casted.getQualifiers().get().stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getQualifiers().isPresent()
+                                              && that.getEmbeddedDataSpecifications().isPresent()
+                                          ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                              && that.getEmbeddedDataSpecifications().get().size()
+                                                  == casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
+                                                      .size()
+                                              && zip(
+                                                      that.getEmbeddedDataSpecifications().get()
+                                                          .stream(),
+                                                      casted.getEmbeddedDataSpecifications().get()
+                                                          .stream())
+                                                  .map(
+                                                      pair ->
+                                                          transform(
+                                                              pair.getFirst(), pair.getSecond()))
+                                                  .collect(Collectors.toList()).stream()
+                                                  .allMatch(Boolean.TRUE::equals))
+                                          : !casted.getEmbeddedDataSpecifications().isPresent()
+                                                  && that.getSubmodelElements().isPresent()
+                                              ? (casted.getSubmodelElements().isPresent()
+                                                  && that.getSubmodelElements().get().size()
+                                                      == casted.getSubmodelElements().get().size()
+                                                  && zip(
+                                                          that.getSubmodelElements().get().stream(),
+                                                          casted.getSubmodelElements().get()
+                                                              .stream())
+                                                      .map(
+                                                          pair ->
+                                                              transform(
+                                                                  pair.getFirst(),
+                                                                  pair.getSecond()))
+                                                      .collect(Collectors.toList()).stream()
+                                                      .allMatch(Boolean.TRUE::equals))
+                                              : !casted.getSubmodelElements().isPresent());
+    }
 
-          @Override
-          public Boolean transformRelationshipElement(
-            IRelationshipElement that,
-            IClass other)
-          {
-            final RelationshipElement casted;
-            try {
-              casted = (RelationshipElement) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformRelationshipElement(IRelationshipElement that, IClass other) {
+      final RelationshipElement casted;
+      try {
+        casted = (RelationshipElement) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && transform(
-                that.getFirst(),
-                casted.getFirst())
-              && transform(
-                that.getSecond(),
-                casted.getSecond()));
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent()
+                                          && transform(that.getFirst(), casted.getFirst())
+                                          && transform(that.getSecond(), casted.getSecond()));
+    }
 
-          @Override
-          public Boolean transformSubmodelElementList(
-            ISubmodelElementList that,
-            IClass other)
-          {
-            final SubmodelElementList casted;
-            try {
-              casted = (SubmodelElementList) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformSubmodelElementList(ISubmodelElementList that, IClass other) {
+      final SubmodelElementList casted;
+      try {
+        casted = (SubmodelElementList) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && that.getOrderRelevant().isPresent() 
-                ? casted.getOrderRelevant().isPresent() 
-                && that.getOrderRelevant().get() == casted.getOrderRelevant().get() 
-                : ! casted.getOrderRelevant().isPresent()
-              && ( that.getSemanticIdListElement().isPresent() 
-                ? casted.getSemanticIdListElement().isPresent() 
-                && transform( that.getSemanticIdListElement().get(), casted.getSemanticIdListElement().get()) 
-                : ! casted.getSemanticIdListElement().isPresent())
-              && that.getTypeValueListElement() == casted.getTypeValueListElement()
-              && that.getValueTypeListElement().isPresent() ?
-                ( casted.getValueTypeListElement().isPresent()
-                && that.getValueTypeListElement().get() == casted.getValueTypeListElement().get() )
-                : ! casted.getValueTypeListElement().isPresent()
-              && that.getValue().isPresent()
-                ? ( casted.getValue().isPresent()
-                && that.getValue().get().size() == casted.getValue().get().size()
-                && zip(
-                  that.getValue().get().stream(),
-                  casted.getValue().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getValue().isPresent());
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent()
+                                              && that.getOrderRelevant().isPresent()
+                                          ? casted.getOrderRelevant().isPresent()
+                                              && that.getOrderRelevant().get()
+                                                  == casted.getOrderRelevant().get()
+                                          : !casted.getOrderRelevant().isPresent()
+                                                  && (that.getSemanticIdListElement().isPresent()
+                                                      ? casted
+                                                              .getSemanticIdListElement()
+                                                              .isPresent()
+                                                          && transform(
+                                                              that.getSemanticIdListElement().get(),
+                                                              casted
+                                                                  .getSemanticIdListElement()
+                                                                  .get())
+                                                      : !casted
+                                                          .getSemanticIdListElement()
+                                                          .isPresent())
+                                                  && that.getTypeValueListElement()
+                                                      == casted.getTypeValueListElement()
+                                                  && that.getValueTypeListElement().isPresent()
+                                              ? (casted.getValueTypeListElement().isPresent()
+                                                  && that.getValueTypeListElement().get()
+                                                      == casted.getValueTypeListElement().get())
+                                              : !casted.getValueTypeListElement().isPresent()
+                                                      && that.getValue().isPresent()
+                                                  ? (casted.getValue().isPresent()
+                                                      && that.getValue().get().size()
+                                                          == casted.getValue().get().size()
+                                                      && zip(
+                                                              that.getValue().get().stream(),
+                                                              casted.getValue().get().stream())
+                                                          .map(
+                                                              pair ->
+                                                                  transform(
+                                                                      pair.getFirst(),
+                                                                      pair.getSecond()))
+                                                          .collect(Collectors.toList()).stream()
+                                                          .allMatch(Boolean.TRUE::equals))
+                                                  : !casted.getValue().isPresent());
+    }
 
-          @Override
-          public Boolean transformSubmodelElementCollection(
-            ISubmodelElementCollection that,
-            IClass other)
-          {
-            final SubmodelElementCollection casted;
-            try {
-              casted = (SubmodelElementCollection) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformSubmodelElementCollection(
+        ISubmodelElementCollection that, IClass other) {
+      final SubmodelElementCollection casted;
+      try {
+        casted = (SubmodelElementCollection) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && that.getValue().isPresent()
-                ? ( casted.getValue().isPresent()
-                && that.getValue().get().size() == casted.getValue().get().size()
-                && zip(
-                  that.getValue().get().stream(),
-                  casted.getValue().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getValue().isPresent());
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent()
+                                              && that.getValue().isPresent()
+                                          ? (casted.getValue().isPresent()
+                                              && that.getValue().get().size()
+                                                  == casted.getValue().get().size()
+                                              && zip(
+                                                      that.getValue().get().stream(),
+                                                      casted.getValue().get().stream())
+                                                  .map(
+                                                      pair ->
+                                                          transform(
+                                                              pair.getFirst(), pair.getSecond()))
+                                                  .collect(Collectors.toList()).stream()
+                                                  .allMatch(Boolean.TRUE::equals))
+                                          : !casted.getValue().isPresent());
+    }
 
-          @Override
-          public Boolean transformProperty(
-            IProperty that,
-            IClass other)
-          {
-            final Property casted;
-            try {
-              casted = (Property) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformProperty(IProperty that, IClass other) {
+      final Property casted;
+      try {
+        casted = (Property) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && that.getValueType() == casted.getValueType()
-              && that.getValue().isPresent() 
-                ? casted.getValue().isPresent() 
-                && that.getValue().get() == casted.getValue().get() 
-                : ! casted.getValue().isPresent()
-              && ( that.getValueId().isPresent() 
-                ? casted.getValueId().isPresent() 
-                && transform( that.getValueId().get(), casted.getValueId().get()) 
-                : ! casted.getValueId().isPresent()));
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent()
+                                              && that.getValueType() == casted.getValueType()
+                                              && that.getValue().isPresent()
+                                          ? casted.getValue().isPresent()
+                                              && that.getValue().get() == casted.getValue().get()
+                                          : !casted.getValue().isPresent()
+                                              && (that.getValueId().isPresent()
+                                                  ? casted.getValueId().isPresent()
+                                                      && transform(
+                                                          that.getValueId().get(),
+                                                          casted.getValueId().get())
+                                                  : !casted.getValueId().isPresent()));
+    }
 
-          @Override
-          public Boolean transformMultiLanguageProperty(
-            IMultiLanguageProperty that,
-            IClass other)
-          {
-            final MultiLanguageProperty casted;
-            try {
-              casted = (MultiLanguageProperty) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformMultiLanguageProperty(IMultiLanguageProperty that, IClass other) {
+      final MultiLanguageProperty casted;
+      try {
+        casted = (MultiLanguageProperty) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && that.getValue().isPresent()
-                ? ( casted.getValue().isPresent()
-                && that.getValue().get().size() == casted.getValue().get().size()
-                && zip(
-                  that.getValue().get().stream(),
-                  casted.getValue().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getValue().isPresent()
-              && ( that.getValueId().isPresent() 
-                ? casted.getValueId().isPresent() 
-                && transform( that.getValueId().get(), casted.getValueId().get()) 
-                : ! casted.getValueId().isPresent()));
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent()
+                                              && that.getValue().isPresent()
+                                          ? (casted.getValue().isPresent()
+                                              && that.getValue().get().size()
+                                                  == casted.getValue().get().size()
+                                              && zip(
+                                                      that.getValue().get().stream(),
+                                                      casted.getValue().get().stream())
+                                                  .map(
+                                                      pair ->
+                                                          transform(
+                                                              pair.getFirst(), pair.getSecond()))
+                                                  .collect(Collectors.toList()).stream()
+                                                  .allMatch(Boolean.TRUE::equals))
+                                          : !casted.getValue().isPresent()
+                                              && (that.getValueId().isPresent()
+                                                  ? casted.getValueId().isPresent()
+                                                      && transform(
+                                                          that.getValueId().get(),
+                                                          casted.getValueId().get())
+                                                  : !casted.getValueId().isPresent()));
+    }
 
-          @Override
-          public Boolean transformRange(
-            IRange that,
-            IClass other)
-          {
-            final Range casted;
-            try {
-              casted = (Range) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformRange(IRange that, IClass other) {
+      final Range casted;
+      try {
+        casted = (Range) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && that.getValueType() == casted.getValueType()
-              && that.getMin().isPresent() 
-                ? casted.getMin().isPresent() 
-                && that.getMin().get() == casted.getMin().get() 
-                : ! casted.getMin().isPresent()
-              && that.getMax().isPresent() 
-                ? casted.getMax().isPresent() 
-                && that.getMax().get() == casted.getMax().get() 
-                : ! casted.getMax().isPresent());
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent()
+                                              && that.getValueType() == casted.getValueType()
+                                              && that.getMin().isPresent()
+                                          ? casted.getMin().isPresent()
+                                              && that.getMin().get() == casted.getMin().get()
+                                          : !casted.getMin().isPresent()
+                                                  && that.getMax().isPresent()
+                                              ? casted.getMax().isPresent()
+                                                  && that.getMax().get() == casted.getMax().get()
+                                              : !casted.getMax().isPresent());
+    }
 
-          @Override
-          public Boolean transformReferenceElement(
-            IReferenceElement that,
-            IClass other)
-          {
-            final ReferenceElement casted;
-            try {
-              casted = (ReferenceElement) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformReferenceElement(IReferenceElement that, IClass other) {
+      final ReferenceElement casted;
+      try {
+        casted = (ReferenceElement) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && ( that.getValue().isPresent() 
-                ? casted.getValue().isPresent() 
-                && transform( that.getValue().get(), casted.getValue().get()) 
-                : ! casted.getValue().isPresent()));
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent()
+                                          && (that.getValue().isPresent()
+                                              ? casted.getValue().isPresent()
+                                                  && transform(
+                                                      that.getValue().get(),
+                                                      casted.getValue().get())
+                                              : !casted.getValue().isPresent()));
+    }
 
-          @Override
-          public Boolean transformBlob(
-            IBlob that,
-            IClass other)
-          {
-            final Blob casted;
-            try {
-              casted = (Blob) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformBlob(IBlob that, IClass other) {
+      final Blob casted;
+      try {
+        casted = (Blob) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && Arrays.equals(that.getValue().get(),casted.getValue().get())
-              && that.getContentType() == casted.getContentType());
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent()
+                                          && Arrays.equals(
+                                              that.getValue().get(), casted.getValue().get())
+                                          && that.getContentType() == casted.getContentType());
+    }
 
-          @Override
-          public Boolean transformFile(
-            IFile that,
-            IClass other)
-          {
-            final File casted;
-            try {
-              casted = (File) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformFile(IFile that, IClass other) {
+      final File casted;
+      try {
+        casted = (File) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && that.getValue().isPresent() 
-                ? casted.getValue().isPresent() 
-                && that.getValue().get() == casted.getValue().get() 
-                : ! casted.getValue().isPresent()
-              && that.getContentType() == casted.getContentType());
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent()
+                                              && that.getValue().isPresent()
+                                          ? casted.getValue().isPresent()
+                                              && that.getValue().get() == casted.getValue().get()
+                                          : !casted.getValue().isPresent()
+                                              && that.getContentType() == casted.getContentType());
+    }
 
-          @Override
-          public Boolean transformAnnotatedRelationshipElement(
-            IAnnotatedRelationshipElement that,
-            IClass other)
-          {
-            final AnnotatedRelationshipElement casted;
-            try {
-              casted = (AnnotatedRelationshipElement) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformAnnotatedRelationshipElement(
+        IAnnotatedRelationshipElement that, IClass other) {
+      final AnnotatedRelationshipElement casted;
+      try {
+        casted = (AnnotatedRelationshipElement) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && transform(
-                that.getFirst(),
-                casted.getFirst())
-              && transform(
-                that.getSecond(),
-                casted.getSecond())
-              && that.getAnnotations().isPresent()
-                ? ( casted.getAnnotations().isPresent()
-                && that.getAnnotations().get().size() == casted.getAnnotations().get().size()
-                && zip(
-                  that.getAnnotations().get().stream(),
-                  casted.getAnnotations().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getAnnotations().isPresent());
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent()
+                                              && transform(that.getFirst(), casted.getFirst())
+                                              && transform(that.getSecond(), casted.getSecond())
+                                              && that.getAnnotations().isPresent()
+                                          ? (casted.getAnnotations().isPresent()
+                                              && that.getAnnotations().get().size()
+                                                  == casted.getAnnotations().get().size()
+                                              && zip(
+                                                      that.getAnnotations().get().stream(),
+                                                      casted.getAnnotations().get().stream())
+                                                  .map(
+                                                      pair ->
+                                                          transform(
+                                                              pair.getFirst(), pair.getSecond()))
+                                                  .collect(Collectors.toList()).stream()
+                                                  .allMatch(Boolean.TRUE::equals))
+                                          : !casted.getAnnotations().isPresent());
+    }
 
-          @Override
-          public Boolean transformEntity(
-            IEntity that,
-            IClass other)
-          {
-            final Entity casted;
-            try {
-              casted = (Entity) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformEntity(IEntity that, IClass other) {
+      final Entity casted;
+      try {
+        casted = (Entity) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && that.getStatements().isPresent()
-                ? ( casted.getStatements().isPresent()
-                && that.getStatements().get().size() == casted.getStatements().get().size()
-                && zip(
-                  that.getStatements().get().stream(),
-                  casted.getStatements().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getStatements().isPresent()
-              && that.getEntityType() == casted.getEntityType()
-              && that.getGlobalAssetId().isPresent() 
-                ? casted.getGlobalAssetId().isPresent() 
-                && that.getGlobalAssetId().get() == casted.getGlobalAssetId().get() 
-                : ! casted.getGlobalAssetId().isPresent()
-              && that.getSpecificAssetIds().isPresent()
-                ? ( casted.getSpecificAssetIds().isPresent()
-                && that.getSpecificAssetIds().get().size() == casted.getSpecificAssetIds().get().size()
-                && zip(
-                  that.getSpecificAssetIds().get().stream(),
-                  casted.getSpecificAssetIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSpecificAssetIds().isPresent());
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent()
+                                              && that.getStatements().isPresent()
+                                          ? (casted.getStatements().isPresent()
+                                              && that.getStatements().get().size()
+                                                  == casted.getStatements().get().size()
+                                              && zip(
+                                                      that.getStatements().get().stream(),
+                                                      casted.getStatements().get().stream())
+                                                  .map(
+                                                      pair ->
+                                                          transform(
+                                                              pair.getFirst(), pair.getSecond()))
+                                                  .collect(Collectors.toList()).stream()
+                                                  .allMatch(Boolean.TRUE::equals))
+                                          : !casted.getStatements().isPresent()
+                                                  && that.getEntityType() == casted.getEntityType()
+                                                  && that.getGlobalAssetId().isPresent()
+                                              ? casted.getGlobalAssetId().isPresent()
+                                                  && that.getGlobalAssetId().get()
+                                                      == casted.getGlobalAssetId().get()
+                                              : !casted.getGlobalAssetId().isPresent()
+                                                      && that.getSpecificAssetIds().isPresent()
+                                                  ? (casted.getSpecificAssetIds().isPresent()
+                                                      && that.getSpecificAssetIds().get().size()
+                                                          == casted
+                                                              .getSpecificAssetIds()
+                                                              .get()
+                                                              .size()
+                                                      && zip(
+                                                              that.getSpecificAssetIds().get()
+                                                                  .stream(),
+                                                              casted.getSpecificAssetIds().get()
+                                                                  .stream())
+                                                          .map(
+                                                              pair ->
+                                                                  transform(
+                                                                      pair.getFirst(),
+                                                                      pair.getSecond()))
+                                                          .collect(Collectors.toList()).stream()
+                                                          .allMatch(Boolean.TRUE::equals))
+                                                  : !casted.getSpecificAssetIds().isPresent());
+    }
 
-          @Override
-          public Boolean transformEventPayload(
-            IEventPayload that,
-            IClass other)
-          {
-            final EventPayload casted;
-            try {
-              casted = (EventPayload) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformEventPayload(IEventPayload that, IClass other) {
+      final EventPayload casted;
+      try {
+        casted = (EventPayload) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              transform(
-                that.getSource(),
-                casted.getSource())
-              && ( that.getSourceSemanticId().isPresent() 
-                ? casted.getSourceSemanticId().isPresent() 
-                && transform( that.getSourceSemanticId().get(), casted.getSourceSemanticId().get()) 
-                : ! casted.getSourceSemanticId().isPresent())
-              && transform(
-                that.getObservableReference(),
-                casted.getObservableReference())
-              && ( that.getObservableSemanticId().isPresent() 
-                ? casted.getObservableSemanticId().isPresent() 
-                && transform( that.getObservableSemanticId().get(), casted.getObservableSemanticId().get()) 
-                : ! casted.getObservableSemanticId().isPresent())
-              && that.getTopic().isPresent() 
-                ? casted.getTopic().isPresent() 
-                && that.getTopic().get() == casted.getTopic().get() 
-                : ! casted.getTopic().isPresent()
-              && ( that.getSubjectId().isPresent() 
-                ? casted.getSubjectId().isPresent() 
-                && transform( that.getSubjectId().get(), casted.getSubjectId().get()) 
-                : ! casted.getSubjectId().isPresent())
+      return (transform(that.getSource(), casted.getSource())
+              && (that.getSourceSemanticId().isPresent()
+                  ? casted.getSourceSemanticId().isPresent()
+                      && transform(
+                          that.getSourceSemanticId().get(), casted.getSourceSemanticId().get())
+                  : !casted.getSourceSemanticId().isPresent())
+              && transform(that.getObservableReference(), casted.getObservableReference())
+              && (that.getObservableSemanticId().isPresent()
+                  ? casted.getObservableSemanticId().isPresent()
+                      && transform(
+                          that.getObservableSemanticId().get(),
+                          casted.getObservableSemanticId().get())
+                  : !casted.getObservableSemanticId().isPresent())
+              && that.getTopic().isPresent()
+          ? casted.getTopic().isPresent() && that.getTopic().get() == casted.getTopic().get()
+          : !casted.getTopic().isPresent()
+              && (that.getSubjectId().isPresent()
+                  ? casted.getSubjectId().isPresent()
+                      && transform(that.getSubjectId().get(), casted.getSubjectId().get())
+                  : !casted.getSubjectId().isPresent())
               && that.getTimeStamp() == casted.getTimeStamp()
-              && Arrays.equals(that.getPayload().get(),casted.getPayload().get()));
-          }
+              && Arrays.equals(that.getPayload().get(), casted.getPayload().get()));
+    }
 
-          @Override
-          public Boolean transformBasicEventElement(
-            IBasicEventElement that,
-            IClass other)
-          {
-            final BasicEventElement casted;
-            try {
-              casted = (BasicEventElement) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformBasicEventElement(IBasicEventElement that, IClass other) {
+      final BasicEventElement casted;
+      try {
+        casted = (BasicEventElement) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && transform(
-                that.getObserved(),
-                casted.getObserved())
-              && that.getDirection() == casted.getDirection()
-              && that.getState() == casted.getState()
-              && that.getMessageTopic().isPresent() 
-                ? casted.getMessageTopic().isPresent() 
-                && that.getMessageTopic().get() == casted.getMessageTopic().get() 
-                : ! casted.getMessageTopic().isPresent()
-              && ( that.getMessageBroker().isPresent() 
-                ? casted.getMessageBroker().isPresent() 
-                && transform( that.getMessageBroker().get(), casted.getMessageBroker().get()) 
-                : ! casted.getMessageBroker().isPresent())
-              && that.getLastUpdate().isPresent() 
-                ? casted.getLastUpdate().isPresent() 
-                && that.getLastUpdate().get() == casted.getLastUpdate().get() 
-                : ! casted.getLastUpdate().isPresent()
-              && that.getMinInterval().isPresent() 
-                ? casted.getMinInterval().isPresent() 
-                && that.getMinInterval().get() == casted.getMinInterval().get() 
-                : ! casted.getMinInterval().isPresent()
-              && that.getMaxInterval().isPresent() 
-                ? casted.getMaxInterval().isPresent() 
-                && that.getMaxInterval().get() == casted.getMaxInterval().get() 
-                : ! casted.getMaxInterval().isPresent());
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent()
+                                              && transform(that.getObserved(), casted.getObserved())
+                                              && that.getDirection() == casted.getDirection()
+                                              && that.getState() == casted.getState()
+                                              && that.getMessageTopic().isPresent()
+                                          ? casted.getMessageTopic().isPresent()
+                                              && that.getMessageTopic().get()
+                                                  == casted.getMessageTopic().get()
+                                          : !casted.getMessageTopic().isPresent()
+                                                  && (that.getMessageBroker().isPresent()
+                                                      ? casted.getMessageBroker().isPresent()
+                                                          && transform(
+                                                              that.getMessageBroker().get(),
+                                                              casted.getMessageBroker().get())
+                                                      : !casted.getMessageBroker().isPresent())
+                                                  && that.getLastUpdate().isPresent()
+                                              ? casted.getLastUpdate().isPresent()
+                                                  && that.getLastUpdate().get()
+                                                      == casted.getLastUpdate().get()
+                                              : !casted.getLastUpdate().isPresent()
+                                                      && that.getMinInterval().isPresent()
+                                                  ? casted.getMinInterval().isPresent()
+                                                      && that.getMinInterval().get()
+                                                          == casted.getMinInterval().get()
+                                                  : !casted.getMinInterval().isPresent()
+                                                          && that.getMaxInterval().isPresent()
+                                                      ? casted.getMaxInterval().isPresent()
+                                                          && that.getMaxInterval().get()
+                                                              == casted.getMaxInterval().get()
+                                                      : !casted.getMaxInterval().isPresent());
+    }
 
-          @Override
-          public Boolean transformOperation(
-            IOperation that,
-            IClass other)
-          {
-            final Operation casted;
-            try {
-              casted = (Operation) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformOperation(IOperation that, IClass other) {
+      final Operation casted;
+      try {
+        casted = (Operation) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && that.getInputVariables().isPresent()
-                ? ( casted.getInputVariables().isPresent()
-                && that.getInputVariables().get().size() == casted.getInputVariables().get().size()
-                && zip(
-                  that.getInputVariables().get().stream(),
-                  casted.getInputVariables().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getInputVariables().isPresent()
-              && that.getOutputVariables().isPresent()
-                ? ( casted.getOutputVariables().isPresent()
-                && that.getOutputVariables().get().size() == casted.getOutputVariables().get().size()
-                && zip(
-                  that.getOutputVariables().get().stream(),
-                  casted.getOutputVariables().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getOutputVariables().isPresent()
-              && that.getInoutputVariables().isPresent()
-                ? ( casted.getInoutputVariables().isPresent()
-                && that.getInoutputVariables().get().size() == casted.getInoutputVariables().get().size()
-                && zip(
-                  that.getInoutputVariables().get().stream(),
-                  casted.getInoutputVariables().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getInoutputVariables().isPresent());
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent()
+                                              && that.getInputVariables().isPresent()
+                                          ? (casted.getInputVariables().isPresent()
+                                              && that.getInputVariables().get().size()
+                                                  == casted.getInputVariables().get().size()
+                                              && zip(
+                                                      that.getInputVariables().get().stream(),
+                                                      casted.getInputVariables().get().stream())
+                                                  .map(
+                                                      pair ->
+                                                          transform(
+                                                              pair.getFirst(), pair.getSecond()))
+                                                  .collect(Collectors.toList()).stream()
+                                                  .allMatch(Boolean.TRUE::equals))
+                                          : !casted.getInputVariables().isPresent()
+                                                  && that.getOutputVariables().isPresent()
+                                              ? (casted.getOutputVariables().isPresent()
+                                                  && that.getOutputVariables().get().size()
+                                                      == casted.getOutputVariables().get().size()
+                                                  && zip(
+                                                          that.getOutputVariables().get().stream(),
+                                                          casted.getOutputVariables().get()
+                                                              .stream())
+                                                      .map(
+                                                          pair ->
+                                                              transform(
+                                                                  pair.getFirst(),
+                                                                  pair.getSecond()))
+                                                      .collect(Collectors.toList()).stream()
+                                                      .allMatch(Boolean.TRUE::equals))
+                                              : !casted.getOutputVariables().isPresent()
+                                                      && that.getInoutputVariables().isPresent()
+                                                  ? (casted.getInoutputVariables().isPresent()
+                                                      && that.getInoutputVariables().get().size()
+                                                          == casted
+                                                              .getInoutputVariables()
+                                                              .get()
+                                                              .size()
+                                                      && zip(
+                                                              that.getInoutputVariables().get()
+                                                                  .stream(),
+                                                              casted.getInoutputVariables().get()
+                                                                  .stream())
+                                                          .map(
+                                                              pair ->
+                                                                  transform(
+                                                                      pair.getFirst(),
+                                                                      pair.getSecond()))
+                                                          .collect(Collectors.toList()).stream()
+                                                          .allMatch(Boolean.TRUE::equals))
+                                                  : !casted.getInoutputVariables().isPresent());
+    }
 
-          @Override
-          public Boolean transformOperationVariable(
-            IOperationVariable that,
-            IClass other)
-          {
-            final OperationVariable casted;
-            try {
-              casted = (OperationVariable) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformOperationVariable(IOperationVariable that, IClass other) {
+      final OperationVariable casted;
+      try {
+        casted = (OperationVariable) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              transform(
-                that.getValue(),
-                casted.getValue()));
-          }
+      return (transform(that.getValue(), casted.getValue()));
+    }
 
-          @Override
-          public Boolean transformCapability(
-            ICapability that,
-            IClass other)
-          {
-            final Capability casted;
-            try {
-              casted = (Capability) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformCapability(ICapability that, IClass other) {
+      final Capability casted;
+      try {
+        casted = (Capability) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getSemanticId().isPresent() 
-                ? casted.getSemanticId().isPresent() 
-                && transform( that.getSemanticId().get(), casted.getSemanticId().get()) 
-                : ! casted.getSemanticId().isPresent())
-              && that.getSupplementalSemanticIds().isPresent()
-                ? ( casted.getSupplementalSemanticIds().isPresent()
-                && that.getSupplementalSemanticIds().get().size() == casted.getSupplementalSemanticIds().get().size()
-                && zip(
-                  that.getSupplementalSemanticIds().get().stream(),
-                  casted.getSupplementalSemanticIds().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSupplementalSemanticIds().isPresent()
-              && that.getQualifiers().isPresent()
-                ? ( casted.getQualifiers().isPresent()
-                && that.getQualifiers().get().size() == casted.getQualifiers().get().size()
-                && zip(
-                  that.getQualifiers().get().stream(),
-                  casted.getQualifiers().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getQualifiers().isPresent()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent());
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getSemanticId().isPresent()
+                                      ? casted.getSemanticId().isPresent()
+                                          && transform(
+                                              that.getSemanticId().get(),
+                                              casted.getSemanticId().get())
+                                      : !casted.getSemanticId().isPresent())
+                                  && that.getSupplementalSemanticIds().isPresent()
+                              ? (casted.getSupplementalSemanticIds().isPresent()
+                                  && that.getSupplementalSemanticIds().get().size()
+                                      == casted.getSupplementalSemanticIds().get().size()
+                                  && zip(
+                                          that.getSupplementalSemanticIds().get().stream(),
+                                          casted.getSupplementalSemanticIds().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getSupplementalSemanticIds().isPresent()
+                                      && that.getQualifiers().isPresent()
+                                  ? (casted.getQualifiers().isPresent()
+                                      && that.getQualifiers().get().size()
+                                          == casted.getQualifiers().get().size()
+                                      && zip(
+                                              that.getQualifiers().get().stream(),
+                                              casted.getQualifiers().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getQualifiers().isPresent()
+                                          && that.getEmbeddedDataSpecifications().isPresent()
+                                      ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                          && that.getEmbeddedDataSpecifications().get().size()
+                                              == casted.getEmbeddedDataSpecifications().get().size()
+                                          && zip(
+                                                  that.getEmbeddedDataSpecifications().get()
+                                                      .stream(),
+                                                  casted.getEmbeddedDataSpecifications().get()
+                                                      .stream())
+                                              .map(
+                                                  pair ->
+                                                      transform(pair.getFirst(), pair.getSecond()))
+                                              .collect(Collectors.toList()).stream()
+                                              .allMatch(Boolean.TRUE::equals))
+                                      : !casted.getEmbeddedDataSpecifications().isPresent());
+    }
 
-          @Override
-          public Boolean transformConceptDescription(
-            IConceptDescription that,
-            IClass other)
-          {
-            final ConceptDescription casted;
-            try {
-              casted = (ConceptDescription) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformConceptDescription(IConceptDescription that, IClass other) {
+      final ConceptDescription casted;
+      try {
+        casted = (ConceptDescription) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getExtensions().isPresent()
-                ? ( casted.getExtensions().isPresent()
-                && that.getExtensions().get().size() == casted.getExtensions().get().size()
-                && zip(
-                  that.getExtensions().get().stream(),
-                  casted.getExtensions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getExtensions().isPresent()
-              && that.getCategory().isPresent() 
-                ? casted.getCategory().isPresent() 
-                && that.getCategory().get() == casted.getCategory().get() 
-                : ! casted.getCategory().isPresent()
-              && that.getIdShort().isPresent() 
-                ? casted.getIdShort().isPresent() 
-                && that.getIdShort().get() == casted.getIdShort().get() 
-                : ! casted.getIdShort().isPresent()
-              && that.getDisplayName().isPresent()
-                ? ( casted.getDisplayName().isPresent()
-                && that.getDisplayName().get().size() == casted.getDisplayName().get().size()
-                && zip(
-                  that.getDisplayName().get().stream(),
-                  casted.getDisplayName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDisplayName().isPresent()
-              && that.getDescription().isPresent()
-                ? ( casted.getDescription().isPresent()
-                && that.getDescription().get().size() == casted.getDescription().get().size()
-                && zip(
-                  that.getDescription().get().stream(),
-                  casted.getDescription().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDescription().isPresent()
-              && ( that.getAdministration().isPresent() 
-                ? casted.getAdministration().isPresent() 
-                && transform( that.getAdministration().get(), casted.getAdministration().get()) 
-                : ! casted.getAdministration().isPresent())
-              && that.getId() == casted.getId()
-              && that.getEmbeddedDataSpecifications().isPresent()
-                ? ( casted.getEmbeddedDataSpecifications().isPresent()
-                && that.getEmbeddedDataSpecifications().get().size() == casted.getEmbeddedDataSpecifications().get().size()
-                && zip(
-                  that.getEmbeddedDataSpecifications().get().stream(),
-                  casted.getEmbeddedDataSpecifications().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getEmbeddedDataSpecifications().isPresent()
-              && that.getIsCaseOf().isPresent()
-                ? ( casted.getIsCaseOf().isPresent()
-                && that.getIsCaseOf().get().size() == casted.getIsCaseOf().get().size()
-                && zip(
-                  that.getIsCaseOf().get().stream(),
-                  casted.getIsCaseOf().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getIsCaseOf().isPresent());
-          }
+      return (that.getExtensions().isPresent()
+          ? (casted.getExtensions().isPresent()
+              && that.getExtensions().get().size() == casted.getExtensions().get().size()
+              && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
+              ? casted.getCategory().isPresent()
+                  && that.getCategory().get() == casted.getCategory().get()
+              : !casted.getCategory().isPresent() && that.getIdShort().isPresent()
+                  ? casted.getIdShort().isPresent()
+                      && that.getIdShort().get() == casted.getIdShort().get()
+                  : !casted.getIdShort().isPresent() && that.getDisplayName().isPresent()
+                      ? (casted.getDisplayName().isPresent()
+                          && that.getDisplayName().get().size()
+                              == casted.getDisplayName().get().size()
+                          && zip(
+                                  that.getDisplayName().get().stream(),
+                                  casted.getDisplayName().get().stream())
+                              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                              .collect(Collectors.toList()).stream()
+                              .allMatch(Boolean.TRUE::equals))
+                      : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
+                          ? (casted.getDescription().isPresent()
+                              && that.getDescription().get().size()
+                                  == casted.getDescription().get().size()
+                              && zip(
+                                      that.getDescription().get().stream(),
+                                      casted.getDescription().get().stream())
+                                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                  .collect(Collectors.toList()).stream()
+                                  .allMatch(Boolean.TRUE::equals))
+                          : !casted.getDescription().isPresent()
+                                  && (that.getAdministration().isPresent()
+                                      ? casted.getAdministration().isPresent()
+                                          && transform(
+                                              that.getAdministration().get(),
+                                              casted.getAdministration().get())
+                                      : !casted.getAdministration().isPresent())
+                                  && that.getId() == casted.getId()
+                                  && that.getEmbeddedDataSpecifications().isPresent()
+                              ? (casted.getEmbeddedDataSpecifications().isPresent()
+                                  && that.getEmbeddedDataSpecifications().get().size()
+                                      == casted.getEmbeddedDataSpecifications().get().size()
+                                  && zip(
+                                          that.getEmbeddedDataSpecifications().get().stream(),
+                                          casted.getEmbeddedDataSpecifications().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getEmbeddedDataSpecifications().isPresent()
+                                      && that.getIsCaseOf().isPresent()
+                                  ? (casted.getIsCaseOf().isPresent()
+                                      && that.getIsCaseOf().get().size()
+                                          == casted.getIsCaseOf().get().size()
+                                      && zip(
+                                              that.getIsCaseOf().get().stream(),
+                                              casted.getIsCaseOf().get().stream())
+                                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                          .collect(Collectors.toList()).stream()
+                                          .allMatch(Boolean.TRUE::equals))
+                                  : !casted.getIsCaseOf().isPresent());
+    }
 
-          @Override
-          public Boolean transformReference(
-            IReference that,
-            IClass other)
-          {
-            final Reference casted;
-            try {
-              casted = (Reference) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformReference(IReference that, IClass other) {
+      final Reference casted;
+      try {
+        casted = (Reference) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getType() == casted.getType()
-              && ( that.getReferredSemanticId().isPresent() 
-                ? casted.getReferredSemanticId().isPresent() 
-                && transform( that.getReferredSemanticId().get(), casted.getReferredSemanticId().get()) 
-                : ! casted.getReferredSemanticId().isPresent())
-              && that.getKeys().size() == casted.getKeys().size()
-                && ( zip(
-                  that.getKeys().stream(),
-                  casted.getKeys().stream())
-                    .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals)));
-          }
+      return (that.getType() == casted.getType()
+          && (that.getReferredSemanticId().isPresent()
+              ? casted.getReferredSemanticId().isPresent()
+                  && transform(
+                      that.getReferredSemanticId().get(), casted.getReferredSemanticId().get())
+              : !casted.getReferredSemanticId().isPresent())
+          && that.getKeys().size() == casted.getKeys().size()
+          && (zip(that.getKeys().stream(), casted.getKeys().stream())
+              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+              .collect(Collectors.toList()).stream()
+              .allMatch(Boolean.TRUE::equals)));
+    }
 
-          @Override
-          public Boolean transformKey(
-            IKey that,
-            IClass other)
-          {
-            final Key casted;
-            try {
-              casted = (Key) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformKey(IKey that, IClass other) {
+      final Key casted;
+      try {
+        casted = (Key) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getType() == casted.getType()
-              && that.getValue() == casted.getValue());
-          }
+      return (that.getType() == casted.getType() && that.getValue() == casted.getValue());
+    }
 
-          @Override
-          public Boolean transformLangStringNameType(
-            ILangStringNameType that,
-            IClass other)
-          {
-            final LangStringNameType casted;
-            try {
-              casted = (LangStringNameType) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformLangStringNameType(ILangStringNameType that, IClass other) {
+      final LangStringNameType casted;
+      try {
+        casted = (LangStringNameType) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getLanguage() == casted.getLanguage()
-              && that.getText() == casted.getText());
-          }
+      return (that.getLanguage() == casted.getLanguage() && that.getText() == casted.getText());
+    }
 
-          @Override
-          public Boolean transformLangStringTextType(
-            ILangStringTextType that,
-            IClass other)
-          {
-            final LangStringTextType casted;
-            try {
-              casted = (LangStringTextType) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformLangStringTextType(ILangStringTextType that, IClass other) {
+      final LangStringTextType casted;
+      try {
+        casted = (LangStringTextType) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getLanguage() == casted.getLanguage()
-              && that.getText() == casted.getText());
-          }
+      return (that.getLanguage() == casted.getLanguage() && that.getText() == casted.getText());
+    }
 
-          @Override
-          public Boolean transformEnvironment(
-            IEnvironment that,
-            IClass other)
-          {
-            final Environment casted;
-            try {
-              casted = (Environment) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformEnvironment(IEnvironment that, IClass other) {
+      final Environment casted;
+      try {
+        casted = (Environment) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getAssetAdministrationShells().isPresent()
-                ? ( casted.getAssetAdministrationShells().isPresent()
-                && that.getAssetAdministrationShells().get().size() == casted.getAssetAdministrationShells().get().size()
-                && zip(
-                  that.getAssetAdministrationShells().get().stream(),
-                  casted.getAssetAdministrationShells().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getAssetAdministrationShells().isPresent()
-              && that.getSubmodels().isPresent()
-                ? ( casted.getSubmodels().isPresent()
-                && that.getSubmodels().get().size() == casted.getSubmodels().get().size()
-                && zip(
-                  that.getSubmodels().get().stream(),
-                  casted.getSubmodels().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getSubmodels().isPresent()
-              && that.getConceptDescriptions().isPresent()
-                ? ( casted.getConceptDescriptions().isPresent()
-                && that.getConceptDescriptions().get().size() == casted.getConceptDescriptions().get().size()
-                && zip(
-                  that.getConceptDescriptions().get().stream(),
-                  casted.getConceptDescriptions().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getConceptDescriptions().isPresent());
-          }
+      return (that.getAssetAdministrationShells().isPresent()
+          ? (casted.getAssetAdministrationShells().isPresent()
+              && that.getAssetAdministrationShells().get().size()
+                  == casted.getAssetAdministrationShells().get().size()
+              && zip(
+                      that.getAssetAdministrationShells().get().stream(),
+                      casted.getAssetAdministrationShells().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getAssetAdministrationShells().isPresent() && that.getSubmodels().isPresent()
+              ? (casted.getSubmodels().isPresent()
+                  && that.getSubmodels().get().size() == casted.getSubmodels().get().size()
+                  && zip(that.getSubmodels().get().stream(), casted.getSubmodels().get().stream())
+                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                      .collect(Collectors.toList()).stream()
+                      .allMatch(Boolean.TRUE::equals))
+              : !casted.getSubmodels().isPresent() && that.getConceptDescriptions().isPresent()
+                  ? (casted.getConceptDescriptions().isPresent()
+                      && that.getConceptDescriptions().get().size()
+                          == casted.getConceptDescriptions().get().size()
+                      && zip(
+                              that.getConceptDescriptions().get().stream(),
+                              casted.getConceptDescriptions().get().stream())
+                          .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                          .collect(Collectors.toList()).stream()
+                          .allMatch(Boolean.TRUE::equals))
+                  : !casted.getConceptDescriptions().isPresent());
+    }
 
-          @Override
-          public Boolean transformEmbeddedDataSpecification(
-            IEmbeddedDataSpecification that,
-            IClass other)
-          {
-            final EmbeddedDataSpecification casted;
-            try {
-              casted = (EmbeddedDataSpecification) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformEmbeddedDataSpecification(
+        IEmbeddedDataSpecification that, IClass other) {
+      final EmbeddedDataSpecification casted;
+      try {
+        casted = (EmbeddedDataSpecification) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              transform(
-                that.getDataSpecification(),
-                casted.getDataSpecification())
-              && transform(
-                that.getDataSpecificationContent(),
-                casted.getDataSpecificationContent()));
-          }
+      return (transform(that.getDataSpecification(), casted.getDataSpecification())
+          && transform(that.getDataSpecificationContent(), casted.getDataSpecificationContent()));
+    }
 
-          @Override
-          public Boolean transformLevelType(
-            ILevelType that,
-            IClass other)
-          {
-            final LevelType casted;
-            try {
-              casted = (LevelType) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformLevelType(ILevelType that, IClass other) {
+      final LevelType casted;
+      try {
+        casted = (LevelType) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getMin() == casted.getMin()
-              && that.getNom() == casted.getNom()
-              && that.getTyp() == casted.getTyp()
-              && that.getMax() == casted.getMax());
-          }
+      return (that.getMin() == casted.getMin()
+          && that.getNom() == casted.getNom()
+          && that.getTyp() == casted.getTyp()
+          && that.getMax() == casted.getMax());
+    }
 
-          @Override
-          public Boolean transformValueReferencePair(
-            IValueReferencePair that,
-            IClass other)
-          {
-            final ValueReferencePair casted;
-            try {
-              casted = (ValueReferencePair) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformValueReferencePair(IValueReferencePair that, IClass other) {
+      final ValueReferencePair casted;
+      try {
+        casted = (ValueReferencePair) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getValue() == casted.getValue()
-              && transform(
-                that.getValueId(),
-                casted.getValueId()));
-          }
+      return (that.getValue() == casted.getValue()
+          && transform(that.getValueId(), casted.getValueId()));
+    }
 
-          @Override
-          public Boolean transformValueList(
-            IValueList that,
-            IClass other)
-          {
-            final ValueList casted;
-            try {
-              casted = (ValueList) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformValueList(IValueList that, IClass other) {
+      final ValueList casted;
+      try {
+        casted = (ValueList) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getValueReferencePairs().size() == casted.getValueReferencePairs().size()
-                && ( zip(
-                  that.getValueReferencePairs().stream(),
-                  casted.getValueReferencePairs().stream())
-                    .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals)));
-          }
+      return (that.getValueReferencePairs().size() == casted.getValueReferencePairs().size()
+          && (zip(that.getValueReferencePairs().stream(), casted.getValueReferencePairs().stream())
+              .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+              .collect(Collectors.toList()).stream()
+              .allMatch(Boolean.TRUE::equals)));
+    }
 
-          @Override
-          public Boolean transformLangStringPreferredNameTypeIec61360(
-            ILangStringPreferredNameTypeIec61360 that,
-            IClass other)
-          {
-            final LangStringPreferredNameTypeIec61360 casted;
-            try {
-              casted = (LangStringPreferredNameTypeIec61360) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformLangStringPreferredNameTypeIec61360(
+        ILangStringPreferredNameTypeIec61360 that, IClass other) {
+      final LangStringPreferredNameTypeIec61360 casted;
+      try {
+        casted = (LangStringPreferredNameTypeIec61360) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getLanguage() == casted.getLanguage()
-              && that.getText() == casted.getText());
-          }
+      return (that.getLanguage() == casted.getLanguage() && that.getText() == casted.getText());
+    }
 
-          @Override
-          public Boolean transformLangStringShortNameTypeIec61360(
-            ILangStringShortNameTypeIec61360 that,
-            IClass other)
-          {
-            final LangStringShortNameTypeIec61360 casted;
-            try {
-              casted = (LangStringShortNameTypeIec61360) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformLangStringShortNameTypeIec61360(
+        ILangStringShortNameTypeIec61360 that, IClass other) {
+      final LangStringShortNameTypeIec61360 casted;
+      try {
+        casted = (LangStringShortNameTypeIec61360) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getLanguage() == casted.getLanguage()
-              && that.getText() == casted.getText());
-          }
+      return (that.getLanguage() == casted.getLanguage() && that.getText() == casted.getText());
+    }
 
-          @Override
-          public Boolean transformLangStringDefinitionTypeIec61360(
-            ILangStringDefinitionTypeIec61360 that,
-            IClass other)
-          {
-            final LangStringDefinitionTypeIec61360 casted;
-            try {
-              casted = (LangStringDefinitionTypeIec61360) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformLangStringDefinitionTypeIec61360(
+        ILangStringDefinitionTypeIec61360 that, IClass other) {
+      final LangStringDefinitionTypeIec61360 casted;
+      try {
+        casted = (LangStringDefinitionTypeIec61360) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getLanguage() == casted.getLanguage()
-              && that.getText() == casted.getText());
-          }
+      return (that.getLanguage() == casted.getLanguage() && that.getText() == casted.getText());
+    }
 
-          @Override
-          public Boolean transformDataSpecificationIec61360(
-            IDataSpecificationIec61360 that,
-            IClass other)
-          {
-            final DataSpecificationIec61360 casted;
-            try {
-              casted = (DataSpecificationIec61360) other;
-            } catch (ClassCastException exception) {
-            return false;
-            }
+    @Override
+    public Boolean transformDataSpecificationIec61360(
+        IDataSpecificationIec61360 that, IClass other) {
+      final DataSpecificationIec61360 casted;
+      try {
+        casted = (DataSpecificationIec61360) other;
+      } catch (ClassCastException exception) {
+        return false;
+      }
 
-            return (
-              that.getPreferredName().size() == casted.getPreferredName().size()
-                && ( zip(
-                  that.getPreferredName().stream(),
-                  casted.getPreferredName().stream())
-                    .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
+      return (that.getPreferredName().size() == casted.getPreferredName().size()
+              && (zip(that.getPreferredName().stream(), casted.getPreferredName().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
               && that.getShortName().isPresent()
-                ? ( casted.getShortName().isPresent()
-                && that.getShortName().get().size() == casted.getShortName().get().size()
-                && zip(
-                  that.getShortName().get().stream(),
-                  casted.getShortName().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getShortName().isPresent()
-              && that.getUnit().isPresent() 
-                ? casted.getUnit().isPresent() 
-                && that.getUnit().get() == casted.getUnit().get() 
-                : ! casted.getUnit().isPresent()
-              && ( that.getUnitId().isPresent() 
-                ? casted.getUnitId().isPresent() 
-                && transform( that.getUnitId().get(), casted.getUnitId().get()) 
-                : ! casted.getUnitId().isPresent())
-              && that.getSourceOfDefinition().isPresent() 
-                ? casted.getSourceOfDefinition().isPresent() 
-                && that.getSourceOfDefinition().get() == casted.getSourceOfDefinition().get() 
-                : ! casted.getSourceOfDefinition().isPresent()
-              && that.getSymbol().isPresent() 
-                ? casted.getSymbol().isPresent() 
-                && that.getSymbol().get() == casted.getSymbol().get() 
-                : ! casted.getSymbol().isPresent()
-              && that.getDataType().isPresent() ?
-                ( casted.getDataType().isPresent()
-                && that.getDataType().get() == casted.getDataType().get() )
-                : ! casted.getDataType().isPresent()
-              && that.getDefinition().isPresent()
-                ? ( casted.getDefinition().isPresent()
-                && that.getDefinition().get().size() == casted.getDefinition().get().size()
-                && zip(
-                  that.getDefinition().get().stream(),
-                  casted.getDefinition().get().stream())
-                    .map(pair -> transform(pair.getFirst(),pair.getSecond()))
-                    .collect(Collectors.toList()).stream().allMatch(Boolean.TRUE::equals))
-                : ! casted.getDefinition().isPresent()
-              && that.getValueFormat().isPresent() 
-                ? casted.getValueFormat().isPresent() 
-                && that.getValueFormat().get() == casted.getValueFormat().get() 
-                : ! casted.getValueFormat().isPresent()
-              && ( that.getValueList().isPresent() 
-                ? casted.getValueList().isPresent() 
-                && transform( that.getValueList().get(), casted.getValueList().get()) 
-                : ! casted.getValueList().isPresent())
-              && that.getValue().isPresent() 
-                ? casted.getValue().isPresent() 
-                && that.getValue().get() == casted.getValue().get() 
-                : ! casted.getValue().isPresent()
-              && ( that.getLevelType().isPresent() 
-                ? casted.getLevelType().isPresent() 
-                && transform( that.getLevelType().get(), casted.getLevelType().get()) 
-                : ! casted.getLevelType().isPresent()));
-          }
-        }  // inner class DeepEqualTransformer
-
-        private static final DeepEqualTransformer deepEqualTransformerInstance = new DeepEqualTransformer();
-
-        private static boolean checkExtensionShallowEquals(
-          Extension that,
-          Extension other)
-        {
-          return (
-            ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && that.getName() == other.getName()
-            && ( that.getValueType().isPresent() ? ( other.getValueType().isPresent() && that.getValueType().get() == other.getValueType().get()) : !other.getValueType().isPresent())
-            && ( that.getValue().isPresent() ? ( other.getValue().isPresent() && that.getValue().get() == other.getValue().get()) : !other.getValue().isPresent())
-            && ( that.getRefersTo().isPresent() ? ( other.getRefersTo().isPresent() && that.getRefersTo().get() == other.getRefersTo().get()) : !other.getRefersTo().isPresent()));
-        }
-
-        private static boolean checkAdministrativeInformationShallowEquals(
-          AdministrativeInformation that,
-          AdministrativeInformation other)
-        {
-          return (
-            ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && ( that.getVersion().isPresent() ? ( other.getVersion().isPresent() && that.getVersion().get() == other.getVersion().get()) : !other.getVersion().isPresent())
-            && ( that.getRevision().isPresent() ? ( other.getRevision().isPresent() && that.getRevision().get() == other.getRevision().get()) : !other.getRevision().isPresent())
-            && ( that.getCreator().isPresent() ? ( other.getCreator().isPresent() && that.getCreator().get() == other.getCreator().get()) : !other.getCreator().isPresent())
-            && ( that.getTemplateId().isPresent() ? ( other.getTemplateId().isPresent() && that.getTemplateId().get() == other.getTemplateId().get()) : !other.getTemplateId().isPresent()));
-        }
-
-        private static boolean checkQualifierShallowEquals(
-          Qualifier that,
-          Qualifier other)
-        {
-          return (
-            ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getKind().isPresent() ? ( other.getKind().isPresent() && that.getKind().get() == other.getKind().get()) : !other.getKind().isPresent())
-            && that.getType() == other.getType()
-            && that.getValueType() == other.getValueType()
-            && ( that.getValue().isPresent() ? ( other.getValue().isPresent() && that.getValue().get() == other.getValue().get()) : !other.getValue().isPresent())
-            && ( that.getValueId().isPresent() ? ( other.getValueId().isPresent() && that.getValueId().get() == other.getValueId().get()) : !other.getValueId().isPresent()));
-        }
-
-        private static boolean checkAssetAdministrationShellShallowEquals(
-          AssetAdministrationShell that,
-          AssetAdministrationShell other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getAdministration().isPresent() ? ( other.getAdministration().isPresent() && that.getAdministration().get() == other.getAdministration().get()) : !other.getAdministration().isPresent())
-            && that.getId() == other.getId()
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && ( that.getDerivedFrom().isPresent() ? ( other.getDerivedFrom().isPresent() && that.getDerivedFrom().get() == other.getDerivedFrom().get()) : !other.getDerivedFrom().isPresent())
-            && that.getAssetInformation() == other.getAssetInformation()
-            && ( that.getSubmodels().isPresent() ? ( other.getSubmodels().isPresent() && that.getSubmodels().get() == other.getSubmodels().get()) : !other.getSubmodels().isPresent()));
-        }
-
-        private static boolean checkAssetInformationShallowEquals(
-          AssetInformation that,
-          AssetInformation other)
-        {
-          return (
-            that.getAssetKind() == other.getAssetKind()
-            && ( that.getGlobalAssetId().isPresent() ? ( other.getGlobalAssetId().isPresent() && that.getGlobalAssetId().get() == other.getGlobalAssetId().get()) : !other.getGlobalAssetId().isPresent())
-            && ( that.getSpecificAssetIds().isPresent() ? ( other.getSpecificAssetIds().isPresent() && that.getSpecificAssetIds().get() == other.getSpecificAssetIds().get()) : !other.getSpecificAssetIds().isPresent())
-            && ( that.getAssetType().isPresent() ? ( other.getAssetType().isPresent() && that.getAssetType().get() == other.getAssetType().get()) : !other.getAssetType().isPresent())
-            && ( that.getDefaultThumbnail().isPresent() ? ( other.getDefaultThumbnail().isPresent() && that.getDefaultThumbnail().get() == other.getDefaultThumbnail().get()) : !other.getDefaultThumbnail().isPresent()));
-        }
-
-        private static boolean checkResourceShallowEquals(
-          Resource that,
-          Resource other)
-        {
-          return (
-            that.getPath() == other.getPath()
-            && ( that.getContentType().isPresent() ? ( other.getContentType().isPresent() && that.getContentType().get() == other.getContentType().get()) : !other.getContentType().isPresent()));
-        }
-
-        private static boolean checkSpecificAssetIdShallowEquals(
-          SpecificAssetId that,
-          SpecificAssetId other)
-        {
-          return (
-            ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && that.getName() == other.getName()
-            && that.getValue() == other.getValue()
-            && ( that.getExternalSubjectId().isPresent() ? ( other.getExternalSubjectId().isPresent() && that.getExternalSubjectId().get() == other.getExternalSubjectId().get()) : !other.getExternalSubjectId().isPresent()));
-        }
-
-        private static boolean checkSubmodelShallowEquals(
-          Submodel that,
-          Submodel other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getAdministration().isPresent() ? ( other.getAdministration().isPresent() && that.getAdministration().get() == other.getAdministration().get()) : !other.getAdministration().isPresent())
-            && that.getId() == other.getId()
-            && ( that.getKind().isPresent() ? ( other.getKind().isPresent() && that.getKind().get() == other.getKind().get()) : !other.getKind().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && ( that.getSubmodelElements().isPresent() ? ( other.getSubmodelElements().isPresent() && that.getSubmodelElements().get() == other.getSubmodelElements().get()) : !other.getSubmodelElements().isPresent()));
-        }
-
-        private static boolean checkRelationshipElementShallowEquals(
-          RelationshipElement that,
-          RelationshipElement other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && that.getFirst() == other.getFirst()
-            && that.getSecond() == other.getSecond());
-        }
-
-        private static boolean checkSubmodelElementListShallowEquals(
-          SubmodelElementList that,
-          SubmodelElementList other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && ( that.getOrderRelevant().isPresent() ? ( other.getOrderRelevant().isPresent() && that.getOrderRelevant().get() == other.getOrderRelevant().get()) : !other.getOrderRelevant().isPresent())
-            && ( that.getSemanticIdListElement().isPresent() ? ( other.getSemanticIdListElement().isPresent() && that.getSemanticIdListElement().get() == other.getSemanticIdListElement().get()) : !other.getSemanticIdListElement().isPresent())
-            && that.getTypeValueListElement() == other.getTypeValueListElement()
-            && ( that.getValueTypeListElement().isPresent() ? ( other.getValueTypeListElement().isPresent() && that.getValueTypeListElement().get() == other.getValueTypeListElement().get()) : !other.getValueTypeListElement().isPresent())
-            && ( that.getValue().isPresent() ? ( other.getValue().isPresent() && that.getValue().get() == other.getValue().get()) : !other.getValue().isPresent()));
-        }
-
-        private static boolean checkSubmodelElementCollectionShallowEquals(
-          SubmodelElementCollection that,
-          SubmodelElementCollection other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && ( that.getValue().isPresent() ? ( other.getValue().isPresent() && that.getValue().get() == other.getValue().get()) : !other.getValue().isPresent()));
-        }
-
-        private static boolean checkPropertyShallowEquals(
-          Property that,
-          Property other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && that.getValueType() == other.getValueType()
-            && ( that.getValue().isPresent() ? ( other.getValue().isPresent() && that.getValue().get() == other.getValue().get()) : !other.getValue().isPresent())
-            && ( that.getValueId().isPresent() ? ( other.getValueId().isPresent() && that.getValueId().get() == other.getValueId().get()) : !other.getValueId().isPresent()));
-        }
-
-        private static boolean checkMultiLanguagePropertyShallowEquals(
-          MultiLanguageProperty that,
-          MultiLanguageProperty other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && ( that.getValue().isPresent() ? ( other.getValue().isPresent() && that.getValue().get() == other.getValue().get()) : !other.getValue().isPresent())
-            && ( that.getValueId().isPresent() ? ( other.getValueId().isPresent() && that.getValueId().get() == other.getValueId().get()) : !other.getValueId().isPresent()));
-        }
-
-        private static boolean checkRangeShallowEquals(
-          Range that,
-          Range other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && that.getValueType() == other.getValueType()
-            && ( that.getMin().isPresent() ? ( other.getMin().isPresent() && that.getMin().get() == other.getMin().get()) : !other.getMin().isPresent())
-            && ( that.getMax().isPresent() ? ( other.getMax().isPresent() && that.getMax().get() == other.getMax().get()) : !other.getMax().isPresent()));
-        }
-
-        private static boolean checkReferenceElementShallowEquals(
-          ReferenceElement that,
-          ReferenceElement other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && ( that.getValue().isPresent() ? ( other.getValue().isPresent() && that.getValue().get() == other.getValue().get()) : !other.getValue().isPresent()));
-        }
-
-        private static boolean checkBlobShallowEquals(
-          Blob that,
-          Blob other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && ( that.getValue().isPresent() ? ( other.getValue().isPresent() && that.getValue().get() == other.getValue().get()) : !other.getValue().isPresent())
-            && that.getContentType() == other.getContentType());
-        }
-
-        private static boolean checkFileShallowEquals(
-          File that,
-          File other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && ( that.getValue().isPresent() ? ( other.getValue().isPresent() && that.getValue().get() == other.getValue().get()) : !other.getValue().isPresent())
-            && that.getContentType() == other.getContentType());
-        }
-
-        private static boolean checkAnnotatedRelationshipElementShallowEquals(
-          AnnotatedRelationshipElement that,
-          AnnotatedRelationshipElement other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && that.getFirst() == other.getFirst()
-            && that.getSecond() == other.getSecond()
-            && ( that.getAnnotations().isPresent() ? ( other.getAnnotations().isPresent() && that.getAnnotations().get() == other.getAnnotations().get()) : !other.getAnnotations().isPresent()));
-        }
-
-        private static boolean checkEntityShallowEquals(
-          Entity that,
-          Entity other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && ( that.getStatements().isPresent() ? ( other.getStatements().isPresent() && that.getStatements().get() == other.getStatements().get()) : !other.getStatements().isPresent())
-            && that.getEntityType() == other.getEntityType()
-            && ( that.getGlobalAssetId().isPresent() ? ( other.getGlobalAssetId().isPresent() && that.getGlobalAssetId().get() == other.getGlobalAssetId().get()) : !other.getGlobalAssetId().isPresent())
-            && ( that.getSpecificAssetIds().isPresent() ? ( other.getSpecificAssetIds().isPresent() && that.getSpecificAssetIds().get() == other.getSpecificAssetIds().get()) : !other.getSpecificAssetIds().isPresent()));
-        }
-
-        private static boolean checkEventPayloadShallowEquals(
-          EventPayload that,
-          EventPayload other)
-        {
-          return (
-            that.getSource() == other.getSource()
-            && ( that.getSourceSemanticId().isPresent() ? ( other.getSourceSemanticId().isPresent() && that.getSourceSemanticId().get() == other.getSourceSemanticId().get()) : !other.getSourceSemanticId().isPresent())
-            && that.getObservableReference() == other.getObservableReference()
-            && ( that.getObservableSemanticId().isPresent() ? ( other.getObservableSemanticId().isPresent() && that.getObservableSemanticId().get() == other.getObservableSemanticId().get()) : !other.getObservableSemanticId().isPresent())
-            && ( that.getTopic().isPresent() ? ( other.getTopic().isPresent() && that.getTopic().get() == other.getTopic().get()) : !other.getTopic().isPresent())
-            && ( that.getSubjectId().isPresent() ? ( other.getSubjectId().isPresent() && that.getSubjectId().get() == other.getSubjectId().get()) : !other.getSubjectId().isPresent())
-            && that.getTimeStamp() == other.getTimeStamp()
-            && ( that.getPayload().isPresent() ? ( other.getPayload().isPresent() && that.getPayload().get() == other.getPayload().get()) : !other.getPayload().isPresent()));
-        }
-
-        private static boolean checkBasicEventElementShallowEquals(
-          BasicEventElement that,
-          BasicEventElement other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && that.getObserved() == other.getObserved()
-            && that.getDirection() == other.getDirection()
-            && that.getState() == other.getState()
-            && ( that.getMessageTopic().isPresent() ? ( other.getMessageTopic().isPresent() && that.getMessageTopic().get() == other.getMessageTopic().get()) : !other.getMessageTopic().isPresent())
-            && ( that.getMessageBroker().isPresent() ? ( other.getMessageBroker().isPresent() && that.getMessageBroker().get() == other.getMessageBroker().get()) : !other.getMessageBroker().isPresent())
-            && ( that.getLastUpdate().isPresent() ? ( other.getLastUpdate().isPresent() && that.getLastUpdate().get() == other.getLastUpdate().get()) : !other.getLastUpdate().isPresent())
-            && ( that.getMinInterval().isPresent() ? ( other.getMinInterval().isPresent() && that.getMinInterval().get() == other.getMinInterval().get()) : !other.getMinInterval().isPresent())
-            && ( that.getMaxInterval().isPresent() ? ( other.getMaxInterval().isPresent() && that.getMaxInterval().get() == other.getMaxInterval().get()) : !other.getMaxInterval().isPresent()));
-        }
-
-        private static boolean checkOperationShallowEquals(
-          Operation that,
-          Operation other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && ( that.getInputVariables().isPresent() ? ( other.getInputVariables().isPresent() && that.getInputVariables().get() == other.getInputVariables().get()) : !other.getInputVariables().isPresent())
-            && ( that.getOutputVariables().isPresent() ? ( other.getOutputVariables().isPresent() && that.getOutputVariables().get() == other.getOutputVariables().get()) : !other.getOutputVariables().isPresent())
-            && ( that.getInoutputVariables().isPresent() ? ( other.getInoutputVariables().isPresent() && that.getInoutputVariables().get() == other.getInoutputVariables().get()) : !other.getInoutputVariables().isPresent()));
-        }
-
-        private static boolean checkOperationVariableShallowEquals(
-          OperationVariable that,
-          OperationVariable other)
-        {
-          return that.getValue() == other.getValue();
-        }
-
-        private static boolean checkCapabilityShallowEquals(
-          Capability that,
-          Capability other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getSemanticId().isPresent() ? ( other.getSemanticId().isPresent() && that.getSemanticId().get() == other.getSemanticId().get()) : !other.getSemanticId().isPresent())
-            && ( that.getSupplementalSemanticIds().isPresent() ? ( other.getSupplementalSemanticIds().isPresent() && that.getSupplementalSemanticIds().get() == other.getSupplementalSemanticIds().get()) : !other.getSupplementalSemanticIds().isPresent())
-            && ( that.getQualifiers().isPresent() ? ( other.getQualifiers().isPresent() && that.getQualifiers().get() == other.getQualifiers().get()) : !other.getQualifiers().isPresent())
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent()));
-        }
-
-        private static boolean checkConceptDescriptionShallowEquals(
-          ConceptDescription that,
-          ConceptDescription other)
-        {
-          return (
-            ( that.getExtensions().isPresent() ? ( other.getExtensions().isPresent() && that.getExtensions().get() == other.getExtensions().get()) : !other.getExtensions().isPresent())
-            && ( that.getCategory().isPresent() ? ( other.getCategory().isPresent() && that.getCategory().get() == other.getCategory().get()) : !other.getCategory().isPresent())
-            && ( that.getIdShort().isPresent() ? ( other.getIdShort().isPresent() && that.getIdShort().get() == other.getIdShort().get()) : !other.getIdShort().isPresent())
-            && ( that.getDisplayName().isPresent() ? ( other.getDisplayName().isPresent() && that.getDisplayName().get() == other.getDisplayName().get()) : !other.getDisplayName().isPresent())
-            && ( that.getDescription().isPresent() ? ( other.getDescription().isPresent() && that.getDescription().get() == other.getDescription().get()) : !other.getDescription().isPresent())
-            && ( that.getAdministration().isPresent() ? ( other.getAdministration().isPresent() && that.getAdministration().get() == other.getAdministration().get()) : !other.getAdministration().isPresent())
-            && that.getId() == other.getId()
-            && ( that.getEmbeddedDataSpecifications().isPresent() ? ( other.getEmbeddedDataSpecifications().isPresent() && that.getEmbeddedDataSpecifications().get() == other.getEmbeddedDataSpecifications().get()) : !other.getEmbeddedDataSpecifications().isPresent())
-            && ( that.getIsCaseOf().isPresent() ? ( other.getIsCaseOf().isPresent() && that.getIsCaseOf().get() == other.getIsCaseOf().get()) : !other.getIsCaseOf().isPresent()));
-        }
-
-        private static boolean checkReferenceShallowEquals(
-          Reference that,
-          Reference other)
-        {
-          return (
-            that.getType() == other.getType()
-            && ( that.getReferredSemanticId().isPresent() ? ( other.getReferredSemanticId().isPresent() && that.getReferredSemanticId().get() == other.getReferredSemanticId().get()) : !other.getReferredSemanticId().isPresent())
-            && that.getKeys() == other.getKeys());
-        }
-
-        private static boolean checkKeyShallowEquals(
-          Key that,
-          Key other)
-        {
-          return (
-            that.getType() == other.getType()
-            && that.getValue() == other.getValue());
-        }
-
-        private static boolean checkLangStringNameTypeShallowEquals(
-          LangStringNameType that,
-          LangStringNameType other)
-        {
-          return (
-            that.getLanguage() == other.getLanguage()
-            && that.getText() == other.getText());
-        }
-
-        private static boolean checkLangStringTextTypeShallowEquals(
-          LangStringTextType that,
-          LangStringTextType other)
-        {
-          return (
-            that.getLanguage() == other.getLanguage()
-            && that.getText() == other.getText());
-        }
-
-        private static boolean checkEnvironmentShallowEquals(
-          Environment that,
-          Environment other)
-        {
-          return (
-            ( that.getAssetAdministrationShells().isPresent() ? ( other.getAssetAdministrationShells().isPresent() && that.getAssetAdministrationShells().get() == other.getAssetAdministrationShells().get()) : !other.getAssetAdministrationShells().isPresent())
-            && ( that.getSubmodels().isPresent() ? ( other.getSubmodels().isPresent() && that.getSubmodels().get() == other.getSubmodels().get()) : !other.getSubmodels().isPresent())
-            && ( that.getConceptDescriptions().isPresent() ? ( other.getConceptDescriptions().isPresent() && that.getConceptDescriptions().get() == other.getConceptDescriptions().get()) : !other.getConceptDescriptions().isPresent()));
-        }
-
-        private static boolean checkEmbeddedDataSpecificationShallowEquals(
-          EmbeddedDataSpecification that,
-          EmbeddedDataSpecification other)
-        {
-          return (
-            that.getDataSpecification() == other.getDataSpecification()
-            && that.getDataSpecificationContent() == other.getDataSpecificationContent());
-        }
-
-        private static boolean checkLevelTypeShallowEquals(
-          LevelType that,
-          LevelType other)
-        {
-          return (
-            that.getMin() == other.getMin()
-            && that.getNom() == other.getNom()
-            && that.getTyp() == other.getTyp()
-            && that.getMax() == other.getMax());
-        }
-
-        private static boolean checkValueReferencePairShallowEquals(
-          ValueReferencePair that,
-          ValueReferencePair other)
-        {
-          return (
-            that.getValue() == other.getValue()
-            && that.getValueId() == other.getValueId());
-        }
-
-        private static boolean checkValueListShallowEquals(
-          ValueList that,
-          ValueList other)
-        {
-          return that.getValueReferencePairs() == other.getValueReferencePairs();
-        }
-
-        private static boolean checkLangStringPreferredNameTypeIec61360ShallowEquals(
-          LangStringPreferredNameTypeIec61360 that,
-          LangStringPreferredNameTypeIec61360 other)
-        {
-          return (
-            that.getLanguage() == other.getLanguage()
-            && that.getText() == other.getText());
-        }
-
-        private static boolean checkLangStringShortNameTypeIec61360ShallowEquals(
-          LangStringShortNameTypeIec61360 that,
-          LangStringShortNameTypeIec61360 other)
-        {
-          return (
-            that.getLanguage() == other.getLanguage()
-            && that.getText() == other.getText());
-        }
-
-        private static boolean checkLangStringDefinitionTypeIec61360ShallowEquals(
-          LangStringDefinitionTypeIec61360 that,
-          LangStringDefinitionTypeIec61360 other)
-        {
-          return (
-            that.getLanguage() == other.getLanguage()
-            && that.getText() == other.getText());
-        }
-
-        private static boolean checkDataSpecificationIec61360ShallowEquals(
-          DataSpecificationIec61360 that,
-          DataSpecificationIec61360 other)
-        {
-          return (
-            that.getPreferredName() == other.getPreferredName()
-            && ( that.getShortName().isPresent() ? ( other.getShortName().isPresent() && that.getShortName().get() == other.getShortName().get()) : !other.getShortName().isPresent())
-            && ( that.getUnit().isPresent() ? ( other.getUnit().isPresent() && that.getUnit().get() == other.getUnit().get()) : !other.getUnit().isPresent())
-            && ( that.getUnitId().isPresent() ? ( other.getUnitId().isPresent() && that.getUnitId().get() == other.getUnitId().get()) : !other.getUnitId().isPresent())
-            && ( that.getSourceOfDefinition().isPresent() ? ( other.getSourceOfDefinition().isPresent() && that.getSourceOfDefinition().get() == other.getSourceOfDefinition().get()) : !other.getSourceOfDefinition().isPresent())
-            && ( that.getSymbol().isPresent() ? ( other.getSymbol().isPresent() && that.getSymbol().get() == other.getSymbol().get()) : !other.getSymbol().isPresent())
-            && ( that.getDataType().isPresent() ? ( other.getDataType().isPresent() && that.getDataType().get() == other.getDataType().get()) : !other.getDataType().isPresent())
-            && ( that.getDefinition().isPresent() ? ( other.getDefinition().isPresent() && that.getDefinition().get() == other.getDefinition().get()) : !other.getDefinition().isPresent())
-            && ( that.getValueFormat().isPresent() ? ( other.getValueFormat().isPresent() && that.getValueFormat().get() == other.getValueFormat().get()) : !other.getValueFormat().isPresent())
-            && ( that.getValueList().isPresent() ? ( other.getValueList().isPresent() && that.getValueList().get() == other.getValueList().get()) : !other.getValueList().isPresent())
-            && ( that.getValue().isPresent() ? ( other.getValue().isPresent() && that.getValue().get() == other.getValue().get()) : !other.getValue().isPresent())
-            && ( that.getLevelType().isPresent() ? ( other.getLevelType().isPresent() && that.getLevelType().get() == other.getLevelType().get()) : !other.getLevelType().isPresent()));
-        }
-
-        private static boolean checkExtensionDeepEquals(
-          Extension that,
-          Extension other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testExtensionDeepCopy
-
-        private static boolean checkAdministrativeInformationDeepEquals(
-          AdministrativeInformation that,
-          AdministrativeInformation other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testAdministrativeInformationDeepCopy
-
-        private static boolean checkQualifierDeepEquals(
-          Qualifier that,
-          Qualifier other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testQualifierDeepCopy
-
-        private static boolean checkAssetAdministrationShellDeepEquals(
-          AssetAdministrationShell that,
-          AssetAdministrationShell other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testAssetAdministrationShellDeepCopy
-
-        private static boolean checkAssetInformationDeepEquals(
-          AssetInformation that,
-          AssetInformation other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testAssetInformationDeepCopy
-
-        private static boolean checkResourceDeepEquals(
-          Resource that,
-          Resource other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testResourceDeepCopy
-
-        private static boolean checkSpecificAssetIdDeepEquals(
-          SpecificAssetId that,
-          SpecificAssetId other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testSpecificAssetIdDeepCopy
-
-        private static boolean checkSubmodelDeepEquals(
-          Submodel that,
-          Submodel other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testSubmodelDeepCopy
-
-        private static boolean checkRelationshipElementDeepEquals(
-          RelationshipElement that,
-          RelationshipElement other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testRelationshipElementDeepCopy
-
-        private static boolean checkSubmodelElementListDeepEquals(
-          SubmodelElementList that,
-          SubmodelElementList other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testSubmodelElementListDeepCopy
-
-        private static boolean checkSubmodelElementCollectionDeepEquals(
-          SubmodelElementCollection that,
-          SubmodelElementCollection other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testSubmodelElementCollectionDeepCopy
-
-        private static boolean checkPropertyDeepEquals(
-          Property that,
-          Property other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testPropertyDeepCopy
-
-        private static boolean checkMultiLanguagePropertyDeepEquals(
-          MultiLanguageProperty that,
-          MultiLanguageProperty other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testMultiLanguagePropertyDeepCopy
-
-        private static boolean checkRangeDeepEquals(
-          Range that,
-          Range other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testRangeDeepCopy
-
-        private static boolean checkReferenceElementDeepEquals(
-          ReferenceElement that,
-          ReferenceElement other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testReferenceElementDeepCopy
-
-        private static boolean checkBlobDeepEquals(
-          Blob that,
-          Blob other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testBlobDeepCopy
-
-        private static boolean checkFileDeepEquals(
-          File that,
-          File other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testFileDeepCopy
-
-        private static boolean checkAnnotatedRelationshipElementDeepEquals(
-          AnnotatedRelationshipElement that,
-          AnnotatedRelationshipElement other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testAnnotatedRelationshipElementDeepCopy
-
-        private static boolean checkEntityDeepEquals(
-          Entity that,
-          Entity other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testEntityDeepCopy
-
-        private static boolean checkEventPayloadDeepEquals(
-          EventPayload that,
-          EventPayload other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testEventPayloadDeepCopy
-
-        private static boolean checkBasicEventElementDeepEquals(
-          BasicEventElement that,
-          BasicEventElement other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testBasicEventElementDeepCopy
-
-        private static boolean checkOperationDeepEquals(
-          Operation that,
-          Operation other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testOperationDeepCopy
-
-        private static boolean checkOperationVariableDeepEquals(
-          OperationVariable that,
-          OperationVariable other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testOperationVariableDeepCopy
-
-        private static boolean checkCapabilityDeepEquals(
-          Capability that,
-          Capability other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testCapabilityDeepCopy
-
-        private static boolean checkConceptDescriptionDeepEquals(
-          ConceptDescription that,
-          ConceptDescription other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testConceptDescriptionDeepCopy
-
-        private static boolean checkReferenceDeepEquals(
-          Reference that,
-          Reference other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testReferenceDeepCopy
-
-        private static boolean checkKeyDeepEquals(
-          Key that,
-          Key other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testKeyDeepCopy
-
-        private static boolean checkLangStringNameTypeDeepEquals(
-          LangStringNameType that,
-          LangStringNameType other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testLangStringNameTypeDeepCopy
-
-        private static boolean checkLangStringTextTypeDeepEquals(
-          LangStringTextType that,
-          LangStringTextType other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testLangStringTextTypeDeepCopy
-
-        private static boolean checkEnvironmentDeepEquals(
-          Environment that,
-          Environment other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testEnvironmentDeepCopy
-
-        private static boolean checkEmbeddedDataSpecificationDeepEquals(
-          EmbeddedDataSpecification that,
-          EmbeddedDataSpecification other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testEmbeddedDataSpecificationDeepCopy
-
-        private static boolean checkLevelTypeDeepEquals(
-          LevelType that,
-          LevelType other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testLevelTypeDeepCopy
-
-        private static boolean checkValueReferencePairDeepEquals(
-          ValueReferencePair that,
-          ValueReferencePair other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testValueReferencePairDeepCopy
-
-        private static boolean checkValueListDeepEquals(
-          ValueList that,
-          ValueList other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testValueListDeepCopy
-
-        private static boolean checkLangStringPreferredNameTypeIec61360DeepEquals(
-          LangStringPreferredNameTypeIec61360 that,
-          LangStringPreferredNameTypeIec61360 other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testLangStringPreferredNameTypeIec61360DeepCopy
-
-        private static boolean checkLangStringShortNameTypeIec61360DeepEquals(
-          LangStringShortNameTypeIec61360 that,
-          LangStringShortNameTypeIec61360 other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testLangStringShortNameTypeIec61360DeepCopy
-
-        private static boolean checkLangStringDefinitionTypeIec61360DeepEquals(
-          LangStringDefinitionTypeIec61360 that,
-          LangStringDefinitionTypeIec61360 other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testLangStringDefinitionTypeIec61360DeepCopy
-
-        private static boolean checkDataSpecificationIec61360DeepEquals(
-          DataSpecificationIec61360 that,
-          DataSpecificationIec61360 other)
-        {
-          return deepEqualTransformerInstance.transform(that, other);
-        } // public void testDataSpecificationIec61360DeepCopy
-
-        @Test
-        public void testExtensionShallowCopy() throws IOException {
-          final Extension instance = CommonJsonization.loadMaximalExtension();
-          final Extension instanceCopy = Copying.shallow(instance);
-          assertTrue(checkExtensionShallowEquals(instance,instanceCopy),"Extension");
-        }  // public void testExtensionShallowCopy
-
-        @Test
-        public void testExtensionDeepCopy() throws IOException {
-          final Extension instance = CommonJsonization.loadMaximalExtension();
-          final Extension instanceCopy = Copying.deep(instance);
-          assertTrue(checkExtensionDeepEquals(instance,instanceCopy),"Extension");
-        }  // public void testExtensionDeepCopy
-
-        @Test
-        public void testAdministrativeInformationShallowCopy() throws IOException {
-          final AdministrativeInformation instance = CommonJsonization.loadMaximalAdministrativeInformation();
-          final AdministrativeInformation instanceCopy = Copying.shallow(instance);
-          assertTrue(checkAdministrativeInformationShallowEquals(instance,instanceCopy),"AdministrativeInformation");
-        }  // public void testAdministrativeInformationShallowCopy
-
-        @Test
-        public void testAdministrativeInformationDeepCopy() throws IOException {
-          final AdministrativeInformation instance = CommonJsonization.loadMaximalAdministrativeInformation();
-          final AdministrativeInformation instanceCopy = Copying.deep(instance);
-          assertTrue(checkAdministrativeInformationDeepEquals(instance,instanceCopy),"AdministrativeInformation");
-        }  // public void testAdministrativeInformationDeepCopy
-
-        @Test
-        public void testQualifierShallowCopy() throws IOException {
-          final Qualifier instance = CommonJsonization.loadMaximalQualifier();
-          final Qualifier instanceCopy = Copying.shallow(instance);
-          assertTrue(checkQualifierShallowEquals(instance,instanceCopy),"Qualifier");
-        }  // public void testQualifierShallowCopy
-
-        @Test
-        public void testQualifierDeepCopy() throws IOException {
-          final Qualifier instance = CommonJsonization.loadMaximalQualifier();
-          final Qualifier instanceCopy = Copying.deep(instance);
-          assertTrue(checkQualifierDeepEquals(instance,instanceCopy),"Qualifier");
-        }  // public void testQualifierDeepCopy
-
-        @Test
-        public void testAssetAdministrationShellShallowCopy() throws IOException {
-          final AssetAdministrationShell instance = CommonJsonization.loadMaximalAssetAdministrationShell();
-          final AssetAdministrationShell instanceCopy = Copying.shallow(instance);
-          assertTrue(checkAssetAdministrationShellShallowEquals(instance,instanceCopy),"AssetAdministrationShell");
-        }  // public void testAssetAdministrationShellShallowCopy
-
-        @Test
-        public void testAssetAdministrationShellDeepCopy() throws IOException {
-          final AssetAdministrationShell instance = CommonJsonization.loadMaximalAssetAdministrationShell();
-          final AssetAdministrationShell instanceCopy = Copying.deep(instance);
-          assertTrue(checkAssetAdministrationShellDeepEquals(instance,instanceCopy),"AssetAdministrationShell");
-        }  // public void testAssetAdministrationShellDeepCopy
-
-        @Test
-        public void testAssetInformationShallowCopy() throws IOException {
-          final AssetInformation instance = CommonJsonization.loadMaximalAssetInformation();
-          final AssetInformation instanceCopy = Copying.shallow(instance);
-          assertTrue(checkAssetInformationShallowEquals(instance,instanceCopy),"AssetInformation");
-        }  // public void testAssetInformationShallowCopy
-
-        @Test
-        public void testAssetInformationDeepCopy() throws IOException {
-          final AssetInformation instance = CommonJsonization.loadMaximalAssetInformation();
-          final AssetInformation instanceCopy = Copying.deep(instance);
-          assertTrue(checkAssetInformationDeepEquals(instance,instanceCopy),"AssetInformation");
-        }  // public void testAssetInformationDeepCopy
-
-        @Test
-        public void testResourceShallowCopy() throws IOException {
-          final Resource instance = CommonJsonization.loadMaximalResource();
-          final Resource instanceCopy = Copying.shallow(instance);
-          assertTrue(checkResourceShallowEquals(instance,instanceCopy),"Resource");
-        }  // public void testResourceShallowCopy
-
-        @Test
-        public void testResourceDeepCopy() throws IOException {
-          final Resource instance = CommonJsonization.loadMaximalResource();
-          final Resource instanceCopy = Copying.deep(instance);
-          assertTrue(checkResourceDeepEquals(instance,instanceCopy),"Resource");
-        }  // public void testResourceDeepCopy
-
-        @Test
-        public void testSpecificAssetIdShallowCopy() throws IOException {
-          final SpecificAssetId instance = CommonJsonization.loadMaximalSpecificAssetId();
-          final SpecificAssetId instanceCopy = Copying.shallow(instance);
-          assertTrue(checkSpecificAssetIdShallowEquals(instance,instanceCopy),"SpecificAssetId");
-        }  // public void testSpecificAssetIdShallowCopy
-
-        @Test
-        public void testSpecificAssetIdDeepCopy() throws IOException {
-          final SpecificAssetId instance = CommonJsonization.loadMaximalSpecificAssetId();
-          final SpecificAssetId instanceCopy = Copying.deep(instance);
-          assertTrue(checkSpecificAssetIdDeepEquals(instance,instanceCopy),"SpecificAssetId");
-        }  // public void testSpecificAssetIdDeepCopy
-
-        @Test
-        public void testSubmodelShallowCopy() throws IOException {
-          final Submodel instance = CommonJsonization.loadMaximalSubmodel();
-          final Submodel instanceCopy = Copying.shallow(instance);
-          assertTrue(checkSubmodelShallowEquals(instance,instanceCopy),"Submodel");
-        }  // public void testSubmodelShallowCopy
-
-        @Test
-        public void testSubmodelDeepCopy() throws IOException {
-          final Submodel instance = CommonJsonization.loadMaximalSubmodel();
-          final Submodel instanceCopy = Copying.deep(instance);
-          assertTrue(checkSubmodelDeepEquals(instance,instanceCopy),"Submodel");
-        }  // public void testSubmodelDeepCopy
-
-        @Test
-        public void testRelationshipElementShallowCopy() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
-          final RelationshipElement instanceCopy = Copying.shallow(instance);
-          assertTrue(checkRelationshipElementShallowEquals(instance,instanceCopy),"RelationshipElement");
-        }  // public void testRelationshipElementShallowCopy
-
-        @Test
-        public void testRelationshipElementDeepCopy() throws IOException {
-          final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
-          final RelationshipElement instanceCopy = Copying.deep(instance);
-          assertTrue(checkRelationshipElementDeepEquals(instance,instanceCopy),"RelationshipElement");
-        }  // public void testRelationshipElementDeepCopy
-
-        @Test
-        public void testSubmodelElementListShallowCopy() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
-          final SubmodelElementList instanceCopy = Copying.shallow(instance);
-          assertTrue(checkSubmodelElementListShallowEquals(instance,instanceCopy),"SubmodelElementList");
-        }  // public void testSubmodelElementListShallowCopy
-
-        @Test
-        public void testSubmodelElementListDeepCopy() throws IOException {
-          final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
-          final SubmodelElementList instanceCopy = Copying.deep(instance);
-          assertTrue(checkSubmodelElementListDeepEquals(instance,instanceCopy),"SubmodelElementList");
-        }  // public void testSubmodelElementListDeepCopy
-
-        @Test
-        public void testSubmodelElementCollectionShallowCopy() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMaximalSubmodelElementCollection();
-          final SubmodelElementCollection instanceCopy = Copying.shallow(instance);
-          assertTrue(checkSubmodelElementCollectionShallowEquals(instance,instanceCopy),"SubmodelElementCollection");
-        }  // public void testSubmodelElementCollectionShallowCopy
-
-        @Test
-        public void testSubmodelElementCollectionDeepCopy() throws IOException {
-          final SubmodelElementCollection instance = CommonJsonization.loadMaximalSubmodelElementCollection();
-          final SubmodelElementCollection instanceCopy = Copying.deep(instance);
-          assertTrue(checkSubmodelElementCollectionDeepEquals(instance,instanceCopy),"SubmodelElementCollection");
-        }  // public void testSubmodelElementCollectionDeepCopy
-
-        @Test
-        public void testPropertyShallowCopy() throws IOException {
-          final Property instance = CommonJsonization.loadMaximalProperty();
-          final Property instanceCopy = Copying.shallow(instance);
-          assertTrue(checkPropertyShallowEquals(instance,instanceCopy),"Property");
-        }  // public void testPropertyShallowCopy
-
-        @Test
-        public void testPropertyDeepCopy() throws IOException {
-          final Property instance = CommonJsonization.loadMaximalProperty();
-          final Property instanceCopy = Copying.deep(instance);
-          assertTrue(checkPropertyDeepEquals(instance,instanceCopy),"Property");
-        }  // public void testPropertyDeepCopy
-
-        @Test
-        public void testMultiLanguagePropertyShallowCopy() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
-          final MultiLanguageProperty instanceCopy = Copying.shallow(instance);
-          assertTrue(checkMultiLanguagePropertyShallowEquals(instance,instanceCopy),"MultiLanguageProperty");
-        }  // public void testMultiLanguagePropertyShallowCopy
-
-        @Test
-        public void testMultiLanguagePropertyDeepCopy() throws IOException {
-          final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
-          final MultiLanguageProperty instanceCopy = Copying.deep(instance);
-          assertTrue(checkMultiLanguagePropertyDeepEquals(instance,instanceCopy),"MultiLanguageProperty");
-        }  // public void testMultiLanguagePropertyDeepCopy
-
-        @Test
-        public void testRangeShallowCopy() throws IOException {
-          final Range instance = CommonJsonization.loadMaximalRange();
-          final Range instanceCopy = Copying.shallow(instance);
-          assertTrue(checkRangeShallowEquals(instance,instanceCopy),"Range");
-        }  // public void testRangeShallowCopy
-
-        @Test
-        public void testRangeDeepCopy() throws IOException {
-          final Range instance = CommonJsonization.loadMaximalRange();
-          final Range instanceCopy = Copying.deep(instance);
-          assertTrue(checkRangeDeepEquals(instance,instanceCopy),"Range");
-        }  // public void testRangeDeepCopy
-
-        @Test
-        public void testReferenceElementShallowCopy() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
-          final ReferenceElement instanceCopy = Copying.shallow(instance);
-          assertTrue(checkReferenceElementShallowEquals(instance,instanceCopy),"ReferenceElement");
-        }  // public void testReferenceElementShallowCopy
-
-        @Test
-        public void testReferenceElementDeepCopy() throws IOException {
-          final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
-          final ReferenceElement instanceCopy = Copying.deep(instance);
-          assertTrue(checkReferenceElementDeepEquals(instance,instanceCopy),"ReferenceElement");
-        }  // public void testReferenceElementDeepCopy
-
-        @Test
-        public void testBlobShallowCopy() throws IOException {
-          final Blob instance = CommonJsonization.loadMaximalBlob();
-          final Blob instanceCopy = Copying.shallow(instance);
-          assertTrue(checkBlobShallowEquals(instance,instanceCopy),"Blob");
-        }  // public void testBlobShallowCopy
-
-        @Test
-        public void testBlobDeepCopy() throws IOException {
-          final Blob instance = CommonJsonization.loadMaximalBlob();
-          final Blob instanceCopy = Copying.deep(instance);
-          assertTrue(checkBlobDeepEquals(instance,instanceCopy),"Blob");
-        }  // public void testBlobDeepCopy
-
-        @Test
-        public void testFileShallowCopy() throws IOException {
-          final File instance = CommonJsonization.loadMaximalFile();
-          final File instanceCopy = Copying.shallow(instance);
-          assertTrue(checkFileShallowEquals(instance,instanceCopy),"File");
-        }  // public void testFileShallowCopy
-
-        @Test
-        public void testFileDeepCopy() throws IOException {
-          final File instance = CommonJsonization.loadMaximalFile();
-          final File instanceCopy = Copying.deep(instance);
-          assertTrue(checkFileDeepEquals(instance,instanceCopy),"File");
-        }  // public void testFileDeepCopy
-
-        @Test
-        public void testAnnotatedRelationshipElementShallowCopy() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMaximalAnnotatedRelationshipElement();
-          final AnnotatedRelationshipElement instanceCopy = Copying.shallow(instance);
-          assertTrue(checkAnnotatedRelationshipElementShallowEquals(instance,instanceCopy),"AnnotatedRelationshipElement");
-        }  // public void testAnnotatedRelationshipElementShallowCopy
-
-        @Test
-        public void testAnnotatedRelationshipElementDeepCopy() throws IOException {
-          final AnnotatedRelationshipElement instance = CommonJsonization.loadMaximalAnnotatedRelationshipElement();
-          final AnnotatedRelationshipElement instanceCopy = Copying.deep(instance);
-          assertTrue(checkAnnotatedRelationshipElementDeepEquals(instance,instanceCopy),"AnnotatedRelationshipElement");
-        }  // public void testAnnotatedRelationshipElementDeepCopy
-
-        @Test
-        public void testEntityShallowCopy() throws IOException {
-          final Entity instance = CommonJsonization.loadMaximalEntity();
-          final Entity instanceCopy = Copying.shallow(instance);
-          assertTrue(checkEntityShallowEquals(instance,instanceCopy),"Entity");
-        }  // public void testEntityShallowCopy
-
-        @Test
-        public void testEntityDeepCopy() throws IOException {
-          final Entity instance = CommonJsonization.loadMaximalEntity();
-          final Entity instanceCopy = Copying.deep(instance);
-          assertTrue(checkEntityDeepEquals(instance,instanceCopy),"Entity");
-        }  // public void testEntityDeepCopy
-
-        @Test
-        public void testEventPayloadShallowCopy() throws IOException {
-          final EventPayload instance = CommonJsonization.loadMaximalEventPayload();
-          final EventPayload instanceCopy = Copying.shallow(instance);
-          assertTrue(checkEventPayloadShallowEquals(instance,instanceCopy),"EventPayload");
-        }  // public void testEventPayloadShallowCopy
-
-        @Test
-        public void testEventPayloadDeepCopy() throws IOException {
-          final EventPayload instance = CommonJsonization.loadMaximalEventPayload();
-          final EventPayload instanceCopy = Copying.deep(instance);
-          assertTrue(checkEventPayloadDeepEquals(instance,instanceCopy),"EventPayload");
-        }  // public void testEventPayloadDeepCopy
-
-        @Test
-        public void testBasicEventElementShallowCopy() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
-          final BasicEventElement instanceCopy = Copying.shallow(instance);
-          assertTrue(checkBasicEventElementShallowEquals(instance,instanceCopy),"BasicEventElement");
-        }  // public void testBasicEventElementShallowCopy
-
-        @Test
-        public void testBasicEventElementDeepCopy() throws IOException {
-          final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
-          final BasicEventElement instanceCopy = Copying.deep(instance);
-          assertTrue(checkBasicEventElementDeepEquals(instance,instanceCopy),"BasicEventElement");
-        }  // public void testBasicEventElementDeepCopy
-
-        @Test
-        public void testOperationShallowCopy() throws IOException {
-          final Operation instance = CommonJsonization.loadMaximalOperation();
-          final Operation instanceCopy = Copying.shallow(instance);
-          assertTrue(checkOperationShallowEquals(instance,instanceCopy),"Operation");
-        }  // public void testOperationShallowCopy
-
-        @Test
-        public void testOperationDeepCopy() throws IOException {
-          final Operation instance = CommonJsonization.loadMaximalOperation();
-          final Operation instanceCopy = Copying.deep(instance);
-          assertTrue(checkOperationDeepEquals(instance,instanceCopy),"Operation");
-        }  // public void testOperationDeepCopy
-
-        @Test
-        public void testOperationVariableShallowCopy() throws IOException {
-          final OperationVariable instance = CommonJsonization.loadMaximalOperationVariable();
-          final OperationVariable instanceCopy = Copying.shallow(instance);
-          assertTrue(checkOperationVariableShallowEquals(instance,instanceCopy),"OperationVariable");
-        }  // public void testOperationVariableShallowCopy
-
-        @Test
-        public void testOperationVariableDeepCopy() throws IOException {
-          final OperationVariable instance = CommonJsonization.loadMaximalOperationVariable();
-          final OperationVariable instanceCopy = Copying.deep(instance);
-          assertTrue(checkOperationVariableDeepEquals(instance,instanceCopy),"OperationVariable");
-        }  // public void testOperationVariableDeepCopy
-
-        @Test
-        public void testCapabilityShallowCopy() throws IOException {
-          final Capability instance = CommonJsonization.loadMaximalCapability();
-          final Capability instanceCopy = Copying.shallow(instance);
-          assertTrue(checkCapabilityShallowEquals(instance,instanceCopy),"Capability");
-        }  // public void testCapabilityShallowCopy
-
-        @Test
-        public void testCapabilityDeepCopy() throws IOException {
-          final Capability instance = CommonJsonization.loadMaximalCapability();
-          final Capability instanceCopy = Copying.deep(instance);
-          assertTrue(checkCapabilityDeepEquals(instance,instanceCopy),"Capability");
-        }  // public void testCapabilityDeepCopy
-
-        @Test
-        public void testConceptDescriptionShallowCopy() throws IOException {
-          final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
-          final ConceptDescription instanceCopy = Copying.shallow(instance);
-          assertTrue(checkConceptDescriptionShallowEquals(instance,instanceCopy),"ConceptDescription");
-        }  // public void testConceptDescriptionShallowCopy
-
-        @Test
-        public void testConceptDescriptionDeepCopy() throws IOException {
-          final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
-          final ConceptDescription instanceCopy = Copying.deep(instance);
-          assertTrue(checkConceptDescriptionDeepEquals(instance,instanceCopy),"ConceptDescription");
-        }  // public void testConceptDescriptionDeepCopy
-
-        @Test
-        public void testReferenceShallowCopy() throws IOException {
-          final Reference instance = CommonJsonization.loadMaximalReference();
-          final Reference instanceCopy = Copying.shallow(instance);
-          assertTrue(checkReferenceShallowEquals(instance,instanceCopy),"Reference");
-        }  // public void testReferenceShallowCopy
-
-        @Test
-        public void testReferenceDeepCopy() throws IOException {
-          final Reference instance = CommonJsonization.loadMaximalReference();
-          final Reference instanceCopy = Copying.deep(instance);
-          assertTrue(checkReferenceDeepEquals(instance,instanceCopy),"Reference");
-        }  // public void testReferenceDeepCopy
-
-        @Test
-        public void testKeyShallowCopy() throws IOException {
-          final Key instance = CommonJsonization.loadMaximalKey();
-          final Key instanceCopy = Copying.shallow(instance);
-          assertTrue(checkKeyShallowEquals(instance,instanceCopy),"Key");
-        }  // public void testKeyShallowCopy
-
-        @Test
-        public void testKeyDeepCopy() throws IOException {
-          final Key instance = CommonJsonization.loadMaximalKey();
-          final Key instanceCopy = Copying.deep(instance);
-          assertTrue(checkKeyDeepEquals(instance,instanceCopy),"Key");
-        }  // public void testKeyDeepCopy
-
-        @Test
-        public void testLangStringNameTypeShallowCopy() throws IOException {
-          final LangStringNameType instance = CommonJsonization.loadMaximalLangStringNameType();
-          final LangStringNameType instanceCopy = Copying.shallow(instance);
-          assertTrue(checkLangStringNameTypeShallowEquals(instance,instanceCopy),"LangStringNameType");
-        }  // public void testLangStringNameTypeShallowCopy
-
-        @Test
-        public void testLangStringNameTypeDeepCopy() throws IOException {
-          final LangStringNameType instance = CommonJsonization.loadMaximalLangStringNameType();
-          final LangStringNameType instanceCopy = Copying.deep(instance);
-          assertTrue(checkLangStringNameTypeDeepEquals(instance,instanceCopy),"LangStringNameType");
-        }  // public void testLangStringNameTypeDeepCopy
-
-        @Test
-        public void testLangStringTextTypeShallowCopy() throws IOException {
-          final LangStringTextType instance = CommonJsonization.loadMaximalLangStringTextType();
-          final LangStringTextType instanceCopy = Copying.shallow(instance);
-          assertTrue(checkLangStringTextTypeShallowEquals(instance,instanceCopy),"LangStringTextType");
-        }  // public void testLangStringTextTypeShallowCopy
-
-        @Test
-        public void testLangStringTextTypeDeepCopy() throws IOException {
-          final LangStringTextType instance = CommonJsonization.loadMaximalLangStringTextType();
-          final LangStringTextType instanceCopy = Copying.deep(instance);
-          assertTrue(checkLangStringTextTypeDeepEquals(instance,instanceCopy),"LangStringTextType");
-        }  // public void testLangStringTextTypeDeepCopy
-
-        @Test
-        public void testEnvironmentShallowCopy() throws IOException {
-          final Environment instance = CommonJsonization.loadMaximalEnvironment();
-          final Environment instanceCopy = Copying.shallow(instance);
-          assertTrue(checkEnvironmentShallowEquals(instance,instanceCopy),"Environment");
-        }  // public void testEnvironmentShallowCopy
-
-        @Test
-        public void testEnvironmentDeepCopy() throws IOException {
-          final Environment instance = CommonJsonization.loadMaximalEnvironment();
-          final Environment instanceCopy = Copying.deep(instance);
-          assertTrue(checkEnvironmentDeepEquals(instance,instanceCopy),"Environment");
-        }  // public void testEnvironmentDeepCopy
-
-        @Test
-        public void testEmbeddedDataSpecificationShallowCopy() throws IOException {
-          final EmbeddedDataSpecification instance = CommonJsonization.loadMaximalEmbeddedDataSpecification();
-          final EmbeddedDataSpecification instanceCopy = Copying.shallow(instance);
-          assertTrue(checkEmbeddedDataSpecificationShallowEquals(instance,instanceCopy),"EmbeddedDataSpecification");
-        }  // public void testEmbeddedDataSpecificationShallowCopy
-
-        @Test
-        public void testEmbeddedDataSpecificationDeepCopy() throws IOException {
-          final EmbeddedDataSpecification instance = CommonJsonization.loadMaximalEmbeddedDataSpecification();
-          final EmbeddedDataSpecification instanceCopy = Copying.deep(instance);
-          assertTrue(checkEmbeddedDataSpecificationDeepEquals(instance,instanceCopy),"EmbeddedDataSpecification");
-        }  // public void testEmbeddedDataSpecificationDeepCopy
-
-        @Test
-        public void testLevelTypeShallowCopy() throws IOException {
-          final LevelType instance = CommonJsonization.loadMaximalLevelType();
-          final LevelType instanceCopy = Copying.shallow(instance);
-          assertTrue(checkLevelTypeShallowEquals(instance,instanceCopy),"LevelType");
-        }  // public void testLevelTypeShallowCopy
-
-        @Test
-        public void testLevelTypeDeepCopy() throws IOException {
-          final LevelType instance = CommonJsonization.loadMaximalLevelType();
-          final LevelType instanceCopy = Copying.deep(instance);
-          assertTrue(checkLevelTypeDeepEquals(instance,instanceCopy),"LevelType");
-        }  // public void testLevelTypeDeepCopy
-
-        @Test
-        public void testValueReferencePairShallowCopy() throws IOException {
-          final ValueReferencePair instance = CommonJsonization.loadMaximalValueReferencePair();
-          final ValueReferencePair instanceCopy = Copying.shallow(instance);
-          assertTrue(checkValueReferencePairShallowEquals(instance,instanceCopy),"ValueReferencePair");
-        }  // public void testValueReferencePairShallowCopy
-
-        @Test
-        public void testValueReferencePairDeepCopy() throws IOException {
-          final ValueReferencePair instance = CommonJsonization.loadMaximalValueReferencePair();
-          final ValueReferencePair instanceCopy = Copying.deep(instance);
-          assertTrue(checkValueReferencePairDeepEquals(instance,instanceCopy),"ValueReferencePair");
-        }  // public void testValueReferencePairDeepCopy
-
-        @Test
-        public void testValueListShallowCopy() throws IOException {
-          final ValueList instance = CommonJsonization.loadMaximalValueList();
-          final ValueList instanceCopy = Copying.shallow(instance);
-          assertTrue(checkValueListShallowEquals(instance,instanceCopy),"ValueList");
-        }  // public void testValueListShallowCopy
-
-        @Test
-        public void testValueListDeepCopy() throws IOException {
-          final ValueList instance = CommonJsonization.loadMaximalValueList();
-          final ValueList instanceCopy = Copying.deep(instance);
-          assertTrue(checkValueListDeepEquals(instance,instanceCopy),"ValueList");
-        }  // public void testValueListDeepCopy
-
-        @Test
-        public void testLangStringPreferredNameTypeIec61360ShallowCopy() throws IOException {
-          final LangStringPreferredNameTypeIec61360 instance = CommonJsonization.loadMaximalLangStringPreferredNameTypeIec61360();
-          final LangStringPreferredNameTypeIec61360 instanceCopy = Copying.shallow(instance);
-          assertTrue(checkLangStringPreferredNameTypeIec61360ShallowEquals(instance,instanceCopy),"LangStringPreferredNameTypeIec61360");
-        }  // public void testLangStringPreferredNameTypeIec61360ShallowCopy
-
-        @Test
-        public void testLangStringPreferredNameTypeIec61360DeepCopy() throws IOException {
-          final LangStringPreferredNameTypeIec61360 instance = CommonJsonization.loadMaximalLangStringPreferredNameTypeIec61360();
-          final LangStringPreferredNameTypeIec61360 instanceCopy = Copying.deep(instance);
-          assertTrue(checkLangStringPreferredNameTypeIec61360DeepEquals(instance,instanceCopy),"LangStringPreferredNameTypeIec61360");
-        }  // public void testLangStringPreferredNameTypeIec61360DeepCopy
-
-        @Test
-        public void testLangStringShortNameTypeIec61360ShallowCopy() throws IOException {
-          final LangStringShortNameTypeIec61360 instance = CommonJsonization.loadMaximalLangStringShortNameTypeIec61360();
-          final LangStringShortNameTypeIec61360 instanceCopy = Copying.shallow(instance);
-          assertTrue(checkLangStringShortNameTypeIec61360ShallowEquals(instance,instanceCopy),"LangStringShortNameTypeIec61360");
-        }  // public void testLangStringShortNameTypeIec61360ShallowCopy
-
-        @Test
-        public void testLangStringShortNameTypeIec61360DeepCopy() throws IOException {
-          final LangStringShortNameTypeIec61360 instance = CommonJsonization.loadMaximalLangStringShortNameTypeIec61360();
-          final LangStringShortNameTypeIec61360 instanceCopy = Copying.deep(instance);
-          assertTrue(checkLangStringShortNameTypeIec61360DeepEquals(instance,instanceCopy),"LangStringShortNameTypeIec61360");
-        }  // public void testLangStringShortNameTypeIec61360DeepCopy
-
-        @Test
-        public void testLangStringDefinitionTypeIec61360ShallowCopy() throws IOException {
-          final LangStringDefinitionTypeIec61360 instance = CommonJsonization.loadMaximalLangStringDefinitionTypeIec61360();
-          final LangStringDefinitionTypeIec61360 instanceCopy = Copying.shallow(instance);
-          assertTrue(checkLangStringDefinitionTypeIec61360ShallowEquals(instance,instanceCopy),"LangStringDefinitionTypeIec61360");
-        }  // public void testLangStringDefinitionTypeIec61360ShallowCopy
-
-        @Test
-        public void testLangStringDefinitionTypeIec61360DeepCopy() throws IOException {
-          final LangStringDefinitionTypeIec61360 instance = CommonJsonization.loadMaximalLangStringDefinitionTypeIec61360();
-          final LangStringDefinitionTypeIec61360 instanceCopy = Copying.deep(instance);
-          assertTrue(checkLangStringDefinitionTypeIec61360DeepEquals(instance,instanceCopy),"LangStringDefinitionTypeIec61360");
-        }  // public void testLangStringDefinitionTypeIec61360DeepCopy
-
-        @Test
-        public void testDataSpecificationIec61360ShallowCopy() throws IOException {
-          final DataSpecificationIec61360 instance = CommonJsonization.loadMaximalDataSpecificationIec61360();
-          final DataSpecificationIec61360 instanceCopy = Copying.shallow(instance);
-          assertTrue(checkDataSpecificationIec61360ShallowEquals(instance,instanceCopy),"DataSpecificationIec61360");
-        }  // public void testDataSpecificationIec61360ShallowCopy
-
-        @Test
-        public void testDataSpecificationIec61360DeepCopy() throws IOException {
-          final DataSpecificationIec61360 instance = CommonJsonization.loadMaximalDataSpecificationIec61360();
-          final DataSpecificationIec61360 instanceCopy = Copying.deep(instance);
-          assertTrue(checkDataSpecificationIec61360DeepEquals(instance,instanceCopy),"DataSpecificationIec61360");
-        }  // public void testDataSpecificationIec61360DeepCopy
-
-        @SuppressWarnings("OptionalGetWithoutIsPresent")
-        @Test
-        public void testSnippetInDocs() {
-          // Prepare the environment
-          final Property someProperty = new Property(
+          ? (casted.getShortName().isPresent()
+              && that.getShortName().get().size() == casted.getShortName().get().size()
+              && zip(that.getShortName().get().stream(), casted.getShortName().get().stream())
+                  .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                  .collect(Collectors.toList()).stream()
+                  .allMatch(Boolean.TRUE::equals))
+          : !casted.getShortName().isPresent() && that.getUnit().isPresent()
+              ? casted.getUnit().isPresent() && that.getUnit().get() == casted.getUnit().get()
+              : !casted.getUnit().isPresent()
+                      && (that.getUnitId().isPresent()
+                          ? casted.getUnitId().isPresent()
+                              && transform(that.getUnitId().get(), casted.getUnitId().get())
+                          : !casted.getUnitId().isPresent())
+                      && that.getSourceOfDefinition().isPresent()
+                  ? casted.getSourceOfDefinition().isPresent()
+                      && that.getSourceOfDefinition().get() == casted.getSourceOfDefinition().get()
+                  : !casted.getSourceOfDefinition().isPresent() && that.getSymbol().isPresent()
+                      ? casted.getSymbol().isPresent()
+                          && that.getSymbol().get() == casted.getSymbol().get()
+                      : !casted.getSymbol().isPresent() && that.getDataType().isPresent()
+                          ? (casted.getDataType().isPresent()
+                              && that.getDataType().get() == casted.getDataType().get())
+                          : !casted.getDataType().isPresent() && that.getDefinition().isPresent()
+                              ? (casted.getDefinition().isPresent()
+                                  && that.getDefinition().get().size()
+                                      == casted.getDefinition().get().size()
+                                  && zip(
+                                          that.getDefinition().get().stream(),
+                                          casted.getDefinition().get().stream())
+                                      .map(pair -> transform(pair.getFirst(), pair.getSecond()))
+                                      .collect(Collectors.toList()).stream()
+                                      .allMatch(Boolean.TRUE::equals))
+                              : !casted.getDefinition().isPresent()
+                                      && that.getValueFormat().isPresent()
+                                  ? casted.getValueFormat().isPresent()
+                                      && that.getValueFormat().get()
+                                          == casted.getValueFormat().get()
+                                  : !casted.getValueFormat().isPresent()
+                                          && (that.getValueList().isPresent()
+                                              ? casted.getValueList().isPresent()
+                                                  && transform(
+                                                      that.getValueList().get(),
+                                                      casted.getValueList().get())
+                                              : !casted.getValueList().isPresent())
+                                          && that.getValue().isPresent()
+                                      ? casted.getValue().isPresent()
+                                          && that.getValue().get() == casted.getValue().get()
+                                      : !casted.getValue().isPresent()
+                                          && (that.getLevelType().isPresent()
+                                              ? casted.getLevelType().isPresent()
+                                                  && transform(
+                                                      that.getLevelType().get(),
+                                                      casted.getLevelType().get())
+                                              : !casted.getLevelType().isPresent()));
+    }
+  } // inner class DeepEqualTransformer
+
+  private static final DeepEqualTransformer deepEqualTransformerInstance =
+      new DeepEqualTransformer();
+
+  private static boolean checkExtensionShallowEquals(Extension that, Extension other) {
+    return ((that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && that.getName() == other.getName()
+        && (that.getValueType().isPresent()
+            ? (other.getValueType().isPresent()
+                && that.getValueType().get() == other.getValueType().get())
+            : !other.getValueType().isPresent())
+        && (that.getValue().isPresent()
+            ? (other.getValue().isPresent() && that.getValue().get() == other.getValue().get())
+            : !other.getValue().isPresent())
+        && (that.getRefersTo().isPresent()
+            ? (other.getRefersTo().isPresent()
+                && that.getRefersTo().get() == other.getRefersTo().get())
+            : !other.getRefersTo().isPresent()));
+  }
+
+  private static boolean checkAdministrativeInformationShallowEquals(
+      AdministrativeInformation that, AdministrativeInformation other) {
+    return ((that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && (that.getVersion().isPresent()
+            ? (other.getVersion().isPresent()
+                && that.getVersion().get() == other.getVersion().get())
+            : !other.getVersion().isPresent())
+        && (that.getRevision().isPresent()
+            ? (other.getRevision().isPresent()
+                && that.getRevision().get() == other.getRevision().get())
+            : !other.getRevision().isPresent())
+        && (that.getCreator().isPresent()
+            ? (other.getCreator().isPresent()
+                && that.getCreator().get() == other.getCreator().get())
+            : !other.getCreator().isPresent())
+        && (that.getTemplateId().isPresent()
+            ? (other.getTemplateId().isPresent()
+                && that.getTemplateId().get() == other.getTemplateId().get())
+            : !other.getTemplateId().isPresent()));
+  }
+
+  private static boolean checkQualifierShallowEquals(Qualifier that, Qualifier other) {
+    return ((that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getKind().isPresent()
+            ? (other.getKind().isPresent() && that.getKind().get() == other.getKind().get())
+            : !other.getKind().isPresent())
+        && that.getType() == other.getType()
+        && that.getValueType() == other.getValueType()
+        && (that.getValue().isPresent()
+            ? (other.getValue().isPresent() && that.getValue().get() == other.getValue().get())
+            : !other.getValue().isPresent())
+        && (that.getValueId().isPresent()
+            ? (other.getValueId().isPresent()
+                && that.getValueId().get() == other.getValueId().get())
+            : !other.getValueId().isPresent()));
+  }
+
+  private static boolean checkAssetAdministrationShellShallowEquals(
+      AssetAdministrationShell that, AssetAdministrationShell other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getAdministration().isPresent()
+            ? (other.getAdministration().isPresent()
+                && that.getAdministration().get() == other.getAdministration().get())
+            : !other.getAdministration().isPresent())
+        && that.getId() == other.getId()
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && (that.getDerivedFrom().isPresent()
+            ? (other.getDerivedFrom().isPresent()
+                && that.getDerivedFrom().get() == other.getDerivedFrom().get())
+            : !other.getDerivedFrom().isPresent())
+        && that.getAssetInformation() == other.getAssetInformation()
+        && (that.getSubmodels().isPresent()
+            ? (other.getSubmodels().isPresent()
+                && that.getSubmodels().get() == other.getSubmodels().get())
+            : !other.getSubmodels().isPresent()));
+  }
+
+  private static boolean checkAssetInformationShallowEquals(
+      AssetInformation that, AssetInformation other) {
+    return (that.getAssetKind() == other.getAssetKind()
+        && (that.getGlobalAssetId().isPresent()
+            ? (other.getGlobalAssetId().isPresent()
+                && that.getGlobalAssetId().get() == other.getGlobalAssetId().get())
+            : !other.getGlobalAssetId().isPresent())
+        && (that.getSpecificAssetIds().isPresent()
+            ? (other.getSpecificAssetIds().isPresent()
+                && that.getSpecificAssetIds().get() == other.getSpecificAssetIds().get())
+            : !other.getSpecificAssetIds().isPresent())
+        && (that.getAssetType().isPresent()
+            ? (other.getAssetType().isPresent()
+                && that.getAssetType().get() == other.getAssetType().get())
+            : !other.getAssetType().isPresent())
+        && (that.getDefaultThumbnail().isPresent()
+            ? (other.getDefaultThumbnail().isPresent()
+                && that.getDefaultThumbnail().get() == other.getDefaultThumbnail().get())
+            : !other.getDefaultThumbnail().isPresent()));
+  }
+
+  private static boolean checkResourceShallowEquals(Resource that, Resource other) {
+    return (that.getPath() == other.getPath()
+        && (that.getContentType().isPresent()
+            ? (other.getContentType().isPresent()
+                && that.getContentType().get() == other.getContentType().get())
+            : !other.getContentType().isPresent()));
+  }
+
+  private static boolean checkSpecificAssetIdShallowEquals(
+      SpecificAssetId that, SpecificAssetId other) {
+    return ((that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && that.getName() == other.getName()
+        && that.getValue() == other.getValue()
+        && (that.getExternalSubjectId().isPresent()
+            ? (other.getExternalSubjectId().isPresent()
+                && that.getExternalSubjectId().get() == other.getExternalSubjectId().get())
+            : !other.getExternalSubjectId().isPresent()));
+  }
+
+  private static boolean checkSubmodelShallowEquals(Submodel that, Submodel other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getAdministration().isPresent()
+            ? (other.getAdministration().isPresent()
+                && that.getAdministration().get() == other.getAdministration().get())
+            : !other.getAdministration().isPresent())
+        && that.getId() == other.getId()
+        && (that.getKind().isPresent()
+            ? (other.getKind().isPresent() && that.getKind().get() == other.getKind().get())
+            : !other.getKind().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && (that.getSubmodelElements().isPresent()
+            ? (other.getSubmodelElements().isPresent()
+                && that.getSubmodelElements().get() == other.getSubmodelElements().get())
+            : !other.getSubmodelElements().isPresent()));
+  }
+
+  private static boolean checkRelationshipElementShallowEquals(
+      RelationshipElement that, RelationshipElement other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && that.getFirst() == other.getFirst()
+        && that.getSecond() == other.getSecond());
+  }
+
+  private static boolean checkSubmodelElementListShallowEquals(
+      SubmodelElementList that, SubmodelElementList other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && (that.getOrderRelevant().isPresent()
+            ? (other.getOrderRelevant().isPresent()
+                && that.getOrderRelevant().get() == other.getOrderRelevant().get())
+            : !other.getOrderRelevant().isPresent())
+        && (that.getSemanticIdListElement().isPresent()
+            ? (other.getSemanticIdListElement().isPresent()
+                && that.getSemanticIdListElement().get() == other.getSemanticIdListElement().get())
+            : !other.getSemanticIdListElement().isPresent())
+        && that.getTypeValueListElement() == other.getTypeValueListElement()
+        && (that.getValueTypeListElement().isPresent()
+            ? (other.getValueTypeListElement().isPresent()
+                && that.getValueTypeListElement().get() == other.getValueTypeListElement().get())
+            : !other.getValueTypeListElement().isPresent())
+        && (that.getValue().isPresent()
+            ? (other.getValue().isPresent() && that.getValue().get() == other.getValue().get())
+            : !other.getValue().isPresent()));
+  }
+
+  private static boolean checkSubmodelElementCollectionShallowEquals(
+      SubmodelElementCollection that, SubmodelElementCollection other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && (that.getValue().isPresent()
+            ? (other.getValue().isPresent() && that.getValue().get() == other.getValue().get())
+            : !other.getValue().isPresent()));
+  }
+
+  private static boolean checkPropertyShallowEquals(Property that, Property other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && that.getValueType() == other.getValueType()
+        && (that.getValue().isPresent()
+            ? (other.getValue().isPresent() && that.getValue().get() == other.getValue().get())
+            : !other.getValue().isPresent())
+        && (that.getValueId().isPresent()
+            ? (other.getValueId().isPresent()
+                && that.getValueId().get() == other.getValueId().get())
+            : !other.getValueId().isPresent()));
+  }
+
+  private static boolean checkMultiLanguagePropertyShallowEquals(
+      MultiLanguageProperty that, MultiLanguageProperty other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && (that.getValue().isPresent()
+            ? (other.getValue().isPresent() && that.getValue().get() == other.getValue().get())
+            : !other.getValue().isPresent())
+        && (that.getValueId().isPresent()
+            ? (other.getValueId().isPresent()
+                && that.getValueId().get() == other.getValueId().get())
+            : !other.getValueId().isPresent()));
+  }
+
+  private static boolean checkRangeShallowEquals(Range that, Range other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && that.getValueType() == other.getValueType()
+        && (that.getMin().isPresent()
+            ? (other.getMin().isPresent() && that.getMin().get() == other.getMin().get())
+            : !other.getMin().isPresent())
+        && (that.getMax().isPresent()
+            ? (other.getMax().isPresent() && that.getMax().get() == other.getMax().get())
+            : !other.getMax().isPresent()));
+  }
+
+  private static boolean checkReferenceElementShallowEquals(
+      ReferenceElement that, ReferenceElement other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && (that.getValue().isPresent()
+            ? (other.getValue().isPresent() && that.getValue().get() == other.getValue().get())
+            : !other.getValue().isPresent()));
+  }
+
+  private static boolean checkBlobShallowEquals(Blob that, Blob other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && (that.getValue().isPresent()
+            ? (other.getValue().isPresent() && that.getValue().get() == other.getValue().get())
+            : !other.getValue().isPresent())
+        && that.getContentType() == other.getContentType());
+  }
+
+  private static boolean checkFileShallowEquals(File that, File other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && (that.getValue().isPresent()
+            ? (other.getValue().isPresent() && that.getValue().get() == other.getValue().get())
+            : !other.getValue().isPresent())
+        && that.getContentType() == other.getContentType());
+  }
+
+  private static boolean checkAnnotatedRelationshipElementShallowEquals(
+      AnnotatedRelationshipElement that, AnnotatedRelationshipElement other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && that.getFirst() == other.getFirst()
+        && that.getSecond() == other.getSecond()
+        && (that.getAnnotations().isPresent()
+            ? (other.getAnnotations().isPresent()
+                && that.getAnnotations().get() == other.getAnnotations().get())
+            : !other.getAnnotations().isPresent()));
+  }
+
+  private static boolean checkEntityShallowEquals(Entity that, Entity other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && (that.getStatements().isPresent()
+            ? (other.getStatements().isPresent()
+                && that.getStatements().get() == other.getStatements().get())
+            : !other.getStatements().isPresent())
+        && that.getEntityType() == other.getEntityType()
+        && (that.getGlobalAssetId().isPresent()
+            ? (other.getGlobalAssetId().isPresent()
+                && that.getGlobalAssetId().get() == other.getGlobalAssetId().get())
+            : !other.getGlobalAssetId().isPresent())
+        && (that.getSpecificAssetIds().isPresent()
+            ? (other.getSpecificAssetIds().isPresent()
+                && that.getSpecificAssetIds().get() == other.getSpecificAssetIds().get())
+            : !other.getSpecificAssetIds().isPresent()));
+  }
+
+  private static boolean checkEventPayloadShallowEquals(EventPayload that, EventPayload other) {
+    return (that.getSource() == other.getSource()
+        && (that.getSourceSemanticId().isPresent()
+            ? (other.getSourceSemanticId().isPresent()
+                && that.getSourceSemanticId().get() == other.getSourceSemanticId().get())
+            : !other.getSourceSemanticId().isPresent())
+        && that.getObservableReference() == other.getObservableReference()
+        && (that.getObservableSemanticId().isPresent()
+            ? (other.getObservableSemanticId().isPresent()
+                && that.getObservableSemanticId().get() == other.getObservableSemanticId().get())
+            : !other.getObservableSemanticId().isPresent())
+        && (that.getTopic().isPresent()
+            ? (other.getTopic().isPresent() && that.getTopic().get() == other.getTopic().get())
+            : !other.getTopic().isPresent())
+        && (that.getSubjectId().isPresent()
+            ? (other.getSubjectId().isPresent()
+                && that.getSubjectId().get() == other.getSubjectId().get())
+            : !other.getSubjectId().isPresent())
+        && that.getTimeStamp() == other.getTimeStamp()
+        && (that.getPayload().isPresent()
+            ? (other.getPayload().isPresent()
+                && that.getPayload().get() == other.getPayload().get())
+            : !other.getPayload().isPresent()));
+  }
+
+  private static boolean checkBasicEventElementShallowEquals(
+      BasicEventElement that, BasicEventElement other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && that.getObserved() == other.getObserved()
+        && that.getDirection() == other.getDirection()
+        && that.getState() == other.getState()
+        && (that.getMessageTopic().isPresent()
+            ? (other.getMessageTopic().isPresent()
+                && that.getMessageTopic().get() == other.getMessageTopic().get())
+            : !other.getMessageTopic().isPresent())
+        && (that.getMessageBroker().isPresent()
+            ? (other.getMessageBroker().isPresent()
+                && that.getMessageBroker().get() == other.getMessageBroker().get())
+            : !other.getMessageBroker().isPresent())
+        && (that.getLastUpdate().isPresent()
+            ? (other.getLastUpdate().isPresent()
+                && that.getLastUpdate().get() == other.getLastUpdate().get())
+            : !other.getLastUpdate().isPresent())
+        && (that.getMinInterval().isPresent()
+            ? (other.getMinInterval().isPresent()
+                && that.getMinInterval().get() == other.getMinInterval().get())
+            : !other.getMinInterval().isPresent())
+        && (that.getMaxInterval().isPresent()
+            ? (other.getMaxInterval().isPresent()
+                && that.getMaxInterval().get() == other.getMaxInterval().get())
+            : !other.getMaxInterval().isPresent()));
+  }
+
+  private static boolean checkOperationShallowEquals(Operation that, Operation other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && (that.getInputVariables().isPresent()
+            ? (other.getInputVariables().isPresent()
+                && that.getInputVariables().get() == other.getInputVariables().get())
+            : !other.getInputVariables().isPresent())
+        && (that.getOutputVariables().isPresent()
+            ? (other.getOutputVariables().isPresent()
+                && that.getOutputVariables().get() == other.getOutputVariables().get())
+            : !other.getOutputVariables().isPresent())
+        && (that.getInoutputVariables().isPresent()
+            ? (other.getInoutputVariables().isPresent()
+                && that.getInoutputVariables().get() == other.getInoutputVariables().get())
+            : !other.getInoutputVariables().isPresent()));
+  }
+
+  private static boolean checkOperationVariableShallowEquals(
+      OperationVariable that, OperationVariable other) {
+    return that.getValue() == other.getValue();
+  }
+
+  private static boolean checkCapabilityShallowEquals(Capability that, Capability other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getSemanticId().isPresent()
+            ? (other.getSemanticId().isPresent()
+                && that.getSemanticId().get() == other.getSemanticId().get())
+            : !other.getSemanticId().isPresent())
+        && (that.getSupplementalSemanticIds().isPresent()
+            ? (other.getSupplementalSemanticIds().isPresent()
+                && that.getSupplementalSemanticIds().get()
+                    == other.getSupplementalSemanticIds().get())
+            : !other.getSupplementalSemanticIds().isPresent())
+        && (that.getQualifiers().isPresent()
+            ? (other.getQualifiers().isPresent()
+                && that.getQualifiers().get() == other.getQualifiers().get())
+            : !other.getQualifiers().isPresent())
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent()));
+  }
+
+  private static boolean checkConceptDescriptionShallowEquals(
+      ConceptDescription that, ConceptDescription other) {
+    return ((that.getExtensions().isPresent()
+            ? (other.getExtensions().isPresent()
+                && that.getExtensions().get() == other.getExtensions().get())
+            : !other.getExtensions().isPresent())
+        && (that.getCategory().isPresent()
+            ? (other.getCategory().isPresent()
+                && that.getCategory().get() == other.getCategory().get())
+            : !other.getCategory().isPresent())
+        && (that.getIdShort().isPresent()
+            ? (other.getIdShort().isPresent()
+                && that.getIdShort().get() == other.getIdShort().get())
+            : !other.getIdShort().isPresent())
+        && (that.getDisplayName().isPresent()
+            ? (other.getDisplayName().isPresent()
+                && that.getDisplayName().get() == other.getDisplayName().get())
+            : !other.getDisplayName().isPresent())
+        && (that.getDescription().isPresent()
+            ? (other.getDescription().isPresent()
+                && that.getDescription().get() == other.getDescription().get())
+            : !other.getDescription().isPresent())
+        && (that.getAdministration().isPresent()
+            ? (other.getAdministration().isPresent()
+                && that.getAdministration().get() == other.getAdministration().get())
+            : !other.getAdministration().isPresent())
+        && that.getId() == other.getId()
+        && (that.getEmbeddedDataSpecifications().isPresent()
+            ? (other.getEmbeddedDataSpecifications().isPresent()
+                && that.getEmbeddedDataSpecifications().get()
+                    == other.getEmbeddedDataSpecifications().get())
+            : !other.getEmbeddedDataSpecifications().isPresent())
+        && (that.getIsCaseOf().isPresent()
+            ? (other.getIsCaseOf().isPresent()
+                && that.getIsCaseOf().get() == other.getIsCaseOf().get())
+            : !other.getIsCaseOf().isPresent()));
+  }
+
+  private static boolean checkReferenceShallowEquals(Reference that, Reference other) {
+    return (that.getType() == other.getType()
+        && (that.getReferredSemanticId().isPresent()
+            ? (other.getReferredSemanticId().isPresent()
+                && that.getReferredSemanticId().get() == other.getReferredSemanticId().get())
+            : !other.getReferredSemanticId().isPresent())
+        && that.getKeys() == other.getKeys());
+  }
+
+  private static boolean checkKeyShallowEquals(Key that, Key other) {
+    return (that.getType() == other.getType() && that.getValue() == other.getValue());
+  }
+
+  private static boolean checkLangStringNameTypeShallowEquals(
+      LangStringNameType that, LangStringNameType other) {
+    return (that.getLanguage() == other.getLanguage() && that.getText() == other.getText());
+  }
+
+  private static boolean checkLangStringTextTypeShallowEquals(
+      LangStringTextType that, LangStringTextType other) {
+    return (that.getLanguage() == other.getLanguage() && that.getText() == other.getText());
+  }
+
+  private static boolean checkEnvironmentShallowEquals(Environment that, Environment other) {
+    return ((that.getAssetAdministrationShells().isPresent()
+            ? (other.getAssetAdministrationShells().isPresent()
+                && that.getAssetAdministrationShells().get()
+                    == other.getAssetAdministrationShells().get())
+            : !other.getAssetAdministrationShells().isPresent())
+        && (that.getSubmodels().isPresent()
+            ? (other.getSubmodels().isPresent()
+                && that.getSubmodels().get() == other.getSubmodels().get())
+            : !other.getSubmodels().isPresent())
+        && (that.getConceptDescriptions().isPresent()
+            ? (other.getConceptDescriptions().isPresent()
+                && that.getConceptDescriptions().get() == other.getConceptDescriptions().get())
+            : !other.getConceptDescriptions().isPresent()));
+  }
+
+  private static boolean checkEmbeddedDataSpecificationShallowEquals(
+      EmbeddedDataSpecification that, EmbeddedDataSpecification other) {
+    return (that.getDataSpecification() == other.getDataSpecification()
+        && that.getDataSpecificationContent() == other.getDataSpecificationContent());
+  }
+
+  private static boolean checkLevelTypeShallowEquals(LevelType that, LevelType other) {
+    return (that.getMin() == other.getMin()
+        && that.getNom() == other.getNom()
+        && that.getTyp() == other.getTyp()
+        && that.getMax() == other.getMax());
+  }
+
+  private static boolean checkValueReferencePairShallowEquals(
+      ValueReferencePair that, ValueReferencePair other) {
+    return (that.getValue() == other.getValue() && that.getValueId() == other.getValueId());
+  }
+
+  private static boolean checkValueListShallowEquals(ValueList that, ValueList other) {
+    return that.getValueReferencePairs() == other.getValueReferencePairs();
+  }
+
+  private static boolean checkLangStringPreferredNameTypeIec61360ShallowEquals(
+      LangStringPreferredNameTypeIec61360 that, LangStringPreferredNameTypeIec61360 other) {
+    return (that.getLanguage() == other.getLanguage() && that.getText() == other.getText());
+  }
+
+  private static boolean checkLangStringShortNameTypeIec61360ShallowEquals(
+      LangStringShortNameTypeIec61360 that, LangStringShortNameTypeIec61360 other) {
+    return (that.getLanguage() == other.getLanguage() && that.getText() == other.getText());
+  }
+
+  private static boolean checkLangStringDefinitionTypeIec61360ShallowEquals(
+      LangStringDefinitionTypeIec61360 that, LangStringDefinitionTypeIec61360 other) {
+    return (that.getLanguage() == other.getLanguage() && that.getText() == other.getText());
+  }
+
+  private static boolean checkDataSpecificationIec61360ShallowEquals(
+      DataSpecificationIec61360 that, DataSpecificationIec61360 other) {
+    return (that.getPreferredName() == other.getPreferredName()
+        && (that.getShortName().isPresent()
+            ? (other.getShortName().isPresent()
+                && that.getShortName().get() == other.getShortName().get())
+            : !other.getShortName().isPresent())
+        && (that.getUnit().isPresent()
+            ? (other.getUnit().isPresent() && that.getUnit().get() == other.getUnit().get())
+            : !other.getUnit().isPresent())
+        && (that.getUnitId().isPresent()
+            ? (other.getUnitId().isPresent() && that.getUnitId().get() == other.getUnitId().get())
+            : !other.getUnitId().isPresent())
+        && (that.getSourceOfDefinition().isPresent()
+            ? (other.getSourceOfDefinition().isPresent()
+                && that.getSourceOfDefinition().get() == other.getSourceOfDefinition().get())
+            : !other.getSourceOfDefinition().isPresent())
+        && (that.getSymbol().isPresent()
+            ? (other.getSymbol().isPresent() && that.getSymbol().get() == other.getSymbol().get())
+            : !other.getSymbol().isPresent())
+        && (that.getDataType().isPresent()
+            ? (other.getDataType().isPresent()
+                && that.getDataType().get() == other.getDataType().get())
+            : !other.getDataType().isPresent())
+        && (that.getDefinition().isPresent()
+            ? (other.getDefinition().isPresent()
+                && that.getDefinition().get() == other.getDefinition().get())
+            : !other.getDefinition().isPresent())
+        && (that.getValueFormat().isPresent()
+            ? (other.getValueFormat().isPresent()
+                && that.getValueFormat().get() == other.getValueFormat().get())
+            : !other.getValueFormat().isPresent())
+        && (that.getValueList().isPresent()
+            ? (other.getValueList().isPresent()
+                && that.getValueList().get() == other.getValueList().get())
+            : !other.getValueList().isPresent())
+        && (that.getValue().isPresent()
+            ? (other.getValue().isPresent() && that.getValue().get() == other.getValue().get())
+            : !other.getValue().isPresent())
+        && (that.getLevelType().isPresent()
+            ? (other.getLevelType().isPresent()
+                && that.getLevelType().get() == other.getLevelType().get())
+            : !other.getLevelType().isPresent()));
+  }
+
+  private static boolean checkExtensionDeepEquals(Extension that, Extension other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testExtensionDeepCopy
+
+  private static boolean checkAdministrativeInformationDeepEquals(
+      AdministrativeInformation that, AdministrativeInformation other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testAdministrativeInformationDeepCopy
+
+  private static boolean checkQualifierDeepEquals(Qualifier that, Qualifier other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testQualifierDeepCopy
+
+  private static boolean checkAssetAdministrationShellDeepEquals(
+      AssetAdministrationShell that, AssetAdministrationShell other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testAssetAdministrationShellDeepCopy
+
+  private static boolean checkAssetInformationDeepEquals(
+      AssetInformation that, AssetInformation other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testAssetInformationDeepCopy
+
+  private static boolean checkResourceDeepEquals(Resource that, Resource other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testResourceDeepCopy
+
+  private static boolean checkSpecificAssetIdDeepEquals(
+      SpecificAssetId that, SpecificAssetId other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testSpecificAssetIdDeepCopy
+
+  private static boolean checkSubmodelDeepEquals(Submodel that, Submodel other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testSubmodelDeepCopy
+
+  private static boolean checkRelationshipElementDeepEquals(
+      RelationshipElement that, RelationshipElement other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testRelationshipElementDeepCopy
+
+  private static boolean checkSubmodelElementListDeepEquals(
+      SubmodelElementList that, SubmodelElementList other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testSubmodelElementListDeepCopy
+
+  private static boolean checkSubmodelElementCollectionDeepEquals(
+      SubmodelElementCollection that, SubmodelElementCollection other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testSubmodelElementCollectionDeepCopy
+
+  private static boolean checkPropertyDeepEquals(Property that, Property other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testPropertyDeepCopy
+
+  private static boolean checkMultiLanguagePropertyDeepEquals(
+      MultiLanguageProperty that, MultiLanguageProperty other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testMultiLanguagePropertyDeepCopy
+
+  private static boolean checkRangeDeepEquals(Range that, Range other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testRangeDeepCopy
+
+  private static boolean checkReferenceElementDeepEquals(
+      ReferenceElement that, ReferenceElement other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testReferenceElementDeepCopy
+
+  private static boolean checkBlobDeepEquals(Blob that, Blob other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testBlobDeepCopy
+
+  private static boolean checkFileDeepEquals(File that, File other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testFileDeepCopy
+
+  private static boolean checkAnnotatedRelationshipElementDeepEquals(
+      AnnotatedRelationshipElement that, AnnotatedRelationshipElement other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testAnnotatedRelationshipElementDeepCopy
+
+  private static boolean checkEntityDeepEquals(Entity that, Entity other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testEntityDeepCopy
+
+  private static boolean checkEventPayloadDeepEquals(EventPayload that, EventPayload other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testEventPayloadDeepCopy
+
+  private static boolean checkBasicEventElementDeepEquals(
+      BasicEventElement that, BasicEventElement other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testBasicEventElementDeepCopy
+
+  private static boolean checkOperationDeepEquals(Operation that, Operation other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testOperationDeepCopy
+
+  private static boolean checkOperationVariableDeepEquals(
+      OperationVariable that, OperationVariable other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testOperationVariableDeepCopy
+
+  private static boolean checkCapabilityDeepEquals(Capability that, Capability other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testCapabilityDeepCopy
+
+  private static boolean checkConceptDescriptionDeepEquals(
+      ConceptDescription that, ConceptDescription other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testConceptDescriptionDeepCopy
+
+  private static boolean checkReferenceDeepEquals(Reference that, Reference other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testReferenceDeepCopy
+
+  private static boolean checkKeyDeepEquals(Key that, Key other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testKeyDeepCopy
+
+  private static boolean checkLangStringNameTypeDeepEquals(
+      LangStringNameType that, LangStringNameType other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testLangStringNameTypeDeepCopy
+
+  private static boolean checkLangStringTextTypeDeepEquals(
+      LangStringTextType that, LangStringTextType other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testLangStringTextTypeDeepCopy
+
+  private static boolean checkEnvironmentDeepEquals(Environment that, Environment other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testEnvironmentDeepCopy
+
+  private static boolean checkEmbeddedDataSpecificationDeepEquals(
+      EmbeddedDataSpecification that, EmbeddedDataSpecification other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testEmbeddedDataSpecificationDeepCopy
+
+  private static boolean checkLevelTypeDeepEquals(LevelType that, LevelType other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testLevelTypeDeepCopy
+
+  private static boolean checkValueReferencePairDeepEquals(
+      ValueReferencePair that, ValueReferencePair other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testValueReferencePairDeepCopy
+
+  private static boolean checkValueListDeepEquals(ValueList that, ValueList other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testValueListDeepCopy
+
+  private static boolean checkLangStringPreferredNameTypeIec61360DeepEquals(
+      LangStringPreferredNameTypeIec61360 that, LangStringPreferredNameTypeIec61360 other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testLangStringPreferredNameTypeIec61360DeepCopy
+
+  private static boolean checkLangStringShortNameTypeIec61360DeepEquals(
+      LangStringShortNameTypeIec61360 that, LangStringShortNameTypeIec61360 other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testLangStringShortNameTypeIec61360DeepCopy
+
+  private static boolean checkLangStringDefinitionTypeIec61360DeepEquals(
+      LangStringDefinitionTypeIec61360 that, LangStringDefinitionTypeIec61360 other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testLangStringDefinitionTypeIec61360DeepCopy
+
+  private static boolean checkDataSpecificationIec61360DeepEquals(
+      DataSpecificationIec61360 that, DataSpecificationIec61360 other) {
+    return deepEqualTransformerInstance.transform(that, other);
+  } // public void testDataSpecificationIec61360DeepCopy
+
+  @Test
+  public void testExtensionShallowCopy() throws IOException {
+    final Extension instance = CommonJsonization.loadMaximalExtension();
+    final Extension instanceCopy = Copying.shallow(instance);
+    assertTrue(checkExtensionShallowEquals(instance, instanceCopy), "Extension");
+  } // public void testExtensionShallowCopy
+
+  @Test
+  public void testExtensionDeepCopy() throws IOException {
+    final Extension instance = CommonJsonization.loadMaximalExtension();
+    final Extension instanceCopy = Copying.deep(instance);
+    assertTrue(checkExtensionDeepEquals(instance, instanceCopy), "Extension");
+  } // public void testExtensionDeepCopy
+
+  @Test
+  public void testAdministrativeInformationShallowCopy() throws IOException {
+    final AdministrativeInformation instance =
+        CommonJsonization.loadMaximalAdministrativeInformation();
+    final AdministrativeInformation instanceCopy = Copying.shallow(instance);
+    assertTrue(
+        checkAdministrativeInformationShallowEquals(instance, instanceCopy),
+        "AdministrativeInformation");
+  } // public void testAdministrativeInformationShallowCopy
+
+  @Test
+  public void testAdministrativeInformationDeepCopy() throws IOException {
+    final AdministrativeInformation instance =
+        CommonJsonization.loadMaximalAdministrativeInformation();
+    final AdministrativeInformation instanceCopy = Copying.deep(instance);
+    assertTrue(
+        checkAdministrativeInformationDeepEquals(instance, instanceCopy),
+        "AdministrativeInformation");
+  } // public void testAdministrativeInformationDeepCopy
+
+  @Test
+  public void testQualifierShallowCopy() throws IOException {
+    final Qualifier instance = CommonJsonization.loadMaximalQualifier();
+    final Qualifier instanceCopy = Copying.shallow(instance);
+    assertTrue(checkQualifierShallowEquals(instance, instanceCopy), "Qualifier");
+  } // public void testQualifierShallowCopy
+
+  @Test
+  public void testQualifierDeepCopy() throws IOException {
+    final Qualifier instance = CommonJsonization.loadMaximalQualifier();
+    final Qualifier instanceCopy = Copying.deep(instance);
+    assertTrue(checkQualifierDeepEquals(instance, instanceCopy), "Qualifier");
+  } // public void testQualifierDeepCopy
+
+  @Test
+  public void testAssetAdministrationShellShallowCopy() throws IOException {
+    final AssetAdministrationShell instance =
+        CommonJsonization.loadMaximalAssetAdministrationShell();
+    final AssetAdministrationShell instanceCopy = Copying.shallow(instance);
+    assertTrue(
+        checkAssetAdministrationShellShallowEquals(instance, instanceCopy),
+        "AssetAdministrationShell");
+  } // public void testAssetAdministrationShellShallowCopy
+
+  @Test
+  public void testAssetAdministrationShellDeepCopy() throws IOException {
+    final AssetAdministrationShell instance =
+        CommonJsonization.loadMaximalAssetAdministrationShell();
+    final AssetAdministrationShell instanceCopy = Copying.deep(instance);
+    assertTrue(
+        checkAssetAdministrationShellDeepEquals(instance, instanceCopy),
+        "AssetAdministrationShell");
+  } // public void testAssetAdministrationShellDeepCopy
+
+  @Test
+  public void testAssetInformationShallowCopy() throws IOException {
+    final AssetInformation instance = CommonJsonization.loadMaximalAssetInformation();
+    final AssetInformation instanceCopy = Copying.shallow(instance);
+    assertTrue(checkAssetInformationShallowEquals(instance, instanceCopy), "AssetInformation");
+  } // public void testAssetInformationShallowCopy
+
+  @Test
+  public void testAssetInformationDeepCopy() throws IOException {
+    final AssetInformation instance = CommonJsonization.loadMaximalAssetInformation();
+    final AssetInformation instanceCopy = Copying.deep(instance);
+    assertTrue(checkAssetInformationDeepEquals(instance, instanceCopy), "AssetInformation");
+  } // public void testAssetInformationDeepCopy
+
+  @Test
+  public void testResourceShallowCopy() throws IOException {
+    final Resource instance = CommonJsonization.loadMaximalResource();
+    final Resource instanceCopy = Copying.shallow(instance);
+    assertTrue(checkResourceShallowEquals(instance, instanceCopy), "Resource");
+  } // public void testResourceShallowCopy
+
+  @Test
+  public void testResourceDeepCopy() throws IOException {
+    final Resource instance = CommonJsonization.loadMaximalResource();
+    final Resource instanceCopy = Copying.deep(instance);
+    assertTrue(checkResourceDeepEquals(instance, instanceCopy), "Resource");
+  } // public void testResourceDeepCopy
+
+  @Test
+  public void testSpecificAssetIdShallowCopy() throws IOException {
+    final SpecificAssetId instance = CommonJsonization.loadMaximalSpecificAssetId();
+    final SpecificAssetId instanceCopy = Copying.shallow(instance);
+    assertTrue(checkSpecificAssetIdShallowEquals(instance, instanceCopy), "SpecificAssetId");
+  } // public void testSpecificAssetIdShallowCopy
+
+  @Test
+  public void testSpecificAssetIdDeepCopy() throws IOException {
+    final SpecificAssetId instance = CommonJsonization.loadMaximalSpecificAssetId();
+    final SpecificAssetId instanceCopy = Copying.deep(instance);
+    assertTrue(checkSpecificAssetIdDeepEquals(instance, instanceCopy), "SpecificAssetId");
+  } // public void testSpecificAssetIdDeepCopy
+
+  @Test
+  public void testSubmodelShallowCopy() throws IOException {
+    final Submodel instance = CommonJsonization.loadMaximalSubmodel();
+    final Submodel instanceCopy = Copying.shallow(instance);
+    assertTrue(checkSubmodelShallowEquals(instance, instanceCopy), "Submodel");
+  } // public void testSubmodelShallowCopy
+
+  @Test
+  public void testSubmodelDeepCopy() throws IOException {
+    final Submodel instance = CommonJsonization.loadMaximalSubmodel();
+    final Submodel instanceCopy = Copying.deep(instance);
+    assertTrue(checkSubmodelDeepEquals(instance, instanceCopy), "Submodel");
+  } // public void testSubmodelDeepCopy
+
+  @Test
+  public void testRelationshipElementShallowCopy() throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
+    final RelationshipElement instanceCopy = Copying.shallow(instance);
+    assertTrue(
+        checkRelationshipElementShallowEquals(instance, instanceCopy), "RelationshipElement");
+  } // public void testRelationshipElementShallowCopy
+
+  @Test
+  public void testRelationshipElementDeepCopy() throws IOException {
+    final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
+    final RelationshipElement instanceCopy = Copying.deep(instance);
+    assertTrue(checkRelationshipElementDeepEquals(instance, instanceCopy), "RelationshipElement");
+  } // public void testRelationshipElementDeepCopy
+
+  @Test
+  public void testSubmodelElementListShallowCopy() throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
+    final SubmodelElementList instanceCopy = Copying.shallow(instance);
+    assertTrue(
+        checkSubmodelElementListShallowEquals(instance, instanceCopy), "SubmodelElementList");
+  } // public void testSubmodelElementListShallowCopy
+
+  @Test
+  public void testSubmodelElementListDeepCopy() throws IOException {
+    final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
+    final SubmodelElementList instanceCopy = Copying.deep(instance);
+    assertTrue(checkSubmodelElementListDeepEquals(instance, instanceCopy), "SubmodelElementList");
+  } // public void testSubmodelElementListDeepCopy
+
+  @Test
+  public void testSubmodelElementCollectionShallowCopy() throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMaximalSubmodelElementCollection();
+    final SubmodelElementCollection instanceCopy = Copying.shallow(instance);
+    assertTrue(
+        checkSubmodelElementCollectionShallowEquals(instance, instanceCopy),
+        "SubmodelElementCollection");
+  } // public void testSubmodelElementCollectionShallowCopy
+
+  @Test
+  public void testSubmodelElementCollectionDeepCopy() throws IOException {
+    final SubmodelElementCollection instance =
+        CommonJsonization.loadMaximalSubmodelElementCollection();
+    final SubmodelElementCollection instanceCopy = Copying.deep(instance);
+    assertTrue(
+        checkSubmodelElementCollectionDeepEquals(instance, instanceCopy),
+        "SubmodelElementCollection");
+  } // public void testSubmodelElementCollectionDeepCopy
+
+  @Test
+  public void testPropertyShallowCopy() throws IOException {
+    final Property instance = CommonJsonization.loadMaximalProperty();
+    final Property instanceCopy = Copying.shallow(instance);
+    assertTrue(checkPropertyShallowEquals(instance, instanceCopy), "Property");
+  } // public void testPropertyShallowCopy
+
+  @Test
+  public void testPropertyDeepCopy() throws IOException {
+    final Property instance = CommonJsonization.loadMaximalProperty();
+    final Property instanceCopy = Copying.deep(instance);
+    assertTrue(checkPropertyDeepEquals(instance, instanceCopy), "Property");
+  } // public void testPropertyDeepCopy
+
+  @Test
+  public void testMultiLanguagePropertyShallowCopy() throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
+    final MultiLanguageProperty instanceCopy = Copying.shallow(instance);
+    assertTrue(
+        checkMultiLanguagePropertyShallowEquals(instance, instanceCopy), "MultiLanguageProperty");
+  } // public void testMultiLanguagePropertyShallowCopy
+
+  @Test
+  public void testMultiLanguagePropertyDeepCopy() throws IOException {
+    final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
+    final MultiLanguageProperty instanceCopy = Copying.deep(instance);
+    assertTrue(
+        checkMultiLanguagePropertyDeepEquals(instance, instanceCopy), "MultiLanguageProperty");
+  } // public void testMultiLanguagePropertyDeepCopy
+
+  @Test
+  public void testRangeShallowCopy() throws IOException {
+    final Range instance = CommonJsonization.loadMaximalRange();
+    final Range instanceCopy = Copying.shallow(instance);
+    assertTrue(checkRangeShallowEquals(instance, instanceCopy), "Range");
+  } // public void testRangeShallowCopy
+
+  @Test
+  public void testRangeDeepCopy() throws IOException {
+    final Range instance = CommonJsonization.loadMaximalRange();
+    final Range instanceCopy = Copying.deep(instance);
+    assertTrue(checkRangeDeepEquals(instance, instanceCopy), "Range");
+  } // public void testRangeDeepCopy
+
+  @Test
+  public void testReferenceElementShallowCopy() throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
+    final ReferenceElement instanceCopy = Copying.shallow(instance);
+    assertTrue(checkReferenceElementShallowEquals(instance, instanceCopy), "ReferenceElement");
+  } // public void testReferenceElementShallowCopy
+
+  @Test
+  public void testReferenceElementDeepCopy() throws IOException {
+    final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
+    final ReferenceElement instanceCopy = Copying.deep(instance);
+    assertTrue(checkReferenceElementDeepEquals(instance, instanceCopy), "ReferenceElement");
+  } // public void testReferenceElementDeepCopy
+
+  @Test
+  public void testBlobShallowCopy() throws IOException {
+    final Blob instance = CommonJsonization.loadMaximalBlob();
+    final Blob instanceCopy = Copying.shallow(instance);
+    assertTrue(checkBlobShallowEquals(instance, instanceCopy), "Blob");
+  } // public void testBlobShallowCopy
+
+  @Test
+  public void testBlobDeepCopy() throws IOException {
+    final Blob instance = CommonJsonization.loadMaximalBlob();
+    final Blob instanceCopy = Copying.deep(instance);
+    assertTrue(checkBlobDeepEquals(instance, instanceCopy), "Blob");
+  } // public void testBlobDeepCopy
+
+  @Test
+  public void testFileShallowCopy() throws IOException {
+    final File instance = CommonJsonization.loadMaximalFile();
+    final File instanceCopy = Copying.shallow(instance);
+    assertTrue(checkFileShallowEquals(instance, instanceCopy), "File");
+  } // public void testFileShallowCopy
+
+  @Test
+  public void testFileDeepCopy() throws IOException {
+    final File instance = CommonJsonization.loadMaximalFile();
+    final File instanceCopy = Copying.deep(instance);
+    assertTrue(checkFileDeepEquals(instance, instanceCopy), "File");
+  } // public void testFileDeepCopy
+
+  @Test
+  public void testAnnotatedRelationshipElementShallowCopy() throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMaximalAnnotatedRelationshipElement();
+    final AnnotatedRelationshipElement instanceCopy = Copying.shallow(instance);
+    assertTrue(
+        checkAnnotatedRelationshipElementShallowEquals(instance, instanceCopy),
+        "AnnotatedRelationshipElement");
+  } // public void testAnnotatedRelationshipElementShallowCopy
+
+  @Test
+  public void testAnnotatedRelationshipElementDeepCopy() throws IOException {
+    final AnnotatedRelationshipElement instance =
+        CommonJsonization.loadMaximalAnnotatedRelationshipElement();
+    final AnnotatedRelationshipElement instanceCopy = Copying.deep(instance);
+    assertTrue(
+        checkAnnotatedRelationshipElementDeepEquals(instance, instanceCopy),
+        "AnnotatedRelationshipElement");
+  } // public void testAnnotatedRelationshipElementDeepCopy
+
+  @Test
+  public void testEntityShallowCopy() throws IOException {
+    final Entity instance = CommonJsonization.loadMaximalEntity();
+    final Entity instanceCopy = Copying.shallow(instance);
+    assertTrue(checkEntityShallowEquals(instance, instanceCopy), "Entity");
+  } // public void testEntityShallowCopy
+
+  @Test
+  public void testEntityDeepCopy() throws IOException {
+    final Entity instance = CommonJsonization.loadMaximalEntity();
+    final Entity instanceCopy = Copying.deep(instance);
+    assertTrue(checkEntityDeepEquals(instance, instanceCopy), "Entity");
+  } // public void testEntityDeepCopy
+
+  @Test
+  public void testEventPayloadShallowCopy() throws IOException {
+    final EventPayload instance = CommonJsonization.loadMaximalEventPayload();
+    final EventPayload instanceCopy = Copying.shallow(instance);
+    assertTrue(checkEventPayloadShallowEquals(instance, instanceCopy), "EventPayload");
+  } // public void testEventPayloadShallowCopy
+
+  @Test
+  public void testEventPayloadDeepCopy() throws IOException {
+    final EventPayload instance = CommonJsonization.loadMaximalEventPayload();
+    final EventPayload instanceCopy = Copying.deep(instance);
+    assertTrue(checkEventPayloadDeepEquals(instance, instanceCopy), "EventPayload");
+  } // public void testEventPayloadDeepCopy
+
+  @Test
+  public void testBasicEventElementShallowCopy() throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
+    final BasicEventElement instanceCopy = Copying.shallow(instance);
+    assertTrue(checkBasicEventElementShallowEquals(instance, instanceCopy), "BasicEventElement");
+  } // public void testBasicEventElementShallowCopy
+
+  @Test
+  public void testBasicEventElementDeepCopy() throws IOException {
+    final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
+    final BasicEventElement instanceCopy = Copying.deep(instance);
+    assertTrue(checkBasicEventElementDeepEquals(instance, instanceCopy), "BasicEventElement");
+  } // public void testBasicEventElementDeepCopy
+
+  @Test
+  public void testOperationShallowCopy() throws IOException {
+    final Operation instance = CommonJsonization.loadMaximalOperation();
+    final Operation instanceCopy = Copying.shallow(instance);
+    assertTrue(checkOperationShallowEquals(instance, instanceCopy), "Operation");
+  } // public void testOperationShallowCopy
+
+  @Test
+  public void testOperationDeepCopy() throws IOException {
+    final Operation instance = CommonJsonization.loadMaximalOperation();
+    final Operation instanceCopy = Copying.deep(instance);
+    assertTrue(checkOperationDeepEquals(instance, instanceCopy), "Operation");
+  } // public void testOperationDeepCopy
+
+  @Test
+  public void testOperationVariableShallowCopy() throws IOException {
+    final OperationVariable instance = CommonJsonization.loadMaximalOperationVariable();
+    final OperationVariable instanceCopy = Copying.shallow(instance);
+    assertTrue(checkOperationVariableShallowEquals(instance, instanceCopy), "OperationVariable");
+  } // public void testOperationVariableShallowCopy
+
+  @Test
+  public void testOperationVariableDeepCopy() throws IOException {
+    final OperationVariable instance = CommonJsonization.loadMaximalOperationVariable();
+    final OperationVariable instanceCopy = Copying.deep(instance);
+    assertTrue(checkOperationVariableDeepEquals(instance, instanceCopy), "OperationVariable");
+  } // public void testOperationVariableDeepCopy
+
+  @Test
+  public void testCapabilityShallowCopy() throws IOException {
+    final Capability instance = CommonJsonization.loadMaximalCapability();
+    final Capability instanceCopy = Copying.shallow(instance);
+    assertTrue(checkCapabilityShallowEquals(instance, instanceCopy), "Capability");
+  } // public void testCapabilityShallowCopy
+
+  @Test
+  public void testCapabilityDeepCopy() throws IOException {
+    final Capability instance = CommonJsonization.loadMaximalCapability();
+    final Capability instanceCopy = Copying.deep(instance);
+    assertTrue(checkCapabilityDeepEquals(instance, instanceCopy), "Capability");
+  } // public void testCapabilityDeepCopy
+
+  @Test
+  public void testConceptDescriptionShallowCopy() throws IOException {
+    final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
+    final ConceptDescription instanceCopy = Copying.shallow(instance);
+    assertTrue(checkConceptDescriptionShallowEquals(instance, instanceCopy), "ConceptDescription");
+  } // public void testConceptDescriptionShallowCopy
+
+  @Test
+  public void testConceptDescriptionDeepCopy() throws IOException {
+    final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
+    final ConceptDescription instanceCopy = Copying.deep(instance);
+    assertTrue(checkConceptDescriptionDeepEquals(instance, instanceCopy), "ConceptDescription");
+  } // public void testConceptDescriptionDeepCopy
+
+  @Test
+  public void testReferenceShallowCopy() throws IOException {
+    final Reference instance = CommonJsonization.loadMaximalReference();
+    final Reference instanceCopy = Copying.shallow(instance);
+    assertTrue(checkReferenceShallowEquals(instance, instanceCopy), "Reference");
+  } // public void testReferenceShallowCopy
+
+  @Test
+  public void testReferenceDeepCopy() throws IOException {
+    final Reference instance = CommonJsonization.loadMaximalReference();
+    final Reference instanceCopy = Copying.deep(instance);
+    assertTrue(checkReferenceDeepEquals(instance, instanceCopy), "Reference");
+  } // public void testReferenceDeepCopy
+
+  @Test
+  public void testKeyShallowCopy() throws IOException {
+    final Key instance = CommonJsonization.loadMaximalKey();
+    final Key instanceCopy = Copying.shallow(instance);
+    assertTrue(checkKeyShallowEquals(instance, instanceCopy), "Key");
+  } // public void testKeyShallowCopy
+
+  @Test
+  public void testKeyDeepCopy() throws IOException {
+    final Key instance = CommonJsonization.loadMaximalKey();
+    final Key instanceCopy = Copying.deep(instance);
+    assertTrue(checkKeyDeepEquals(instance, instanceCopy), "Key");
+  } // public void testKeyDeepCopy
+
+  @Test
+  public void testLangStringNameTypeShallowCopy() throws IOException {
+    final LangStringNameType instance = CommonJsonization.loadMaximalLangStringNameType();
+    final LangStringNameType instanceCopy = Copying.shallow(instance);
+    assertTrue(checkLangStringNameTypeShallowEquals(instance, instanceCopy), "LangStringNameType");
+  } // public void testLangStringNameTypeShallowCopy
+
+  @Test
+  public void testLangStringNameTypeDeepCopy() throws IOException {
+    final LangStringNameType instance = CommonJsonization.loadMaximalLangStringNameType();
+    final LangStringNameType instanceCopy = Copying.deep(instance);
+    assertTrue(checkLangStringNameTypeDeepEquals(instance, instanceCopy), "LangStringNameType");
+  } // public void testLangStringNameTypeDeepCopy
+
+  @Test
+  public void testLangStringTextTypeShallowCopy() throws IOException {
+    final LangStringTextType instance = CommonJsonization.loadMaximalLangStringTextType();
+    final LangStringTextType instanceCopy = Copying.shallow(instance);
+    assertTrue(checkLangStringTextTypeShallowEquals(instance, instanceCopy), "LangStringTextType");
+  } // public void testLangStringTextTypeShallowCopy
+
+  @Test
+  public void testLangStringTextTypeDeepCopy() throws IOException {
+    final LangStringTextType instance = CommonJsonization.loadMaximalLangStringTextType();
+    final LangStringTextType instanceCopy = Copying.deep(instance);
+    assertTrue(checkLangStringTextTypeDeepEquals(instance, instanceCopy), "LangStringTextType");
+  } // public void testLangStringTextTypeDeepCopy
+
+  @Test
+  public void testEnvironmentShallowCopy() throws IOException {
+    final Environment instance = CommonJsonization.loadMaximalEnvironment();
+    final Environment instanceCopy = Copying.shallow(instance);
+    assertTrue(checkEnvironmentShallowEquals(instance, instanceCopy), "Environment");
+  } // public void testEnvironmentShallowCopy
+
+  @Test
+  public void testEnvironmentDeepCopy() throws IOException {
+    final Environment instance = CommonJsonization.loadMaximalEnvironment();
+    final Environment instanceCopy = Copying.deep(instance);
+    assertTrue(checkEnvironmentDeepEquals(instance, instanceCopy), "Environment");
+  } // public void testEnvironmentDeepCopy
+
+  @Test
+  public void testEmbeddedDataSpecificationShallowCopy() throws IOException {
+    final EmbeddedDataSpecification instance =
+        CommonJsonization.loadMaximalEmbeddedDataSpecification();
+    final EmbeddedDataSpecification instanceCopy = Copying.shallow(instance);
+    assertTrue(
+        checkEmbeddedDataSpecificationShallowEquals(instance, instanceCopy),
+        "EmbeddedDataSpecification");
+  } // public void testEmbeddedDataSpecificationShallowCopy
+
+  @Test
+  public void testEmbeddedDataSpecificationDeepCopy() throws IOException {
+    final EmbeddedDataSpecification instance =
+        CommonJsonization.loadMaximalEmbeddedDataSpecification();
+    final EmbeddedDataSpecification instanceCopy = Copying.deep(instance);
+    assertTrue(
+        checkEmbeddedDataSpecificationDeepEquals(instance, instanceCopy),
+        "EmbeddedDataSpecification");
+  } // public void testEmbeddedDataSpecificationDeepCopy
+
+  @Test
+  public void testLevelTypeShallowCopy() throws IOException {
+    final LevelType instance = CommonJsonization.loadMaximalLevelType();
+    final LevelType instanceCopy = Copying.shallow(instance);
+    assertTrue(checkLevelTypeShallowEquals(instance, instanceCopy), "LevelType");
+  } // public void testLevelTypeShallowCopy
+
+  @Test
+  public void testLevelTypeDeepCopy() throws IOException {
+    final LevelType instance = CommonJsonization.loadMaximalLevelType();
+    final LevelType instanceCopy = Copying.deep(instance);
+    assertTrue(checkLevelTypeDeepEquals(instance, instanceCopy), "LevelType");
+  } // public void testLevelTypeDeepCopy
+
+  @Test
+  public void testValueReferencePairShallowCopy() throws IOException {
+    final ValueReferencePair instance = CommonJsonization.loadMaximalValueReferencePair();
+    final ValueReferencePair instanceCopy = Copying.shallow(instance);
+    assertTrue(checkValueReferencePairShallowEquals(instance, instanceCopy), "ValueReferencePair");
+  } // public void testValueReferencePairShallowCopy
+
+  @Test
+  public void testValueReferencePairDeepCopy() throws IOException {
+    final ValueReferencePair instance = CommonJsonization.loadMaximalValueReferencePair();
+    final ValueReferencePair instanceCopy = Copying.deep(instance);
+    assertTrue(checkValueReferencePairDeepEquals(instance, instanceCopy), "ValueReferencePair");
+  } // public void testValueReferencePairDeepCopy
+
+  @Test
+  public void testValueListShallowCopy() throws IOException {
+    final ValueList instance = CommonJsonization.loadMaximalValueList();
+    final ValueList instanceCopy = Copying.shallow(instance);
+    assertTrue(checkValueListShallowEquals(instance, instanceCopy), "ValueList");
+  } // public void testValueListShallowCopy
+
+  @Test
+  public void testValueListDeepCopy() throws IOException {
+    final ValueList instance = CommonJsonization.loadMaximalValueList();
+    final ValueList instanceCopy = Copying.deep(instance);
+    assertTrue(checkValueListDeepEquals(instance, instanceCopy), "ValueList");
+  } // public void testValueListDeepCopy
+
+  @Test
+  public void testLangStringPreferredNameTypeIec61360ShallowCopy() throws IOException {
+    final LangStringPreferredNameTypeIec61360 instance =
+        CommonJsonization.loadMaximalLangStringPreferredNameTypeIec61360();
+    final LangStringPreferredNameTypeIec61360 instanceCopy = Copying.shallow(instance);
+    assertTrue(
+        checkLangStringPreferredNameTypeIec61360ShallowEquals(instance, instanceCopy),
+        "LangStringPreferredNameTypeIec61360");
+  } // public void testLangStringPreferredNameTypeIec61360ShallowCopy
+
+  @Test
+  public void testLangStringPreferredNameTypeIec61360DeepCopy() throws IOException {
+    final LangStringPreferredNameTypeIec61360 instance =
+        CommonJsonization.loadMaximalLangStringPreferredNameTypeIec61360();
+    final LangStringPreferredNameTypeIec61360 instanceCopy = Copying.deep(instance);
+    assertTrue(
+        checkLangStringPreferredNameTypeIec61360DeepEquals(instance, instanceCopy),
+        "LangStringPreferredNameTypeIec61360");
+  } // public void testLangStringPreferredNameTypeIec61360DeepCopy
+
+  @Test
+  public void testLangStringShortNameTypeIec61360ShallowCopy() throws IOException {
+    final LangStringShortNameTypeIec61360 instance =
+        CommonJsonization.loadMaximalLangStringShortNameTypeIec61360();
+    final LangStringShortNameTypeIec61360 instanceCopy = Copying.shallow(instance);
+    assertTrue(
+        checkLangStringShortNameTypeIec61360ShallowEquals(instance, instanceCopy),
+        "LangStringShortNameTypeIec61360");
+  } // public void testLangStringShortNameTypeIec61360ShallowCopy
+
+  @Test
+  public void testLangStringShortNameTypeIec61360DeepCopy() throws IOException {
+    final LangStringShortNameTypeIec61360 instance =
+        CommonJsonization.loadMaximalLangStringShortNameTypeIec61360();
+    final LangStringShortNameTypeIec61360 instanceCopy = Copying.deep(instance);
+    assertTrue(
+        checkLangStringShortNameTypeIec61360DeepEquals(instance, instanceCopy),
+        "LangStringShortNameTypeIec61360");
+  } // public void testLangStringShortNameTypeIec61360DeepCopy
+
+  @Test
+  public void testLangStringDefinitionTypeIec61360ShallowCopy() throws IOException {
+    final LangStringDefinitionTypeIec61360 instance =
+        CommonJsonization.loadMaximalLangStringDefinitionTypeIec61360();
+    final LangStringDefinitionTypeIec61360 instanceCopy = Copying.shallow(instance);
+    assertTrue(
+        checkLangStringDefinitionTypeIec61360ShallowEquals(instance, instanceCopy),
+        "LangStringDefinitionTypeIec61360");
+  } // public void testLangStringDefinitionTypeIec61360ShallowCopy
+
+  @Test
+  public void testLangStringDefinitionTypeIec61360DeepCopy() throws IOException {
+    final LangStringDefinitionTypeIec61360 instance =
+        CommonJsonization.loadMaximalLangStringDefinitionTypeIec61360();
+    final LangStringDefinitionTypeIec61360 instanceCopy = Copying.deep(instance);
+    assertTrue(
+        checkLangStringDefinitionTypeIec61360DeepEquals(instance, instanceCopy),
+        "LangStringDefinitionTypeIec61360");
+  } // public void testLangStringDefinitionTypeIec61360DeepCopy
+
+  @Test
+  public void testDataSpecificationIec61360ShallowCopy() throws IOException {
+    final DataSpecificationIec61360 instance =
+        CommonJsonization.loadMaximalDataSpecificationIec61360();
+    final DataSpecificationIec61360 instanceCopy = Copying.shallow(instance);
+    assertTrue(
+        checkDataSpecificationIec61360ShallowEquals(instance, instanceCopy),
+        "DataSpecificationIec61360");
+  } // public void testDataSpecificationIec61360ShallowCopy
+
+  @Test
+  public void testDataSpecificationIec61360DeepCopy() throws IOException {
+    final DataSpecificationIec61360 instance =
+        CommonJsonization.loadMaximalDataSpecificationIec61360();
+    final DataSpecificationIec61360 instanceCopy = Copying.deep(instance);
+    assertTrue(
+        checkDataSpecificationIec61360DeepEquals(instance, instanceCopy),
+        "DataSpecificationIec61360");
+  } // public void testDataSpecificationIec61360DeepCopy
+
+  @SuppressWarnings("OptionalGetWithoutIsPresent")
+  @Test
+  public void testSnippetInDocs() {
+    // Prepare the environment
+    final Property someProperty =
+        new Property(
             DataTypeDefXsd.BOOLEAN,
             null,
             null,
@@ -3585,14 +4220,13 @@ public class TestCopying {
             null,
             null,
             null,
-            null
-          );
-          someProperty.setIdShort("someProperty");
-          List<ISubmodelElement> submodelElements = new ArrayList<>();
-          submodelElements.add(someProperty);
-  
-  
-          final Submodel submodel = new Submodel(
+            null);
+    someProperty.setIdShort("someProperty");
+    List<ISubmodelElement> submodelElements = new ArrayList<>();
+    submodelElements.add(someProperty);
+
+    final Submodel submodel =
+        new Submodel(
             "some-unique-global-identifier",
             null,
             null,
@@ -3605,24 +4239,41 @@ public class TestCopying {
             null,
             null,
             null,
-            submodelElements
-          );
-          final List<ISubmodel> submodels = new ArrayList<>();
-          submodels.add(submodel);
-          final Environment environment = new Environment(null, submodels, null);
-          // Make a deep copy
-          final Environment deepCopy = Copying.deep(environment);
-          // Make a shallow copy
-          final Environment shallowCopy = Copying.shallow(environment);
-          // Changes to the property affect only the shallow copy,
-          // but not the deep one
-          environment.getSubmodels().get().get(0).getSubmodelElements().get().get(0).setIdShort("changed");
-  
-          assertEquals("changed",shallowCopy.getSubmodels().get().get(0).getSubmodelElements().get().get(0).getIdShort().get());
-          assertEquals("someProperty",deepCopy.getSubmodels().get().get(0).getSubmodelElements().get().get(0).getIdShort().get());
-        }  // public void Test_snippet_in_docs
-}  // class TestCopying
+            submodelElements);
+    final List<ISubmodel> submodels = new ArrayList<>();
+    submodels.add(submodel);
+    final Environment environment = new Environment(null, submodels, null);
+    // Make a deep copy
+    final Environment deepCopy = Copying.deep(environment);
+    // Make a shallow copy
+    final Environment shallowCopy = Copying.shallow(environment);
+    // Changes to the property affect only the shallow copy,
+    // but not the deep one
+    environment
+        .getSubmodels()
+        .get()
+        .get(0)
+        .getSubmodelElements()
+        .get()
+        .get(0)
+        .setIdShort("changed");
 
+    assertEquals(
+        "changed",
+        shallowCopy
+            .getSubmodels()
+            .get()
+            .get(0)
+            .getSubmodelElements()
+            .get()
+            .get(0)
+            .getIdShort()
+            .get());
+    assertEquals(
+        "someProperty",
+        deepCopy.getSubmodels().get().get(0).getSubmodelElements().get().get(0).getIdShort().get());
+  } // public void Test_snippet_in_docs
+} // class TestCopying
 
 /*
  * This code has been automatically generated by testgen.

@@ -5,26 +5,21 @@
 
 package aas_core.aas3_0.enhancing;
 
-import java.lang.Iterable;
-import java.util.Optional;
-import java.util.List;
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
-import aas_core.aas3_0.visitation.ITransformer;
-import aas_core.aas3_0.visitation.ITransformerWithContext;
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.visitation.ITransformer;
+import aas_core.aas3_0.visitation.ITransformerWithContext;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
+import java.util.List;
+import java.util.Optional;
 
-public class EnhancedSpecificAssetId<EnhancementT>
-  extends Enhanced<EnhancementT>
-  implements ISpecificAssetId {
+public class EnhancedSpecificAssetId<EnhancementT> extends Enhanced<EnhancementT>
+    implements ISpecificAssetId {
   private final ISpecificAssetId instance;
 
-  public EnhancedSpecificAssetId(
-    ISpecificAssetId instance,
-    EnhancementT enhancement
-  ) {
+  public EnhancedSpecificAssetId(ISpecificAssetId instance, EnhancementT enhancement) {
     super(enhancement);
     this.instance = instance;
   }
@@ -95,10 +90,7 @@ public class EnhancedSpecificAssetId<EnhancementT>
     visitor.visitSpecificAssetId(instance);
   }
 
-  public <ContextT> void accept(
-    IVisitorWithContext<ContextT> visitor,
-    ContextT context
-  ) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitSpecificAssetId(instance, context);
   }
 
@@ -107,9 +99,7 @@ public class EnhancedSpecificAssetId<EnhancementT>
   }
 
   public <ContextT, T> T transform(
-    ITransformerWithContext<ContextT, T> transformer,
-    ContextT context
-  ) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformSpecificAssetId(instance, context);
   }
 }

@@ -7,19 +7,13 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
-import java.util.List;
-import aas_core.aas3_0.types.model.IClass;
-import java.util.Optional;
 
 /**
- * A value reference pair within a value list. Each value has a global unique id
- * defining its semantic.
+ * A value reference pair within a value list. Each value has a global unique id defining its
+ * semantic.
  */
 public interface IValueReferencePair extends IClass {
-  /**
-   * The value of the referenced concept definition of the value in {@link #getValueId()}.
-   */
+  /** The value of the referenced concept definition of the value in {@link #getValueId()}. */
   String getValue();
 
   void setValue(String value);

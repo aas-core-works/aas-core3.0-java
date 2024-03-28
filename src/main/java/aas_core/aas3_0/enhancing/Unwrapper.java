@@ -5,8 +5,8 @@
 
 package aas_core.aas3_0.enhancing;
 
-import java.util.Optional;
 import aas_core.aas3_0.types.model.*;
+import java.util.Optional;
 
 /**
  * Unwrap enhancements from the wrapped instances.
@@ -18,11 +18,10 @@ public class Unwrapper<EnhancementT> {
    * Unwrap the given model instance.
    *
    * @param that model instance to be unwrapped
-   * @return Enhancement, or {@link java.util.Optional#empty()} if {@code that}
-   * has not been wrapped yet.
+   * @return Enhancement, or {@link java.util.Optional#empty()} if {@code that} has not been wrapped
+   *     yet.
    */
-  public Optional<EnhancementT> unwrap(IClass that)
-  {
+  public Optional<EnhancementT> unwrap(IClass that) {
     if (that instanceof Enhanced) {
       @SuppressWarnings("unchecked")
       Enhanced<EnhancementT> enhanced = (Enhanced<EnhancementT>) that;
@@ -38,13 +37,11 @@ public class Unwrapper<EnhancementT> {
    * @param that model instance to be unwrapped
    * @return Enhancement wrapped around {@code that}
    */
-  public EnhancementT mustUnwrap(IClass that)
-  {
+  public EnhancementT mustUnwrap(IClass that) {
     Optional<EnhancementT> value = unwrap(that);
     if (!value.isPresent()) {
       throw new IllegalArgumentException(
-        "Expected the instance to have been wrapped, but it was not: " + that
-      );
+          "Expected the instance to have been wrapped, but it was not: " + that);
     }
     return value.get();
   }

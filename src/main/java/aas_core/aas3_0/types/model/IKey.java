@@ -7,14 +7,8 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
-import java.util.List;
-import aas_core.aas3_0.types.model.IClass;
-import java.util.Optional;
 
-/**
- * A key is a reference to an element by its ID.
- */
+/** A key is a reference to an element by its ID. */
 public interface IKey extends IClass {
   /**
    * Denotes which kind of entity is referenced.
@@ -22,20 +16,18 @@ public interface IKey extends IClass {
    * <p>In case {@link #getType()} = {@link aas_core.aas3_0.types.enums.KeyTypes#GLOBAL_REFERENCE},
    * the key represents a reference to a source that can be globally identified.
    *
-   * <p>In case {@link #getType()} = {@link aas_core.aas3_0.types.enums.KeyTypes#FRAGMENT_REFERENCE} the key represents
-   * a bookmark or a similar local identifier within its parent element as specified
-   * by the key that precedes this key.
+   * <p>In case {@link #getType()} = {@link aas_core.aas3_0.types.enums.KeyTypes#FRAGMENT_REFERENCE}
+   * the key represents a bookmark or a similar local identifier within its parent element as
+   * specified by the key that precedes this key.
    *
-   * <p>In all other cases the key references a model element of the same or of another AAS.
-   * The name of the model element is explicitly listed.
+   * <p>In all other cases the key references a model element of the same or of another AAS. The
+   * name of the model element is explicitly listed.
    */
   KeyTypes getType();
 
   void setType(KeyTypes type);
 
-  /**
-   * The key value, for example an IRDI or an URI
-   */
+  /** The key value, for example an IRDI or an URI */
   String getValue();
 
   void setValue(String value);

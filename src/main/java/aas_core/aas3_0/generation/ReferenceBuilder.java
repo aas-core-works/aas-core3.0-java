@@ -5,11 +5,8 @@ import aas_core.aas3_0.types.impl.*;
 import aas_core.aas3_0.types.model.*;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-/**
- * Builder for the Reference type.
- */
+/** Builder for the Reference type. */
 public class ReferenceBuilder {
   /**
    * Type of the reference.
@@ -19,8 +16,9 @@ public class ReferenceBuilder {
   private ReferenceTypes type;
 
   /**
-   * {@link aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()} of the referenced model element
-   * ({@link aas_core.aas3_0.types.impl.Reference#getType()} = {@link aas_core.aas3_0.types.enums.ReferenceTypes#MODEL_REFERENCE}).
+   * {@link aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()} of the referenced model
+   * element ({@link aas_core.aas3_0.types.impl.Reference#getType()} = {@link
+   * aas_core.aas3_0.types.enums.ReferenceTypes#MODEL_REFERENCE}).
    *
    * <p>For external references there typically is no semantic ID.
    *
@@ -28,20 +26,12 @@ public class ReferenceBuilder {
    */
   private IReference referredSemanticId;
 
-  /**
-   * Unique references in their name space.
-   */
+  /** Unique references in their name space. */
   private List<IKey> keys;
 
-  public ReferenceBuilder(
-    ReferenceTypes type,
-    List<IKey> keys) {
-    this.type = Objects.requireNonNull(
-      type,
-      "Argument \"type\" must be non-null.");
-    this.keys = Objects.requireNonNull(
-      keys,
-      "Argument \"keys\" must be non-null.");
+  public ReferenceBuilder(ReferenceTypes type, List<IKey> keys) {
+    this.type = Objects.requireNonNull(type, "Argument \"type\" must be non-null.");
+    this.keys = Objects.requireNonNull(keys, "Argument \"keys\" must be non-null.");
   }
 
   public ReferenceBuilder setReferredsemanticid(IReference referredSemanticId) {
@@ -50,9 +40,6 @@ public class ReferenceBuilder {
   }
 
   public Reference build() {
-    return new Reference(
-      this.type,
-      this.keys,
-      this.referredSemanticId);
+    return new Reference(this.type, this.keys, this.referredSemanticId);
   }
 }

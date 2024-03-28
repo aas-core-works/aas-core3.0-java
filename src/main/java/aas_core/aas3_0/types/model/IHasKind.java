@@ -7,14 +7,10 @@ package aas_core.aas3_0.types.model;
 
 import aas_core.aas3_0.types.enums.*;
 import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
-import java.util.List;
-import aas_core.aas3_0.types.model.IClass;
 import java.util.Optional;
 
 /**
- * An element with a kind is an element that can either represent a template or an
- * instance.
+ * An element with a kind is an element that can either represent a template or an instance.
  *
  * <p>Default for an element is that it is representing an instance.
  */

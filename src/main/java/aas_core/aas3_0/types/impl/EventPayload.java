@@ -5,43 +5,38 @@
 
 package aas_core.aas3_0.types.impl;
 
-import aas_core.aas3_0.visitation.IVisitor;
-import aas_core.aas3_0.visitation.IVisitorWithContext;
+import aas_core.aas3_0.types.enums.*;
+import aas_core.aas3_0.types.model.*;
+import aas_core.aas3_0.types.model.IEventPayload;
 import aas_core.aas3_0.visitation.ITransformer;
 import aas_core.aas3_0.visitation.ITransformerWithContext;
-import aas_core.aas3_0.types.enums.*;
-import aas_core.aas3_0.types.impl.*;
-import aas_core.aas3_0.types.model.*;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Objects;
+import aas_core.aas3_0.visitation.IVisitor;
+import aas_core.aas3_0.visitation.IVisitorWithContext;
 import java.util.Iterator;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import aas_core.aas3_0.types.model.IEventPayload;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * Defines the necessary information of an event instance sent out or received.
  *
- * <p>This element is experimental and therefore may be subject to change or may be
- * removed completely in future versions of the meta-model.
+ * <p>This element is experimental and therefore may be subject to change or may be removed
+ * completely in future versions of the meta-model.
  */
 public class EventPayload implements IEventPayload {
   /**
-   * Reference to the source event element, including identification of
-   * {@link aas_core.aas3_0.types.impl.AssetAdministrationShell}, {@link aas_core.aas3_0.types.impl.Submodel},
-   * {@link aas_core.aas3_0.types.model.ISubmodelElement}'s.
+   * Reference to the source event element, including identification of {@link
+   * aas_core.aas3_0.types.impl.AssetAdministrationShell}, {@link
+   * aas_core.aas3_0.types.impl.Submodel}, {@link aas_core.aas3_0.types.model.ISubmodelElement}'s.
    */
   private IReference source;
 
   /**
-   * {@link aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()} of the source event element, if available
+   * {@link aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()} of the source event element,
+   * if available
    *
    * <p>It is recommended to use a global reference.
    */
@@ -50,22 +45,22 @@ public class EventPayload implements IEventPayload {
   /**
    * Reference to the referable, which defines the scope of the event.
    *
-   * <p>Can be {@link aas_core.aas3_0.types.impl.AssetAdministrationShell}, {@link aas_core.aas3_0.types.impl.Submodel} or
-   * {@link aas_core.aas3_0.types.model.ISubmodelElement}.
+   * <p>Can be {@link aas_core.aas3_0.types.impl.AssetAdministrationShell}, {@link
+   * aas_core.aas3_0.types.impl.Submodel} or {@link aas_core.aas3_0.types.model.ISubmodelElement}.
    */
   private IReference observableReference;
 
   /**
-   * {@link aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()} of the referable which defines the scope of
-   * the event, if available.
+   * {@link aas_core.aas3_0.types.model.IHasSemantics#getSemanticId()} of the referable which
+   * defines the scope of the event, if available.
    *
    * <p>It is recommended to use a global reference.
    */
   private IReference observableSemanticId;
 
   /**
-   * Information for the outer message infrastructure for scheduling the event to
-   * the respective communication channel.
+   * Information for the outer message infrastructure for scheduling the event to the respective
+   * communication channel.
    */
   private String topic;
 
@@ -76,49 +71,34 @@ public class EventPayload implements IEventPayload {
    */
   private IReference subjectId;
 
-  /**
-   * Timestamp in UTC, when this event was triggered.
-   */
+  /** Timestamp in UTC, when this event was triggered. */
   private String timeStamp;
 
-  /**
-   * Event specific payload.
-   */
+  /** Event specific payload. */
   private byte[] payload;
 
-  public EventPayload(
-    IReference source,
-    IReference observableReference,
-    String timeStamp) {
-    this.source = Objects.requireNonNull(
-      source,
-      "Argument \"source\" must be non-null.");
-    this.observableReference = Objects.requireNonNull(
-      observableReference,
-      "Argument \"observableReference\" must be non-null.");
-    this.timeStamp = Objects.requireNonNull(
-      timeStamp,
-      "Argument \"timeStamp\" must be non-null.");
+  public EventPayload(IReference source, IReference observableReference, String timeStamp) {
+    this.source = Objects.requireNonNull(source, "Argument \"source\" must be non-null.");
+    this.observableReference =
+        Objects.requireNonNull(
+            observableReference, "Argument \"observableReference\" must be non-null.");
+    this.timeStamp = Objects.requireNonNull(timeStamp, "Argument \"timeStamp\" must be non-null.");
   }
 
   public EventPayload(
-    IReference source,
-    IReference observableReference,
-    String timeStamp,
-    IReference sourceSemanticId,
-    IReference observableSemanticId,
-    String topic,
-    IReference subjectId,
-    byte[] payload) {
-    this.source = Objects.requireNonNull(
-      source,
-      "Argument \"source\" must be non-null.");
-    this.observableReference = Objects.requireNonNull(
-      observableReference,
-      "Argument \"observableReference\" must be non-null.");
-    this.timeStamp = Objects.requireNonNull(
-      timeStamp,
-      "Argument \"timeStamp\" must be non-null.");
+      IReference source,
+      IReference observableReference,
+      String timeStamp,
+      IReference sourceSemanticId,
+      IReference observableSemanticId,
+      String topic,
+      IReference subjectId,
+      byte[] payload) {
+    this.source = Objects.requireNonNull(source, "Argument \"source\" must be non-null.");
+    this.observableReference =
+        Objects.requireNonNull(
+            observableReference, "Argument \"observableReference\" must be non-null.");
+    this.timeStamp = Objects.requireNonNull(timeStamp, "Argument \"timeStamp\" must be non-null.");
     this.sourceSemanticId = sourceSemanticId;
     this.observableSemanticId = observableSemanticId;
     this.topic = topic;
@@ -133,9 +113,7 @@ public class EventPayload implements IEventPayload {
 
   @Override
   public void setSource(IReference source) {
-    this.source = Objects.requireNonNull(
-      source,
-      "Argument \"source\" must be non-null.");
+    this.source = Objects.requireNonNull(source, "Argument \"source\" must be non-null.");
   }
 
   @Override
@@ -155,9 +133,9 @@ public class EventPayload implements IEventPayload {
 
   @Override
   public void setObservableReference(IReference observableReference) {
-    this.observableReference = Objects.requireNonNull(
-      observableReference,
-      "Argument \"observableReference\" must be non-null.");
+    this.observableReference =
+        Objects.requireNonNull(
+            observableReference, "Argument \"observableReference\" must be non-null.");
   }
 
   @Override
@@ -197,9 +175,7 @@ public class EventPayload implements IEventPayload {
 
   @Override
   public void setTimeStamp(String timeStamp) {
-    this.timeStamp = Objects.requireNonNull(
-      timeStamp,
-      "Argument \"timeStamp\" must be non-null.");
+    this.timeStamp = Objects.requireNonNull(timeStamp, "Argument \"timeStamp\" must be non-null.");
   }
 
   @Override
@@ -212,55 +188,43 @@ public class EventPayload implements IEventPayload {
     this.payload = payload;
   }
 
-  /**
-   * Iterate recursively over all the class instances referenced from this instance.
-   */
+  /** Iterate recursively over all the class instances referenced from this instance. */
   public Iterable<IClass> descend() {
     return new EventPayloadRecursiveIterable();
   }
 
-  /**
-   * Iterate over all the class instances referenced from this instance.
-   */
+  /** Iterate over all the class instances referenced from this instance. */
   public Iterable<IClass> descendOnce() {
     return new EventPayloadIterable();
   }
 
-  /**
-   * Accept the {@code visitor} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code visitor} to visit this instance for double dispatch. */
   @Override
   public void accept(IVisitor visitor) {
     visitor.visitEventPayload(this);
   }
 
   /**
-   * Accept the {@code visitor} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code visitor} to visit this instance for double dispatch with the {@code context}.
+   */
   @Override
-  public <ContextT> void accept(
-      IVisitorWithContext<ContextT> visitor,
-      ContextT context) {
+  public <ContextT> void accept(IVisitorWithContext<ContextT> visitor, ContextT context) {
     visitor.visitEventPayload(this, context);
   }
 
-  /**
-   * Accept the {@code transformer} to visit this instance for double dispatch.
-   **/
+  /** Accept the {@code transformer} to visit this instance for double dispatch. */
   @Override
   public <T> T transform(ITransformer<T> transformer) {
     return transformer.transformEventPayload(this);
   }
 
   /**
-   * Accept the {@code transformer} to visit this instance for double dispatch
-   * with the {@code context}.
-   **/
+   * Accept the {@code transformer} to visit this instance for double dispatch with the {@code
+   * context}.
+   */
   @Override
   public <ContextT, T> T transform(
-      ITransformerWithContext<ContextT, T> transformer,
-      ContextT context) {
+      ITransformerWithContext<ContextT, T> transformer, ContextT context) {
     return transformer.transformEventPayload(this, context);
   }
 
@@ -290,28 +254,26 @@ public class EventPayload implements IEventPayload {
       Stream<IClass> memberStream = Stream.empty();
 
       if (source != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(EventPayload.this.source));
+        memberStream = Stream.concat(memberStream, Stream.<IClass>of(EventPayload.this.source));
       }
 
       if (sourceSemanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(EventPayload.this.sourceSemanticId));
+        memberStream =
+            Stream.concat(memberStream, Stream.<IClass>of(EventPayload.this.sourceSemanticId));
       }
 
       if (observableReference != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(EventPayload.this.observableReference));
+        memberStream =
+            Stream.concat(memberStream, Stream.<IClass>of(EventPayload.this.observableReference));
       }
 
       if (observableSemanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(EventPayload.this.observableSemanticId));
+        memberStream =
+            Stream.concat(memberStream, Stream.<IClass>of(EventPayload.this.observableSemanticId));
       }
 
       if (subjectId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.<IClass>of(EventPayload.this.subjectId));
+        memberStream = Stream.concat(memberStream, Stream.<IClass>of(EventPayload.this.subjectId));
       }
 
       return memberStream;
@@ -344,33 +306,52 @@ public class EventPayload implements IEventPayload {
       Stream<IClass> memberStream = Stream.empty();
 
       if (source != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(EventPayload.this.source),
-            StreamSupport.stream(EventPayload.this.source.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(EventPayload.this.source),
+                    StreamSupport.stream(EventPayload.this.source.descend().spliterator(), false)));
       }
 
       if (sourceSemanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(EventPayload.this.sourceSemanticId),
-            StreamSupport.stream(EventPayload.this.sourceSemanticId.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(EventPayload.this.sourceSemanticId),
+                    StreamSupport.stream(
+                        EventPayload.this.sourceSemanticId.descend().spliterator(), false)));
       }
 
       if (observableReference != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(EventPayload.this.observableReference),
-            StreamSupport.stream(EventPayload.this.observableReference.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(EventPayload.this.observableReference),
+                    StreamSupport.stream(
+                        EventPayload.this.observableReference.descend().spliterator(), false)));
       }
 
       if (observableSemanticId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(EventPayload.this.observableSemanticId),
-            StreamSupport.stream(EventPayload.this.observableSemanticId.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(EventPayload.this.observableSemanticId),
+                    StreamSupport.stream(
+                        EventPayload.this.observableSemanticId.descend().spliterator(), false)));
       }
 
       if (subjectId != null) {
-        memberStream = Stream.concat(memberStream,
-          Stream.concat(Stream.<IClass>of(EventPayload.this.subjectId),
-            StreamSupport.stream(EventPayload.this.subjectId.descend().spliterator(), false)));
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(EventPayload.this.subjectId),
+                    StreamSupport.stream(
+                        EventPayload.this.subjectId.descend().spliterator(), false)));
       }
 
       return memberStream;

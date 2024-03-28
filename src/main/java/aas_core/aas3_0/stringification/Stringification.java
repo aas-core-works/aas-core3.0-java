@@ -5,15 +5,16 @@
 
 package aas_core.aas3_0.stringification;
 
+import aas_core.aas3_0.types.enums.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import aas_core.aas3_0.types.enums.*;
 
 public class Stringification {
   private static final Map<ModellingKind, String> modellingKindToString;
+
   static {
     final Map<ModellingKind, String> temp = new HashMap<>();
 
@@ -32,12 +33,12 @@ public class Stringification {
    *
    * <p>If {@code that} is not a valid literal, return {@code Optional#empty()}.
    */
-  public static Optional<String> toString(ModellingKind that)
-  {
+  public static Optional<String> toString(ModellingKind that) {
     return Optional.ofNullable(that).map(modellingKindToString::get);
   }
 
   private static final Map<String, ModellingKind> modellingKindFromString;
+
   static {
     final Map<String, ModellingKind> temp = new HashMap<>();
 
@@ -54,12 +55,10 @@ public class Stringification {
   /**
    * Parse the string representation of {@link ModellingKind}.
    *
-   * <p>If {@code text} is not a valid string representation
-   * of a literal of {@link ModellingKind},
+   * <p>If {@code text} is not a valid string representation of a literal of {@link ModellingKind},
    * return {@code Optional#empty()}.
    */
-  public static Optional<ModellingKind> modellingKindFromString(String text)
-  {
+  public static Optional<ModellingKind> modellingKindFromString(String text) {
     ModellingKind value = modellingKindFromString.get(text);
     if (value == null) {
       return Optional.empty();
@@ -69,6 +68,7 @@ public class Stringification {
   }
 
   private static final Map<QualifierKind, String> qualifierKindToString;
+
   static {
     final Map<QualifierKind, String> temp = new HashMap<>();
 
@@ -88,12 +88,12 @@ public class Stringification {
    *
    * <p>If {@code that} is not a valid literal, return {@code Optional#empty()}.
    */
-  public static Optional<String> toString(QualifierKind that)
-  {
+  public static Optional<String> toString(QualifierKind that) {
     return Optional.ofNullable(that).map(qualifierKindToString::get);
   }
 
   private static final Map<String, QualifierKind> qualifierKindFromString;
+
   static {
     final Map<String, QualifierKind> temp = new HashMap<>();
 
@@ -111,12 +111,10 @@ public class Stringification {
   /**
    * Parse the string representation of {@link QualifierKind}.
    *
-   * <p>If {@code text} is not a valid string representation
-   * of a literal of {@link QualifierKind},
+   * <p>If {@code text} is not a valid string representation of a literal of {@link QualifierKind},
    * return {@code Optional#empty()}.
    */
-  public static Optional<QualifierKind> qualifierKindFromString(String text)
-  {
+  public static Optional<QualifierKind> qualifierKindFromString(String text) {
     QualifierKind value = qualifierKindFromString.get(text);
     if (value == null) {
       return Optional.empty();
@@ -126,6 +124,7 @@ public class Stringification {
   }
 
   private static final Map<AssetKind, String> assetKindToString;
+
   static {
     final Map<AssetKind, String> temp = new HashMap<>();
 
@@ -145,12 +144,12 @@ public class Stringification {
    *
    * <p>If {@code that} is not a valid literal, return {@code Optional#empty()}.
    */
-  public static Optional<String> toString(AssetKind that)
-  {
+  public static Optional<String> toString(AssetKind that) {
     return Optional.ofNullable(that).map(assetKindToString::get);
   }
 
   private static final Map<String, AssetKind> assetKindFromString;
+
   static {
     final Map<String, AssetKind> temp = new HashMap<>();
 
@@ -168,12 +167,10 @@ public class Stringification {
   /**
    * Parse the string representation of {@link AssetKind}.
    *
-   * <p>If {@code text} is not a valid string representation
-   * of a literal of {@link AssetKind},
+   * <p>If {@code text} is not a valid string representation of a literal of {@link AssetKind},
    * return {@code Optional#empty()}.
    */
-  public static Optional<AssetKind> assetKindFromString(String text)
-  {
+  public static Optional<AssetKind> assetKindFromString(String text) {
     AssetKind value = assetKindFromString.get(text);
     if (value == null) {
       return Optional.empty();
@@ -183,6 +180,7 @@ public class Stringification {
   }
 
   private static final Map<AasSubmodelElements, String> aasSubmodelElementsToString;
+
   static {
     final Map<AasSubmodelElements, String> temp = new HashMap<>();
 
@@ -216,12 +214,12 @@ public class Stringification {
    *
    * <p>If {@code that} is not a valid literal, return {@code Optional#empty()}.
    */
-  public static Optional<String> toString(AasSubmodelElements that)
-  {
+  public static Optional<String> toString(AasSubmodelElements that) {
     return Optional.ofNullable(that).map(aasSubmodelElementsToString::get);
   }
 
   private static final Map<String, AasSubmodelElements> aasSubmodelElementsFromString;
+
   static {
     final Map<String, AasSubmodelElements> temp = new HashMap<>();
 
@@ -253,12 +251,10 @@ public class Stringification {
   /**
    * Parse the string representation of {@link AasSubmodelElements}.
    *
-   * <p>If {@code text} is not a valid string representation
-   * of a literal of {@link AasSubmodelElements},
-   * return {@code Optional#empty()}.
+   * <p>If {@code text} is not a valid string representation of a literal of {@link
+   * AasSubmodelElements}, return {@code Optional#empty()}.
    */
-  public static Optional<AasSubmodelElements> aasSubmodelElementsFromString(String text)
-  {
+  public static Optional<AasSubmodelElements> aasSubmodelElementsFromString(String text) {
     AasSubmodelElements value = aasSubmodelElementsFromString.get(text);
     if (value == null) {
       return Optional.empty();
@@ -268,6 +264,7 @@ public class Stringification {
   }
 
   private static final Map<EntityType, String> entityTypeToString;
+
   static {
     final Map<EntityType, String> temp = new HashMap<>();
 
@@ -286,12 +283,12 @@ public class Stringification {
    *
    * <p>If {@code that} is not a valid literal, return {@code Optional#empty()}.
    */
-  public static Optional<String> toString(EntityType that)
-  {
+  public static Optional<String> toString(EntityType that) {
     return Optional.ofNullable(that).map(entityTypeToString::get);
   }
 
   private static final Map<String, EntityType> entityTypeFromString;
+
   static {
     final Map<String, EntityType> temp = new HashMap<>();
 
@@ -308,12 +305,10 @@ public class Stringification {
   /**
    * Parse the string representation of {@link EntityType}.
    *
-   * <p>If {@code text} is not a valid string representation
-   * of a literal of {@link EntityType},
+   * <p>If {@code text} is not a valid string representation of a literal of {@link EntityType},
    * return {@code Optional#empty()}.
    */
-  public static Optional<EntityType> entityTypeFromString(String text)
-  {
+  public static Optional<EntityType> entityTypeFromString(String text) {
     EntityType value = entityTypeFromString.get(text);
     if (value == null) {
       return Optional.empty();
@@ -323,6 +318,7 @@ public class Stringification {
   }
 
   private static final Map<Direction, String> directionToString;
+
   static {
     final Map<Direction, String> temp = new HashMap<>();
 
@@ -341,12 +337,12 @@ public class Stringification {
    *
    * <p>If {@code that} is not a valid literal, return {@code Optional#empty()}.
    */
-  public static Optional<String> toString(Direction that)
-  {
+  public static Optional<String> toString(Direction that) {
     return Optional.ofNullable(that).map(directionToString::get);
   }
 
   private static final Map<String, Direction> directionFromString;
+
   static {
     final Map<String, Direction> temp = new HashMap<>();
 
@@ -363,12 +359,10 @@ public class Stringification {
   /**
    * Parse the string representation of {@link Direction}.
    *
-   * <p>If {@code text} is not a valid string representation
-   * of a literal of {@link Direction},
+   * <p>If {@code text} is not a valid string representation of a literal of {@link Direction},
    * return {@code Optional#empty()}.
    */
-  public static Optional<Direction> directionFromString(String text)
-  {
+  public static Optional<Direction> directionFromString(String text) {
     Direction value = directionFromString.get(text);
     if (value == null) {
       return Optional.empty();
@@ -378,6 +372,7 @@ public class Stringification {
   }
 
   private static final Map<StateOfEvent, String> stateOfEventToString;
+
   static {
     final Map<StateOfEvent, String> temp = new HashMap<>();
 
@@ -396,12 +391,12 @@ public class Stringification {
    *
    * <p>If {@code that} is not a valid literal, return {@code Optional#empty()}.
    */
-  public static Optional<String> toString(StateOfEvent that)
-  {
+  public static Optional<String> toString(StateOfEvent that) {
     return Optional.ofNullable(that).map(stateOfEventToString::get);
   }
 
   private static final Map<String, StateOfEvent> stateOfEventFromString;
+
   static {
     final Map<String, StateOfEvent> temp = new HashMap<>();
 
@@ -418,12 +413,10 @@ public class Stringification {
   /**
    * Parse the string representation of {@link StateOfEvent}.
    *
-   * <p>If {@code text} is not a valid string representation
-   * of a literal of {@link StateOfEvent},
+   * <p>If {@code text} is not a valid string representation of a literal of {@link StateOfEvent},
    * return {@code Optional#empty()}.
    */
-  public static Optional<StateOfEvent> stateOfEventFromString(String text)
-  {
+  public static Optional<StateOfEvent> stateOfEventFromString(String text) {
     StateOfEvent value = stateOfEventFromString.get(text);
     if (value == null) {
       return Optional.empty();
@@ -433,6 +426,7 @@ public class Stringification {
   }
 
   private static final Map<ReferenceTypes, String> referenceTypesToString;
+
   static {
     final Map<ReferenceTypes, String> temp = new HashMap<>();
 
@@ -451,12 +445,12 @@ public class Stringification {
    *
    * <p>If {@code that} is not a valid literal, return {@code Optional#empty()}.
    */
-  public static Optional<String> toString(ReferenceTypes that)
-  {
+  public static Optional<String> toString(ReferenceTypes that) {
     return Optional.ofNullable(that).map(referenceTypesToString::get);
   }
 
   private static final Map<String, ReferenceTypes> referenceTypesFromString;
+
   static {
     final Map<String, ReferenceTypes> temp = new HashMap<>();
 
@@ -473,12 +467,10 @@ public class Stringification {
   /**
    * Parse the string representation of {@link ReferenceTypes}.
    *
-   * <p>If {@code text} is not a valid string representation
-   * of a literal of {@link ReferenceTypes},
+   * <p>If {@code text} is not a valid string representation of a literal of {@link ReferenceTypes},
    * return {@code Optional#empty()}.
    */
-  public static Optional<ReferenceTypes> referenceTypesFromString(String text)
-  {
+  public static Optional<ReferenceTypes> referenceTypesFromString(String text) {
     ReferenceTypes value = referenceTypesFromString.get(text);
     if (value == null) {
       return Optional.empty();
@@ -488,6 +480,7 @@ public class Stringification {
   }
 
   private static final Map<KeyTypes, String> keyTypesToString;
+
   static {
     final Map<KeyTypes, String> temp = new HashMap<>();
 
@@ -528,12 +521,12 @@ public class Stringification {
    *
    * <p>If {@code that} is not a valid literal, return {@code Optional#empty()}.
    */
-  public static Optional<String> toString(KeyTypes that)
-  {
+  public static Optional<String> toString(KeyTypes that) {
     return Optional.ofNullable(that).map(keyTypesToString::get);
   }
 
   private static final Map<String, KeyTypes> keyTypesFromString;
+
   static {
     final Map<String, KeyTypes> temp = new HashMap<>();
 
@@ -572,12 +565,10 @@ public class Stringification {
   /**
    * Parse the string representation of {@link KeyTypes}.
    *
-   * <p>If {@code text} is not a valid string representation
-   * of a literal of {@link KeyTypes},
+   * <p>If {@code text} is not a valid string representation of a literal of {@link KeyTypes},
    * return {@code Optional#empty()}.
    */
-  public static Optional<KeyTypes> keyTypesFromString(String text)
-  {
+  public static Optional<KeyTypes> keyTypesFromString(String text) {
     KeyTypes value = keyTypesFromString.get(text);
     if (value == null) {
       return Optional.empty();
@@ -587,6 +578,7 @@ public class Stringification {
   }
 
   private static final Map<DataTypeDefXsd, String> dataTypeDefXsdToString;
+
   static {
     final Map<DataTypeDefXsd, String> temp = new HashMap<>();
 
@@ -633,12 +625,12 @@ public class Stringification {
    *
    * <p>If {@code that} is not a valid literal, return {@code Optional#empty()}.
    */
-  public static Optional<String> toString(DataTypeDefXsd that)
-  {
+  public static Optional<String> toString(DataTypeDefXsd that) {
     return Optional.ofNullable(that).map(dataTypeDefXsdToString::get);
   }
 
   private static final Map<String, DataTypeDefXsd> dataTypeDefXsdFromString;
+
   static {
     final Map<String, DataTypeDefXsd> temp = new HashMap<>();
 
@@ -683,12 +675,10 @@ public class Stringification {
   /**
    * Parse the string representation of {@link DataTypeDefXsd}.
    *
-   * <p>If {@code text} is not a valid string representation
-   * of a literal of {@link DataTypeDefXsd},
+   * <p>If {@code text} is not a valid string representation of a literal of {@link DataTypeDefXsd},
    * return {@code Optional#empty()}.
    */
-  public static Optional<DataTypeDefXsd> dataTypeDefXsdFromString(String text)
-  {
+  public static Optional<DataTypeDefXsd> dataTypeDefXsdFromString(String text) {
     DataTypeDefXsd value = dataTypeDefXsdFromString.get(text);
     if (value == null) {
       return Optional.empty();
@@ -698,6 +688,7 @@ public class Stringification {
   }
 
   private static final Map<DataTypeIec61360, String> dataTypeIec61360ToString;
+
   static {
     final Map<DataTypeIec61360, String> temp = new HashMap<>();
 
@@ -733,12 +724,12 @@ public class Stringification {
    *
    * <p>If {@code that} is not a valid literal, return {@code Optional#empty()}.
    */
-  public static Optional<String> toString(DataTypeIec61360 that)
-  {
+  public static Optional<String> toString(DataTypeIec61360 that) {
     return Optional.ofNullable(that).map(dataTypeIec61360ToString::get);
   }
 
   private static final Map<String, DataTypeIec61360> dataTypeIec61360FromString;
+
   static {
     final Map<String, DataTypeIec61360> temp = new HashMap<>();
 
@@ -772,12 +763,10 @@ public class Stringification {
   /**
    * Parse the string representation of {@link DataTypeIec61360}.
    *
-   * <p>If {@code text} is not a valid string representation
-   * of a literal of {@link DataTypeIec61360},
-   * return {@code Optional#empty()}.
+   * <p>If {@code text} is not a valid string representation of a literal of {@link
+   * DataTypeIec61360}, return {@code Optional#empty()}.
    */
-  public static Optional<DataTypeIec61360> dataTypeIec61360FromString(String text)
-  {
+  public static Optional<DataTypeIec61360> dataTypeIec61360FromString(String text) {
     DataTypeIec61360 value = dataTypeIec61360FromString.get(text);
     if (value == null) {
       return Optional.empty();
