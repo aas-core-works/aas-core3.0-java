@@ -130,6 +130,9 @@ class Error:
         self.cause = cause
         self.path = Path()
 
+    def __repr__(self) -> str:
+        return f"Error(path={self.path}, cause={self.cause})"
+
 
 # noinspection SpellCheckingInspection
 def _construct_matches_id_short() -> Pattern[str]:
@@ -267,7 +270,7 @@ def _construct_matches_rfc_8089_path() -> Pattern[str]:
     dec_octet = '([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
     ipv4address = f'{dec_octet}\\.{dec_octet}\\.{dec_octet}\\.{dec_octet}'
     ls32 = f'({h16}:{h16}|{ipv4address})'
-    ipv6address = f'(({h16}:){{6}}{ls32}|::({h16}:){{5}}{ls32}|({h16})?::({h16}:){{4}}{ls32}|(({h16}:)?{h16})?::({h16}:){{3}}{ls32}|(({h16}:){{2}}{h16})?::({h16}:){{2}}{ls32}|(({h16}:){{3}}{h16})?::{h16}:{ls32}|(({h16}:){{4}}{h16})?::{ls32}|(({h16}:){{5}}{h16})?::{h16}|(({h16}:){{6}}{h16})?::)'
+    ipv6address = f'(({h16}:){{6}}{ls32}|::({h16}:){{5}}{ls32}|({h16})?::({h16}:){{4}}{ls32}|(({h16}:)?{h16})?::({h16}:){{3}}{ls32}|(({h16}:){{0,2}}{h16})?::({h16}:){{2}}{ls32}|(({h16}:){{0,3}}{h16})?::{h16}:{ls32}|(({h16}:){{0,4}}{h16})?::{ls32}|(({h16}:){{0,5}}{h16})?::{h16}|(({h16}:){{0,6}}{h16})?::)'
     unreserved = '[a-zA-Z0-9\\-._~]'
     sub_delims = "[!$&'()*+,;=]"
     ipvfuture = f'[vV][0-9A-Fa-f]+\\.({unreserved}|{sub_delims}|:)+'
@@ -312,7 +315,7 @@ def _construct_matches_bcp_47() -> Pattern[str]:
     alphanum = '[a-zA-Z0-9]'
     singleton = '[0-9A-WY-Za-wy-z]'
     extension = f'{singleton}(-({alphanum}){{2,8}})+'
-    extlang = '[a-zA-Z]{3}(-[a-zA-Z]{3}){2}'
+    extlang = '[a-zA-Z]{3}(-[a-zA-Z]{3}){0,2}'
     irregular = '(en-GB-oed|i-ami|i-bnn|i-default|i-enochian|i-hak|i-klingon|i-lux|i-mingo|i-navajo|i-pwn|i-tao|i-tay|i-tsu|sgn-BE-FR|sgn-BE-NL|sgn-CH-DE)'
     regular = '(art-lojban|cel-gaulish|no-bok|no-nyn|zh-guoyu|zh-hakka|zh-min|zh-min-nan|zh-xiang)'
     grandfathered = f'({irregular}|{regular})'
@@ -409,7 +412,7 @@ def _construct_matches_xs_any_uri() -> Pattern[str]:
     dec_octet = '([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
     ipv4address = f'{dec_octet}\\.{dec_octet}\\.{dec_octet}\\.{dec_octet}'
     ls32 = f'({h16}:{h16}|{ipv4address})'
-    ipv6address = f'(({h16}:){{6}}{ls32}|::({h16}:){{5}}{ls32}|({h16})?::({h16}:){{4}}{ls32}|(({h16}:)?{h16})?::({h16}:){{3}}{ls32}|(({h16}:){{2}}{h16})?::({h16}:){{2}}{ls32}|(({h16}:){{3}}{h16})?::{h16}:{ls32}|(({h16}:){{4}}{h16})?::{ls32}|(({h16}:){{5}}{h16})?::{h16}|(({h16}:){{6}}{h16})?::)'
+    ipv6address = f'(({h16}:){{6}}{ls32}|::({h16}:){{5}}{ls32}|({h16})?::({h16}:){{4}}{ls32}|(({h16}:)?{h16})?::({h16}:){{3}}{ls32}|(({h16}:){{0,2}}{h16})?::({h16}:){{2}}{ls32}|(({h16}:){{0,3}}{h16})?::{h16}:{ls32}|(({h16}:){{0,4}}{h16})?::{ls32}|(({h16}:){{0,5}}{h16})?::{h16}|(({h16}:){{0,6}}{h16})?::)'
     unreserved = '[a-zA-Z0-9\\-._~]'
     ipvfuture = f'[vV][0-9A-Fa-f]+\\.({unreserved}|{sub_delims}|:)+'
     ip_literal = f'\\[({ipv6address}|{ipvfuture})\\]'
@@ -521,7 +524,7 @@ def _construct_matches_xs_date() -> Pattern[str]:
     month_frag = '((0[1-9])|(1[0-2]))'
     day_frag = f'((0[1-9])|([12]{digit})|(3[01]))'
     minute_frag = f'[0-5]{digit}'
-    timezone_frag = f'(Z|(\\+|-)(0{digit}|1[0-3]):{minute_frag}|14:00)'
+    timezone_frag = f'(Z|(\\+|-)((0{digit}|1[0-3]):{minute_frag}|14:00))'
     date_lexical_rep = f'{year_frag}-{month_frag}-{day_frag}{timezone_frag}?'
     pattern = f'^{date_lexical_rep}$'
 
@@ -554,7 +557,7 @@ def _construct_matches_xs_date_time() -> Pattern[str]:
     minute_frag = f'[0-5]{digit}'
     second_frag = f'([0-5]{digit})(\\.{digit}+)?'
     end_of_day_frag = '24:00:00(\\.0+)?'
-    timezone_frag = f'(Z|(\\+|-)(0{digit}|1[0-3]):{minute_frag}|14:00)'
+    timezone_frag = f'(Z|(\\+|-)((0{digit}|1[0-3]):{minute_frag}|14:00))'
     date_time_lexical_rep = f'{year_frag}-{month_frag}-{day_frag}T(({hour_frag}:{minute_frag}:{second_frag})|{end_of_day_frag}){timezone_frag}?'
     pattern = f'^{date_time_lexical_rep}$'
 
@@ -1500,10 +1503,11 @@ def is_model_reference_to(
     """
     # pylint: disable=all
     return (
-        reference.type == aas_types.ReferenceTypes.MODEL_REFERENCE
-        and len(reference.keys) != 0
-        and reference.keys[-1].type == expected_type
-    )
+        (
+            reference.type == aas_types.ReferenceTypes.MODEL_REFERENCE
+            and len(reference.keys) != 0
+            and reference.keys[-1].type == expected_type
+        ))
 
 
 def is_model_reference_to_referable(
@@ -1514,10 +1518,11 @@ def is_model_reference_to_referable(
     """
     # pylint: disable=all
     return (
-        reference.type == aas_types.ReferenceTypes.MODEL_REFERENCE
-        and len(reference.keys) != 0
-        and (reference.keys[-1].type in aas_constants.AAS_REFERABLES)
-    )
+        (
+            reference.type == aas_types.ReferenceTypes.MODEL_REFERENCE
+            and len(reference.keys) != 0
+            and (reference.keys[-1].type in aas_constants.AAS_REFERABLES)
+        ))
 
 
 def id_shorts_are_unique(referables: Iterable[aas_types.Referable]) -> bool:
@@ -2214,7 +2219,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -2233,7 +2238,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -2678,7 +2683,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -2697,7 +2702,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -3035,7 +3040,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -3054,7 +3059,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -3291,7 +3296,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -3310,7 +3315,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -3661,7 +3666,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -3680,7 +3685,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -3948,7 +3953,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -3967,7 +3972,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -4227,7 +4232,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -4246,7 +4251,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -4308,7 +4313,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.value)
         ):
             yield Error(
-                'Value specifies no duplicate languages.'
+                'Value must specify unique languages.'
             )
 
         if not (
@@ -4518,7 +4523,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -4537,7 +4542,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -4808,7 +4813,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -4827,7 +4832,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -5066,7 +5071,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -5085,7 +5090,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -5333,7 +5338,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -5352,7 +5357,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -5600,7 +5605,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -5619,7 +5624,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -5898,7 +5903,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -5917,7 +5922,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -6362,7 +6367,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -6381,7 +6386,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -6680,7 +6685,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -6699,7 +6704,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -7036,7 +7041,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -7055,7 +7060,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -7274,7 +7279,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.description)
         ):
             yield Error(
-                'Description specifies no duplicate languages.'
+                'Description must specify unique languages.'
             )
 
         if not (
@@ -7293,7 +7298,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Display name specifies no duplicate languages.'
+                'Display name must specify unique languages.'
             )
 
         if not (
@@ -7976,7 +7981,7 @@ class _Transformer(
     ) -> Iterator[Error]:
         if not (len(that.text) <= 255):
             yield Error(
-                'String shall have a maximum length of 1023 characters.'
+                'String shall have a maximum length of 255 characters.'
             )
 
         for error in verify_bcp_47_language_tag(that.language):
@@ -8004,7 +8009,7 @@ class _Transformer(
     ) -> Iterator[Error]:
         if not (len(that.text) <= 18):
             yield Error(
-                'String shall have a maximum length of 1023 characters.'
+                'String shall have a maximum length of 18 characters.'
             )
 
         for error in verify_bcp_47_language_tag(that.language):
@@ -8102,7 +8107,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.definition)
         ):
             yield Error(
-                'Definition specifies no duplicate languages.'
+                'Definition must specify unique languages.'
             )
 
         if not (
@@ -8118,7 +8123,7 @@ class _Transformer(
             or lang_strings_have_unique_languages(that.short_name)
         ):
             yield Error(
-                'Short name specifies no duplicate languages.'
+                'Short name must specify unique languages.'
             )
 
         if not (len(that.preferred_name) >= 1):
@@ -8132,7 +8137,7 @@ class _Transformer(
             )
         ):
             yield Error(
-                'Preferred name specifies no duplicate languages.'
+                'Preferred name must specify unique languages.'
             )
 
         if not (
