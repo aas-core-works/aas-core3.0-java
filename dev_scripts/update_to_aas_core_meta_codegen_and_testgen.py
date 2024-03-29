@@ -1,7 +1,7 @@
 """
 Update everything in this project to the latest aas-core-meta, -codegen and -testgen.
 
-Git is expected to be installed.
+Git, Java and Maven are expected to be installed.
 """
 
 from __future__ import annotations
@@ -15,7 +15,51 @@ import subprocess
 import sys
 import tempfile
 import time
-from typing import Optional, List, Callable, AnyStr, Sequence
+from typing import Optional, List, Callable, AnyStr, Sequence, Mapping
+
+
+def _execute(
+    cmd: Sequence[str],
+    stdout: Optional[int] = None,
+    stderr: Optional[int] = None,
+    cwd: Optional[str] = None,
+    env: Optional[Mapping[str, str]] = None,
+) -> Optional[int]:
+    """
+    Execute the command and print if something went wrong.
+
+    Return the non-zero exit code, or None if the exit code was zero.
+    """
+    exit_code = subprocess.call(cmd, stdout=stdout, stderr=stderr, cwd=cwd, env=env)
+    if exit_code != 0:
+        print("Failed to execute: " + " ".join(cmd), file=sys.stderr)
+        return exit_code
+
+    return None
+
+
+def _check_all_tools_installed() -> Optional[int]:
+    """Check that Git, Java and Maven are installed and work properly."""
+    exit_code = _execute(
+        cmd=["git", "--version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+    )
+    if exit_code is not None:
+        return exit_code
+
+    exit_code = _execute(
+        cmd=["java", "-version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+    )
+    if exit_code is not None:
+        return exit_code
+
+    exit_code = _execute(
+        cmd=["mvn", "-version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+    )
+    if exit_code is not None:
+        return exit_code
+
+    return None
+
 
 # noinspection RegExpSimplifiable
 AAS_CORE_META_DEPENDENCY_RE = re.compile(
@@ -59,7 +103,7 @@ def _make_sure_no_changed_files(
 def _update_setup_py(
     our_repo: pathlib.Path, aas_core_meta_revision: str, aas_core_codegen_revision: str
 ) -> None:
-    """Update the aas-core-meta in setup.py."""
+    """Update the aas-core-meta and aas-core-codegen in setup.py."""
     setup_py = our_repo / "dev_scripts" / "setup.py"
     text = setup_py.read_text(encoding="utf-8")
 
@@ -82,42 +126,62 @@ def _update_setup_py(
 
 def _uninstall_and_install_aas_core_meta(
     our_repo: pathlib.Path, aas_core_meta_revision: str
-) -> None:
-    """Uninstall and install the latest aas-core-meta in the virtual environment."""
-    subprocess.check_call(
-        [sys.executable, "-m", "pip", "uninstall", "-y", "aas-core-meta"],
+) -> Optional[int]:
+    """
+    Uninstall and install the latest aas-core-meta in the virtual environment.
+
+    Return a non-zero exit code if something went wrong.
+    """
+    exit_code = _execute(
+        cmd=[sys.executable, "-m", "pip", "uninstall", "-y", "aas-core-meta"],
         cwd=str(our_repo),
     )
+    if exit_code is not None:
+        return exit_code
 
     aas_core_meta_dependency = (
         f"aas-core-meta@git+https://github.com/aas-core-works/aas-core-meta"
         f"@{aas_core_meta_revision}#egg=aas-core-meta"
     )
 
-    subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", aas_core_meta_dependency],
+    exit_code = _execute(
+        cmd=[sys.executable, "-m", "pip", "install", aas_core_meta_dependency],
         cwd=str(our_repo),
     )
+    if exit_code is not None:
+        return exit_code
+
+    return None
 
 
 def _uninstall_and_install_aas_core_codegen(
     our_repo: pathlib.Path, aas_core_codegen_revision: str
-) -> None:
-    """Uninstall and install the latest aas-core-codegen in the virtual environment."""
-    subprocess.check_call(
-        [sys.executable, "-m", "pip", "uninstall", "-y", "aas-core-codegen"],
+) -> Optional[int]:
+    """
+    Uninstall and install the latest aas-core-codegen in the virtual environment.
+
+    Return a non-zero exit code if something went wrong.
+    """
+    exit_code = _execute(
+        cmd=[sys.executable, "-m", "pip", "uninstall", "-y", "aas-core-codegen"],
         cwd=str(our_repo),
     )
+    if exit_code is not None:
+        return exit_code
 
     aas_core_codegen_dependency = (
         f"aas-core-codegen@git+https://github.com/aas-core-works/aas-core-codegen"
         f"@{aas_core_codegen_revision}#egg=aas-core-codegen"
     )
 
-    subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", aas_core_codegen_dependency],
+    exit_code = _execute(
+        cmd=[sys.executable, "-m", "pip", "install", aas_core_codegen_dependency],
         cwd=str(our_repo),
     )
+    if exit_code is not None:
+        return exit_code
+
+    return None
 
 
 def _copy_code_from_aas_core_codegen(
@@ -126,19 +190,20 @@ def _copy_code_from_aas_core_codegen(
     """Copy the generated code from aas-core-codegen's test data."""
     source_dir = (
         aas_core_codegen_repo
-        / "test_data/csharp/test_main/aas_core_meta.v3/expected_output"
+        / "test_data/java/test_main/aas_core_meta.v3/expected_output"
     )
 
-    target_dir = our_repo / "src/AasCore.Aas3_0"
+    target_dir = our_repo / "src/main/java/aas_core/aas3_0"
 
     print(
-        f"Copying the code: "
-        f"from {source_dir} "
-        f"to {target_dir.relative_to(our_repo)} ..."
+        f"Copying the code:\n"
+        f"  from {source_dir}\n"
+        f"  to {target_dir.relative_to(our_repo)}"
     )
 
-    for pth in source_dir.glob("*.cs"):
-        tgt_pth = target_dir / pth.name
+    for pth in source_dir.glob("**/*.java"):
+        relative_pth = pth.relative_to(source_dir)
+        tgt_pth = target_dir / relative_pth
         shutil.copy(pth, tgt_pth)
 
 
@@ -287,7 +352,7 @@ def _replace_test_data(
 
     for pth in [
         test_data_dir / name
-        for name in ("Descend", "DescendOnce", "Json", "Xml", "XOrDefault")
+        for name in ("Descend", "DescendOnce", "XOrDefault", "Json", "Xml")
     ]:
         if pth.exists():
             print(f"Removing {pth} ...")
@@ -297,30 +362,67 @@ def _replace_test_data(
     for pth in [aas_core_testgen_repo / "test_data" / name for name in ("Json", "Xml")]:
         target_pth = test_data_dir / pth.name
         assert not target_pth.exists()
-        assert pth.exists(), f"Expected the test data directory to exist: {pth=}"
+        assert pth.exists(), f"Expected the source test data directory to exist: {pth=}"
         shutil.copytree(pth, target_pth)
 
 
-def _reformat_code(our_repo: pathlib.Path) -> None:
+def _semantically_patch(our_repo: pathlib.Path) -> Optional[int]:
+    """Run the scripts to semantically patch the generated code."""
+    cwd = our_repo / "dev_scripts" / "semantic-patching"
+
+    verification_java = (
+        our_repo / "src/main/java/aas_core/aas3_0/verification/Verification.java"
+    )
+    assert (
+        verification_java.exists() and verification_java.is_file()
+    ), f"No Verification.java found to patch: {verification_java=}"
+
+    exit_code = _execute(cmd=["mvn", "package"], cwd=str(cwd))
+    if exit_code is not None:
+        return exit_code
+
+    exit_code = _execute(
+        [
+            "mvn",
+            "exec:java",
+            "-Dexec.mainClass=aas_core_works.PatchVerification",
+            f"-Dexec.args={verification_java} {verification_java}",
+        ],
+        cwd=str(cwd),
+    )
+    if exit_code is not None:
+        return exit_code
+
+    return None
+
+
+def _reformat_code(our_repo: pathlib.Path) -> Optional[int]:
     """Reformat the generated code."""
-    print("Re-formatting the C# code...")
-    subprocess.check_call(["powershell", "./FormatCode.ps1"], cwd=our_repo / "src")
+    print("Re-formatting the code...")
+    return _execute(cmd=["mvn", "spotless:apply"], cwd=str(our_repo))
 
 
-def _run_tests_and_rerecord(our_repo: pathlib.Path) -> None:
-    """Run the tests with the environment variables set to re-record."""
+def _run_tests_and_rerecord(our_repo: pathlib.Path) -> Optional[int]:
+    """
+    Run the tests with the environment variables set to re-record.
+
+    Return the non-zero exit code if something went wrong.
+    """
     print("Running tests & re-recording the test traces...")
 
     env = os.environ.copy()
-    env["AAS_CORE_AAS3_0_TESTS_TEST_DATA_DIR"] = str(our_repo / "test_data")
     env["AAS_CORE_AAS3_0_TESTS_RECORD_MODE"] = "true"
 
-    subprocess.check_call(["dotnet", "test"], env=env, cwd=our_repo / "src")
+    return _execute(cmd=["mvn", "test"], env=env, cwd=str(our_repo))
 
 
-def _run_check(our_repo: pathlib.Path) -> None:
-    """Run all the pre-commit checks."""
-    subprocess.check_call(["powershell", "./Check.ps1"], cwd=our_repo / "src")
+def _run_check(our_repo: pathlib.Path) -> Optional[int]:
+    """
+    Run all the pre-commit checks.
+
+    Return the non-zero exit code if something went wrong.
+    """
+    return _execute(cmd=["mvn", "spotless:check"], cwd=str(our_repo))
 
 
 def _create_branch_commit_and_push(
@@ -422,6 +524,10 @@ def main() -> int:
     expected_aas_core_testgen_branch = str(args.expected_aas_core_testgen_branch)
 
     expected_our_branch = str(args.expected_our_branch)
+
+    exit_code = _check_all_tools_installed()
+    if exit_code is not None:
+        return exit_code
 
     # region aas-core-meta repo
 
@@ -572,13 +678,17 @@ def main() -> int:
         aas_core_codegen_revision=aas_core_codegen_revision,
     )
 
-    _uninstall_and_install_aas_core_meta(
+    exit_code = _uninstall_and_install_aas_core_meta(
         our_repo=our_repo, aas_core_meta_revision=aas_core_meta_revision
     )
+    if exit_code is not None:
+        return exit_code
 
-    _uninstall_and_install_aas_core_codegen(
+    exit_code = _uninstall_and_install_aas_core_codegen(
         our_repo=our_repo, aas_core_codegen_revision=aas_core_codegen_revision
     )
+    if exit_code is not None:
+        return exit_code
 
     _copy_code_from_aas_core_codegen(
         aas_core_codegen_repo=aas_core_codegen_repo, our_repo=our_repo
@@ -596,11 +706,21 @@ def main() -> int:
 
     _replace_test_data(our_repo=our_repo, aas_core_testgen_repo=aas_core_testgen_repo)
 
-    _reformat_code(our_repo=our_repo)
+    exit_code = _semantically_patch(our_repo=our_repo)
+    if exit_code is not None:
+        return exit_code
 
-    _run_tests_and_rerecord(our_repo=our_repo)
+    exit_code = _reformat_code(our_repo=our_repo)
+    if exit_code is not None:
+        return exit_code
 
-    _run_check(our_repo=our_repo)
+    exit_code = _run_tests_and_rerecord(our_repo=our_repo)
+    if exit_code is not None:
+        return exit_code
+
+    exit_code = _run_check(our_repo=our_repo)
+    if exit_code is not None:
+        return exit_code
 
     _create_branch_commit_and_push(
         our_repo=our_repo,
