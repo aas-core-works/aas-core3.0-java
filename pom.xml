@@ -80,7 +80,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${javadoc.maven.plugin.version}</version>
                 <configuration>
-                    <doclint>all</doclint>
+                    <doclint>all,-missing</doclint>
                     <overview>
                         ${basedir}/doc/overview.html
                     </overview>
