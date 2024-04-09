@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>aas-core-works</groupId>
+    <groupId>io.github.aas-core-works</groupId>
     <artifactId>aas-core3.0-java</artifactId>
     <!--Note: When increasing version for new releases, adjust snippet in overview.html, as well.-->
     <version>1.0.0-rc1</version>
