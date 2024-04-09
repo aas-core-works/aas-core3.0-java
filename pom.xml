@@ -6,7 +6,8 @@
 
     <groupId>aas-core-works</groupId>
     <artifactId>aas-core3.0-java</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <!--Note: When increasing version for new releases, adjust snippet in overview.html, as well.-->
+    <version>1.0.0-rc1</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
