@@ -9,6 +9,42 @@
     <!--Note: When increasing version for new releases, adjust snippet in overview.html, as well.-->
     <version>1.0.0-rc1</version>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Manipulate, verify and de/serialize Asset Administration Shells.</description>
+    <url>https://github.com/aas-core-works/aas-core3.0-java</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Tobias Langer</name>
+            <email>tobias.langer@conplement.de</email>
+            <organization>conplement AG</organization>
+            <organizationUrl>https://www.conplement.de/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Markus Böhm</name>
+            <email>markus.boehm@conplement.de</email>
+            <organization>conplement AG</organization>
+            <organizationUrl>https://www.conplement.de/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Marko Ristin</name>
+            <email>marko@ristin.ch</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com:aas-core-works/aas-core3.0-java.git</connection>
+        <developerConnection>scm:git:ssh://github.com:aas-core-works/aas-core3.0-java.git</developerConnection>
+        <url>https://github.com/aas-core-works/aas-core3.0-java</url>
+    </scm>
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -42,14 +78,6 @@
             <version>${dk.brics.version}</version>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>ossrh</id>
-            <name>Central Repository OSSRH</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
 
     <build>
         <plugins>
@@ -86,6 +114,19 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${javadoc.maven.plugin.version}</version>
                 <configuration>
@@ -94,6 +135,14 @@
                         ${basedir}/doc/overview.html
                     </overview>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -114,6 +163,16 @@
                         <arg>--pinentry-mode</arg>
                         <arg>loopback</arg>
                     </gpgArguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.4.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <tokenAuth>true</tokenAuth>
                 </configuration>
             </plugin>
         </plugins>
