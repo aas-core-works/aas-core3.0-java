@@ -9784,30 +9784,13 @@ public class Jsonization {
         return Result.failure(error);
       }
 
-      IReference theDataSpecification = null;
       IDataSpecificationContent theDataSpecificationContent = null;
+      IReference theDataSpecification = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
 
         switch (currentNode.getKey()) {
-          case "dataSpecification":
-            {
-              if (currentNode.getValue() == null) {
-                continue;
-              }
-
-              final Result<? extends IReference> theDataSpecificationResult =
-                  tryReferenceFrom(currentNode.getValue());
-              if (theDataSpecificationResult.isError()) {
-                theDataSpecificationResult
-                    .getError()
-                    .prependSegment(new Reporting.NameSegment("dataSpecification"));
-                return theDataSpecificationResult.castTo(EmbeddedDataSpecification.class);
-              }
-              theDataSpecification = theDataSpecificationResult.getResult();
-              break;
-            }
           case "dataSpecificationContent":
             {
               if (currentNode.getValue() == null) {
@@ -9825,6 +9808,23 @@ public class Jsonization {
               theDataSpecificationContent = theDataSpecificationContentResult.getResult();
               break;
             }
+          case "dataSpecification":
+            {
+              if (currentNode.getValue() == null) {
+                continue;
+              }
+
+              final Result<? extends IReference> theDataSpecificationResult =
+                  tryReferenceFrom(currentNode.getValue());
+              if (theDataSpecificationResult.isError()) {
+                theDataSpecificationResult
+                    .getError()
+                    .prependSegment(new Reporting.NameSegment("dataSpecification"));
+                return theDataSpecificationResult.castTo(EmbeddedDataSpecification.class);
+              }
+              theDataSpecification = theDataSpecificationResult.getResult();
+              break;
+            }
           default:
             {
               final Reporting.Error error =
@@ -9834,12 +9834,6 @@ public class Jsonization {
         }
       }
 
-      if (theDataSpecification == null) {
-        final Reporting.Error error =
-            new Reporting.Error("Required property \"dataSpecification\" is missing");
-        return Result.failure(error);
-      }
-
       if (theDataSpecificationContent == null) {
         final Reporting.Error error =
             new Reporting.Error("Required property \"dataSpecificationContent\" is missing");
@@ -9847,7 +9841,7 @@ public class Jsonization {
       }
 
       return Result.success(
-          new EmbeddedDataSpecification(theDataSpecification, theDataSpecificationContent));
+          new EmbeddedDataSpecification(theDataSpecificationContent, theDataSpecification));
     }
 
     /**
@@ -13433,9 +13427,11 @@ public class Jsonization {
     public JsonNode transformEmbeddedDataSpecification(IEmbeddedDataSpecification that) {
       final ObjectNode result = JsonNodeFactory.instance.objectNode();
 
-      result.set("dataSpecification", transform(that.getDataSpecification()));
-
       result.set("dataSpecificationContent", transform(that.getDataSpecificationContent()));
+
+      if (that.getDataSpecification().isPresent()) {
+        result.set("dataSpecification", transform(that.getDataSpecification().get()));
+      }
 
       return result;
     }

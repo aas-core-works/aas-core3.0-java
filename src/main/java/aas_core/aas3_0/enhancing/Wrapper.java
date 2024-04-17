@@ -3197,17 +3197,6 @@ class Wrapper<EnhancementT> extends AbstractTransformer<IClass> {
       throw new IllegalArgumentException("The instance has been already enhanced: " + that);
     }
 
-    IReference dataSpecification = that.getDataSpecification();
-    IClass transformedDataSpecification = transform(dataSpecification);
-    if (!(transformedDataSpecification instanceof IReference)) {
-      throw new UnsupportedOperationException(
-          "Expected the transformed value to be a IReference "
-              + ", but got: "
-              + transformedDataSpecification);
-    }
-    IReference castedDataSpecification = (IReference) transformedDataSpecification;
-    that.setDataSpecification(castedDataSpecification);
-
     IDataSpecificationContent dataSpecificationContent = that.getDataSpecificationContent();
     IClass transformedDataSpecificationContent = transform(dataSpecificationContent);
     if (!(transformedDataSpecificationContent instanceof IDataSpecificationContent)) {
@@ -3219,6 +3208,19 @@ class Wrapper<EnhancementT> extends AbstractTransformer<IClass> {
     IDataSpecificationContent castedDataSpecificationContent =
         (IDataSpecificationContent) transformedDataSpecificationContent;
     that.setDataSpecificationContent(castedDataSpecificationContent);
+
+    if (that.getDataSpecification().isPresent()) {
+      IReference dataSpecification = that.getDataSpecification().get();
+      IClass transformedDataSpecification = transform(dataSpecification);
+      if (!(transformedDataSpecification instanceof IReference)) {
+        throw new UnsupportedOperationException(
+            "Expected the transformed value to be a IReference "
+                + ", but got: "
+                + transformedDataSpecification);
+      }
+      IReference castedDataSpecification = (IReference) transformedDataSpecification;
+      that.setDataSpecification(castedDataSpecification);
+    }
 
     Optional<EnhancementT> enhancement = enhancementFactory.apply(that);
     return !enhancement.isPresent()

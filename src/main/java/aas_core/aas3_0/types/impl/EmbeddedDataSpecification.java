@@ -14,6 +14,7 @@ import aas_core.aas3_0.visitation.IVisitor;
 import aas_core.aas3_0.visitation.IVisitorWithContext;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -21,32 +22,24 @@ import java.util.stream.StreamSupport;
 
 /** Embed the content of a data specification. */
 public class EmbeddedDataSpecification implements IEmbeddedDataSpecification {
-  /** Reference to the data specification */
-  private IReference dataSpecification;
-
   /** Actual content of the data specification */
   private IDataSpecificationContent dataSpecificationContent;
 
-  public EmbeddedDataSpecification(
-      IReference dataSpecification, IDataSpecificationContent dataSpecificationContent) {
-    this.dataSpecification =
-        Objects.requireNonNull(
-            dataSpecification, "Argument \"dataSpecification\" must be non-null.");
+  /** Reference to the data specification */
+  private IReference dataSpecification;
+
+  public EmbeddedDataSpecification(IDataSpecificationContent dataSpecificationContent) {
     this.dataSpecificationContent =
         Objects.requireNonNull(
             dataSpecificationContent, "Argument \"dataSpecificationContent\" must be non-null.");
   }
 
-  @Override
-  public IReference getDataSpecification() {
-    return dataSpecification;
-  }
-
-  @Override
-  public void setDataSpecification(IReference dataSpecification) {
-    this.dataSpecification =
+  public EmbeddedDataSpecification(
+      IDataSpecificationContent dataSpecificationContent, IReference dataSpecification) {
+    this.dataSpecificationContent =
         Objects.requireNonNull(
-            dataSpecification, "Argument \"dataSpecification\" must be non-null.");
+            dataSpecificationContent, "Argument \"dataSpecificationContent\" must be non-null.");
+    this.dataSpecification = dataSpecification;
   }
 
   @Override
@@ -59,6 +52,16 @@ public class EmbeddedDataSpecification implements IEmbeddedDataSpecification {
     this.dataSpecificationContent =
         Objects.requireNonNull(
             dataSpecificationContent, "Argument \"dataSpecificationContent\" must be non-null.");
+  }
+
+  @Override
+  public Optional<IReference> getDataSpecification() {
+    return Optional.ofNullable(dataSpecification);
+  }
+
+  @Override
+  public void setDataSpecification(IReference dataSpecification) {
+    this.dataSpecification = dataSpecification;
   }
 
   /** Iterate recursively over all the class instances referenced from this instance. */
@@ -126,17 +129,17 @@ public class EmbeddedDataSpecification implements IEmbeddedDataSpecification {
     private Stream<IClass> stream() {
       Stream<IClass> memberStream = Stream.empty();
 
-      if (dataSpecification != null) {
-        memberStream =
-            Stream.concat(
-                memberStream, Stream.<IClass>of(EmbeddedDataSpecification.this.dataSpecification));
-      }
-
       if (dataSpecificationContent != null) {
         memberStream =
             Stream.concat(
                 memberStream,
                 Stream.<IClass>of(EmbeddedDataSpecification.this.dataSpecificationContent));
+      }
+
+      if (dataSpecification != null) {
+        memberStream =
+            Stream.concat(
+                memberStream, Stream.<IClass>of(EmbeddedDataSpecification.this.dataSpecification));
       }
 
       return memberStream;
@@ -168,17 +171,6 @@ public class EmbeddedDataSpecification implements IEmbeddedDataSpecification {
     private Stream<IClass> stream() {
       Stream<IClass> memberStream = Stream.empty();
 
-      if (dataSpecification != null) {
-        memberStream =
-            Stream.concat(
-                memberStream,
-                Stream.concat(
-                    Stream.<IClass>of(EmbeddedDataSpecification.this.dataSpecification),
-                    StreamSupport.stream(
-                        EmbeddedDataSpecification.this.dataSpecification.descend().spliterator(),
-                        false)));
-      }
-
       if (dataSpecificationContent != null) {
         memberStream =
             Stream.concat(
@@ -190,6 +182,17 @@ public class EmbeddedDataSpecification implements IEmbeddedDataSpecification {
                             .dataSpecificationContent
                             .descend()
                             .spliterator(),
+                        false)));
+      }
+
+      if (dataSpecification != null) {
+        memberStream =
+            Stream.concat(
+                memberStream,
+                Stream.concat(
+                    Stream.<IClass>of(EmbeddedDataSpecification.this.dataSpecification),
+                    StreamSupport.stream(
+                        EmbeddedDataSpecification.this.dataSpecification.descend().spliterator(),
                         false)));
       }
 
