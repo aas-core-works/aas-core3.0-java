@@ -30,6 +30,7 @@ setup(
     install_requires=[
         "aas-core-meta@git+https://github.com/aas-core-works/aas-core-meta@6d5411b#egg=aas-core-meta",
         "aas-core-codegen@git+https://github.com/aas-core-works/aas-core-codegen@5a9ef8c6#egg=aas-core-codegen",
+        "lxml",
     ],
     py_modules=["test_codegen"],
 )
