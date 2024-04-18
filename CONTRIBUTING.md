@@ -62,7 +62,7 @@ pip3 install -e .
 Now you can run the generation scripts:
 
 ```
-python testgen/generate_all.py
+python test_codegen/generate_all.py
 ```
 
 ### Test Data
