@@ -88,7 +88,7 @@ We develop using the feature branches, see [this section of the Git book].
 
 If you are a member of the development team, create a feature branch directly within the repository.
 
-Otherwise, if you are a non-member contributor, fork the repository and create the feature branch in your forked repository. See [this GitHub tuturial] for more guidance.
+Otherwise, if you are a non-member contributor, fork the repository and create the feature branch in your forked repository. See [this GitHub tutorial] for more guidance.
 
 [this GitHub tutorial]: https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork
 
