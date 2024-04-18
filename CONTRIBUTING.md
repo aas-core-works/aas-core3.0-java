@@ -84,18 +84,18 @@ TODO
 **Feature branches**.
 We develop using the feature branches, see [this section of the Git book].
 
-[this section of the Git book]: https://git-scm.com/book/en/v2/Git-Branching-Branching-Workflows 
+[this section of the Git book]: https://git-scm.com/book/en/v2/Git-Branching-Branching-Workflows
 
 If you are a member of the development team, create a feature branch directly within the repository.
 
-Otherwise, if you are a non-member contributor, fork the repository and create the feature branch in your forked repository. See [this GitHub tuturial] for more guidance. 
+Otherwise, if you are a non-member contributor, fork the repository and create the feature branch in your forked repository. See [this GitHub tuturial] for more guidance.
 
 [this GitHub tutorial]: https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork
 
 **Branch Prefix**.
 Please prefix the branch with your Github user name (*e.g.,* `mristin/Add-some-feature`).
 
-**Continuous Integration**. 
+**Continuous Integration**.
 GitHub will run the continuous integration (CI) automatically through GitHub actions.
 The CI includes building the solution, running the test, inspecting the code *etc.*
 
