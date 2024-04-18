@@ -100,12 +100,12 @@ public class MultiLanguagePropertyBuilder {
     return this;
   }
 
-  public MultiLanguagePropertyBuilder setIdshort(String idShort) {
+  public MultiLanguagePropertyBuilder setIdShort(String idShort) {
     this.idShort = idShort;
     return this;
   }
 
-  public MultiLanguagePropertyBuilder setDisplayname(List<ILangStringNameType> displayName) {
+  public MultiLanguagePropertyBuilder setDisplayName(List<ILangStringNameType> displayName) {
     this.displayName = displayName;
     return this;
   }
@@ -115,12 +115,12 @@ public class MultiLanguagePropertyBuilder {
     return this;
   }
 
-  public MultiLanguagePropertyBuilder setSemanticid(IReference semanticId) {
+  public MultiLanguagePropertyBuilder setSemanticId(IReference semanticId) {
     this.semanticId = semanticId;
     return this;
   }
 
-  public MultiLanguagePropertyBuilder setSupplementalsemanticids(
+  public MultiLanguagePropertyBuilder setSupplementalSemanticIds(
       List<IReference> supplementalSemanticIds) {
     this.supplementalSemanticIds = supplementalSemanticIds;
     return this;
@@ -131,7 +131,7 @@ public class MultiLanguagePropertyBuilder {
     return this;
   }
 
-  public MultiLanguagePropertyBuilder setEmbeddeddataspecifications(
+  public MultiLanguagePropertyBuilder setEmbeddedDataSpecifications(
       List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;
@@ -142,7 +142,7 @@ public class MultiLanguagePropertyBuilder {
     return this;
   }
 
-  public MultiLanguagePropertyBuilder setValueid(IReference valueId) {
+  public MultiLanguagePropertyBuilder setValueId(IReference valueId) {
     this.valueId = valueId;
     return this;
   }

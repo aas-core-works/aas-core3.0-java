@@ -102,12 +102,12 @@ public class RelationshipElementBuilder {
     return this;
   }
 
-  public RelationshipElementBuilder setIdshort(String idShort) {
+  public RelationshipElementBuilder setIdShort(String idShort) {
     this.idShort = idShort;
     return this;
   }
 
-  public RelationshipElementBuilder setDisplayname(List<ILangStringNameType> displayName) {
+  public RelationshipElementBuilder setDisplayName(List<ILangStringNameType> displayName) {
     this.displayName = displayName;
     return this;
   }
@@ -117,12 +117,12 @@ public class RelationshipElementBuilder {
     return this;
   }
 
-  public RelationshipElementBuilder setSemanticid(IReference semanticId) {
+  public RelationshipElementBuilder setSemanticId(IReference semanticId) {
     this.semanticId = semanticId;
     return this;
   }
 
-  public RelationshipElementBuilder setSupplementalsemanticids(
+  public RelationshipElementBuilder setSupplementalSemanticIds(
       List<IReference> supplementalSemanticIds) {
     this.supplementalSemanticIds = supplementalSemanticIds;
     return this;
@@ -133,7 +133,7 @@ public class RelationshipElementBuilder {
     return this;
   }
 
-  public RelationshipElementBuilder setEmbeddeddataspecifications(
+  public RelationshipElementBuilder setEmbeddedDataSpecifications(
       List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;

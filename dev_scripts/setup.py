@@ -29,7 +29,7 @@ setup(
     packages=find_packages(exclude=["tests", "continuous_integration", "dev_scripts"]),
     install_requires=[
         "aas-core-meta@git+https://github.com/aas-core-works/aas-core-meta@6d5411b#egg=aas-core-meta",
-        "aas-core-codegen@git+https://github.com/aas-core-works/aas-core-codegen@d06db62#egg=aas-core-codegen",
+        "aas-core-codegen@git+https://github.com/aas-core-works/aas-core-codegen@5a9ef8c6#egg=aas-core-codegen",
     ],
     py_modules=["test_codegen"],
 )
