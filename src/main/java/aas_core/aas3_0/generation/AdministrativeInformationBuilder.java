@@ -36,7 +36,7 @@ public class AdministrativeInformationBuilder {
    */
   private String templateId;
 
-  public AdministrativeInformationBuilder setEmbeddeddataspecifications(
+  public AdministrativeInformationBuilder setEmbeddedDataSpecifications(
       List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;
@@ -57,7 +57,7 @@ public class AdministrativeInformationBuilder {
     return this;
   }
 
-  public AdministrativeInformationBuilder setTemplateid(String templateId) {
+  public AdministrativeInformationBuilder setTemplateId(String templateId) {
     this.templateId = templateId;
     return this;
   }

@@ -25,7 +25,7 @@ public class ResourceBuilder {
     this.path = Objects.requireNonNull(path, "Argument \"path\" must be non-null.");
   }
 
-  public ResourceBuilder setContenttype(String contentType) {
+  public ResourceBuilder setContentType(String contentType) {
     this.contentType = contentType;
     return this;
   }

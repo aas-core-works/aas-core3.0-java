@@ -108,12 +108,12 @@ public class AnnotatedRelationshipElementBuilder {
     return this;
   }
 
-  public AnnotatedRelationshipElementBuilder setIdshort(String idShort) {
+  public AnnotatedRelationshipElementBuilder setIdShort(String idShort) {
     this.idShort = idShort;
     return this;
   }
 
-  public AnnotatedRelationshipElementBuilder setDisplayname(List<ILangStringNameType> displayName) {
+  public AnnotatedRelationshipElementBuilder setDisplayName(List<ILangStringNameType> displayName) {
     this.displayName = displayName;
     return this;
   }
@@ -123,12 +123,12 @@ public class AnnotatedRelationshipElementBuilder {
     return this;
   }
 
-  public AnnotatedRelationshipElementBuilder setSemanticid(IReference semanticId) {
+  public AnnotatedRelationshipElementBuilder setSemanticId(IReference semanticId) {
     this.semanticId = semanticId;
     return this;
   }
 
-  public AnnotatedRelationshipElementBuilder setSupplementalsemanticids(
+  public AnnotatedRelationshipElementBuilder setSupplementalSemanticIds(
       List<IReference> supplementalSemanticIds) {
     this.supplementalSemanticIds = supplementalSemanticIds;
     return this;
@@ -139,7 +139,7 @@ public class AnnotatedRelationshipElementBuilder {
     return this;
   }
 
-  public AnnotatedRelationshipElementBuilder setEmbeddeddataspecifications(
+  public AnnotatedRelationshipElementBuilder setEmbeddedDataSpecifications(
       List<IEmbeddedDataSpecification> embeddedDataSpecifications) {
     this.embeddedDataSpecifications = embeddedDataSpecifications;
     return this;

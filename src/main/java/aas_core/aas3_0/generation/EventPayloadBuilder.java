@@ -65,12 +65,12 @@ public class EventPayloadBuilder {
     this.timeStamp = Objects.requireNonNull(timeStamp, "Argument \"timeStamp\" must be non-null.");
   }
 
-  public EventPayloadBuilder setSourcesemanticid(IReference sourceSemanticId) {
+  public EventPayloadBuilder setSourceSemanticId(IReference sourceSemanticId) {
     this.sourceSemanticId = sourceSemanticId;
     return this;
   }
 
-  public EventPayloadBuilder setObservablesemanticid(IReference observableSemanticId) {
+  public EventPayloadBuilder setObservableSemanticId(IReference observableSemanticId) {
     this.observableSemanticId = observableSemanticId;
     return this;
   }
@@ -80,7 +80,7 @@ public class EventPayloadBuilder {
     return this;
   }
 
-  public EventPayloadBuilder setSubjectid(IReference subjectId) {
+  public EventPayloadBuilder setSubjectId(IReference subjectId) {
     this.subjectId = subjectId;
     return this;
   }
