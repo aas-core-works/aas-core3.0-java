@@ -21,6 +21,13 @@ jobs:
           distribution: 'corretto'
           cache: maven
 
+      - name: Check version info
+        run: |
+          pushd ./dev_scripts
+          pip3 install "."
+          popd
+          python3 ./dev_scripts/check_docs_package_version.py --validate
+
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
