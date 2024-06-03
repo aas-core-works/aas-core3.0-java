@@ -37,7 +37,6 @@ def _generate_assert_serialize_deserialize_equals_original() -> Stripped:
     return Stripped(
         f"""\
 private static void assertSerializeDeserializeEqualsOriginal(IClass instance, Path path) throws XMLStreamException, IOException {{
-
 {I}final StringWriter stringOut = new StringWriter();
 {I}final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
 {I}final XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(stringOut);
@@ -75,7 +74,6 @@ private static void assertSerializeDeserializeEqualsOriginal(IClass instance, Pa
 {IIII}"The original XML from " + path + " is unequal the serialized XML: " + error.getCause()
 {II}));
 {I}}});
-
 }}"""
     )
 
@@ -124,7 +122,6 @@ def _generate_check_elements_equal() -> Stripped:
     return Stripped(
         f"""\
 public static Optional<Reporting.Error> checkElementsEqual(XMLEvent expected, String expectedContent, Map<XMLEvent, String> outputMap) {{
-
 {I}switch (expected.getEventType()) {{
 {II}case XMLStreamConstants.START_ELEMENT: {{
 {III}final String expectedName = expected.asStartElement()
@@ -226,7 +223,6 @@ def _generate_for_self_contained(
             f"""\
 @Test
 public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
-
 {I}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
 {II}"Xml",
 {II}"SelfContained",
@@ -323,7 +319,6 @@ def _generate_for_contained_in_environment(
             f"""\
 @Test
 public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
-
 {I}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
 {II}"Xml",
 {II}"ContainedInEnvironment",
