@@ -43,9 +43,6 @@ def main() -> int:
         container_cls = test_data_io.determine_container_class(
             cls=our_type, test_data_dir=test_data_dir, environment_cls=environment_cls
         )
-        container_cls_java = aas_core_codegen.java.naming.class_name(
-            container_cls.name
-        )
 
         cls_name_java = aas_core_codegen.java.naming.class_name(our_type.name)
         cls_name_json = aas_core_codegen.naming.json_model_type(our_type.name)
