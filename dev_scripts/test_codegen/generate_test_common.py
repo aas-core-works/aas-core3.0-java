@@ -32,7 +32,7 @@ public static List<Path> findPaths(Path path, String fileExtension) throws IOExc
 {I}return result;
 }}""")
 
-def _generate_must_find()-> Stripped:
+def _generate_must_find() -> Stripped:
     return Stripped(f"""\
 @SuppressWarnings("unchecked")
 public static <T extends IClass> T mustFind(String type, IClass container) {{
@@ -52,7 +52,7 @@ public static <T extends IClass> T mustFind(String type, IClass container) {{
 {I}return (T)instance;
 }}""")
 
-def _generate_assert_no_verification_errors()-> Stripped:
+def _generate_assert_no_verification_errors() -> Stripped:
     return Stripped(f"""\
 public static void assertNoVerificationErrors(List<Reporting.Error> errors, Path path){{
 
@@ -73,14 +73,14 @@ public static void assertNoVerificationErrors(List<Reporting.Error> errors, Path
 {I}}}
 }}""")
 
-def _generate_as_list()-> Stripped:
+def _generate_as_list() -> Stripped:
     return Stripped(f"""\
 public static <T> List<T> asList(Iterable<T> iterable) {{
 {I}return StreamSupport.stream(iterable.spliterator(), false)
 {II}.collect(Collectors.toList());
 }}""")
 
-def _generate_assert_equals_expected_or_rerecord_verification_errors()-> Stripped:
+def _generate_assert_equals_expected_or_rerecord_verification_errors() -> Stripped:
     return Stripped(f"""\
 public static void assertEqualsExpectedOrRerecordVerificationErrors(List<Reporting.Error> errors, Path path) throws IOException {{
 {I}if (errors.isEmpty()) {{
@@ -100,7 +100,7 @@ public static void assertEqualsExpectedOrRerecordVerificationErrors(List<Reporti
 }}""")
 
 
-def _generate_assert_equals_expected_or_rerecord_deserialization_exception()-> Stripped:
+def _generate_assert_equals_expected_or_rerecord_deserialization_exception() -> Stripped:
     return Stripped(f"""\
 public static void assertEqualsExpectedOrRerecordDeserializationException(Xmlization.DeserializeException exception, Path path) throws IOException {{
 {I}if (exception == null) {{
