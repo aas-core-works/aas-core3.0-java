@@ -5,7 +5,7 @@ import os
 import pathlib
 import sys
 import textwrap
-from typing import List, Optional
+from typing import List
 
 import aas_core_codegen
 import aas_core_codegen.common
@@ -16,7 +16,6 @@ import aas_core_codegen.run
 from aas_core_codegen import intermediate
 from aas_core_codegen.common import Stripped, Identifier
 from aas_core_codegen.java import (
-    common as java_common,
     naming as java_naming,
 )
 from aas_core_codegen.java.common import (
