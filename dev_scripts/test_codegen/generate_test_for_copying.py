@@ -325,8 +325,8 @@ def _generate_deep_equals_transformer(
 
     writer = io.StringIO()
     writer.write(
-        f"""\
-private static class DeepEqualTransformer extends AbstractTransformerWithContext<IClass, Boolean> {{
+        """\
+private static class DeepEqualTransformer extends AbstractTransformerWithContext<IClass, Boolean> {
 """
     )
 
