@@ -102,7 +102,7 @@ import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestEnhancing {{
+public class TestEnhancing {
 """
     )
 
