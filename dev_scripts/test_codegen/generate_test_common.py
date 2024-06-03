@@ -15,10 +15,9 @@ from aas_core_codegen.java.common import (
     INDENT5 as IIIII,
 )
 
-def _generate_find_paths()-> Stripped:
+def _generate_find_paths() -> Stripped:
     return Stripped(f"""\
 public static List<Path> findPaths(Path path, String fileExtension) throws IOException {{
-
 {I}if (!Files.isDirectory(path)) {{
 {II}throw new IllegalArgumentException("Path must be a directory!");
 {I}}}
@@ -28,6 +27,22 @@ public static List<Path> findPaths(Path path, String fileExtension) throws IOExc
 {II}result = walk
 {III}.filter(p -> !Files.isDirectory(p))
 {III}.filter(f -> f.toString().endsWith(fileExtension))
+{III}.collect(Collectors.toList());
+{I}}}
+{I}return result;
+}}""")
+
+def _generate_find_dirs() -> Stripped:
+    return Stripped(f"""\
+public static List<Path> findDirs(Path path) throws IOException {{
+{I}if (!Files.isDirectory(path)) {{
+{II}throw new IllegalArgumentException("Path must be a directory!");
+{I}}}
+
+{I}List<Path> result;
+{I}try (Stream<Path> walk = Files.walk(path)) {{
+{II}result = walk
+{III}.filter(p -> Files.isDirectory(p))
 {III}.collect(Collectors.toList());
 {I}}}
 {I}return result;
@@ -136,6 +151,7 @@ def main() -> int:
     repo_root = this_path.parent.parent.parent
     blocks = [
         _generate_find_paths(),
+        _generate_find_dirs(),
         _generate_must_find(),
         _generate_assert_no_verification_errors(),
         _generate_as_list(),
@@ -172,7 +188,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
 * Provide methods for testing.
 */
-public class Common{{
+public class Common {{
 {I}public static final boolean RECORD_MODE = System.getenv("AAS_CORE_AAS3_0_TESTS_RECORD_MODE") != null && System.getenv("AAS_CORE_AAS3_0_TESTS_RECORD_MODE")
 {II}.equalsIgnoreCase("true");
 

@@ -1,4 +1,0 @@
-assetAdministrationShells[0].administration.revision: Invariant violated:
-The value must not be empty.;
-assetAdministrationShells[0].administration.revision: Invariant violated:
-Revision type shall match the revision pattern.
