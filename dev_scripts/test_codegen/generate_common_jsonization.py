@@ -16,6 +16,10 @@ import aas_core_codegen.run
 from aas_core_codegen import intermediate
 from aas_core_codegen.common import Stripped
 from aas_core_codegen.java import common as java_common
+from aas_core_codegen.java.common import (
+    INDENT as I,
+    INDENT2 as II,
+)
 
 import test_codegen.common
 from test_codegen import test_data_io
@@ -68,29 +72,29 @@ final Environment container = Jsonization.Deserialize.deserializeEnvironment(nod
             Stripped(
                 f"""\
 public static {cls_name_java} loadMaximal{cls_name_java}() throws IOException {{
-    final Path path = Paths.get(Common.TEST_DATA_DIR,
-        "Json",
-        {java_common.string_literal(container_kind_directory)},
-        "Expected",
-        {java_common.string_literal(cls_name_json)},
-        "maximal.json");
-    final ObjectMapper objectMapper = new ObjectMapper();
-    final JsonNode node = objectMapper.readTree(path.toFile());
-    {aas_core_codegen.common.indent_but_first_line(deserialization_snippet, indent)}
-    return Common.mustFind("{cls_name_java}",container);
+{I}final Path path = Paths.get(Common.TEST_DATA_DIR,
+{II}"Json",
+{II}{java_common.string_literal(container_kind_directory)},
+{II}"Expected",
+{II}{java_common.string_literal(cls_name_json)},
+{II}"maximal.json");
+{I}final ObjectMapper objectMapper = new ObjectMapper();
+{I}final JsonNode node = objectMapper.readTree(path.toFile());
+{I}{aas_core_codegen.common.indent_but_first_line(deserialization_snippet, indent)}
+{I}return Common.mustFind("{cls_name_java}",container);
 }}  // public static loadMaximal{cls_name_java}
 
 public static {cls_name_java} loadMinimal{cls_name_java}() throws IOException {{
-    final Path path = Paths.get(Common.TEST_DATA_DIR,
-        "Json",
-        {java_common.string_literal(container_kind_directory)},
-        "Expected",
-        {java_common.string_literal(cls_name_json)},
-        "minimal.json");
-    final ObjectMapper objectMapper = new ObjectMapper();
-    final JsonNode node = objectMapper.readTree(path.toFile());
-    {aas_core_codegen.common.indent_but_first_line(deserialization_snippet, indent)}
-    return Common.mustFind("{cls_name_java}",container);
+{I}final Path path = Paths.get(Common.TEST_DATA_DIR,
+{II}"Json",
+{II}{java_common.string_literal(container_kind_directory)},
+{II}"Expected",
+{II}{java_common.string_literal(cls_name_json)},
+{II}"minimal.json");
+{I}final ObjectMapper objectMapper = new ObjectMapper();
+{I}final JsonNode node = objectMapper.readTree(path.toFile());
+{I}{aas_core_codegen.common.indent_but_first_line(deserialization_snippet, indent)}
+{I}return Common.mustFind("{cls_name_java}",container);
 }}  // public static loadMinimal{cls_name_java}"""
             )
         )
@@ -123,7 +127,7 @@ public class CommonJsonization{
         if i > 0:
             writer.write("\n\n")
 
-        writer.write(textwrap.indent(block, "        "))
+        writer.write(textwrap.indent(block, I))
 
     writer.write(
         """
