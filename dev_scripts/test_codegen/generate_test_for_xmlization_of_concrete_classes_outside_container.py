@@ -104,7 +104,7 @@ import java.io.StringWriter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-/** 
+/**
 * Test de/serialization of classes contained in a container <i>outside</i>
 * of that container.
 * This is necessary so that we also test the methods that directly de/serialize
