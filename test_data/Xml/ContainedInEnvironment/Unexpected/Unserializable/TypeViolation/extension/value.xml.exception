@@ -1,0 +1,1 @@
+Expected an XML end element to conclude a property of class Extension with the element name value, but got the node of type Start-Element with the value <['https://admin-shell.io/aas/3/0']::reference> at: environment/assetAdministrationShells/*[0]/extensions/*[0]

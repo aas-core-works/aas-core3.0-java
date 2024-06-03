@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 public class TestXmlizationOfConcreteClasses {
   private static void assertSerializeDeserializeEqualsOriginal(IClass instance, Path path)
       throws XMLStreamException, IOException {
-
     final StringWriter stringOut = new StringWriter();
     final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
     final XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(stringOut);
@@ -96,7 +95,6 @@ public class TestXmlizationOfConcreteClasses {
 
   private static String readContent(XMLEventReader reader) throws XMLStreamException {
     final StringBuilder content = new StringBuilder();
-
     while (reader.hasNext()
             && reader.peek().isCharacters()
             && !reader.peek().asCharacters().isWhiteSpace()
@@ -112,7 +110,6 @@ public class TestXmlizationOfConcreteClasses {
 
   public static Optional<Reporting.Error> checkElementsEqual(
       XMLEvent expected, String expectedContent, Map<XMLEvent, String> outputMap) {
-
     switch (expected.getEventType()) {
       case XMLStreamConstants.START_ELEMENT:
         {
@@ -166,7 +163,9 @@ public class TestXmlizationOfConcreteClasses {
           return Optional.empty();
         }
       default:
-        throw new IllegalStateException("Unexpected event type in check elements equal.");
+        {
+          throw new IllegalStateException("Unexpected event type in check elements equal.");
+        }
     }
   }
 
@@ -206,7 +205,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testExtensionOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "extension");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -217,21 +215,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testExtensionDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "extension");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("extension");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -240,20 +237,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testExtensionVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "extension");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("extension");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -262,7 +255,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testAdministrativeInformationOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -279,21 +271,20 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testAdministrativeInformationDeserializationFail()
       throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "administrativeInformation");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("administrativeInformation");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -303,20 +294,16 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testAdministrativeInformationVerificationFail()
       throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "administrativeInformation");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("administrativeInformation");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -325,7 +312,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testQualifierOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "qualifier");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -336,21 +322,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testQualifierDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "qualifier");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("qualifier");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -359,20 +344,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testQualifierVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "qualifier");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("qualifier");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -381,7 +362,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testAssetAdministrationShellOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -398,21 +378,20 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testAssetAdministrationShellDeserializationFail()
       throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "assetAdministrationShell");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("assetAdministrationShell");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -422,20 +401,16 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testAssetAdministrationShellVerificationFail()
       throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "assetAdministrationShell");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("assetAdministrationShell");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -444,7 +419,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testAssetInformationOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "assetInformation");
@@ -456,21 +430,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testAssetInformationDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "assetInformation");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("assetInformation");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -479,20 +452,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testAssetInformationVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "assetInformation");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("assetInformation");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -501,7 +470,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testResourceOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "resource");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -512,21 +480,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testResourceDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "resource");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("resource");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -535,20 +502,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testResourceVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "resource");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("resource");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -557,7 +520,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testSpecificAssetIdOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "specificAssetId");
@@ -569,21 +531,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testSpecificAssetIdDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "specificAssetId");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("specificAssetId");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -592,20 +553,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testSpecificAssetIdVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "specificAssetId");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("specificAssetId");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -614,7 +571,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testSubmodelOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "submodel");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -625,21 +581,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testSubmodelDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "submodel");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("submodel");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -648,20 +603,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testSubmodelVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "submodel");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("submodel");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -670,7 +621,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testRelationshipElementOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -686,21 +636,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testRelationshipElementDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "relationshipElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("relationshipElement");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -709,20 +658,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testRelationshipElementVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "relationshipElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("relationshipElement");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -731,7 +676,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testSubmodelElementListOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -747,21 +691,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testSubmodelElementListDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "submodelElementList");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("submodelElementList");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -770,20 +713,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testSubmodelElementListVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "submodelElementList");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("submodelElementList");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -792,7 +731,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testSubmodelElementCollectionOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -809,21 +747,20 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testSubmodelElementCollectionDeserializationFail()
       throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "submodelElementCollection");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("submodelElementCollection");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -833,20 +770,16 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testSubmodelElementCollectionVerificationFail()
       throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "submodelElementCollection");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("submodelElementCollection");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -855,7 +788,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testPropertyOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "property");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -866,21 +798,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testPropertyDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "property");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("property");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -889,20 +820,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testPropertyVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "property");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("property");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -911,7 +838,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testMultiLanguagePropertyOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -928,21 +854,20 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testMultiLanguagePropertyDeserializationFail()
       throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "multiLanguageProperty");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("multiLanguageProperty");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -951,20 +876,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testMultiLanguagePropertyVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "multiLanguageProperty");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("multiLanguageProperty");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -973,7 +894,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testRangeOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "range");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -984,16 +904,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testRangeDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", cause, "range");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("range");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1002,15 +926,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testRangeVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", cause, "range");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("range");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1019,7 +944,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testReferenceElementOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "referenceElement");
@@ -1031,21 +955,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testReferenceElementDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "referenceElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("referenceElement");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1054,20 +977,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testReferenceElementVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "referenceElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("referenceElement");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1076,7 +995,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testBlobOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "blob");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -1087,16 +1005,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testBlobDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", cause, "blob");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("blob");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1105,15 +1027,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testBlobVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", cause, "blob");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("blob");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1122,7 +1045,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testFileOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "file");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -1133,16 +1055,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testFileDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", cause, "file");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("file");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1151,15 +1077,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testFileVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", cause, "file");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("file");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1168,7 +1095,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testAnnotatedRelationshipElementOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -1185,21 +1111,20 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testAnnotatedRelationshipElementDeserializationFail()
       throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "annotatedRelationshipElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("annotatedRelationshipElement");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1209,20 +1134,16 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testAnnotatedRelationshipElementVerificationFail()
       throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "annotatedRelationshipElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("annotatedRelationshipElement");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1231,7 +1152,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testEntityOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "entity");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -1242,16 +1162,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testEntityDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", cause, "entity");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("entity");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1260,15 +1184,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testEntityVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", cause, "entity");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("entity");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1277,7 +1202,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testEventPayloadOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "SelfContained", "Expected", "eventPayload");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -1295,16 +1219,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testEventPayloadDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "SelfContained", "Unexpected", cause, "eventPayload");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "SelfContained", "Unexpected", "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("eventPayload");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         final XMLEventReader xmlReader =
@@ -1322,15 +1246,15 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testEventPayloadVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "SelfContained", "Unexpected", cause, "eventPayload");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(Common.TEST_DATA_DIR, "Xml", "SelfContained", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("eventPayload");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         final XMLEventReader xmlReader =
@@ -1345,7 +1269,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testBasicEventElementOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "basicEventElement");
@@ -1357,21 +1280,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testBasicEventElementDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "basicEventElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("basicEventElement");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1380,20 +1302,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testBasicEventElementVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "basicEventElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("basicEventElement");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1402,7 +1320,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testOperationOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "operation");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -1413,21 +1330,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testOperationDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "operation");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("operation");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1436,20 +1352,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testOperationVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "operation");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("operation");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1458,7 +1370,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testOperationVariableOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "operationVariable");
@@ -1470,21 +1381,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testOperationVariableDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "operationVariable");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("operationVariable");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1493,20 +1403,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testOperationVariableVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "operationVariable");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("operationVariable");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1515,7 +1421,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testCapabilityOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "capability");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -1526,21 +1431,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testCapabilityDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "capability");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("capability");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1549,20 +1453,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testCapabilityVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "capability");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("capability");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1571,7 +1471,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testConceptDescriptionOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -1587,21 +1486,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testConceptDescriptionDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "conceptDescription");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("conceptDescription");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1610,20 +1508,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testConceptDescriptionVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "conceptDescription");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("conceptDescription");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1632,7 +1526,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testReferenceOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "reference");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -1643,21 +1536,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testReferenceDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "reference");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("reference");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1666,20 +1558,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testReferenceVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "reference");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("reference");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1688,7 +1576,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testKeyOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "key");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -1699,16 +1586,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testKeyDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", cause, "key");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("key");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1717,15 +1608,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testKeyVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", cause, "key");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("key");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1734,7 +1626,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testLangStringNameTypeOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -1750,21 +1641,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testLangStringNameTypeDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "langStringNameType");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("langStringNameType");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1773,20 +1663,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testLangStringNameTypeVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "langStringNameType");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("langStringNameType");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1795,7 +1681,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testLangStringTextTypeOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -1811,21 +1696,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testLangStringTextTypeDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "langStringTextType");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("langStringTextType");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1834,20 +1718,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testLangStringTextTypeVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "langStringTextType");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("langStringTextType");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1856,7 +1736,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testEnvironmentOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "SelfContained", "Expected", "environment");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -1874,16 +1753,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testEnvironmentDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "SelfContained", "Unexpected", cause, "environment");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "SelfContained", "Unexpected", "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("environment");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         final XMLEventReader xmlReader =
@@ -1901,15 +1780,15 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testEnvironmentVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Xml", "SelfContained", "Unexpected", cause, "environment");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(Common.TEST_DATA_DIR, "Xml", "SelfContained", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("environment");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         final XMLEventReader xmlReader =
@@ -1924,7 +1803,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testEmbeddedDataSpecificationOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -1941,21 +1819,20 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testEmbeddedDataSpecificationDeserializationFail()
       throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "embeddedDataSpecification");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("embeddedDataSpecification");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1965,20 +1842,16 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testEmbeddedDataSpecificationVerificationFail()
       throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "embeddedDataSpecification");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("embeddedDataSpecification");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -1987,7 +1860,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testLevelTypeOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "levelType");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -1998,21 +1870,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testLevelTypeDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "levelType");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("levelType");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2021,20 +1892,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testLevelTypeVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "levelType");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("levelType");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -2043,7 +1910,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testValueReferencePairOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -2059,21 +1925,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testValueReferencePairDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "valueReferencePair");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("valueReferencePair");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2082,20 +1947,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testValueReferencePairVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "valueReferencePair");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("valueReferencePair");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -2104,7 +1965,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testValueListOk() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Expected", "valueList");
     final List<Path> paths = Common.findPaths(searchPath, ".xml");
@@ -2115,21 +1975,20 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testValueListDeserializationFail() throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "valueList");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("valueList");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2138,20 +1997,16 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testValueListVerificationFail() throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "valueList");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("valueList");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -2160,7 +2015,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testLangStringPreferredNameTypeIec61360Ok() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -2177,21 +2031,20 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testLangStringPreferredNameTypeIec61360DeserializationFail()
       throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "langStringPreferredNameTypeIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("langStringPreferredNameTypeIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2201,20 +2054,16 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testLangStringPreferredNameTypeIec61360VerificationFail()
       throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "langStringPreferredNameTypeIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("langStringPreferredNameTypeIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -2223,7 +2072,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testLangStringShortNameTypeIec61360Ok() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -2240,21 +2088,20 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testLangStringShortNameTypeIec61360DeserializationFail()
       throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "langStringShortNameTypeIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("langStringShortNameTypeIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2264,20 +2111,16 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testLangStringShortNameTypeIec61360VerificationFail()
       throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "langStringShortNameTypeIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("langStringShortNameTypeIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -2286,7 +2129,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testLangStringDefinitionTypeIec61360Ok() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -2303,21 +2145,20 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testLangStringDefinitionTypeIec61360DeserializationFail()
       throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "langStringDefinitionTypeIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("langStringDefinitionTypeIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2327,20 +2168,16 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testLangStringDefinitionTypeIec61360VerificationFail()
       throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "langStringDefinitionTypeIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("langStringDefinitionTypeIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }
@@ -2349,7 +2186,6 @@ public class TestXmlizationOfConcreteClasses {
 
   @Test
   public void testDataSpecificationIec61360Ok() throws IOException, XMLStreamException {
-
     final Path searchPath =
         Paths.get(
             Common.TEST_DATA_DIR,
@@ -2366,21 +2202,20 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testDataSpecificationIec61360DeserializationFail()
       throws IOException, XMLStreamException {
-
-    for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "dataSpecificationIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Xml",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("dataSpecificationIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2390,20 +2225,16 @@ public class TestXmlizationOfConcreteClasses {
   @Test
   public void testDataSpecificationIec61360VerificationFail()
       throws IOException, XMLStreamException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Xml",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "dataSpecificationIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Xml", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("dataSpecificationIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".xml");
+      final List<Path> paths = Common.findPaths(clsDir, ".xml");
       for (Path path : paths) {
         testVerificationFail(path);
       }

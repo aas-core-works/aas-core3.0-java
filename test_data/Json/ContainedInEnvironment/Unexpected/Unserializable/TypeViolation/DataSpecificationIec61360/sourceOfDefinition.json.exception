@@ -1,0 +1,1 @@
+Expected a JsonValue of String, but got ARRAY at: assetAdministrationShells[0].embeddedDataSpecifications[0].dataSpecificationContent.sourceOfDefinition
