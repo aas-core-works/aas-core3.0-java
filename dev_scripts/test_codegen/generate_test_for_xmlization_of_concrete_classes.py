@@ -415,8 +415,6 @@ def main() -> int:
         _generate_test_deserialization_fail()
     ]  # type: List[str]
 
-
-
     for our_type in symbol_table.our_types:
         if not isinstance(our_type, intermediate.ConcreteClass):
             continue
