@@ -110,7 +110,7 @@ public class TestEnhancing {{
         if i > 0:
             writer.write("\n\n")
 
-        writer.write(textwrap.indent(block, II))
+        writer.write(textwrap.indent(block, I))
 
     writer.write(
         """

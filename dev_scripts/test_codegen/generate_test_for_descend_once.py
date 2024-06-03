@@ -87,13 +87,12 @@ def main() -> int:
                 f"""\
 @Test
 public void test{cls_name_java}() throws IOException {{
-
- final {cls_name_java} instance = CommonJsonization.loadMaximal{cls_name_java}();
-        compareOrRerecordTrace(instance,
-                Paths.get(Common.TEST_DATA_DIR,
-                        "DescendOnce",
-                        "{cls_name_java}",
-                        "maximal.json.trace"));
+{I}final {cls_name_java} instance = CommonJsonization.loadMaximal{cls_name_java}();
+{I}compareOrRerecordTrace(instance,
+{II}Paths.get(Common.TEST_DATA_DIR,
+{III}"DescendOnce",
+{III}"{cls_name_java}",
+{III}"maximal.json.trace"));
 }}  // public void test{cls_name_java}"""
             )
         )
@@ -128,7 +127,7 @@ public class TestDescendOnce {
         if i > 0:
             writer.write("\n\n")
 
-        writer.write(textwrap.indent(block, "        "))
+        writer.write(textwrap.indent(block, I))
 
     writer.write(
         """

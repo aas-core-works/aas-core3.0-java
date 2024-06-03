@@ -519,7 +519,7 @@ public class TestCopying {
         if i > 0:
             writer.write("\n\n")
 
-        writer.write(textwrap.indent(block, "        "))
+        writer.write(textwrap.indent(block, I))
 
     writer.write(
         """
