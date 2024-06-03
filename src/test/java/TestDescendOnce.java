@@ -45,7 +45,10 @@ public class TestDescendOnce {
     } else {
       if (!Files.exists(expectedPath)) {
         throw new FileNotFoundException(
-            "The file with the recorded value does not exist: " + expectedPath);
+            "The file with the recorded trace does not exist: "
+                + expectedPath
+                + "; maybe you want to set the environment variable "
+                + "AAS_CORE_AAS3_0_TESTS_RECORD_MODE");
       }
       final String expected =
           Files.readAllLines(expectedPath).stream().collect(Collectors.joining("\n"));
@@ -55,7 +58,6 @@ public class TestDescendOnce {
 
   @Test
   public void testExtension() throws IOException {
-
     final Extension instance = CommonJsonization.loadMaximalExtension();
     compareOrRerecordTrace(
         instance,
@@ -64,7 +66,6 @@ public class TestDescendOnce {
 
   @Test
   public void testAdministrativeInformation() throws IOException {
-
     final AdministrativeInformation instance =
         CommonJsonization.loadMaximalAdministrativeInformation();
     compareOrRerecordTrace(
@@ -78,7 +79,6 @@ public class TestDescendOnce {
 
   @Test
   public void testQualifier() throws IOException {
-
     final Qualifier instance = CommonJsonization.loadMaximalQualifier();
     compareOrRerecordTrace(
         instance,
@@ -87,7 +87,6 @@ public class TestDescendOnce {
 
   @Test
   public void testAssetAdministrationShell() throws IOException {
-
     final AssetAdministrationShell instance =
         CommonJsonization.loadMaximalAssetAdministrationShell();
     compareOrRerecordTrace(
@@ -98,7 +97,6 @@ public class TestDescendOnce {
 
   @Test
   public void testAssetInformation() throws IOException {
-
     final AssetInformation instance = CommonJsonization.loadMaximalAssetInformation();
     compareOrRerecordTrace(
         instance,
@@ -107,7 +105,6 @@ public class TestDescendOnce {
 
   @Test
   public void testResource() throws IOException {
-
     final Resource instance = CommonJsonization.loadMaximalResource();
     compareOrRerecordTrace(
         instance, Paths.get(Common.TEST_DATA_DIR, "DescendOnce", "Resource", "maximal.json.trace"));
@@ -115,7 +112,6 @@ public class TestDescendOnce {
 
   @Test
   public void testSpecificAssetId() throws IOException {
-
     final SpecificAssetId instance = CommonJsonization.loadMaximalSpecificAssetId();
     compareOrRerecordTrace(
         instance,
@@ -124,7 +120,6 @@ public class TestDescendOnce {
 
   @Test
   public void testSubmodel() throws IOException {
-
     final Submodel instance = CommonJsonization.loadMaximalSubmodel();
     compareOrRerecordTrace(
         instance, Paths.get(Common.TEST_DATA_DIR, "DescendOnce", "Submodel", "maximal.json.trace"));
@@ -132,7 +127,6 @@ public class TestDescendOnce {
 
   @Test
   public void testRelationshipElement() throws IOException {
-
     final RelationshipElement instance = CommonJsonization.loadMaximalRelationshipElement();
     compareOrRerecordTrace(
         instance,
@@ -142,7 +136,6 @@ public class TestDescendOnce {
 
   @Test
   public void testSubmodelElementList() throws IOException {
-
     final SubmodelElementList instance = CommonJsonization.loadMaximalSubmodelElementList();
     compareOrRerecordTrace(
         instance,
@@ -152,7 +145,6 @@ public class TestDescendOnce {
 
   @Test
   public void testSubmodelElementCollection() throws IOException {
-
     final SubmodelElementCollection instance =
         CommonJsonization.loadMaximalSubmodelElementCollection();
     compareOrRerecordTrace(
@@ -166,7 +158,6 @@ public class TestDescendOnce {
 
   @Test
   public void testProperty() throws IOException {
-
     final Property instance = CommonJsonization.loadMaximalProperty();
     compareOrRerecordTrace(
         instance, Paths.get(Common.TEST_DATA_DIR, "DescendOnce", "Property", "maximal.json.trace"));
@@ -174,7 +165,6 @@ public class TestDescendOnce {
 
   @Test
   public void testMultiLanguageProperty() throws IOException {
-
     final MultiLanguageProperty instance = CommonJsonization.loadMaximalMultiLanguageProperty();
     compareOrRerecordTrace(
         instance,
@@ -184,7 +174,6 @@ public class TestDescendOnce {
 
   @Test
   public void testRange() throws IOException {
-
     final Range instance = CommonJsonization.loadMaximalRange();
     compareOrRerecordTrace(
         instance, Paths.get(Common.TEST_DATA_DIR, "DescendOnce", "Range", "maximal.json.trace"));
@@ -192,7 +181,6 @@ public class TestDescendOnce {
 
   @Test
   public void testReferenceElement() throws IOException {
-
     final ReferenceElement instance = CommonJsonization.loadMaximalReferenceElement();
     compareOrRerecordTrace(
         instance,
@@ -201,7 +189,6 @@ public class TestDescendOnce {
 
   @Test
   public void testBlob() throws IOException {
-
     final Blob instance = CommonJsonization.loadMaximalBlob();
     compareOrRerecordTrace(
         instance, Paths.get(Common.TEST_DATA_DIR, "DescendOnce", "Blob", "maximal.json.trace"));
@@ -209,7 +196,6 @@ public class TestDescendOnce {
 
   @Test
   public void testFile() throws IOException {
-
     final File instance = CommonJsonization.loadMaximalFile();
     compareOrRerecordTrace(
         instance, Paths.get(Common.TEST_DATA_DIR, "DescendOnce", "File", "maximal.json.trace"));
@@ -217,7 +203,6 @@ public class TestDescendOnce {
 
   @Test
   public void testAnnotatedRelationshipElement() throws IOException {
-
     final AnnotatedRelationshipElement instance =
         CommonJsonization.loadMaximalAnnotatedRelationshipElement();
     compareOrRerecordTrace(
@@ -231,7 +216,6 @@ public class TestDescendOnce {
 
   @Test
   public void testEntity() throws IOException {
-
     final Entity instance = CommonJsonization.loadMaximalEntity();
     compareOrRerecordTrace(
         instance, Paths.get(Common.TEST_DATA_DIR, "DescendOnce", "Entity", "maximal.json.trace"));
@@ -239,7 +223,6 @@ public class TestDescendOnce {
 
   @Test
   public void testEventPayload() throws IOException {
-
     final EventPayload instance = CommonJsonization.loadMaximalEventPayload();
     compareOrRerecordTrace(
         instance,
@@ -248,7 +231,6 @@ public class TestDescendOnce {
 
   @Test
   public void testBasicEventElement() throws IOException {
-
     final BasicEventElement instance = CommonJsonization.loadMaximalBasicEventElement();
     compareOrRerecordTrace(
         instance,
@@ -257,7 +239,6 @@ public class TestDescendOnce {
 
   @Test
   public void testOperation() throws IOException {
-
     final Operation instance = CommonJsonization.loadMaximalOperation();
     compareOrRerecordTrace(
         instance,
@@ -266,7 +247,6 @@ public class TestDescendOnce {
 
   @Test
   public void testOperationVariable() throws IOException {
-
     final OperationVariable instance = CommonJsonization.loadMaximalOperationVariable();
     compareOrRerecordTrace(
         instance,
@@ -275,7 +255,6 @@ public class TestDescendOnce {
 
   @Test
   public void testCapability() throws IOException {
-
     final Capability instance = CommonJsonization.loadMaximalCapability();
     compareOrRerecordTrace(
         instance,
@@ -284,7 +263,6 @@ public class TestDescendOnce {
 
   @Test
   public void testConceptDescription() throws IOException {
-
     final ConceptDescription instance = CommonJsonization.loadMaximalConceptDescription();
     compareOrRerecordTrace(
         instance,
@@ -293,7 +271,6 @@ public class TestDescendOnce {
 
   @Test
   public void testReference() throws IOException {
-
     final Reference instance = CommonJsonization.loadMaximalReference();
     compareOrRerecordTrace(
         instance,
@@ -302,7 +279,6 @@ public class TestDescendOnce {
 
   @Test
   public void testKey() throws IOException {
-
     final Key instance = CommonJsonization.loadMaximalKey();
     compareOrRerecordTrace(
         instance, Paths.get(Common.TEST_DATA_DIR, "DescendOnce", "Key", "maximal.json.trace"));
@@ -310,7 +286,6 @@ public class TestDescendOnce {
 
   @Test
   public void testLangStringNameType() throws IOException {
-
     final LangStringNameType instance = CommonJsonization.loadMaximalLangStringNameType();
     compareOrRerecordTrace(
         instance,
@@ -319,7 +294,6 @@ public class TestDescendOnce {
 
   @Test
   public void testLangStringTextType() throws IOException {
-
     final LangStringTextType instance = CommonJsonization.loadMaximalLangStringTextType();
     compareOrRerecordTrace(
         instance,
@@ -328,7 +302,6 @@ public class TestDescendOnce {
 
   @Test
   public void testEnvironment() throws IOException {
-
     final Environment instance = CommonJsonization.loadMaximalEnvironment();
     compareOrRerecordTrace(
         instance,
@@ -337,7 +310,6 @@ public class TestDescendOnce {
 
   @Test
   public void testEmbeddedDataSpecification() throws IOException {
-
     final EmbeddedDataSpecification instance =
         CommonJsonization.loadMaximalEmbeddedDataSpecification();
     compareOrRerecordTrace(
@@ -351,7 +323,6 @@ public class TestDescendOnce {
 
   @Test
   public void testLevelType() throws IOException {
-
     final LevelType instance = CommonJsonization.loadMaximalLevelType();
     compareOrRerecordTrace(
         instance,
@@ -360,7 +331,6 @@ public class TestDescendOnce {
 
   @Test
   public void testValueReferencePair() throws IOException {
-
     final ValueReferencePair instance = CommonJsonization.loadMaximalValueReferencePair();
     compareOrRerecordTrace(
         instance,
@@ -369,7 +339,6 @@ public class TestDescendOnce {
 
   @Test
   public void testValueList() throws IOException {
-
     final ValueList instance = CommonJsonization.loadMaximalValueList();
     compareOrRerecordTrace(
         instance,
@@ -378,7 +347,6 @@ public class TestDescendOnce {
 
   @Test
   public void testLangStringPreferredNameTypeIec61360() throws IOException {
-
     final LangStringPreferredNameTypeIec61360 instance =
         CommonJsonization.loadMaximalLangStringPreferredNameTypeIec61360();
     compareOrRerecordTrace(
@@ -392,7 +360,6 @@ public class TestDescendOnce {
 
   @Test
   public void testLangStringShortNameTypeIec61360() throws IOException {
-
     final LangStringShortNameTypeIec61360 instance =
         CommonJsonization.loadMaximalLangStringShortNameTypeIec61360();
     compareOrRerecordTrace(
@@ -406,7 +373,6 @@ public class TestDescendOnce {
 
   @Test
   public void testLangStringDefinitionTypeIec61360() throws IOException {
-
     final LangStringDefinitionTypeIec61360 instance =
         CommonJsonization.loadMaximalLangStringDefinitionTypeIec61360();
     compareOrRerecordTrace(
@@ -420,7 +386,6 @@ public class TestDescendOnce {
 
   @Test
   public void testDataSpecificationIec61360() throws IOException {
-
     final DataSpecificationIec61360 instance =
         CommonJsonization.loadMaximalDataSpecificationIec61360();
     compareOrRerecordTrace(

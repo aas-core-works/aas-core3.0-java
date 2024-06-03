@@ -1,0 +1,1 @@
+Expected an XML end element to conclude a property of class AdministrativeInformation with the element name version, but got the node of type Start-Element with the value <['https://admin-shell.io/aas/3/0']::reference> at: environment/assetAdministrationShells/*[0]/administration

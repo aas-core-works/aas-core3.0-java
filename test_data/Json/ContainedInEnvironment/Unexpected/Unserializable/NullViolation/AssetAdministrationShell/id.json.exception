@@ -1,0 +1,1 @@
+Expected a JsonValue of String, but got NULL at: assetAdministrationShells[0].id
