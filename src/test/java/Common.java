@@ -136,7 +136,10 @@ public class Common {
     } else {
       if (!Files.exists(errorsPath)) {
         throw new FileNotFoundException(
-            "The file with the recorded errors does not exist: " + errorsPath);
+            "The file with the recorded errors does not exist: " +
+            errorsPath +
+            "; maybe you want to set the environment variable" +
+            Common.RECORD_MODE);
       }
       final String expected = String.join("\n", Files.readAllLines(errorsPath));
       assertEquals(

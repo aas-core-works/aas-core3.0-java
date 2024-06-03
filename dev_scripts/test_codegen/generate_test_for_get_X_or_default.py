@@ -21,7 +21,8 @@ from test_codegen.common import load_symbol_table
 from aas_core_codegen.java.common import (
     INDENT as I,
     INDENT2 as II,
-    INDENT3 as III
+    INDENT3 as III,
+    INDENT4 as IIII,
 )
 
 def main() -> int:
@@ -41,7 +42,11 @@ public static void compareOrRerecordValue(Object value, Path expectedPath) throw
 {II}Files.write(expectedPath, got.toString().getBytes());
 {I}}} else {{
 {II}if (!Files.exists(expectedPath)) {{
-{III}throw new FileNotFoundException("The file with the recorded value does not exist: " + expectedPath);
+{III}throw new FileNotFoundException(
+{IIII}"The file with the recorded value does not exist: " +
+{IIII}expectedPath +
+{IIII}"; maybe you want to set the environment variable " +
+{IIII}"AAS_CORE_AAS3_0_TESTS_RECORD_MODE");
 {II}}}
 {II}final JsonNode expected = mapper.readTree(expectedPath.toFile());
 {II}assertEquals(mapper.readTree(expected.toString()), mapper.readTree(got.toString()));
