@@ -102,9 +102,8 @@ def _generate_read_content() -> Stripped:
         f"""\
 private static String readContent(XMLEventReader reader) throws XMLStreamException {{
 {I}final StringBuilder content = new StringBuilder();
-{I}
-{I}while (reader.hasNext() && reader.peek().isCharacters() 
-{III}&& !reader.peek().asCharacters().isWhiteSpace() 
+{I}while (reader.hasNext() && reader.peek().isCharacters()
+{III}&& !reader.peek().asCharacters().isWhiteSpace()
 {III}|| reader.peek().getEventType() == XMLStreamConstants.COMMENT) {{
 
 {II}if (reader.peek().isCharacters()) {{

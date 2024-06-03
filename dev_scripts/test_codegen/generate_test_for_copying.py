@@ -181,9 +181,9 @@ def _generate_transform_as_deep_equals(cls: intermediate.ConcreteClass) -> Strip
                 or primitive_type is intermediate.PrimitiveType.STR
             ):
                 if optional: expr = Stripped(f"""\
-that.{getter_name}().isPresent() 
-{I}? casted.{getter_name}().isPresent() 
-{I}&& that.{getter_name}().get() == casted.{getter_name}().get() 
+that.{getter_name}().isPresent()
+{I}? casted.{getter_name}().isPresent()
+{I}&& that.{getter_name}().get() == casted.{getter_name}().get()
 {I}: ! casted.{getter_name}().isPresent()""")
                 else: expr = Stripped(f"that.{getter_name}() == casted.{getter_name}()")
             elif primitive_type is intermediate.PrimitiveType.BYTEARRAY:
@@ -211,9 +211,9 @@ that.{getter_name}().isPresent() ?
             ):
                 if optional: expr = Stripped(
                     f"""\
-( that.{getter_name}().isPresent() 
-{I}? casted.{getter_name}().isPresent() 
-{I}&& transform( that.{getter_name}().get(), casted.{getter_name}().get()) 
+( that.{getter_name}().isPresent()
+{I}? casted.{getter_name}().isPresent()
+{I}&& transform( that.{getter_name}().get(), casted.{getter_name}().get())
 {I}: ! casted.{getter_name}().isPresent())"""
                 )
                 else: expr = Stripped(
