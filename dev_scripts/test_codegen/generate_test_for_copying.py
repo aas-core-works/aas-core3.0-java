@@ -451,8 +451,8 @@ public void testSnippetInDocs() {{
 {I}someProperty.setIdShort("someProperty");
 {I}List<ISubmodelElement> submodelElements = new ArrayList<>();
 {I}submodelElements.add(someProperty);
-{I}
-{I}
+
+
 {I}final Submodel submodel = new Submodel(
 {II}"some-unique-global-identifier",
 {II}null,
@@ -478,7 +478,7 @@ public void testSnippetInDocs() {{
 {I}// Changes to the property affect only the shallow copy,
 {I}// but not the deep one
 {I}environment.getSubmodels().get().get(0).getSubmodelElements().get().get(0).setIdShort("changed");
-{I}
+
 {I}assertEquals("changed",shallowCopy.getSubmodels().get().get(0).getSubmodelElements().get().get(0).getIdShort().get());
 {I}assertEquals("someProperty",deepCopy.getSubmodels().get().get(0).getSubmodelElements().get().get(0).getIdShort().get());
 }}  // public void Test_snippet_in_docs"""

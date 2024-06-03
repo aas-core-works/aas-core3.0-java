@@ -158,9 +158,10 @@ public static Optional<Reporting.Error> checkElementsEqual(XMLEvent expected, St
 {III}outputMap.remove(got.get().getKey());
 {III}return Optional.empty();
 {II}}}
-{II}default:
+{II}default: {{
 {III}throw new IllegalStateException("Unexpected event type in check elements equal.");
 {II}}}
+{I}}}
 }}"""
     )
 @require(lambda container_cls_java: container_cls_java == "Environment")
@@ -327,10 +328,10 @@ public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
 {II}"ContainedInEnvironment",
 {II}"Expected",
 {II}{java_common.string_literal(cls_name_xml)});
-{II}final List<Path> paths = Common.findPaths(searchPath, ".xml");
-{II}for (Path path : paths) {{
-{III}testRoundTrip(path);
-{II}}}
+{I}final List<Path> paths = Common.findPaths(searchPath, ".xml");
+{I}for (Path path : paths) {{
+{II}testRoundTrip(path);
+{I}}}
 }}  // public void test{cls_name_java}DeserializationOk"""
         )
     )
