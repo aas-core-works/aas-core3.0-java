@@ -105,7 +105,6 @@ def _generate_shallow_equals(cls: intermediate.ConcreteClass) -> Stripped:
 
     exprs = []  # type: List[str]
     for prop in cls.properties:
-        prop_name = java_naming.property_name(prop.name)
         getter_name = java_naming.getter_name(prop.name)
         if isinstance(prop.type_annotation, intermediate.OptionalTypeAnnotation):
             exprs.append(f"( that.{getter_name}().isPresent() ? ( other.{getter_name}().isPresent() && that.{getter_name}().get() == other.{getter_name}().get()) : !other.{getter_name}().isPresent())")
