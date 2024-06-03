@@ -20,6 +20,7 @@ from aas_core_codegen.java.common import (
     INDENT2 as II,
     INDENT3 as III,
     INDENT4 as IIII,
+    INDENT4 as IIIII,
 )
 
 import test_codegen.common
@@ -54,7 +55,11 @@ private void compareOrRerecordTrace(IClass instance, Path expectedPath) throws I
 {II}Files.write(expectedPath, got.getBytes());
 {I}}}else {{
 {III}if (!Files.exists(expectedPath)) {{
-{IIII}throw new FileNotFoundException("The file with the recorded value does not exist: " + expectedPath);
+{IIII}throw new FileNotFoundException(
+{IIIII}"The file with the recorded trace does not exist: " +
+{IIIII}expectedPath +
+{IIIII}"; maybe you want to set the environment variable " +
+{IIIII}"AAS_CORE_AAS3_0_TESTS_RECORD_MODE");
 {III}}}
 {III}final String expected = Files.readAllLines(expectedPath).stream().collect(Collectors.joining("\\n"));
 {III}assertEquals(expected.replace("\\n",""), got.replace("\\n",""));
