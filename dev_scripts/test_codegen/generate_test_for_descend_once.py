@@ -25,7 +25,7 @@ from aas_core_codegen.java.common import (
 
 import test_codegen.common
 
-def _generate_compare_or_rerecord_trace()-> Stripped:
+def _generate_compare_or_rerecord_trace() -> Stripped:
     return Stripped(f"""\
 private void compareOrRerecordTrace(IClass instance, Path expectedPath) throws IOException  {{
 {I}final StringBuilder stringBuilder = new StringBuilder();

@@ -221,7 +221,7 @@ public void test{cls_name_java}VerificationFail() throws IOException {{
     )
 
     return blocks
-def _generate_assert_serialize_deserialize_equals_original()-> Stripped:
+def _generate_assert_serialize_deserialize_equals_original() -> Stripped:
     return Stripped(f"""\
 private static void assertSerializeDeserializeEqualsOriginal(JsonNode originalNode, IClass instance, Path path) throws JsonProcessingException {{
 {I}JsonNode serialized = null;
@@ -239,7 +239,7 @@ private static void assertSerializeDeserializeEqualsOriginal(JsonNode originalNo
 }}""")
 
 @require(lambda container_cls_java: container_cls_java == "Environment")
-def _generate_test_round_trip( container_cls_java: str)-> Stripped:
+def _generate_test_round_trip( container_cls_java: str) -> Stripped:
     return Stripped(f"""\
 private static void testRoundTrip(Path path) throws IOException {{
 {I}final JsonNode node = mapper.readTree(path.toFile());
@@ -251,7 +251,7 @@ private static void testRoundTrip(Path path) throws IOException {{
 }}""")
 
 
-def _generate_test_deserialization_fail()-> Stripped:
+def _generate_test_deserialization_fail() -> Stripped:
     return Stripped(f"""\
 private static void testDeserializationFail(Path path) throws IOException {{
 {I}final JsonNode node = mapper.readTree(path.toFile());
@@ -264,7 +264,7 @@ private static void testDeserializationFail(Path path) throws IOException {{
 {I}assertEqualsExpectedOrRerecordDeserializationException(exception, path);
 }}""")
 
-def _generate_test_verification_fail()-> Stripped:
+def _generate_test_verification_fail() -> Stripped:
     return Stripped(f"""\
 private static void testVerificationFail(Path path) throws IOException {{
 {I}final JsonNode node = mapper.readTree(path.toFile());
@@ -274,7 +274,7 @@ private static void testVerificationFail(Path path) throws IOException {{
 {I}Common.assertEqualsExpectedOrRerecordVerificationErrors(errorList, path);
 }}""")
 
-def _generate_assert_equals_expected_or_rerecord_deserialization_exception()-> Stripped:
+def _generate_assert_equals_expected_or_rerecord_deserialization_exception() -> Stripped:
     return Stripped(f"""\
 private static void assertEqualsExpectedOrRerecordDeserializationException(Jsonization.DeserializeException exception, Path path) throws IOException {{
 {I}if (exception == null) {{
