@@ -26,7 +26,6 @@ from aas_core_codegen.java.common import (
     INDENT3 as III,
     INDENT4 as IIII,
     INDENT5 as IIIII,
-    INDENT6 as IIIIII,
 )
 
 def _generate_for_self_contained(
