@@ -66,18 +66,17 @@ public void test{cls_name_java}Ok() throws IOException {{
             f"""\
 @Test
 public void test{cls_name_java}DeserializationFail() throws IOException {{
-{I}for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {{
-{II}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
-{III}"Json",
-{III}"SelfContained",
-{III}"Unexpected",
-{III}cause,
-{III}{java_common.string_literal(cls_name_json)});
-{II}if (!Files.exists(searchPath)) {{
+{I}for (Path causeDir : Common.findDirs(Paths.get(Common.TEST_DATA_DIR,
+{II}"Json",
+{II}"SelfContained",
+{II}"Unexpected",
+{II}"Unserializable"))) {{
+{II}final Path clsDir = causeDir.resolve({java_common.string_literal(cls_name_json)});
+{II}if (!Files.exists(clsDir)) {{
 {III}// No examples of {cls_name_java} for the failure cause.
 {III}continue;
 {II}}}
-{II}final List<Path> paths = Common.findPaths(searchPath, ".json");
+{II}final List<Path> paths = Common.findPaths(clsDir, ".json");
 {II}for (Path path : paths) {{
 {III}final JsonNode node = mapper.readTree(path.toFile());
 {III}Jsonization.DeserializeException exception = null;
@@ -98,18 +97,17 @@ public void test{cls_name_java}DeserializationFail() throws IOException {{
             f"""\
 @Test
 public void test{cls_name_java}VerificationFail() throws IOException {{
-{I}for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {{
-{II}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
-{III}"Json",
-{III}"SelfContained",
-{III}"Unexpected",
-{III}cause,
-{III}{java_common.string_literal(cls_name_json)});
-{II}if (!Files.exists(searchPath)) {{
+{I}for (Path causeDir : Common.findDirs(Paths.get(Common.TEST_DATA_DIR,
+{II}"Json",
+{II}"SelfContained",
+{II}"Unexpected",
+{II}"Invalid"))) {{
+{II}final Path clsDir = causeDir.resolve({java_common.string_literal(cls_name_json)});
+{II}if (!Files.exists(clsDir)) {{
 {III}// No examples of {cls_name_java} for the failure cause.
 {III}continue;
 {II}}}
-{II}final List<Path> paths = Common.findPaths(searchPath, ".json");
+{II}final List<Path> paths = Common.findPaths(clsDir, ".json");
 {II}for (Path path : paths) {{
 {III}final JsonNode node = mapper.readTree(path.toFile());
 {III}final {cls_name_java} instance = Jsonization.Deserialize.deserialize{cls_name_java}(node);
@@ -179,18 +177,17 @@ public void test{cls_name_java}DeserializationFromNonObjectFail() {{
             f"""\
 @Test
 public void test{cls_name_java}DeserializationFail() throws IOException {{
-{I}for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {{
-{II}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
-{III}"Json",
+{I}for (Path causeDir : Common.findDirs(Paths.get(Common.TEST_DATA_DIR,
+{II}"Json",
 {III}"ContainedInEnvironment",
-{III}"Unexpected",
-{III}cause,
-{III}{java_common.string_literal(cls_name_json)});
-{II}if (!Files.exists(searchPath)) {{
+{II}"Unexpected",
+{II}"Unserializable"))) {{
+{II}final Path clsDir = causeDir.resolve({java_common.string_literal(cls_name_json)});
+{II}if (!Files.exists(clsDir)) {{
 {III}// No examples of {cls_name_java} for the failure cause.
 {III}continue;
 {II}}}
-{II}final List<Path> paths = Common.findPaths(searchPath, ".json");
+{II}final List<Path> paths = Common.findPaths(clsDir, ".json");
 {II}for (Path path : paths) {{
 {III}testDeserializationFail(path);
 {II}}}
@@ -204,18 +201,17 @@ public void test{cls_name_java}DeserializationFail() throws IOException {{
             f"""\
 @Test
 public void test{cls_name_java}VerificationFail() throws IOException {{
-{I}for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {{
-{II}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
-{III}"Json",
+{I}for (Path causeDir : Common.findDirs(Paths.get(Common.TEST_DATA_DIR,
+{II}"Json",
 {III}"ContainedInEnvironment",
-{III}"Unexpected",
-{III}cause,
-{III}{java_common.string_literal(cls_name_json)});
-{II}if (!Files.exists(searchPath)) {{
+{II}"Unexpected",
+{II}"Invalid"))) {{
+{II}final Path clsDir = causeDir.resolve({java_common.string_literal(cls_name_json)});
+{II}if (!Files.exists(clsDir)) {{
 {III}// No examples of {cls_name_java} for the failure cause.
 {III}continue;
 {II}}}
-{II}final List<Path> paths = Common.findPaths(searchPath, ".json");
+{II}final List<Path> paths = Common.findPaths(clsDir, ".json");
 {II}for (Path path : paths) {{
 {III}final JsonNode node = mapper.readTree(path.toFile());
 {III}testVerificationFail(path);

@@ -1,1 +1,0 @@
-Expected a JsonValue of String, but got NULL at: assetAdministrationShells[0].extensions[0].name

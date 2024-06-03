@@ -1,1 +1,0 @@
-Expected an XML element representing an instance of class IDataSpecificationContent, but got a node of type Characters with value Unexpected string value at: environment/assetAdministrationShells/*[0]/embeddedDataSpecifications/*[0]/dataSpecificationContent

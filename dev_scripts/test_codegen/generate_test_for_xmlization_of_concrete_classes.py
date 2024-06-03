@@ -251,19 +251,17 @@ public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
             f"""\
 @Test
 public void test{cls_name_java}DeserializationFail() throws IOException, XMLStreamException {{
-
-{I}for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {{
-{II}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
-{III}"Xml",
-{III}"SelfContained",
-{III}"Unexpected",
-{III}cause,
-{III}{java_common.string_literal(cls_name_xml)});
-{II}if (!Files.exists(searchPath)) {{
+{I}for (Path causeDir : Common.findDirs(Paths.get(Common.TEST_DATA_DIR,
+{II}"Xml",
+{II}"SelfContained",
+{II}"Unexpected",
+{II}"Unserializable"))) {{
+{II}final Path clsDir = causeDir.resolve({java_common.string_literal(cls_name_xml)});
+{II}if (!Files.exists(clsDir)) {{
 {III}// No examples of Environment for the failure cause.
 {III}continue;
 {I}}}
-{II}final List<Path> paths = Common.findPaths(searchPath, ".xml");
+{II}final List<Path> paths = Common.findPaths(clsDir, ".xml");
 {II}for (Path path : paths) {{
 {III}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 {III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(path));
@@ -285,18 +283,17 @@ public void test{cls_name_java}DeserializationFail() throws IOException, XMLStre
             f"""\
 @Test
 public void test{cls_name_java}VerificationFail() throws IOException, XMLStreamException {{
-{I}for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {{
-{II}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
-{III}"Xml",
-{III}"SelfContained",
-{III}"Unexpected",
-{III}cause,
-{III}{java_common.string_literal(cls_name_xml)});
-{II}if (!Files.exists(searchPath)) {{
+{I}for (Path causeDir : Common.findDirs(Paths.get(Common.TEST_DATA_DIR,
+{II}"Xml",
+{II}"SelfContained",
+{II}"Unexpected",
+{II}"Invalid"))) {{
+{II}final Path clsDir = causeDir.resolve({java_common.string_literal(cls_name_xml)});
+{II}if (!Files.exists(clsDir)) {{
 {III}// No examples of Environment for the failure cause.
 {III}continue;
 {II}}}
-{II}final List<Path> paths = Common.findPaths(searchPath, ".xml");
+{II}final List<Path> paths = Common.findPaths(clsDir, ".xml");
 {II}for (Path path : paths) {{
 {III}final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 {III}final XMLEventReader xmlReader = xmlInputFactory.createXMLEventReader(Files.newInputStream(path));
@@ -345,19 +342,17 @@ public void test{cls_name_java}Ok() throws IOException, XMLStreamException {{
             f"""\
 @Test
 public void test{cls_name_java}DeserializationFail() throws IOException, XMLStreamException {{
-
-{I}for (String cause : Common.CAUSES_XML_DESERIALIZATION_FAILURE) {{
-{II}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
-{III}"Xml",
-{III}"ContainedInEnvironment",
-{III}"Unexpected",
-{III}cause,
-{III}{java_common.string_literal(cls_name_xml)});
-{II}if (!Files.exists(searchPath)) {{
+{I}for (Path causeDir : Common.findDirs(Paths.get(Common.TEST_DATA_DIR,
+{II}"Xml",
+{II}"ContainedInEnvironment",
+{II}"Unexpected",
+{II}"Unserializable"))) {{
+{II}final Path clsDir = causeDir.resolve({java_common.string_literal(cls_name_xml)});
+{II}if (!Files.exists(clsDir)) {{
 {III}// No examples of Environment for the failure cause.
 {III}continue;
 {I}}}
-{II}final List<Path> paths = Common.findPaths(searchPath, ".xml");
+{II}final List<Path> paths = Common.findPaths(clsDir, ".xml");
 {II}for (Path path : paths) {{
 {III}testDeserializationFail(path);
 {II}}}
@@ -371,18 +366,17 @@ public void test{cls_name_java}DeserializationFail() throws IOException, XMLStre
             f"""\
 @Test
 public void test{cls_name_java}VerificationFail() throws IOException, XMLStreamException {{
-{I}for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {{
-{II}final Path searchPath = Paths.get(Common.TEST_DATA_DIR,
-{III}"Xml",
-{III}"ContainedInEnvironment",
-{III}"Unexpected",
-{III}cause,
-{III}{java_common.string_literal(cls_name_xml)});
-{II}if (!Files.exists(searchPath)) {{
+{I}for (Path causeDir : Common.findDirs(Paths.get(Common.TEST_DATA_DIR,
+{II}"Xml",
+{II}"ContainedInEnvironment",
+{II}"Unexpected",
+{II}"Invalid"))) {{
+{II}final Path clsDir = causeDir.resolve({java_common.string_literal(cls_name_xml)});
+{II}if (!Files.exists(clsDir)) {{
 {II}// No examples of Environment for the failure cause.
 {III}continue;
 {II}}}
-{II}final List<Path> paths = Common.findPaths(searchPath, ".xml");
+{II}final List<Path> paths = Common.findPaths(clsDir, ".xml");
 {II}for (Path path : paths) {{
 {III}testVerificationFail(path);
 {II}}}
