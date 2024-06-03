@@ -191,8 +191,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class Common{{
 {I}public static final boolean RECORD_MODE = System.getenv("AAS_CORE_AAS3_0_TESTS_RECORD_MODE") != null && System.getenv("AAS_CORE_AAS3_0_TESTS_RECORD_MODE")
 {II}.equalsIgnoreCase("true");
+
 {I}public static String TEST_DATA_DIR = Paths.get("test_data").toAbsolutePath().toString();
-{I}
+
 {I}public static final List<String> CAUSES_FOR_VERIFICATION_FAILURE =
 {II}Collections.unmodifiableList(Arrays.asList(
 {III}"DateTimeStampUtcViolationOnFebruary29th",
@@ -203,6 +204,7 @@ public class Common{{
 {III}"InvalidMinMaxExample",
 {III}"SetViolation",
 {III}"ConstraintViolation"));
+
 """
     )
 
