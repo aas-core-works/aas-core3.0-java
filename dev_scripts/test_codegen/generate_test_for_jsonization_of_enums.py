@@ -59,7 +59,7 @@ public void testRoundTrip{enum_name}() throws JsonProcessingException {{
 }}  // void Test_round_trip_{enum_name}"""
             )
         )
-        
+
     writer = io.StringIO()
     writer.write(
         """\
