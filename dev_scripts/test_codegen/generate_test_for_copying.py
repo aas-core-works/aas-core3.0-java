@@ -5,7 +5,7 @@ import os
 import pathlib
 import sys
 import textwrap
-from typing import List, Optional
+from typing import List
 
 import aas_core_codegen
 import aas_core_codegen.common
@@ -16,7 +16,6 @@ import aas_core_codegen.run
 from aas_core_codegen import intermediate
 from aas_core_codegen.common import Stripped, Identifier
 from aas_core_codegen.java import (
-    common as java_common,
     naming as java_naming,
 )
 from aas_core_codegen.java.common import (
@@ -105,7 +104,6 @@ def _generate_shallow_equals(cls: intermediate.ConcreteClass) -> Stripped:
 
     exprs = []  # type: List[str]
     for prop in cls.properties:
-        prop_name = java_naming.property_name(prop.name)
         getter_name = java_naming.getter_name(prop.name)
         if isinstance(prop.type_annotation, intermediate.OptionalTypeAnnotation):
             exprs.append(f"( that.{getter_name}().isPresent() ? ( other.{getter_name}().isPresent() && that.{getter_name}().get() == other.{getter_name}().get()) : !other.{getter_name}().isPresent())")
@@ -327,8 +325,8 @@ def _generate_deep_equals_transformer(
 
     writer = io.StringIO()
     writer.write(
-        f"""\
-private static class DeepEqualTransformer extends AbstractTransformerWithContext<IClass, Boolean> {{
+        """\
+private static class DeepEqualTransformer extends AbstractTransformerWithContext<IClass, Boolean> {
 """
     )
 
@@ -519,7 +517,7 @@ public class TestCopying {
         if i > 0:
             writer.write("\n\n")
 
-        writer.write(textwrap.indent(block, "        "))
+        writer.write(textwrap.indent(block, I))
 
     writer.write(
         """

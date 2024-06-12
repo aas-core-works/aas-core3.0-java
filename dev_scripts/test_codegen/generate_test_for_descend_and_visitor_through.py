@@ -23,7 +23,7 @@ from aas_core_codegen.java.common import (
 )
 import test_codegen.common
 
-def _generate_compare_or_rerecord_trace()-> Stripped:
+def _generate_compare_or_rerecord_trace() -> Stripped:
     return Stripped(f"""\
 private void compareOrRerecordTrace(IClass instance, Path expectedPath) throws IOException  {{
 {I}final StringBuilder stringBuilder = new StringBuilder();
@@ -57,7 +57,7 @@ private void compareOrRerecordTrace(IClass instance, Path expectedPath) throws I
 {I}}}
 }}""")
 
-def _generate_assert_descend_and_visitor_through_same()-> Stripped:
+def _generate_assert_descend_and_visitor_through_same() -> Stripped:
     return Stripped(f"""\
 private void assertDescendAndVisitorThroughSame(IClass instance) {{
 {I}final List<String> logFromDescend = new ArrayList<>();
@@ -73,7 +73,7 @@ private void assertDescendAndVisitorThroughSame(IClass instance) {{
 {I}assertTrue(logFromDescend.equals(traceFromVisitor));
 }}""")
 
-def _generate_trace()-> Stripped:
+def _generate_trace() -> Stripped:
     return Stripped(f"""\
 private String trace(IClass instance) {{
 {I}if (instance instanceof IIdentifiable) {{
@@ -85,7 +85,7 @@ private String trace(IClass instance) {{
 {I}}}
 }}""")
 
-def _generate_visitor()-> Stripped:
+def _generate_visitor() -> Stripped:
     return Stripped(f"""\
 private class TracingVisitorThrough extends VisitorThrough {{
 {I}public final List<String> log = new ArrayList<>();
@@ -182,7 +182,7 @@ public class TestDescendAndVisitorThrough {
         if i > 0:
             writer.write("\n\n")
 
-        writer.write(textwrap.indent(block, "        "))
+        writer.write(textwrap.indent(block, I))
 
     writer.write(
         """
