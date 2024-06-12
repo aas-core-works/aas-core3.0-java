@@ -180,9 +180,9 @@ def _generate_transform_as_deep_equals(cls: intermediate.ConcreteClass) -> Strip
                 or primitive_type is intermediate.PrimitiveType.STR
             ):
                 if optional: expr = Stripped(f"""\
-that.{getter_name}().isPresent() 
-{I}? casted.{getter_name}().isPresent() 
-{I}&& that.{getter_name}().get() == casted.{getter_name}().get() 
+that.{getter_name}().isPresent()
+{I}? casted.{getter_name}().isPresent()
+{I}&& that.{getter_name}().get() == casted.{getter_name}().get()
 {I}: ! casted.{getter_name}().isPresent()""")
                 else: expr = Stripped(f"that.{getter_name}() == casted.{getter_name}()")
             elif primitive_type is intermediate.PrimitiveType.BYTEARRAY:
@@ -210,9 +210,9 @@ that.{getter_name}().isPresent() ?
             ):
                 if optional: expr = Stripped(
                     f"""\
-( that.{getter_name}().isPresent() 
-{I}? casted.{getter_name}().isPresent() 
-{I}&& transform( that.{getter_name}().get(), casted.{getter_name}().get()) 
+( that.{getter_name}().isPresent()
+{I}? casted.{getter_name}().isPresent()
+{I}&& transform( that.{getter_name}().get(), casted.{getter_name}().get())
 {I}: ! casted.{getter_name}().isPresent())"""
                 )
                 else: expr = Stripped(
@@ -451,8 +451,8 @@ public void testSnippetInDocs() {{
 {I}someProperty.setIdShort("someProperty");
 {I}List<ISubmodelElement> submodelElements = new ArrayList<>();
 {I}submodelElements.add(someProperty);
-{I}
-{I}
+
+
 {I}final Submodel submodel = new Submodel(
 {II}"some-unique-global-identifier",
 {II}null,
@@ -478,7 +478,7 @@ public void testSnippetInDocs() {{
 {I}// Changes to the property affect only the shallow copy,
 {I}// but not the deep one
 {I}environment.getSubmodels().get().get(0).getSubmodelElements().get().get(0).setIdShort("changed");
-{I}
+
 {I}assertEquals("changed",shallowCopy.getSubmodels().get().get(0).getSubmodelElements().get().get(0).getIdShort().get());
 {I}assertEquals("someProperty",deepCopy.getSubmodels().get().get(0).getSubmodelElements().get().get(0).getIdShort().get());
 }}  // public void Test_snippet_in_docs"""

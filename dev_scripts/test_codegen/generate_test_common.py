@@ -12,6 +12,7 @@ from aas_core_codegen.java.common import (
     INDENT2 as II,
     INDENT3 as III,
     INDENT4 as IIII,
+    INDENT5 as IIIII,
 )
 
 def _generate_find_paths()-> Stripped:
@@ -92,7 +93,11 @@ public static void assertEqualsExpectedOrRerecordVerificationErrors(List<Reporti
 {II}Files.write(errorsPath, got.getBytes(StandardCharsets.UTF_8));
 {I}}} else {{
 {II}if (!Files.exists(errorsPath)) {{
-{III}throw new FileNotFoundException("The file with the recorded errors does not exist: " + errorsPath);
+{III}throw new FileNotFoundException(
+{IIII}"The file with the recorded errors does not exist: " +
+{IIII}errorsPath +
+{IIII}"; maybe you want to set the environment variable " +
+{IIII}"AAS_CORE_AAS3_0_TESTS_RECORD_MODE");
 {II}}}
 {II}final String expected = String.join("\\n", Files.readAllLines(errorsPath));
 {II}assertEquals(expected,got,"The expected verification errors do not match the actual ones for the file " + path);
@@ -112,7 +117,11 @@ public static void assertEqualsExpectedOrRerecordDeserializationException(Xmliza
 {III}Files.write(exceptionPath, got.getBytes(StandardCharsets.UTF_8));
 {II}}} else{{
 {III}if (!Files.exists(exceptionPath)) {{
-{IIII}throw new FileNotFoundException("The file with the recorded errors does not exist: " + exceptionPath);
+{IIII}throw new FileNotFoundException(
+{IIIII}"The file with the recorded exception does not exist: " +
+{IIIII}exceptionPath +
+{IIIII}"; maybe you want to set the environment variable " +
+{IIIII}"AAS_CORE_AAS3_0_TESTS_RECORD_MODE");
 {III}}}
 {III}final String expected = String.join("\\n", Files.readAllLines(exceptionPath));
 {III}assertEquals(expected, got, "The expected exception does not match the actual one for the file " + path);
@@ -166,22 +175,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class Common{{
 {I}public static final boolean RECORD_MODE = System.getenv("AAS_CORE_AAS3_0_TESTS_RECORD_MODE") != null && System.getenv("AAS_CORE_AAS3_0_TESTS_RECORD_MODE")
 {II}.equalsIgnoreCase("true");
+
 {I}public static String TEST_DATA_DIR = Paths.get("test_data").toAbsolutePath().toString();
-
-{I}public static final List<String> CAUSES_XML_DESERIALIZATION_FAILURE =
-{II}Collections.unmodifiableList(Arrays.asList(
-{III}"TypeViolation",
-{III}"RequiredViolation",
-{III}"EnumViolation",
-{III}"UnexpectedAdditionalProperty"));
-
-{I}public static final List<String> CAUSES_JSON_DESERIALIZATION_FAILURE =
-{II}Collections.unmodifiableList(Arrays.asList(
-{III}"TypeViolation",
-{III}"RequiredViolation",
-{III}"EnumViolation",
-{III}"NullViolation",
-{III}"UnexpectedAdditionalProperty"));
 
 {I}public static final List<String> CAUSES_FOR_VERIFICATION_FAILURE =
 {II}Collections.unmodifiableList(Arrays.asList(
@@ -193,6 +188,7 @@ public class Common{{
 {III}"InvalidMinMaxExample",
 {III}"SetViolation",
 {III}"ConstraintViolation"));
+
 """
     )
 

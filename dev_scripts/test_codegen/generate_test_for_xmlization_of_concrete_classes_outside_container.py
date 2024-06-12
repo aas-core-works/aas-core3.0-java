@@ -63,11 +63,11 @@ public void testRoundTrip{cls_name_java}() throws IOException, XMLStreamExceptio
 {I}// We load from JSON here just to jump-start the round trip.
 {I}// The round-trip goes then over XML.
 {I}final {cls_name_java} instance = CommonJsonization.loadMaximal{cls_name_java}();
-{I}
+
 {I}final StringWriter stringOut = new StringWriter();
 {I}final XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
 {I}final XMLStreamWriter xmlWriter = outputFactory.createXMLStreamWriter(stringOut);
-{I}
+
 {I}Xmlization.Serialize.to(instance, xmlWriter);
 {I}// De-serialize from XML
 {I}final String outputText = stringOut.toString();
@@ -104,7 +104,7 @@ import java.io.StringWriter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-/** 
+/**
 * Test de/serialization of classes contained in a container <i>outside</i>
 * of that container.
 * This is necessary so that we also test the methods that directly de/serialize
