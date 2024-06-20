@@ -29,7 +29,10 @@ public class TestXOrDefault {
     } else {
       if (!Files.exists(expectedPath)) {
         throw new FileNotFoundException(
-            "The file with the recorded value does not exist: " + expectedPath);
+            "The file with the recorded value does not exist: "
+                + expectedPath
+                + "; maybe you want to set the environment variable "
+                + "AAS_CORE_AAS3_0_TESTS_RECORD_MODE");
       }
       final JsonNode expected = mapper.readTree(expectedPath.toFile());
       assertEquals(mapper.readTree(expected.toString()), mapper.readTree(got.toString()));

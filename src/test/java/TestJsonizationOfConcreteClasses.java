@@ -88,7 +88,10 @@ public class TestJsonizationOfConcreteClasses {
       } else {
         if (!Files.exists(exceptionPath)) {
           throw new FileNotFoundException(
-              "The file with the recorded errors does not exist: " + exceptionPath);
+              "The file with the recorded errors does not exist: "
+                  + exceptionPath
+                  + "; maybe you want to set the environment variable "
+                  + "AAS_CORE_AAS3_0_TESTS_RECORD_MODE");
         }
         final String expected =
             Files.readAllLines(exceptionPath).stream().collect(Collectors.joining("\n"));
@@ -129,20 +132,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testExtensionDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Extension");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("Extension");
+      if (!Files.exists(clsDir)) {
         // No examples of Extension for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -151,20 +154,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testExtensionVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Extension");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("Extension");
+      if (!Files.exists(clsDir)) {
         // No examples of Extension for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -206,20 +205,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testAdministrativeInformationDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "AdministrativeInformation");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("AdministrativeInformation");
+      if (!Files.exists(clsDir)) {
         // No examples of AdministrativeInformation for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -228,20 +227,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testAdministrativeInformationVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "AdministrativeInformation");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("AdministrativeInformation");
+      if (!Files.exists(clsDir)) {
         // No examples of AdministrativeInformation for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -278,20 +273,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testQualifierDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Qualifier");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("Qualifier");
+      if (!Files.exists(clsDir)) {
         // No examples of Qualifier for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -300,20 +295,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testQualifierVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Qualifier");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("Qualifier");
+      if (!Files.exists(clsDir)) {
         // No examples of Qualifier for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -355,20 +346,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testAssetAdministrationShellDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "AssetAdministrationShell");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("AssetAdministrationShell");
+      if (!Files.exists(clsDir)) {
         // No examples of AssetAdministrationShell for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -377,20 +368,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testAssetAdministrationShellVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "AssetAdministrationShell");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("AssetAdministrationShell");
+      if (!Files.exists(clsDir)) {
         // No examples of AssetAdministrationShell for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -428,20 +415,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testAssetInformationDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "AssetInformation");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("AssetInformation");
+      if (!Files.exists(clsDir)) {
         // No examples of AssetInformation for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -450,20 +437,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testAssetInformationVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "AssetInformation");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("AssetInformation");
+      if (!Files.exists(clsDir)) {
         // No examples of AssetInformation for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -500,20 +483,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testResourceDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Resource");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("Resource");
+      if (!Files.exists(clsDir)) {
         // No examples of Resource for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -522,20 +505,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testResourceVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Resource");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("Resource");
+      if (!Files.exists(clsDir)) {
         // No examples of Resource for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -573,20 +552,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testSpecificAssetIdDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "SpecificAssetId");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("SpecificAssetId");
+      if (!Files.exists(clsDir)) {
         // No examples of SpecificAssetId for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -595,20 +574,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testSpecificAssetIdVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "SpecificAssetId");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("SpecificAssetId");
+      if (!Files.exists(clsDir)) {
         // No examples of SpecificAssetId for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -645,20 +620,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testSubmodelDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Submodel");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("Submodel");
+      if (!Files.exists(clsDir)) {
         // No examples of Submodel for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -667,20 +642,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testSubmodelVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Submodel");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("Submodel");
+      if (!Files.exists(clsDir)) {
         // No examples of Submodel for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -722,20 +693,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testRelationshipElementDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "RelationshipElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("RelationshipElement");
+      if (!Files.exists(clsDir)) {
         // No examples of RelationshipElement for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -744,20 +715,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testRelationshipElementVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "RelationshipElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("RelationshipElement");
+      if (!Files.exists(clsDir)) {
         // No examples of RelationshipElement for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -799,20 +766,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testSubmodelElementListDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "SubmodelElementList");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("SubmodelElementList");
+      if (!Files.exists(clsDir)) {
         // No examples of SubmodelElementList for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -821,20 +788,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testSubmodelElementListVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "SubmodelElementList");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("SubmodelElementList");
+      if (!Files.exists(clsDir)) {
         // No examples of SubmodelElementList for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -876,20 +839,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testSubmodelElementCollectionDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "SubmodelElementCollection");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("SubmodelElementCollection");
+      if (!Files.exists(clsDir)) {
         // No examples of SubmodelElementCollection for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -898,20 +861,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testSubmodelElementCollectionVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "SubmodelElementCollection");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("SubmodelElementCollection");
+      if (!Files.exists(clsDir)) {
         // No examples of SubmodelElementCollection for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -948,20 +907,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testPropertyDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Property");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("Property");
+      if (!Files.exists(clsDir)) {
         // No examples of Property for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -970,20 +929,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testPropertyVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Property");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("Property");
+      if (!Files.exists(clsDir)) {
         // No examples of Property for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -1025,20 +980,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testMultiLanguagePropertyDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "MultiLanguageProperty");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("MultiLanguageProperty");
+      if (!Files.exists(clsDir)) {
         // No examples of MultiLanguageProperty for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1047,20 +1002,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testMultiLanguagePropertyVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "MultiLanguageProperty");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("MultiLanguageProperty");
+      if (!Files.exists(clsDir)) {
         // No examples of MultiLanguageProperty for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -1097,15 +1048,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testRangeDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", cause, "Range");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("Range");
+      if (!Files.exists(clsDir)) {
         // No examples of Range for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1114,15 +1070,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testRangeVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", cause, "Range");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("Range");
+      if (!Files.exists(clsDir)) {
         // No examples of Range for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -1160,20 +1117,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testReferenceElementDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "ReferenceElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("ReferenceElement");
+      if (!Files.exists(clsDir)) {
         // No examples of ReferenceElement for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1182,20 +1139,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testReferenceElementVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "ReferenceElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("ReferenceElement");
+      if (!Files.exists(clsDir)) {
         // No examples of ReferenceElement for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -1232,15 +1185,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testBlobDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", cause, "Blob");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("Blob");
+      if (!Files.exists(clsDir)) {
         // No examples of Blob for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1249,15 +1207,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testBlobVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", cause, "Blob");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("Blob");
+      if (!Files.exists(clsDir)) {
         // No examples of Blob for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -1294,15 +1253,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testFileDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", cause, "File");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("File");
+      if (!Files.exists(clsDir)) {
         // No examples of File for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1311,15 +1275,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testFileVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", cause, "File");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("File");
+      if (!Files.exists(clsDir)) {
         // No examples of File for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -1361,20 +1326,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testAnnotatedRelationshipElementDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "AnnotatedRelationshipElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("AnnotatedRelationshipElement");
+      if (!Files.exists(clsDir)) {
         // No examples of AnnotatedRelationshipElement for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1383,20 +1348,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testAnnotatedRelationshipElementVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "AnnotatedRelationshipElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("AnnotatedRelationshipElement");
+      if (!Files.exists(clsDir)) {
         // No examples of AnnotatedRelationshipElement for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -1433,20 +1394,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testEntityDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Entity");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("Entity");
+      if (!Files.exists(clsDir)) {
         // No examples of Entity for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1455,20 +1416,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testEntityVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Entity");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("Entity");
+      if (!Files.exists(clsDir)) {
         // No examples of Entity for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -1494,15 +1451,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testEventPayloadDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Json", "SelfContained", "Unexpected", cause, "EventPayload");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "SelfContained", "Unexpected", "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("EventPayload");
+      if (!Files.exists(clsDir)) {
         // No examples of EventPayload for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         Jsonization.DeserializeException exception = null;
@@ -1518,15 +1476,15 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testEventPayloadVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Json", "SelfContained", "Unexpected", cause, "EventPayload");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(Common.TEST_DATA_DIR, "Json", "SelfContained", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("EventPayload");
+      if (!Files.exists(clsDir)) {
         // No examples of EventPayload for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         final EventPayload instance = Jsonization.Deserialize.deserializeEventPayload(node);
@@ -1571,20 +1529,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testBasicEventElementDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "BasicEventElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("BasicEventElement");
+      if (!Files.exists(clsDir)) {
         // No examples of BasicEventElement for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1593,20 +1551,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testBasicEventElementVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "BasicEventElement");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("BasicEventElement");
+      if (!Files.exists(clsDir)) {
         // No examples of BasicEventElement for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -1643,20 +1597,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testOperationDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Operation");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("Operation");
+      if (!Files.exists(clsDir)) {
         // No examples of Operation for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1665,20 +1619,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testOperationVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Operation");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("Operation");
+      if (!Files.exists(clsDir)) {
         // No examples of Operation for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -1720,20 +1670,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testOperationVariableDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "OperationVariable");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("OperationVariable");
+      if (!Files.exists(clsDir)) {
         // No examples of OperationVariable for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1742,20 +1692,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testOperationVariableVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "OperationVariable");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("OperationVariable");
+      if (!Files.exists(clsDir)) {
         // No examples of OperationVariable for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -1792,20 +1738,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testCapabilityDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Capability");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("Capability");
+      if (!Files.exists(clsDir)) {
         // No examples of Capability for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1814,20 +1760,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testCapabilityVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Capability");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("Capability");
+      if (!Files.exists(clsDir)) {
         // No examples of Capability for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -1869,20 +1811,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testConceptDescriptionDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "ConceptDescription");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("ConceptDescription");
+      if (!Files.exists(clsDir)) {
         // No examples of ConceptDescription for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1891,20 +1833,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testConceptDescriptionVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "ConceptDescription");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("ConceptDescription");
+      if (!Files.exists(clsDir)) {
         // No examples of ConceptDescription for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -1941,20 +1879,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testReferenceDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Reference");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("Reference");
+      if (!Files.exists(clsDir)) {
         // No examples of Reference for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -1963,20 +1901,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testReferenceVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "Reference");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("Reference");
+      if (!Files.exists(clsDir)) {
         // No examples of Reference for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -2013,15 +1947,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testKeyDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", cause, "Key");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("Key");
+      if (!Files.exists(clsDir)) {
         // No examples of Key for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2030,15 +1969,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testKeyVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", cause, "Key");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("Key");
+      if (!Files.exists(clsDir)) {
         // No examples of Key for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -2080,20 +2020,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testLangStringNameTypeDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "LangStringNameType");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("LangStringNameType");
+      if (!Files.exists(clsDir)) {
         // No examples of LangStringNameType for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2102,20 +2042,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testLangStringNameTypeVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "LangStringNameType");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("LangStringNameType");
+      if (!Files.exists(clsDir)) {
         // No examples of LangStringNameType for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -2157,20 +2093,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testLangStringTextTypeDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "LangStringTextType");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("LangStringTextType");
+      if (!Files.exists(clsDir)) {
         // No examples of LangStringTextType for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2179,20 +2115,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testLangStringTextTypeVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "LangStringTextType");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("LangStringTextType");
+      if (!Files.exists(clsDir)) {
         // No examples of LangStringTextType for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -2218,15 +2150,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testEnvironmentDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Json", "SelfContained", "Unexpected", cause, "Environment");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "SelfContained", "Unexpected", "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("Environment");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         Jsonization.DeserializeException exception = null;
@@ -2242,15 +2175,15 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testEnvironmentVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR, "Json", "SelfContained", "Unexpected", cause, "Environment");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(Common.TEST_DATA_DIR, "Json", "SelfContained", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("Environment");
+      if (!Files.exists(clsDir)) {
         // No examples of Environment for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         final Environment instance = Jsonization.Deserialize.deserializeEnvironment(node);
@@ -2295,20 +2228,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testEmbeddedDataSpecificationDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "EmbeddedDataSpecification");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("EmbeddedDataSpecification");
+      if (!Files.exists(clsDir)) {
         // No examples of EmbeddedDataSpecification for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2317,20 +2250,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testEmbeddedDataSpecificationVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "EmbeddedDataSpecification");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("EmbeddedDataSpecification");
+      if (!Files.exists(clsDir)) {
         // No examples of EmbeddedDataSpecification for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -2367,20 +2296,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testLevelTypeDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "LevelType");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("LevelType");
+      if (!Files.exists(clsDir)) {
         // No examples of LevelType for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2389,20 +2318,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testLevelTypeVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "LevelType");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("LevelType");
+      if (!Files.exists(clsDir)) {
         // No examples of LevelType for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -2444,20 +2369,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testValueReferencePairDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "ValueReferencePair");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("ValueReferencePair");
+      if (!Files.exists(clsDir)) {
         // No examples of ValueReferencePair for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2466,20 +2391,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testValueReferencePairVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "ValueReferencePair");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("ValueReferencePair");
+      if (!Files.exists(clsDir)) {
         // No examples of ValueReferencePair for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -2516,20 +2437,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testValueListDeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "ValueList");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("ValueList");
+      if (!Files.exists(clsDir)) {
         // No examples of ValueList for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2538,20 +2459,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testValueListVerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "ValueList");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("ValueList");
+      if (!Files.exists(clsDir)) {
         // No examples of ValueList for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -2593,20 +2510,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testLangStringPreferredNameTypeIec61360DeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "LangStringPreferredNameTypeIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("LangStringPreferredNameTypeIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of LangStringPreferredNameTypeIec61360 for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2615,20 +2532,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testLangStringPreferredNameTypeIec61360VerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "LangStringPreferredNameTypeIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("LangStringPreferredNameTypeIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of LangStringPreferredNameTypeIec61360 for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -2670,20 +2583,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testLangStringShortNameTypeIec61360DeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "LangStringShortNameTypeIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("LangStringShortNameTypeIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of LangStringShortNameTypeIec61360 for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2692,20 +2605,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testLangStringShortNameTypeIec61360VerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "LangStringShortNameTypeIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("LangStringShortNameTypeIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of LangStringShortNameTypeIec61360 for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -2747,20 +2656,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testLangStringDefinitionTypeIec61360DeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "LangStringDefinitionTypeIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("LangStringDefinitionTypeIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of LangStringDefinitionTypeIec61360 for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2769,20 +2678,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testLangStringDefinitionTypeIec61360VerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "LangStringDefinitionTypeIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("LangStringDefinitionTypeIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of LangStringDefinitionTypeIec61360 for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);
@@ -2824,20 +2729,20 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testDataSpecificationIec61360DeserializationFail() throws IOException {
-    for (String cause : Common.CAUSES_JSON_DESERIALIZATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "DataSpecificationIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR,
+                "Json",
+                "ContainedInEnvironment",
+                "Unexpected",
+                "Unserializable"))) {
+      final Path clsDir = causeDir.resolve("DataSpecificationIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of DataSpecificationIec61360 for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         testDeserializationFail(path);
       }
@@ -2846,20 +2751,16 @@ public class TestJsonizationOfConcreteClasses {
 
   @Test
   public void testDataSpecificationIec61360VerificationFail() throws IOException {
-    for (String cause : Common.CAUSES_FOR_VERIFICATION_FAILURE) {
-      final Path searchPath =
-          Paths.get(
-              Common.TEST_DATA_DIR,
-              "Json",
-              "ContainedInEnvironment",
-              "Unexpected",
-              cause,
-              "DataSpecificationIec61360");
-      if (!Files.exists(searchPath)) {
+    for (Path causeDir :
+        Common.findDirs(
+            Paths.get(
+                Common.TEST_DATA_DIR, "Json", "ContainedInEnvironment", "Unexpected", "Invalid"))) {
+      final Path clsDir = causeDir.resolve("DataSpecificationIec61360");
+      if (!Files.exists(clsDir)) {
         // No examples of DataSpecificationIec61360 for the failure cause.
         continue;
       }
-      final List<Path> paths = Common.findPaths(searchPath, ".json");
+      final List<Path> paths = Common.findPaths(clsDir, ".json");
       for (Path path : paths) {
         final JsonNode node = mapper.readTree(path.toFile());
         testVerificationFail(path);

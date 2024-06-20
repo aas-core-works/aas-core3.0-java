@@ -15,8 +15,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,43 +22,13 @@ import java.util.stream.StreamSupport;
 
 /** Provide methods for testing. */
 public class Common {
-
   public static final boolean RECORD_MODE =
       System.getenv("AAS_CORE_AAS3_0_TESTS_RECORD_MODE") != null
           && System.getenv("AAS_CORE_AAS3_0_TESTS_RECORD_MODE").equalsIgnoreCase("true");
+
   public static String TEST_DATA_DIR = Paths.get("test_data").toAbsolutePath().toString();
 
-  public static final List<String> CAUSES_XML_DESERIALIZATION_FAILURE =
-      Collections.unmodifiableList(
-          Arrays.asList(
-              "TypeViolation",
-              "RequiredViolation",
-              "EnumViolation",
-              "UnexpectedAdditionalProperty"));
-
-  public static final List<String> CAUSES_JSON_DESERIALIZATION_FAILURE =
-      Collections.unmodifiableList(
-          Arrays.asList(
-              "TypeViolation",
-              "RequiredViolation",
-              "EnumViolation",
-              "NullViolation",
-              "UnexpectedAdditionalProperty"));
-
-  public static final List<String> CAUSES_FOR_VERIFICATION_FAILURE =
-      Collections.unmodifiableList(
-          Arrays.asList(
-              "DateTimeStampUtcViolationOnFebruary29th",
-              "MaxLengthViolation",
-              "MinLengthViolation",
-              "PatternViolation",
-              "InvalidValueExample",
-              "InvalidMinMaxExample",
-              "SetViolation",
-              "ConstraintViolation"));
-
   public static List<Path> findPaths(Path path, String fileExtension) throws IOException {
-
     if (!Files.isDirectory(path)) {
       throw new IllegalArgumentException("Path must be a directory!");
     }
@@ -71,6 +39,18 @@ public class Common {
           walk.filter(p -> !Files.isDirectory(p))
               .filter(f -> f.toString().endsWith(fileExtension))
               .collect(Collectors.toList());
+    }
+    return result;
+  }
+
+  public static List<Path> findDirs(Path path) throws IOException {
+    if (!Files.isDirectory(path)) {
+      throw new IllegalArgumentException("Path must be a directory!");
+    }
+
+    List<Path> result;
+    try (Stream<Path> walk = Files.walk(path)) {
+      result = walk.filter(p -> Files.isDirectory(p)).collect(Collectors.toList());
     }
     return result;
   }
@@ -136,10 +116,10 @@ public class Common {
     } else {
       if (!Files.exists(errorsPath)) {
         throw new FileNotFoundException(
-            "The file with the recorded errors does not exist: " +
-            errorsPath +
-            "; maybe you want to set the environment variable" +
-            Common.RECORD_MODE);
+            "The file with the recorded errors does not exist: "
+                + errorsPath
+                + "; maybe you want to set the environment variable "
+                + "AAS_CORE_AAS3_0_TESTS_RECORD_MODE");
       }
       final String expected = String.join("\n", Files.readAllLines(errorsPath));
       assertEquals(
@@ -161,7 +141,10 @@ public class Common {
       } else {
         if (!Files.exists(exceptionPath)) {
           throw new FileNotFoundException(
-              "The file with the recorded errors does not exist: " + exceptionPath);
+              "The file with the recorded exception does not exist: "
+                  + exceptionPath
+                  + "; maybe you want to set the environment variable "
+                  + "AAS_CORE_AAS3_0_TESTS_RECORD_MODE");
         }
         final String expected = String.join("\n", Files.readAllLines(exceptionPath));
         assertEquals(
