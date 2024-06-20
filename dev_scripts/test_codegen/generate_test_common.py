@@ -176,8 +176,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -193,17 +191,6 @@ public class Common {{
 {II}.equalsIgnoreCase("true");
 
 {I}public static String TEST_DATA_DIR = Paths.get("test_data").toAbsolutePath().toString();
-
-{I}public static final List<String> CAUSES_FOR_VERIFICATION_FAILURE =
-{II}Collections.unmodifiableList(Arrays.asList(
-{III}"DateTimeStampUtcViolationOnFebruary29th",
-{III}"MaxLengthViolation",
-{III}"MinLengthViolation",
-{III}"PatternViolation",
-{III}"InvalidValueExample",
-{III}"InvalidMinMaxExample",
-{III}"SetViolation",
-{III}"ConstraintViolation"));
 
 """
     )

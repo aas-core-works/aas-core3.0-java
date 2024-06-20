@@ -15,8 +15,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,18 +27,6 @@ public class Common {
           && System.getenv("AAS_CORE_AAS3_0_TESTS_RECORD_MODE").equalsIgnoreCase("true");
 
   public static String TEST_DATA_DIR = Paths.get("test_data").toAbsolutePath().toString();
-
-  public static final List<String> CAUSES_FOR_VERIFICATION_FAILURE =
-      Collections.unmodifiableList(
-          Arrays.asList(
-              "DateTimeStampUtcViolationOnFebruary29th",
-              "MaxLengthViolation",
-              "MinLengthViolation",
-              "PatternViolation",
-              "InvalidValueExample",
-              "InvalidMinMaxExample",
-              "SetViolation",
-              "ConstraintViolation"));
 
   public static List<Path> findPaths(Path path, String fileExtension) throws IOException {
     if (!Files.isDirectory(path)) {
