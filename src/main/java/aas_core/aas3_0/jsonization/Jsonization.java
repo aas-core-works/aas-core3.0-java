@@ -1312,6 +1312,8 @@ public class Jsonization {
       IReference theDerivedFrom = null;
       List<IReference> theSubmodels = null;
 
+      String modelType = null;
+
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
 
@@ -1613,7 +1615,30 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(AssetAdministrationShell.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("AssetAdministrationShell")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'AssetAdministrationShell', "
+                            + "but got '"
+                            + modelType
+                            + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -1622,6 +1647,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       if (theId == null) {
@@ -2073,6 +2104,8 @@ public class Jsonization {
       List<IEmbeddedDataSpecification> theEmbeddedDataSpecifications = null;
       List<ISubmodelElement> theSubmodelElements = null;
 
+      String modelType = null;
+
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
 
@@ -2452,7 +2485,27 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(Submodel.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("Submodel")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'Submodel', " + "but got '" + modelType + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -2461,6 +2514,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       if (theId == null) {
@@ -2648,6 +2707,8 @@ public class Jsonization {
       List<IReference> theSupplementalSemanticIds = null;
       List<IQualifier> theQualifiers = null;
       List<IEmbeddedDataSpecification> theEmbeddedDataSpecifications = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -2972,7 +3033,30 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(RelationshipElement.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("RelationshipElement")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'RelationshipElement', "
+                            + "but got '"
+                            + modelType
+                            + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -2981,6 +3065,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       if (theFirst == null) {
@@ -3057,6 +3147,8 @@ public class Jsonization {
       IReference theSemanticIdListElement = null;
       DataTypeDefXsd theValueTypeListElement = null;
       List<ISubmodelElement> theValue = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -3457,7 +3549,30 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(SubmodelElementList.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("SubmodelElementList")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'SubmodelElementList', "
+                            + "but got '"
+                            + modelType
+                            + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -3466,6 +3581,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       if (theTypeValueListElement == null) {
@@ -3517,6 +3638,8 @@ public class Jsonization {
       List<IQualifier> theQualifiers = null;
       List<IEmbeddedDataSpecification> theEmbeddedDataSpecifications = null;
       List<ISubmodelElement> theValue = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -3849,7 +3972,30 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(SubmodelElementCollection.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("SubmodelElementCollection")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'SubmodelElementCollection', "
+                            + "but got '"
+                            + modelType
+                            + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -3858,6 +4004,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       return Result.success(
@@ -3960,6 +4112,8 @@ public class Jsonization {
       List<IEmbeddedDataSpecification> theEmbeddedDataSpecifications = null;
       String theValue = null;
       IReference theValueId = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -4300,7 +4454,27 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(Property.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("Property")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'Property', " + "but got '" + modelType + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -4309,6 +4483,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       if (theValueType == null) {
@@ -4358,6 +4538,8 @@ public class Jsonization {
       List<IEmbeddedDataSpecification> theEmbeddedDataSpecifications = null;
       List<ILangStringTextType> theValue = null;
       IReference theValueId = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -4705,7 +4887,30 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(MultiLanguageProperty.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("MultiLanguageProperty")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'MultiLanguageProperty', "
+                            + "but got '"
+                            + modelType
+                            + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -4714,6 +4919,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       return Result.success(
@@ -4757,6 +4968,8 @@ public class Jsonization {
       List<IEmbeddedDataSpecification> theEmbeddedDataSpecifications = null;
       String theMin = null;
       String theMax = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -5096,7 +5309,27 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(Range.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("Range")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'Range', " + "but got '" + modelType + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -5105,6 +5338,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       if (theValueType == null) {
@@ -5153,6 +5392,8 @@ public class Jsonization {
       List<IQualifier> theQualifiers = null;
       List<IEmbeddedDataSpecification> theEmbeddedDataSpecifications = null;
       IReference theValue = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -5462,7 +5703,30 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(ReferenceElement.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("ReferenceElement")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'ReferenceElement', "
+                            + "but got '"
+                            + modelType
+                            + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -5471,6 +5735,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       return Result.success(
@@ -5512,6 +5782,8 @@ public class Jsonization {
       List<IQualifier> theQualifiers = null;
       List<IEmbeddedDataSpecification> theEmbeddedDataSpecifications = null;
       byte[] theValue = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -5837,7 +6109,27 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(Blob.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("Blob")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'Blob', " + "but got '" + modelType + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -5846,6 +6138,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       if (theContentType == null) {
@@ -5894,6 +6192,8 @@ public class Jsonization {
       List<IQualifier> theQualifiers = null;
       List<IEmbeddedDataSpecification> theEmbeddedDataSpecifications = null;
       String theValue = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -6219,7 +6519,27 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(File.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("File")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'File', " + "but got '" + modelType + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -6228,6 +6548,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       if (theContentType == null) {
@@ -6278,6 +6604,8 @@ public class Jsonization {
       List<IQualifier> theQualifiers = null;
       List<IEmbeddedDataSpecification> theEmbeddedDataSpecifications = null;
       List<IDataElement> theAnnotations = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -6641,7 +6969,30 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(AnnotatedRelationshipElement.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("AnnotatedRelationshipElement")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'AnnotatedRelationshipElement', "
+                            + "but got '"
+                            + modelType
+                            + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -6650,6 +7001,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       if (theFirst == null) {
@@ -6706,6 +7063,8 @@ public class Jsonization {
       List<ISubmodelElement> theStatements = null;
       String theGlobalAssetId = null;
       List<ISpecificAssetId> theSpecificAssetIds = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -7114,7 +7473,27 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(Entity.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("Entity")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'Entity', " + "but got '" + modelType + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -7123,6 +7502,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       if (theEntityType == null) {
@@ -7474,6 +7859,8 @@ public class Jsonization {
       String theLastUpdate = null;
       String theMinInterval = null;
       String theMaxInterval = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -7900,7 +8287,30 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(BasicEventElement.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("BasicEventElement")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'BasicEventElement', "
+                            + "but got '"
+                            + modelType
+                            + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -7909,6 +8319,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       if (theObserved == null) {
@@ -7975,6 +8391,8 @@ public class Jsonization {
       List<IOperationVariable> theInputVariables = null;
       List<IOperationVariable> theOutputVariables = null;
       List<IOperationVariable> theInoutputVariables = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -8389,7 +8807,27 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(Operation.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("Operation")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'Operation', " + "but got '" + modelType + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -8398,6 +8836,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       return Result.success(
@@ -8491,6 +8935,8 @@ public class Jsonization {
       List<IReference> theSupplementalSemanticIds = null;
       List<IQualifier> theQualifiers = null;
       List<IEmbeddedDataSpecification> theEmbeddedDataSpecifications = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -8785,7 +9231,27 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(Capability.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("Capability")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'Capability', " + "but got '" + modelType + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -8794,6 +9260,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       return Result.success(
@@ -8832,6 +9304,8 @@ public class Jsonization {
       IAdministrativeInformation theAdministration = null;
       List<IEmbeddedDataSpecification> theEmbeddedDataSpecifications = null;
       List<IReference> theIsCaseOf = null;
+
+      String modelType = null;
 
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
@@ -9098,7 +9572,30 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(ConceptDescription.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("ConceptDescription")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'ConceptDescription', "
+                            + "but got '"
+                            + modelType
+                            + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -9107,6 +9604,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       if (theId == null) {
@@ -10376,6 +10879,8 @@ public class Jsonization {
       String theValue = null;
       ILevelType theLevelType = null;
 
+      String modelType = null;
+
       for (Iterator<Map.Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
         Map.Entry<String, JsonNode> currentNode = iterator.next();
 
@@ -10643,7 +11148,30 @@ public class Jsonization {
             }
           case "modelType":
             {
-              continue;
+              if (currentNode.getValue() == null) {
+                final Reporting.Error error =
+                    new Reporting.Error("Expected a model type, but got null");
+                return Result.failure(error);
+              }
+              final Result<? extends String> modelTypeResult =
+                  DeserializeImplementation.tryStringFrom(currentNode.getValue());
+              if (modelTypeResult.isError()) {
+                modelTypeResult.getError().prependSegment(new Reporting.NameSegment("modelType"));
+                return modelTypeResult.castTo(DataSpecificationIec61360.class);
+              }
+              modelType = modelTypeResult.getResult();
+
+              if (!modelType.equals("DataSpecificationIec61360")) {
+                final Reporting.Error error =
+                    new Reporting.Error(
+                        "Expected the model type 'DataSpecificationIec61360', "
+                            + "but got '"
+                            + modelType
+                            + "'");
+                error.prependSegment(new Reporting.NameSegment("modelType"));
+                return Result.failure(error);
+              }
+              break;
             }
           default:
             {
@@ -10652,6 +11180,12 @@ public class Jsonization {
               return Result.failure(error);
             }
         }
+      }
+
+      if (modelType == null) {
+        final Reporting.Error error =
+            new Reporting.Error("Required property \"modelType\" is missing");
+        return Result.failure(error);
       }
 
       if (thePreferredName == null) {
