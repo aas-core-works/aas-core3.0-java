@@ -1,0 +1,1 @@
+Expected a JsonObject, but got NULL at: assetAdministrationShells[0].embeddedDataSpecifications[0].dataSpecification

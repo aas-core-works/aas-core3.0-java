@@ -12,7 +12,6 @@ import aas_core.aas3_0.visitation.ITransformer;
 import aas_core.aas3_0.visitation.ITransformerWithContext;
 import aas_core.aas3_0.visitation.IVisitor;
 import aas_core.aas3_0.visitation.IVisitorWithContext;
-import java.util.Optional;
 
 public class EnhancedEmbeddedDataSpecification<EnhancementT> extends Enhanced<EnhancementT>
     implements IEmbeddedDataSpecification {
@@ -35,7 +34,7 @@ public class EnhancedEmbeddedDataSpecification<EnhancementT> extends Enhanced<En
   }
 
   @Override
-  public Optional<IReference> getDataSpecification() {
+  public IReference getDataSpecification() {
     return instance.getDataSpecification();
   }
 

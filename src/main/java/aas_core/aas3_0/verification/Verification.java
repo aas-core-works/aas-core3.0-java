@@ -9378,18 +9378,16 @@ public class Verification {
                         error.prependSegment(new Reporting.NameSegment("dataSpecificationContent"));
                         return error;
                       }));
-      if (that.getDataSpecification().isPresent()) {
-        errorStream =
-            Stream.<Reporting.Error>concat(
-                errorStream,
-                Stream.of(that.getDataSpecification().get())
-                    .flatMap(Verification::verifyToErrorStream)
-                    .map(
-                        error -> {
-                          error.prependSegment(new Reporting.NameSegment("dataSpecification"));
-                          return error;
-                        }));
-      }
+      errorStream =
+          Stream.<Reporting.Error>concat(
+              errorStream,
+              Stream.of(that.getDataSpecification())
+                  .flatMap(Verification::verifyToErrorStream)
+                  .map(
+                      error -> {
+                        error.prependSegment(new Reporting.NameSegment("dataSpecification"));
+                        return error;
+                      }));
       return errorStream;
     }
 
@@ -9659,7 +9657,7 @@ public class Verification {
                 Stream.of(
                     new Reporting.Error(
                         "Invariant violated:\n"
-                            + "Constraint AASc-002: preferred name shall be provided at "
+                            + "Constraint AASc-3a-002: preferred name shall be provided at "
                             + "least in English.")));
       }
       errorStream =
@@ -10297,16 +10295,6 @@ public class Verification {
                   new Reporting.Error(
                       "Invariant violated:\n"
                           + "Identifier shall have a maximum length of 2000 characters.")));
-    }
-    if (!matchesRfc8089Path(that)) {
-      errorStream =
-          Stream.<Reporting.Error>concat(
-              errorStream,
-              Stream.of(
-                  new Reporting.Error(
-                      "Invariant violated:\n"
-                          + "The value must represent a valid file URI scheme according "
-                          + "to RFC 8089.")));
     }
     return errorStream;
   }

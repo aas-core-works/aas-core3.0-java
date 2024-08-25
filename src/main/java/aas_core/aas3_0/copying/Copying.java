@@ -435,7 +435,7 @@ public class Copying {
     @Override
     public IClass transformEmbeddedDataSpecification(IEmbeddedDataSpecification that) {
       return new EmbeddedDataSpecification(
-          that.getDataSpecificationContent(), that.getDataSpecification().orElse(null));
+          that.getDataSpecificationContent(), that.getDataSpecification());
     }
 
     @Override
@@ -1973,7 +1973,7 @@ public class Copying {
     @Override
     public IClass transformEmbeddedDataSpecification(IEmbeddedDataSpecification that) {
       return new EmbeddedDataSpecification(
-          deep(that.getDataSpecificationContent()), that.getDataSpecification().orElse(null));
+          deep(that.getDataSpecificationContent()), deep(that.getDataSpecification()));
     }
 
     @Override
