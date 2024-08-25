@@ -30,9 +30,22 @@ def _execute(
 
     Return the non-zero exit code, or None if the exit code was zero.
     """
-    exit_code = subprocess.call(cmd, stdout=stdout, stderr=stderr, cwd=cwd, env=env)
+    cmd_joined = " ".join(cmd)
+
+    exit_code = None  # type: Optional[int]
+    try:
+        exit_code = subprocess.call(cmd, stdout=stdout, stderr=stderr, cwd=cwd, env=env)
+    except FileNotFoundError as exception:
+        print(f"Failed to execute {cmd_joined}: {exception}", file=sys.stderr)
+        return 1
+
+    assert exit_code is not None
+
     if exit_code != 0:
-        print("Failed to execute: " + " ".join(cmd), file=sys.stderr)
+        print(
+            f"Failed to execute {cmd_joined} with exit code: {exit_code}",
+            file=sys.stderr
+        )
         return exit_code
 
     return None
