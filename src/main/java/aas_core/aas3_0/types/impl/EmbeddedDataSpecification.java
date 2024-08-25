@@ -14,7 +14,6 @@ import aas_core.aas3_0.visitation.IVisitor;
 import aas_core.aas3_0.visitation.IVisitorWithContext;
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -28,18 +27,14 @@ public class EmbeddedDataSpecification implements IEmbeddedDataSpecification {
   /** Reference to the data specification */
   private IReference dataSpecification;
 
-  public EmbeddedDataSpecification(IDataSpecificationContent dataSpecificationContent) {
-    this.dataSpecificationContent =
-        Objects.requireNonNull(
-            dataSpecificationContent, "Argument \"dataSpecificationContent\" must be non-null.");
-  }
-
   public EmbeddedDataSpecification(
       IDataSpecificationContent dataSpecificationContent, IReference dataSpecification) {
     this.dataSpecificationContent =
         Objects.requireNonNull(
             dataSpecificationContent, "Argument \"dataSpecificationContent\" must be non-null.");
-    this.dataSpecification = dataSpecification;
+    this.dataSpecification =
+        Objects.requireNonNull(
+            dataSpecification, "Argument \"dataSpecification\" must be non-null.");
   }
 
   @Override
@@ -55,13 +50,15 @@ public class EmbeddedDataSpecification implements IEmbeddedDataSpecification {
   }
 
   @Override
-  public Optional<IReference> getDataSpecification() {
-    return Optional.ofNullable(dataSpecification);
+  public IReference getDataSpecification() {
+    return dataSpecification;
   }
 
   @Override
   public void setDataSpecification(IReference dataSpecification) {
-    this.dataSpecification = dataSpecification;
+    this.dataSpecification =
+        Objects.requireNonNull(
+            dataSpecification, "Argument \"dataSpecification\" must be non-null.");
   }
 
   /** Iterate recursively over all the class instances referenced from this instance. */
