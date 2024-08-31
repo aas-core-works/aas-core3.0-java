@@ -3892,12 +3892,13 @@ public class Verification {
                             + "have the same submodel element type as specified in type "
                             + "value list element.")));
       }
-      if (!(!((that.getValue().isPresent())
-              && (that.getTypeValueListElement() == AasSubmodelElements.PROPERTY
-                  || that.getTypeValueListElement() == AasSubmodelElements.RANGE))
+      if (!(!(that.getTypeValueListElement() == AasSubmodelElements.PROPERTY
+              || that.getTypeValueListElement() == AasSubmodelElements.RANGE)
           || ((that.getValueTypeListElement().isPresent())
-              && propertiesOrRangesHaveValueType(
-                  that.getValue().orElse(null), that.getValueTypeListElement().orElse(null))))) {
+              && ((!that.getValue().isPresent())
+                  || propertiesOrRangesHaveValueType(
+                      that.getValue().orElse(null),
+                      that.getValueTypeListElement().orElse(null)))))) {
         errorStream =
             Stream.<Reporting.Error>concat(
                 errorStream,
