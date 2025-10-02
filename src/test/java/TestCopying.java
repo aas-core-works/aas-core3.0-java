@@ -2182,8 +2182,8 @@ public class TestCopying {
         return false;
       }
 
-      return (transform(that.getDataSpecificationContent(), casted.getDataSpecificationContent())
-          && transform(that.getDataSpecification(), casted.getDataSpecification()));
+      return (transform(that.getDataSpecification(), casted.getDataSpecification())
+          && transform(that.getDataSpecificationContent(), casted.getDataSpecificationContent()));
     }
 
     @Override
@@ -3360,8 +3360,8 @@ public class TestCopying {
 
   private static boolean checkEmbeddedDataSpecificationShallowEquals(
       EmbeddedDataSpecification that, EmbeddedDataSpecification other) {
-    return (that.getDataSpecificationContent() == other.getDataSpecificationContent()
-        && that.getDataSpecification() == other.getDataSpecification());
+    return (that.getDataSpecification() == other.getDataSpecification()
+        && that.getDataSpecificationContent() == other.getDataSpecificationContent());
   }
 
   private static boolean checkLevelTypeShallowEquals(LevelType that, LevelType other) {

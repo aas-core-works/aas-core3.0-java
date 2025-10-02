@@ -9102,7 +9102,7 @@ public class Verification {
               .allMatch(
                   i ->
                       !(that.getKeys().get(i).getType() == KeyTypes.SUBMODEL_ELEMENT_LIST)
-                          || matchesXsPositiveInteger(that.getKeys().get(i + 1).getValue()))))) {
+                          || matchesXsNonNegativeInteger(that.getKeys().get(i + 1).getValue()))))) {
         errorStream =
             Stream.<Reporting.Error>concat(
                 errorStream,
@@ -9372,21 +9372,21 @@ public class Verification {
       errorStream =
           Stream.<Reporting.Error>concat(
               errorStream,
-              Stream.of(that.getDataSpecificationContent())
-                  .flatMap(Verification::verifyToErrorStream)
-                  .map(
-                      error -> {
-                        error.prependSegment(new Reporting.NameSegment("dataSpecificationContent"));
-                        return error;
-                      }));
-      errorStream =
-          Stream.<Reporting.Error>concat(
-              errorStream,
               Stream.of(that.getDataSpecification())
                   .flatMap(Verification::verifyToErrorStream)
                   .map(
                       error -> {
                         error.prependSegment(new Reporting.NameSegment("dataSpecification"));
+                        return error;
+                      }));
+      errorStream =
+          Stream.<Reporting.Error>concat(
+              errorStream,
+              Stream.of(that.getDataSpecificationContent())
+                  .flatMap(Verification::verifyToErrorStream)
+                  .map(
+                      error -> {
+                        error.prependSegment(new Reporting.NameSegment("dataSpecificationContent"));
                         return error;
                       }));
       return errorStream;
@@ -9887,6 +9887,23 @@ public class Verification {
   }
 
   /** Verify the constraints of {@code that}. */
+  public static Stream<Reporting.Error> verifyXmlSerializableString(String that) {
+    Stream<Reporting.Error> errorStream = Stream.empty();
+    if (!matchesXmlSerializableString(that)) {
+      errorStream =
+          Stream.<Reporting.Error>concat(
+              errorStream,
+              Stream.of(
+                  new Reporting.Error(
+                      "Invariant violated:\n"
+                          + "Constraint AASd-130: An attribute with data type \'string\' "
+                          + "shall consist of these characters only: "
+                          + "^[\\x09\\x0A\\x0D\\x20-\\uD7FF\\uE000-\\uFFFD\\U00010000-\\U0010FFFF]*$.")));
+    }
+    return errorStream;
+  }
+
+  /** Verify the constraints of {@code that}. */
   public static Stream<Reporting.Error> verifyNonEmptyXmlSerializableString(String that) {
     Stream<Reporting.Error> errorStream = Stream.empty();
     if (!matchesXmlSerializableString(that)) {
@@ -10336,7 +10353,17 @@ public class Verification {
   /** Verify the constraints of {@code that}. */
   public static Stream<Reporting.Error> verifyValueDataType(String that) {
     Stream<Reporting.Error> errorStream = Stream.empty();
-    // There is no verification specified.
+    if (!matchesXmlSerializableString(that)) {
+      errorStream =
+          Stream.<Reporting.Error>concat(
+              errorStream,
+              Stream.of(
+                  new Reporting.Error(
+                      "Invariant violated:\n"
+                          + "Constraint AASd-130: An attribute with data type \'string\' "
+                          + "shall consist of these characters only: "
+                          + "^[\\x09\\x0A\\x0D\\x20-\\uD7FF\\uE000-\\uFFFD\\U00010000-\\U0010FFFF]*$.")));
+    }
     return errorStream;
   }
 

@@ -10,15 +10,15 @@ import aas_core.aas3_0.types.impl.*;
 
 /** Embed the content of a data specification. */
 public interface IEmbeddedDataSpecification extends IClass {
-  /** Actual content of the data specification */
-  IDataSpecificationContent getDataSpecificationContent();
-
-  void setDataSpecificationContent(IDataSpecificationContent dataSpecificationContent);
-
   /** Reference to the data specification */
   IReference getDataSpecification();
 
   void setDataSpecification(IReference dataSpecification);
+
+  /** Actual content of the data specification */
+  IDataSpecificationContent getDataSpecificationContent();
+
+  void setDataSpecificationContent(IDataSpecificationContent dataSpecificationContent);
 }
 
 /*
