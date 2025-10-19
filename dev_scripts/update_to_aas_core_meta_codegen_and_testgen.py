@@ -197,58 +197,40 @@ def _uninstall_and_install_aas_core_codegen(
     return None
 
 
-def _copy_code_from_aas_core_codegen(
-    aas_core_codegen_repo: pathlib.Path, our_repo: pathlib.Path
-) -> None:
-    """Copy the generated code from aas-core-codegen's test data."""
-    source_dir = (
-        aas_core_codegen_repo
-        / "test_data/java/test_main/aas_core_meta.v3/expected_output"
-    )
-
-    target_dir = our_repo / "src/main/java/aas_core/aas3_0"
-
-    print(
-        f"Copying the code:\n"
-        f"  from {source_dir}\n"
-        f"  to {target_dir.relative_to(our_repo)}"
-    )
-
-    for pth in source_dir.glob("**/*.java"):
-        relative_pth = pth.relative_to(source_dir)
-        tgt_pth = target_dir / relative_pth
-        shutil.copy(pth, tgt_pth)
-
-
-def _copy_python_sdk_from_aas_core_codegen(
-    aas_core_codegen_repo: pathlib.Path,
+def _regenerate_code(
     our_repo: pathlib.Path,
-    aas_core_codegen_revision: str,
-) -> None:
-    """Copy the generated Python SDK from aas-core-codegen's test data."""
-    source_dir = (
-        aas_core_codegen_repo
-        / "test_data/python/test_main/aas_core_meta.v3/expected_output"
+    meta_repo: pathlib.Path,
+) -> Optional[int]:
+    """
+    Call codegen script.
+
+    Return an error code, if any.
+    """
+    codegen_dir = our_repo / "dev_scripts/codegen"
+
+    meta_model_path = meta_repo / "aas_core_meta/v3.py"
+
+    target_dir = our_repo
+
+    print(f"Starting to run codegen script")
+    start = time.perf_counter()
+
+    proc = subprocess.run(
+        [
+            sys.executable, "codegen.py",
+            "--meta_model", str(meta_model_path),
+            "--target", str(target_dir),
+        ],
+        cwd=str(codegen_dir),
     )
 
-    target_dir = our_repo / "dev_scripts/aas_core3"
+    if proc.returncode != 0:
+        return proc.returncode
 
-    for pth in source_dir.glob("*.py"):
-        tgt_pth = target_dir / pth.name
-        shutil.copy(pth, tgt_pth)
+    duration = time.perf_counter() - start
+    print(f"Generating the code took: {duration:.2f} seconds.")
 
-    init_py = target_dir / "__init__.py"
-
-    text = f'''\
-"""
-Provide Python SDK as copied from aas-core-codegen test data.
-
-This copy is necessary so that we can decouple from ``aas-core*-python`` repository.
-
-The revision of aas-core-codegen was: {aas_core_codegen_revision}
-"""
-'''
-    init_py.write_text(text, encoding="utf-8")
+    return None
 
 
 def _run_in_parallel(
@@ -699,17 +681,11 @@ def main() -> int:
     if exit_code is not None:
         return exit_code
 
-    _copy_code_from_aas_core_codegen(
-        aas_core_codegen_repo=aas_core_codegen_repo, our_repo=our_repo
-    )
-
-    _copy_python_sdk_from_aas_core_codegen(
-        aas_core_codegen_repo=aas_core_codegen_repo,
-        our_repo=our_repo,
-        aas_core_codegen_revision=aas_core_codegen_revision,
-    )
-
     _replace_test_data(our_repo=our_repo, aas_core_testgen_repo=aas_core_testgen_repo)
+
+    exit_code = _regenerate_code(our_repo=our_repo, meta_repo=aas_core_meta_repo)
+    if exit_code is not None:
+        return exit_code
 
     exit_code = _generate_test_code(our_repo=our_repo)
     if exit_code is not None:
