@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aas-core3.0-java-dev-scripts"
+version = "0.0.1"
+description = "Provide development scripts for aas-core3.0-java."
+authors = [
+    { name = "Marko Ristin", email = "marko@ristin.ch" },
+    { name = "Tobias Langer", email = "tobias.langer@conplement.de" },
+]
+license = {text = "MIT"}
+keywords = ["asset administration shell", "code generation", "industry 4.0", "industrie 4.0", "i4.0"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "aas-core-meta@git+https://github.com/aas-core-works/aas-core-meta@899add1#egg=aas-core-meta",
+    "aas-core-codegen@git+https://github.com/aas-core-works/aas-core-codegen@4c01ed64#egg=aas-core-codegen",
+    "lxml",
+]
+
+[tool.setuptools.packages.find]
+exclude = ["tests", "continuous_integration", "dev_scripts"]
+
+[tool.setuptools]
+py-modules = ["test_codegen"]
