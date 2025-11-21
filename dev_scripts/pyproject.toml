@@ -21,7 +21,6 @@ classifiers = [
 ]
 requires-python = ">=3.9"
 dependencies = [
-    "aas-core-meta@git+https://github.com/aas-core-works/aas-core-meta@899add1#egg=aas-core-meta",
     "aas-core-codegen@git+https://github.com/aas-core-works/aas-core-codegen@4c01ed64#egg=aas-core-codegen",
     "lxml",
     "requests>=2.32.5",
