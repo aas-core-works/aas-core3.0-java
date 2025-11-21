@@ -62,7 +62,7 @@ pip3 install -e .
 Now you can run the generation scripts:
 
 ```
-python test_codegen/generate_all.py
+python update_to_aas_core_meta_codegen.py
 ```
 
 ### Test Data
