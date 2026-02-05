@@ -7,7 +7,7 @@
     <groupId>io.github.aas-core-works</groupId>
     <artifactId>aas-core3.0-java</artifactId>
     <!--Note: When increasing version for new releases, adjust snippet in overview.html, as well.-->
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Manipulate, verify and de/serialize Asset Administration Shells.</description>
