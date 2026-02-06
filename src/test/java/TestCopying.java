@@ -96,7 +96,8 @@ public class TestCopying {
                       that.getSupplementalSemanticIds().get().stream(),
                       casted.getSupplementalSemanticIds().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getSupplementalSemanticIds().isPresent()
                   && that.getName() == casted.getName()
@@ -113,7 +114,8 @@ public class TestCopying {
                                   that.getRefersTo().get().stream(),
                                   casted.getRefersTo().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getRefersTo().isPresent());
     }
@@ -136,7 +138,8 @@ public class TestCopying {
                       that.getEmbeddedDataSpecifications().get().stream(),
                       casted.getEmbeddedDataSpecifications().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getEmbeddedDataSpecifications().isPresent() && that.getVersion().isPresent()
               ? casted.getVersion().isPresent()
@@ -176,7 +179,8 @@ public class TestCopying {
                       that.getSupplementalSemanticIds().get().stream(),
                       casted.getSupplementalSemanticIds().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getSupplementalSemanticIds().isPresent() && that.getKind().isPresent()
               ? (casted.getKind().isPresent() && that.getKind().get() == casted.getKind().get())
@@ -207,7 +211,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -223,7 +228,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -233,7 +239,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getAdministration().isPresent()
@@ -251,7 +258,8 @@ public class TestCopying {
                                           that.getEmbeddedDataSpecifications().get().stream(),
                                           casted.getEmbeddedDataSpecifications().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getEmbeddedDataSpecifications().isPresent()
                                       && (that.getDerivedFrom().isPresent()
@@ -270,7 +278,8 @@ public class TestCopying {
                                               that.getSubmodels().get().stream(),
                                               casted.getSubmodels().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getSubmodels().isPresent());
     }
@@ -295,7 +304,8 @@ public class TestCopying {
                           that.getSpecificAssetIds().get().stream(),
                           casted.getSpecificAssetIds().get().stream())
                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                      .collect(Collectors.toList()).stream()
+                      .collect(Collectors.toList())
+                      .stream()
                       .allMatch(Boolean.TRUE::equals))
               : !casted.getSpecificAssetIds().isPresent() && that.getAssetType().isPresent()
                   ? casted.getAssetType().isPresent()
@@ -345,7 +355,8 @@ public class TestCopying {
                       that.getSupplementalSemanticIds().get().stream(),
                       casted.getSupplementalSemanticIds().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getSupplementalSemanticIds().isPresent()
               && that.getName() == casted.getName()
@@ -371,7 +382,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -387,7 +399,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -397,7 +410,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getAdministration().isPresent()
@@ -425,7 +439,8 @@ public class TestCopying {
                                               that.getSupplementalSemanticIds().get().stream(),
                                               casted.getSupplementalSemanticIds().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getSupplementalSemanticIds().isPresent()
                                           && that.getQualifiers().isPresent()
@@ -438,7 +453,8 @@ public class TestCopying {
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getQualifiers().isPresent()
                                               && that.getEmbeddedDataSpecifications().isPresent()
@@ -449,15 +465,20 @@ public class TestCopying {
                                                       .get()
                                                       .size()
                                               && zip(
-                                                      that.getEmbeddedDataSpecifications().get()
+                                                      that
+                                                          .getEmbeddedDataSpecifications()
+                                                          .get()
                                                           .stream(),
-                                                      casted.getEmbeddedDataSpecifications().get()
+                                                      casted
+                                                          .getEmbeddedDataSpecifications()
+                                                          .get()
                                                           .stream())
                                                   .map(
                                                       pair ->
                                                           transform(
                                                               pair.getFirst(), pair.getSecond()))
-                                                  .collect(Collectors.toList()).stream()
+                                                  .collect(Collectors.toList())
+                                                  .stream()
                                                   .allMatch(Boolean.TRUE::equals))
                                           : !casted.getEmbeddedDataSpecifications().isPresent()
                                                   && that.getSubmodelElements().isPresent()
@@ -466,14 +487,17 @@ public class TestCopying {
                                                       == casted.getSubmodelElements().get().size()
                                                   && zip(
                                                           that.getSubmodelElements().get().stream(),
-                                                          casted.getSubmodelElements().get()
+                                                          casted
+                                                              .getSubmodelElements()
+                                                              .get()
                                                               .stream())
                                                       .map(
                                                           pair ->
                                                               transform(
                                                                   pair.getFirst(),
                                                                   pair.getSecond()))
-                                                      .collect(Collectors.toList()).stream()
+                                                      .collect(Collectors.toList())
+                                                      .stream()
                                                       .allMatch(Boolean.TRUE::equals))
                                               : !casted.getSubmodelElements().isPresent());
     }
@@ -492,7 +516,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -508,7 +533,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -518,7 +544,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -535,7 +562,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -546,7 +574,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -554,14 +583,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent()
                                           && transform(that.getFirst(), casted.getFirst())
@@ -582,7 +616,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -598,7 +633,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -608,7 +644,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -625,7 +662,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -636,7 +674,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -644,14 +683,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent()
                                               && that.getOrderRelevant().isPresent()
@@ -690,7 +734,8 @@ public class TestCopying {
                                                                   transform(
                                                                       pair.getFirst(),
                                                                       pair.getSecond()))
-                                                          .collect(Collectors.toList()).stream()
+                                                          .collect(Collectors.toList())
+                                                          .stream()
                                                           .allMatch(Boolean.TRUE::equals))
                                                   : !casted.getValue().isPresent());
     }
@@ -710,7 +755,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -726,7 +772,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -736,7 +783,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -753,7 +801,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -764,7 +813,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -772,14 +822,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent()
                                               && that.getValue().isPresent()
@@ -793,7 +848,8 @@ public class TestCopying {
                                                       pair ->
                                                           transform(
                                                               pair.getFirst(), pair.getSecond()))
-                                                  .collect(Collectors.toList()).stream()
+                                                  .collect(Collectors.toList())
+                                                  .stream()
                                                   .allMatch(Boolean.TRUE::equals))
                                           : !casted.getValue().isPresent());
     }
@@ -812,7 +868,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -828,7 +885,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -838,7 +896,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -855,7 +914,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -866,7 +926,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -874,14 +935,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent()
                                               && that.getValueType() == casted.getValueType()
@@ -911,7 +977,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -927,7 +994,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -937,7 +1005,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -954,7 +1023,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -965,7 +1035,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -973,14 +1044,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent()
                                               && that.getValue().isPresent()
@@ -994,7 +1070,8 @@ public class TestCopying {
                                                       pair ->
                                                           transform(
                                                               pair.getFirst(), pair.getSecond()))
-                                                  .collect(Collectors.toList()).stream()
+                                                  .collect(Collectors.toList())
+                                                  .stream()
                                                   .allMatch(Boolean.TRUE::equals))
                                           : !casted.getValue().isPresent()
                                               && (that.getValueId().isPresent()
@@ -1019,7 +1096,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -1035,7 +1113,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -1045,7 +1124,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -1062,7 +1142,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -1073,7 +1154,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -1081,14 +1163,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent()
                                               && that.getValueType() == casted.getValueType()
@@ -1116,7 +1203,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -1132,7 +1220,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -1142,7 +1231,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -1159,7 +1249,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -1170,7 +1261,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -1178,14 +1270,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent()
                                           && (that.getValue().isPresent()
@@ -1210,7 +1307,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -1226,7 +1324,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -1236,7 +1335,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -1253,7 +1353,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -1264,7 +1365,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -1272,14 +1374,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent()
                                           && Arrays.equals(
@@ -1301,7 +1408,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -1317,7 +1425,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -1327,7 +1436,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -1344,7 +1454,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -1355,7 +1466,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -1363,14 +1475,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent()
                                               && that.getValue().isPresent()
@@ -1395,7 +1512,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -1411,7 +1529,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -1421,7 +1540,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -1438,7 +1558,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -1449,7 +1570,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -1457,14 +1579,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent()
                                               && transform(that.getFirst(), casted.getFirst())
@@ -1480,7 +1607,8 @@ public class TestCopying {
                                                       pair ->
                                                           transform(
                                                               pair.getFirst(), pair.getSecond()))
-                                                  .collect(Collectors.toList()).stream()
+                                                  .collect(Collectors.toList())
+                                                  .stream()
                                                   .allMatch(Boolean.TRUE::equals))
                                           : !casted.getAnnotations().isPresent());
     }
@@ -1499,7 +1627,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -1515,7 +1644,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -1525,7 +1655,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -1542,7 +1673,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -1553,7 +1685,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -1561,14 +1694,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent()
                                               && that.getStatements().isPresent()
@@ -1582,7 +1720,8 @@ public class TestCopying {
                                                       pair ->
                                                           transform(
                                                               pair.getFirst(), pair.getSecond()))
-                                                  .collect(Collectors.toList()).stream()
+                                                  .collect(Collectors.toList())
+                                                  .stream()
                                                   .allMatch(Boolean.TRUE::equals))
                                           : !casted.getStatements().isPresent()
                                                   && that.getEntityType() == casted.getEntityType()
@@ -1599,16 +1738,21 @@ public class TestCopying {
                                                               .get()
                                                               .size()
                                                       && zip(
-                                                              that.getSpecificAssetIds().get()
+                                                              that
+                                                                  .getSpecificAssetIds()
+                                                                  .get()
                                                                   .stream(),
-                                                              casted.getSpecificAssetIds().get()
+                                                              casted
+                                                                  .getSpecificAssetIds()
+                                                                  .get()
                                                                   .stream())
                                                           .map(
                                                               pair ->
                                                                   transform(
                                                                       pair.getFirst(),
                                                                       pair.getSecond()))
-                                                          .collect(Collectors.toList()).stream()
+                                                          .collect(Collectors.toList())
+                                                          .stream()
                                                           .allMatch(Boolean.TRUE::equals))
                                                   : !casted.getSpecificAssetIds().isPresent());
     }
@@ -1660,7 +1804,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -1676,7 +1821,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -1686,7 +1832,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -1703,7 +1850,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -1714,7 +1862,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -1722,14 +1871,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent()
                                               && transform(that.getObserved(), casted.getObserved())
@@ -1777,7 +1931,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -1793,7 +1948,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -1803,7 +1959,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -1820,7 +1977,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -1831,7 +1989,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -1839,14 +1998,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent()
                                               && that.getInputVariables().isPresent()
@@ -1860,7 +2024,8 @@ public class TestCopying {
                                                       pair ->
                                                           transform(
                                                               pair.getFirst(), pair.getSecond()))
-                                                  .collect(Collectors.toList()).stream()
+                                                  .collect(Collectors.toList())
+                                                  .stream()
                                                   .allMatch(Boolean.TRUE::equals))
                                           : !casted.getInputVariables().isPresent()
                                                   && that.getOutputVariables().isPresent()
@@ -1869,14 +2034,17 @@ public class TestCopying {
                                                       == casted.getOutputVariables().get().size()
                                                   && zip(
                                                           that.getOutputVariables().get().stream(),
-                                                          casted.getOutputVariables().get()
+                                                          casted
+                                                              .getOutputVariables()
+                                                              .get()
                                                               .stream())
                                                       .map(
                                                           pair ->
                                                               transform(
                                                                   pair.getFirst(),
                                                                   pair.getSecond()))
-                                                      .collect(Collectors.toList()).stream()
+                                                      .collect(Collectors.toList())
+                                                      .stream()
                                                       .allMatch(Boolean.TRUE::equals))
                                               : !casted.getOutputVariables().isPresent()
                                                       && that.getInoutputVariables().isPresent()
@@ -1887,16 +2055,21 @@ public class TestCopying {
                                                               .get()
                                                               .size()
                                                       && zip(
-                                                              that.getInoutputVariables().get()
+                                                              that
+                                                                  .getInoutputVariables()
+                                                                  .get()
                                                                   .stream(),
-                                                              casted.getInoutputVariables().get()
+                                                              casted
+                                                                  .getInoutputVariables()
+                                                                  .get()
                                                                   .stream())
                                                           .map(
                                                               pair ->
                                                                   transform(
                                                                       pair.getFirst(),
                                                                       pair.getSecond()))
-                                                          .collect(Collectors.toList()).stream()
+                                                          .collect(Collectors.toList())
+                                                          .stream()
                                                           .allMatch(Boolean.TRUE::equals))
                                                   : !casted.getInoutputVariables().isPresent());
     }
@@ -1927,7 +2100,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -1943,7 +2117,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -1953,7 +2128,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getSemanticId().isPresent()
@@ -1970,7 +2146,8 @@ public class TestCopying {
                                           that.getSupplementalSemanticIds().get().stream(),
                                           casted.getSupplementalSemanticIds().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getSupplementalSemanticIds().isPresent()
                                       && that.getQualifiers().isPresent()
@@ -1981,7 +2158,8 @@ public class TestCopying {
                                               that.getQualifiers().get().stream(),
                                               casted.getQualifiers().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getQualifiers().isPresent()
                                           && that.getEmbeddedDataSpecifications().isPresent()
@@ -1989,14 +2167,19 @@ public class TestCopying {
                                           && that.getEmbeddedDataSpecifications().get().size()
                                               == casted.getEmbeddedDataSpecifications().get().size()
                                           && zip(
-                                                  that.getEmbeddedDataSpecifications().get()
+                                                  that
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream(),
-                                                  casted.getEmbeddedDataSpecifications().get()
+                                                  casted
+                                                      .getEmbeddedDataSpecifications()
+                                                      .get()
                                                       .stream())
                                               .map(
                                                   pair ->
                                                       transform(pair.getFirst(), pair.getSecond()))
-                                              .collect(Collectors.toList()).stream()
+                                              .collect(Collectors.toList())
+                                              .stream()
                                               .allMatch(Boolean.TRUE::equals))
                                       : !casted.getEmbeddedDataSpecifications().isPresent());
     }
@@ -2015,7 +2198,8 @@ public class TestCopying {
               && that.getExtensions().get().size() == casted.getExtensions().get().size()
               && zip(that.getExtensions().get().stream(), casted.getExtensions().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getExtensions().isPresent() && that.getCategory().isPresent()
               ? casted.getCategory().isPresent()
@@ -2031,7 +2215,8 @@ public class TestCopying {
                                   that.getDisplayName().get().stream(),
                                   casted.getDisplayName().get().stream())
                               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                              .collect(Collectors.toList()).stream()
+                              .collect(Collectors.toList())
+                              .stream()
                               .allMatch(Boolean.TRUE::equals))
                       : !casted.getDisplayName().isPresent() && that.getDescription().isPresent()
                           ? (casted.getDescription().isPresent()
@@ -2041,7 +2226,8 @@ public class TestCopying {
                                       that.getDescription().get().stream(),
                                       casted.getDescription().get().stream())
                                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                  .collect(Collectors.toList()).stream()
+                                  .collect(Collectors.toList())
+                                  .stream()
                                   .allMatch(Boolean.TRUE::equals))
                           : !casted.getDescription().isPresent()
                                   && (that.getAdministration().isPresent()
@@ -2059,7 +2245,8 @@ public class TestCopying {
                                           that.getEmbeddedDataSpecifications().get().stream(),
                                           casted.getEmbeddedDataSpecifications().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getEmbeddedDataSpecifications().isPresent()
                                       && that.getIsCaseOf().isPresent()
@@ -2070,7 +2257,8 @@ public class TestCopying {
                                               that.getIsCaseOf().get().stream(),
                                               casted.getIsCaseOf().get().stream())
                                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                          .collect(Collectors.toList()).stream()
+                                          .collect(Collectors.toList())
+                                          .stream()
                                           .allMatch(Boolean.TRUE::equals))
                                   : !casted.getIsCaseOf().isPresent());
     }
@@ -2093,7 +2281,8 @@ public class TestCopying {
           && that.getKeys().size() == casted.getKeys().size()
           && (zip(that.getKeys().stream(), casted.getKeys().stream())
               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-              .collect(Collectors.toList()).stream()
+              .collect(Collectors.toList())
+              .stream()
               .allMatch(Boolean.TRUE::equals)));
     }
 
@@ -2150,14 +2339,16 @@ public class TestCopying {
                       that.getAssetAdministrationShells().get().stream(),
                       casted.getAssetAdministrationShells().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getAssetAdministrationShells().isPresent() && that.getSubmodels().isPresent()
               ? (casted.getSubmodels().isPresent()
                   && that.getSubmodels().get().size() == casted.getSubmodels().get().size()
                   && zip(that.getSubmodels().get().stream(), casted.getSubmodels().get().stream())
                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                      .collect(Collectors.toList()).stream()
+                      .collect(Collectors.toList())
+                      .stream()
                       .allMatch(Boolean.TRUE::equals))
               : !casted.getSubmodels().isPresent() && that.getConceptDescriptions().isPresent()
                   ? (casted.getConceptDescriptions().isPresent()
@@ -2167,7 +2358,8 @@ public class TestCopying {
                               that.getConceptDescriptions().get().stream(),
                               casted.getConceptDescriptions().get().stream())
                           .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                          .collect(Collectors.toList()).stream()
+                          .collect(Collectors.toList())
+                          .stream()
                           .allMatch(Boolean.TRUE::equals))
                   : !casted.getConceptDescriptions().isPresent());
     }
@@ -2226,7 +2418,8 @@ public class TestCopying {
       return (that.getValueReferencePairs().size() == casted.getValueReferencePairs().size()
           && (zip(that.getValueReferencePairs().stream(), casted.getValueReferencePairs().stream())
               .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-              .collect(Collectors.toList()).stream()
+              .collect(Collectors.toList())
+              .stream()
               .allMatch(Boolean.TRUE::equals)));
     }
 
@@ -2282,14 +2475,16 @@ public class TestCopying {
       return (that.getPreferredName().size() == casted.getPreferredName().size()
               && (zip(that.getPreferredName().stream(), casted.getPreferredName().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
               && that.getShortName().isPresent()
           ? (casted.getShortName().isPresent()
               && that.getShortName().get().size() == casted.getShortName().get().size()
               && zip(that.getShortName().get().stream(), casted.getShortName().get().stream())
                   .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                  .collect(Collectors.toList()).stream()
+                  .collect(Collectors.toList())
+                  .stream()
                   .allMatch(Boolean.TRUE::equals))
           : !casted.getShortName().isPresent() && that.getUnit().isPresent()
               ? casted.getUnit().isPresent() && that.getUnit().get() == casted.getUnit().get()
@@ -2315,7 +2510,8 @@ public class TestCopying {
                                           that.getDefinition().get().stream(),
                                           casted.getDefinition().get().stream())
                                       .map(pair -> transform(pair.getFirst(), pair.getSecond()))
-                                      .collect(Collectors.toList()).stream()
+                                      .collect(Collectors.toList())
+                                      .stream()
                                       .allMatch(Boolean.TRUE::equals))
                               : !casted.getDefinition().isPresent()
                                       && that.getValueFormat().isPresent()

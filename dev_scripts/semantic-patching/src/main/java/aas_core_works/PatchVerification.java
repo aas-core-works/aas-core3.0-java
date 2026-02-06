@@ -55,7 +55,7 @@ public class PatchVerification {
 
     MethodDeclaration constructMethod = null;
     for (MethodDeclaration method : verificationCls.getMethods()) {
-      if (method.getName().toString().equals("constructMatchesRfc8089Path")) {
+      if (method.getName().toString().equals("constructMatchesRfc2396")) {
         constructMethod = method;
         break;
       }
@@ -63,7 +63,7 @@ public class PatchVerification {
 
     if (constructMethod == null) {
       System.err.println(
-          "Could not find the method constructMatchesRfc8089Path in " + sourcePath
+          "Could not find the method constructMatchesRfc2396 in " + sourcePath
       );
       System.exit(1);
       return;
@@ -73,7 +73,7 @@ public class PatchVerification {
 
     if (!constructMethod.getBody().isPresent()) {
       System.err.println(
-          "The constructMatchesRfc8089Path lacks the body in " + sourcePath
+          "The constructMatchesRfc2396 lacks the body in " + sourcePath
       );
       System.exit(1);
       return;
@@ -94,14 +94,15 @@ public class PatchVerification {
         if (expression instanceof VariableDeclarationExpr) {
           VariableDeclarationExpr varDeclExpr = (VariableDeclarationExpr) expression;
 
-          if (expression.toString().equals("String pattern = \"^\" + fileUri + \"$\"")) {
+          if (expression.toString().equals(
+                  "String uriReference = \"^(\" + absoluteuri + \"|\" + relativeuri + \")?(#\" + fragment + \")?$\"")) {
             expectedPatternDecl = varDeclExpr.getVariable(0);
           }
         }
       } else if (statement.isReturnStmt()) {
         ReturnStmt returnStmt = (ReturnStmt) statement;
 
-        if (returnStmt.toString().equals("return Pattern.compile(pattern);")) {
+        if (returnStmt.toString().equals("return Pattern.compile(uriReference);")) {
           expectedReturnStmt = returnStmt;
         }
       }
@@ -109,7 +110,9 @@ public class PatchVerification {
 
     if (expectedPatternDecl == null) {
       System.err.println(
-          "The constructMatchesRfc8089Path lacks the 'String pattern = \"^\" + fileUri + \"$\"' statement in "
+          "The constructMatchesRfc2396 lacks the "
+              + "'String uriReference = \"^(\" + absoluteuri + \"|\" + relativeuri + \")?(#\" + fragment + \")?$\"' "
+              + "statement in "
               + sourcePath
       );
       System.exit(1);
@@ -118,23 +121,25 @@ public class PatchVerification {
 
     if (expectedReturnStmt == null) {
       System.err.println(
-          "The constructMatchesRfc8089Path lacks the expected return statement " +
-              "'return Pattern.compile(pattern);' in " + sourcePath
+          "The constructMatchesRfc2396 lacks the expected return statement " +
+              "'return Pattern.compile(uriReference);' in " + sourcePath
       );
       System.exit(1);
       return;
     }
 
-    expectedPatternDecl.setInitializer("fileUri");
+    expectedPatternDecl.setInitializer(
+      "\"(\" + absoluteuri + \"|\" + relativeuri + \")?(#\" + fragment + \")?\""
+    );
 
     expectedReturnStmt.setExpression(
-        StaticJavaParser.parseExpression("new RegExp(pattern).toAutomaton()")
+        StaticJavaParser.parseExpression("new RegExp(uriReference).toAutomaton()")
     );
 
     VariableDeclarator regexVariable = null;
     for (FieldDeclaration field : verificationCls.getFields()) {
       for (VariableDeclarator declarator : field.getVariables()) {
-        if (declarator.getNameAsString().equals("regexMatchesRfc8089Path")) {
+        if (declarator.getNameAsString().equals("regexMatchesRfc2396")) {
           regexVariable = declarator;
           break;
         }
@@ -146,7 +151,7 @@ public class PatchVerification {
 
     if (regexVariable == null) {
       System.err.println(
-          "Could not find regexMatchesRfc8089Path field in " + sourcePath
+          "Could not find regexMatchesRfc2396 field in " + sourcePath
       );
       System.exit(1);
       return;
@@ -155,7 +160,7 @@ public class PatchVerification {
 
     MethodDeclaration matchesMethod = null;
     for (MethodDeclaration method : verificationCls.getMethods()) {
-      if (method.getName().toString().equals("matchesRfc8089Path")) {
+      if (method.getName().toString().equals("matchesRfc2396")) {
         matchesMethod = method;
         break;
       }
@@ -163,7 +168,7 @@ public class PatchVerification {
 
     if (matchesMethod == null) {
       System.err.println(
-          "Could not find the method matchesRfc8089Path in " + sourcePath
+          "Could not find the method matchesRfc2396 in " + sourcePath
       );
       System.exit(1);
       return;
@@ -172,7 +177,7 @@ public class PatchVerification {
     matchesMethod.setBody(
         StaticJavaParser.parseBlock("""
             {
-            return regexMatchesRfc8089Path.run(text);
+            return regexMatchesRfc2396.run(text);
             }""")
     );
 
