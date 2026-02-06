@@ -29,8 +29,8 @@ jobs:
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip3 install -e _dev_scripts --group _dev_scripts/pyproject.toml:dev
+          pip3 install --group dev_scripts/pyproject.toml:dev -e dev_scripts
 
       - name: Run checks
         run: |
-          python3 _dev_scripts/continuous_integration_of_dev_scripts/precommit.py
+          python3 dev_scripts/continuous_integration_of_dev_scripts/precommit.py
