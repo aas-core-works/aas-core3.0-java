@@ -161,51 +161,61 @@ public class Verification {
     return regexMatchesMimeType.matcher(text).matches();
   }
 
-  private static Automaton constructMatchesRfc8089Path() {
-    String h16 = "[0-9A-Fa-f]{1,4}";
-    String decOctet = "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])";
-    String ipv4address = decOctet + "\\." + decOctet + "\\." + decOctet + "\\." + decOctet;
-    String ls32 = "(" + h16 + ":" + h16 + "|" + ipv4address + ")";
-    String ipv6address =
-        "((" + h16 + ":){6}" + ls32 + "|::(" + h16 + ":){5}" + ls32 + "|(" + h16 + ")?::(" + h16
-            + ":){4}" + ls32 + "|((" + h16 + ":)?" + h16 + ")?::(" + h16 + ":){3}" + ls32 + "|(("
-            + h16 + ":){0,2}" + h16 + ")?::(" + h16 + ":){2}" + ls32 + "|((" + h16 + ":){0,3}" + h16
-            + ")?::" + h16 + ":" + ls32 + "|((" + h16 + ":){0,4}" + h16 + ")?::" + ls32 + "|(("
-            + h16 + ":){0,5}" + h16 + ")?::" + h16 + "|((" + h16 + ":){0,6}" + h16 + ")?::)";
-    String unreserved = "[a-zA-Z0-9\\-._~]";
-    String subDelims = "[!$&\'()*+,;=]";
-    String ipvfuture = "[vV][0-9A-Fa-f]+\\.(" + unreserved + "|" + subDelims + "|:)+";
-    String ipLiteral = "\\[(" + ipv6address + "|" + ipvfuture + ")\\]";
-    String pctEncoded = "%[0-9A-Fa-f][0-9A-Fa-f]";
-    String regName = "(" + unreserved + "|" + pctEncoded + "|" + subDelims + ")*";
-    String host = "(" + ipLiteral + "|" + ipv4address + "|" + regName + ")";
-    String fileAuth = "(localhost|" + host + ")";
-    String pchar = "(" + unreserved + "|" + pctEncoded + "|" + subDelims + "|[:@])";
-    String segmentNz = "(" + pchar + ")+";
-    String segment = "(" + pchar + ")*";
-    String pathAbsolute = "/(" + segmentNz + "(/" + segment + ")*)?";
-    String authPath = "(" + fileAuth + ")?" + pathAbsolute;
-    String localPath = pathAbsolute;
-    String fileHierPart = "(//" + authPath + "|" + localPath + ")";
-    String fileScheme = "file";
-    String fileUri = fileScheme + ":" + fileHierPart;
-    String pattern = fileUri;
-    return new RegExp(pattern).toAutomaton();
+  private static Automaton constructMatchesRfc2396() {
+    String alphanum = "[a-zA-Z0-9]";
+    String mark = "[-_.!~*\'()]";
+    String unreserved = "(" + alphanum + "|" + mark + ")";
+    String hex = "([0-9]|[aA]|[bB]|[cC]|[dD]|[eE]|[fF]|[aA]|[bB]|[cC]|[dD]|[eE]|[fF])";
+    String escaped = "%" + hex + hex;
+    String pchar = "(" + unreserved + "|" + escaped + "|[:@&=+$,])";
+    String param = "(" + pchar + ")*";
+    String segment = "(" + pchar + ")*(;" + param + ")*";
+    String pathSegments = segment + "(/" + segment + ")*";
+    String absPath = "/" + pathSegments;
+    String scheme = "[a-zA-Z][a-zA-Z0-9+\\-.]*";
+    String userinfo = "(" + unreserved + "|" + escaped + "|[;:&=+$,])*";
+    String domainlabel = "(" + alphanum + "|" + alphanum + "(" + alphanum + "|-)*" + alphanum + ")";
+    String toplabel = "([a-zA-Z]|[a-zA-Z](" + alphanum + "|-)*" + alphanum + ")";
+    String hostname = "(" + domainlabel + "\\.)*" + toplabel + "(\\.)?";
+    String ipv4address = "[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+";
+    String host = "(" + hostname + "|" + ipv4address + ")";
+    String port = "[0-9]*";
+    String hostport = host + "(:" + port + ")?";
+    String server = "((" + userinfo + "@)?" + hostport + ")?";
+    String regName = "(" + unreserved + "|" + escaped + "|[$,;:@&=+])+";
+    String authority = "(" + server + "|" + regName + ")";
+    String netPath = "//" + authority + "(" + absPath + ")?";
+    String reserved = "[;/?:@&=+$,]";
+    String uric = "(" + reserved + "|" + unreserved + "|" + escaped + ")";
+    String query = "(" + uric + ")*";
+    String hierPart = "(" + netPath + "|" + absPath + ")(\\?" + query + ")?";
+    String uricNoSlash = "(" + unreserved + "|" + escaped + "|[;?:@&=+$,])";
+    String opaquePart = uricNoSlash + "(" + uric + ")*";
+    String absoluteuri = scheme + ":(" + hierPart + "|" + opaquePart + ")";
+    String fragment = "(" + uric + ")*";
+    String relSegment = "(" + unreserved + "|" + escaped + "|[;@&=+$,])+";
+    String relPath = relSegment + "(" + absPath + ")?";
+    String relativeuri = "(" + netPath + "|" + absPath + "|" + relPath + ")(\\?" + query + ")?";
+    String uriReference = "(" + absoluteuri + "|" + relativeuri + ")?(#" + fragment + ")?";
+    return new RegExp(uriReference).toAutomaton();
   }
 
-  private static final Automaton regexMatchesRfc8089Path = constructMatchesRfc8089Path();
+  private static final Automaton regexMatchesRfc2396 = constructMatchesRfc2396();
 
   /**
-   * Check that {@code text} is a path conforming to the pattern of RFC 8089.
+   * Check that {@code text} matches to the URI pattern defined in RFC 2396
    *
    * <p>The definition has been taken from: <a
-   * href='https%3A//datatracker.ietf.org/doc/html/rfc8089'>https://datatracker.ietf.org/doc/html/rfc8089</a>
+   * href='https%3A//datatracker.ietf.org/doc/html/rfc2396'>https://datatracker.ietf.org/doc/html/rfc2396</a>
+   *
+   * <p>Note that RFX 2396 alone is not enough for specifying {@code xs:anyURI} for XSD version 1.0,
+   * as that specifies URI together with the amendment of RFC 2732.
    *
    * @param text Text to be checked
    * @return True if the {@code text} conforms to the pattern
    */
-  public static Boolean matchesRfc8089Path(String text) {
-    return regexMatchesRfc8089Path.run(text);
+  public static Boolean matchesRfc2396(String text) {
+    return regexMatchesRfc2396.run(text);
   }
 
   private static Pattern constructMatchesBcp47() {
@@ -8037,7 +8047,8 @@ public class Verification {
                     new Reporting.Error(
                         "Invariant violated:\n"
                             + "Constraint AASd-134: For an Operation the ID-short of all "
-                            + "values of input, output and in/output variables.")));
+                            + "values of input, output and in/output variables shall be "
+                            + "unique.")));
       }
       if (!(!(that.getInputVariables().isPresent())
           || (that.getInputVariables().get().size() >= 1))) {
@@ -10313,6 +10324,16 @@ public class Verification {
                   new Reporting.Error(
                       "Invariant violated:\n"
                           + "Identifier shall have a maximum length of 2000 characters.")));
+    }
+    if (!matchesRfc2396(that)) {
+      errorStream =
+          Stream.<Reporting.Error>concat(
+              errorStream,
+              Stream.of(
+                  new Reporting.Error(
+                      "Invariant violated:\n"
+                          + "String with max 2048 and min 1 characters conformant to "
+                          + "a URI as per RFC 2396.")));
     }
     return errorStream;
   }

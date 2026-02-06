@@ -157,48 +157,59 @@ public class Verification {
     return regexMatchesMimeType.matcher(text).matches();
   }
 
-  private static Pattern constructMatchesRfc8089Path() {
-    String h16 = "[0-9A-Fa-f]{1,4}";
-    String decOctet = "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])";
-    String ipv4address = decOctet + "\\." + decOctet + "\\." + decOctet + "\\." + decOctet;
-    String ls32 = "(" + h16 + ":" + h16 + "|" + ipv4address + ")";
-    String ipv6address = "((" + h16 + ":){6}" + ls32 + "|::(" + h16 + ":){5}" + ls32 + "|(" + h16 + ")?::(" + h16 + ":){4}" + ls32 + "|((" + h16 + ":)?" + h16 + ")?::(" + h16 + ":){3}" + ls32 + "|((" + h16 + ":){2}" + h16 + ")?::(" + h16 + ":){2}" + ls32 + "|((" + h16 + ":){3}" + h16 + ")?::" + h16 + ":" + ls32 + "|((" + h16 + ":){4}" + h16 + ")?::" + ls32 + "|((" + h16 + ":){5}" + h16 + ")?::" + h16 + "|((" + h16 + ":){6}" + h16 + ")?::)";
-    String unreserved = "[a-zA-Z0-9\\-._~]";
-    String subDelims = "[!$&\'()*+,;=]";
-    String ipvfuture = "[vV][0-9A-Fa-f]+\\.(" + unreserved + "|" + subDelims + "|:)+";
-    String ipLiteral = "\\[(" + ipv6address + "|" + ipvfuture + ")\\]";
-    String pctEncoded = "%[0-9A-Fa-f][0-9A-Fa-f]";
-    String regName = "(" + unreserved + "|" + pctEncoded + "|" + subDelims + ")*";
-    String host = "(" + ipLiteral + "|" + ipv4address + "|" + regName + ")";
-    String fileAuth = "(localhost|" + host + ")";
-    String pchar = "(" + unreserved + "|" + pctEncoded + "|" + subDelims + "|[:@])";
-    String segmentNz = "(" + pchar + ")+";
-    String segment = "(" + pchar + ")*";
-    String pathAbsolute = "/(" + segmentNz + "(/" + segment + ")*)?";
-    String authPath = "(" + fileAuth + ")?" + pathAbsolute;
-    String localPath = pathAbsolute;
-    String fileHierPart = "(//" + authPath + "|" + localPath + ")";
-    String fileScheme = "file";
-    String fileUri = fileScheme + ":" + fileHierPart;
-    String pattern = "^" + fileUri + "$";
-
-    return Pattern.compile(pattern);
+  private static Pattern constructMatchesRfc2396() {
+    String alphanum = "[a-zA-Z0-9]";
+    String mark = "[-_.!~*\'()]";
+    String unreserved = "(" + alphanum + "|" + mark + ")";
+    String hex = "([0-9]|[aA]|[bB]|[cC]|[dD]|[eE]|[fF]|[aA]|[bB]|[cC]|[dD]|[eE]|[fF])";
+    String escaped = "%" + hex + hex;
+    String pchar = "(" + unreserved + "|" + escaped + "|[:@&=+$,])";
+    String param = "(" + pchar + ")*";
+    String segment = "(" + pchar + ")*(;" + param + ")*";
+    String pathSegments = segment + "(/" + segment + ")*";
+    String absPath = "/" + pathSegments;
+    String scheme = "[a-zA-Z][a-zA-Z0-9+\\-.]*";
+    String userinfo = "(" + unreserved + "|" + escaped + "|[;:&=+$,])*";
+    String domainlabel = "(" + alphanum + "|" + alphanum + "(" + alphanum + "|-)*" + alphanum + ")";
+    String toplabel = "([a-zA-Z]|[a-zA-Z](" + alphanum + "|-)*" + alphanum + ")";
+    String hostname = "(" + domainlabel + "\\.)*" + toplabel + "(\\.)?";
+    String ipv4address = "[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+";
+    String host = "(" + hostname + "|" + ipv4address + ")";
+    String port = "[0-9]*";
+    String hostport = host + "(:" + port + ")?";
+    String server = "((" + userinfo + "@)?" + hostport + ")?";
+    String regName = "(" + unreserved + "|" + escaped + "|[$,;:@&=+])+";
+    String authority = "(" + server + "|" + regName + ")";
+    String netPath = "//" + authority + "(" + absPath + ")?";
+    String reserved = "[;/?:@&=+$,]";
+    String uric = "(" + reserved + "|" + unreserved + "|" + escaped + ")";
+    String query = "(" + uric + ")*";
+    String hierPart = "(" + netPath + "|" + absPath + ")(\\?" + query + ")?";
+    String uricNoSlash = "(" + unreserved + "|" + escaped + "|[;?:@&=+$,])";
+    String opaquePart = uricNoSlash + "(" + uric + ")*";
+    String absoluteuri = scheme + ":(" + hierPart + "|" + opaquePart + ")";
+    String fragment = "(" + uric + ")*";
+    String relSegment = "(" + unreserved + "|" + escaped + "|[;@&=+$,])+";
+    String relPath = relSegment + "(" + absPath + ")?";
+    String relativeuri = "(" + netPath + "|" + absPath + "|" + relPath + ")(\\?" + query + ")?";
+    String uriReference = "^(" + absoluteuri + "|" + relativeuri + ")?(#" + fragment + ")?$";
+    return Pattern.compile(uriReference);
   }
 
-  private static final Pattern regexMatchesRfc8089Path = constructMatchesRfc8089Path();
+  private static final Pattern regexMatchesRfc2396 = constructMatchesRfc2396();
 
   /**
-   * Check that {@link text} is a path conforming to the pattern of RFC 8089.
+   * Check that {@link text} is a path conforming to the pattern of RFC 2396.
    *
    * <p>The definition has been taken from:
-   * https://datatracker.ietf.org/doc/html/rfc8089
+   * https://datatracker.ietf.org/doc/html/rfc2396
    *
    * @param textText to be checked
    *
    * @returns True if the {@link text} conforms to the pattern
    */
-  public static Boolean matchesRfc8089Path(String text) {
-    return regexMatchesRfc8089Path.matcher(text).matches();
+  public static Boolean matchesRfc2396(String text) {
+    return regexMatchesRfc2396.matcher(text).matches();
   }
 
   private static Pattern constructMatchesBcp47() {
@@ -9814,12 +9825,12 @@ public class Verification {
           "Identifier shall have a maximum length of 2000 characters.")));
     }
 
-    if (!matchesRfc8089Path(that)) {
+    if (!matchesRfc2396(that)) {
       errorStream = Stream.<Reporting.Error>concat(errorStream,
         Stream.of(new Reporting.Error(
           "Invariant violated:\n" +
           "The value must represent a valid file URI scheme according " +
-          "to RFC 8089.")));
+          "to RFC 2396.")));
     }
 
     return errorStream;

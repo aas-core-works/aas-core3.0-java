@@ -157,7 +157,9 @@ public class Extension implements IExtension {
     return getRefersTo().orElseGet(Collections::emptyList);
   }
 
-  /** @return the value type {@link DataTypeDefXsd} or the default value if it has not been set. */
+  /**
+   * @return the value type {@link DataTypeDefXsd} or the default value if it has not been set.
+   */
   public DataTypeDefXsd valueTypeOrDefault() {
     return valueType != null ? valueType : DataTypeDefXsd.STRING;
   }

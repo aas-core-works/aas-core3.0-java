@@ -302,7 +302,9 @@ public class Range implements IRange {
     return getEmbeddedDataSpecifications().orElseGet(Collections::emptyList);
   }
 
-  /** @return the category or the default value if it has not been set. */
+  /**
+   * @return the category or the default value if it has not been set.
+   */
   public String categoryOrDefault() {
     return category != null ? category : "VARIABLE";
   }
