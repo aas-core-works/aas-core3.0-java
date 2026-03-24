@@ -79,7 +79,8 @@ public class PatchVerification {
       return;
     }
 
-    VariableDeclarator expectedPatternDecl = null;
+    VariableDeclarator serverDecl = null;
+    VariableDeclarator uriReferenceDecl = null;
     ReturnStmt expectedReturnStmt = null;
 
     for (Statement statement : constructMethod.getBody().get().getStatements()) {
@@ -96,7 +97,10 @@ public class PatchVerification {
 
           if (expression.toString().equals(
                   "String uriReference = \"^(\" + absoluteuri + \"|\" + relativeuri + \")?(#\" + fragment + \")?$\"")) {
-            expectedPatternDecl = varDeclExpr.getVariable(0);
+            uriReferenceDecl = varDeclExpr.getVariable(0);
+          } else if (expression.toString().equals(
+                  "String server = \"((\" + userinfo + \"@)?\" + hostport + \")?\"")) {
+            serverDecl = varDeclExpr.getVariable(0);
           }
         }
       } else if (statement.isReturnStmt()) {
@@ -108,7 +112,18 @@ public class PatchVerification {
       }
     }
 
-    if (expectedPatternDecl == null) {
+    if (serverDecl == null) {
+      System.err.println(
+          "The constructMatchesRfc2396 lacks the "
+              + "String server = \"((\" + userinfo + \"@)?\" + hostport + \")?\""
+              + "statement in "
+              + sourcePath
+      );
+      System.exit(1);
+      return;
+    }
+
+    if (uriReferenceDecl == null) {
       System.err.println(
           "The constructMatchesRfc2396 lacks the "
               + "'String uriReference = \"^(\" + absoluteuri + \"|\" + relativeuri + \")?(#\" + fragment + \")?$\"' "
@@ -128,8 +143,13 @@ public class PatchVerification {
       return;
     }
 
-    expectedPatternDecl.setInitializer(
-      "\"(\" + absoluteuri + \"|\" + relativeuri + \")?(#\" + fragment + \")?\""
+    // NOTE (empwilli): we take care to also escape # and @ characters; these
+    // carry special meaning in Automaton.
+    serverDecl.setInitializer(
+      "\"((\" + userinfo + \"\\\\@)?\" + hostport + \")?\""
+    );
+    uriReferenceDecl.setInitializer(
+      "\"(\" + absoluteuri + \"|\" + relativeuri + \")?(\\\\#\" + fragment + \")?\""
     );
 
     expectedReturnStmt.setExpression(
