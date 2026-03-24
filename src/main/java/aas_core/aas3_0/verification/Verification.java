@@ -181,7 +181,7 @@ public class Verification {
     String host = "(" + hostname + "|" + ipv4address + ")";
     String port = "[0-9]*";
     String hostport = host + "(:" + port + ")?";
-    String server = "((" + userinfo + "@)?" + hostport + ")?";
+    String server = "((" + userinfo + "\\@)?" + hostport + ")?";
     String regName = "(" + unreserved + "|" + escaped + "|[$,;:@&=+])+";
     String authority = "(" + server + "|" + regName + ")";
     String netPath = "//" + authority + "(" + absPath + ")?";
@@ -196,7 +196,7 @@ public class Verification {
     String relSegment = "(" + unreserved + "|" + escaped + "|[;@&=+$,])+";
     String relPath = relSegment + "(" + absPath + ")?";
     String relativeuri = "(" + netPath + "|" + absPath + "|" + relPath + ")(\\?" + query + ")?";
-    String uriReference = "(" + absoluteuri + "|" + relativeuri + ")?(#" + fragment + ")?";
+    String uriReference = "(" + absoluteuri + "|" + relativeuri + ")?(\\#" + fragment + ")?";
     return new RegExp(uriReference).toAutomaton();
   }
 
